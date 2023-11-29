@@ -115,3 +115,9 @@
 `skipsong`: This is a Dayzo-only command!
 
 `trophy`: This a Trevlar-only command!
+
+### Simple Commands
+
+Each of these commands display a simple static message in chat.
+
+`afm`, `backseat`, `beholdg4`, `blunderbot`, `blunderreport`, `bm`, `em`, `chess`, `discord`, `dm`, `fauxtog`, `insubordinate`, `lurk`, `merch`, `onlychess`, `onlyfans`, `prime`, `resign`, `rip`, `rosen`, `rm`, `streamlabs`, `team`, `tess`, `tiktok`, `tip`, `youtube`
