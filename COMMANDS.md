@@ -7,7 +7,7 @@
 :one: - Shows the number of times the command is allowed per live stream
 
 
-**Commands**
+### Commands
 
 `!arena`: Displays a link to the current arena
 
@@ -65,7 +65,7 @@
 
 `!vchat <message>` :gem::three: : Asks BlunderBot a question but BlunderBot responds with voice instead of text.
 
-**Channel Redemptions**
+### Channel Redemptions
 
 `Buy a Square (5)`: For only 5 BlunderBucks (channel points), you can buy a square on the board and your name will stay there for the rest of the stream.
 
@@ -82,7 +82,7 @@
 `Create me an opponent king (15000)`: I'll create a king for you so you can use the `!opp <name>` command.
 
 
-**Bits**
+### Bits
 
 `cheer69`: BlunderBot changes my king and the opponent king to characters that otherwise can't be chosen.
 
@@ -93,7 +93,7 @@
 `cheer100`: 100 bits or more and BlunderBot will read the attached message and play a longer clip of the bits alert.
 
 
-**Mod commands**
+### Mod Commands
 
 `accept`: Accepts any members waiting to join the BBB team
 
@@ -106,7 +106,7 @@
 `poll <message>`: BlunderBot will start a poll with some choices based on the message. Use like: `!poll favorite chess opening`
 
 
-**Personal Mod Commands**
+### Personal Mod Commands
 
 `clock`: This is a Mammali-only command!
 
