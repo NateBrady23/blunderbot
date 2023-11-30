@@ -40,6 +40,19 @@ const command: Command = {
           prediction_window: 90
         }
       );
+
+      const msg = await services.openaiService.sendPrompt(
+        `
+        Make an announcement that a game prediction is now available.
+        Tell people in 2 sentences or less that they can wager their "Blunder Bucks" to predict
+        if the Blunder Master will win, lose, or draw his current game.
+        `,
+        {
+          usePersonality: true,
+        }
+      );
+      await services.twitchService.ownerRunCommand(`!tts ${msg}`);
+
       return true;
     }
 
