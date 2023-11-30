@@ -8,6 +8,7 @@ import { GiphyService } from '../giphy/giphy.service';
 import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
+import { ENV } from '../config/config.service';
 
 @Injectable()
 export class CommandService {
@@ -46,7 +47,9 @@ export class CommandService {
 
     this.setInitialCommandState();
 
-    void this.heartRateCheck();
+    if (ENV.HEART_RATE_ENABLED) {
+      void this.heartRateCheck();
+    }
   }
 
   setInitialCommandState() {

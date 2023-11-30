@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ENV } from '../config/config.service';
-import { isNHoursLater, removeSymbols } from '../utils/utils';
+import { removeSymbols } from '../utils/utils';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
@@ -8,7 +8,6 @@ import { Platform } from '../enums';
 const tmi = require('tmi.js');
 
 let shoutoutUsers = ENV.SHOUTOUT_USERS;
-const shoutoutUsersTime = Date.now();
 const challengeQueue = [];
 const newChatters = [];
 

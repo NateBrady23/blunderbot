@@ -16,7 +16,9 @@ export class BrowserService {
     // Preload some frequently used pages
     (async () => {
       this.logger.log('Preloading browser pages');
-      await this.getHeartRatePage();
+      if (ENV.HEART_RATE_ENABLED) {
+        await this.getHeartRatePage();
+      }
     })();
   }
 
