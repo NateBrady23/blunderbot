@@ -1,3 +1,8 @@
+[![Twitch Status](https://img.shields.io/twitch/status/NateBrady23)](https://twitch.tv/NateBrady23)
+[![Discord](https://img.shields.io/discord/833463969027981332?label=Discord&logo=discord&style=flat)](https://discord.gg/MfsRvaMeqU)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCNmr4iM5RfHc8L_DfIIb_ow)](https://youtube.com/@natebrady)
+[![GitHub License](https://img.shields.io/github/license/NateBrady23/blunderbot)](https://github.com/NateBrady23/blunderbot/blob/main/LICENSE)
+
 # BlunderBot
 
 An interactive Twitch and Discord bot for chess streamers.
