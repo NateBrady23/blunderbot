@@ -101,8 +101,11 @@ class ConfigService {
 
     const value = this.getValue(envVar);
 
-    if (value === 'true' || value === 'false') {
-      return Boolean(value);
+    if (value.toLowerCase() === 'true') {
+      return true;
+    }
+    if (value.toLowerCase() === 'false') {
+      return false;
     }
 
     return value;
