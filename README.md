@@ -1,3 +1,8 @@
+[![Twitch Status](https://img.shields.io/twitch/status/NateBrady23)](https://twitch.tv/NateBrady23)
+[![Discord](https://img.shields.io/discord/833463969027981332?label=Discord&logo=discord&style=flat)](https://discord.gg/MfsRvaMeqU)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCNmr4iM5RfHc8L_DfIIb_ow)](https://youtube.com/@natebrady)
+[![GitHub License](https://img.shields.io/github/license/NateBrady23/blunderbot)](https://github.com/NateBrady23/blunderbot/blob/main/LICENSE)
+
 # BlunderBot
 
 An interactive Twitch and Discord bot for chess streamers.
@@ -13,6 +18,10 @@ I may iterate quickly on the main branch while this is still v0.* without warnin
 ## Setup
 
 The setup is fairly complicated, due to the fact that all major browsers have disabled the ability to turn off CSP in meta tags/headers. This means we have to set up a proxy to allow certain injections into the lichess frontend.
+
+BlunderBot, as is, only works on Windows, but I'm working toward making it OS agnostic.
+
+Along with the software mentioned below, you'll need to have Visual Studio installed for `node-gyp`. Working on removing that.
 
 ### Fiddler Proxy
 
@@ -44,6 +53,12 @@ These settings may be important to get the overlay to work properly. The size of
  - Google Chrome Browser window in FanzyZones is 1265x938
  - The lichess board is 677.33 x 677.33
  - Each square is 84.667x84.667
+
+Most of the css selectors are based on the brown theme, so you'll need to switch to that if it's not already set. Working on removing this restriction as well.
+
+<img width="163" alt="image" src="https://github.com/NateBrady23/blunderbot/assets/1304934/7a712ef0-4654-425c-b37e-4dddb1de64e2">
+
+### Additional Software
 
 I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to mute or unmute desktop applications that may be playing music so BlunderBot is easier to hear.
 
