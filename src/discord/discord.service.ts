@@ -7,7 +7,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 
 @Injectable()
 export class DiscordService {
-  private logger: Logger = new Logger('DiscordService');
+  private logger: Logger = new Logger(DiscordService.name);
 
   public client;
   public guild;
@@ -43,11 +43,10 @@ export class DiscordService {
             (member) => member.presence?.status === 'online'
           );
           for (const id of totalOnline.keys()) {
-            // console.log(id);
-            console.log(totalOnline.get(id).user.username);
+            this.logger.log(totalOnline.get(id).user.username);
           }
           // Now you have a collection with all online member objects in the totalOnline variable
-          console.log(
+          this.logger.log(
             `There are currently ${totalOnline.size} members online in this guild!`
           );
         });
@@ -72,14 +71,21 @@ export class DiscordService {
   // TODO: There's a bug sometimes where there's no message or context?
   onMessageHandler(discordMessage) {
     if (!discordMessage) return;
-    if (
-      discordMessage.content.match(
-        /^<@1067564139251249162>|<@1067564139251249162>.?.?$/i
-      )
-    ) {
+    // Checks to see if BlunderBot was mentioned at the beginning or
+    // end of the message, so it can respond.
+    const beginEndMentionRegex = new RegExp(
+      `^<@${ENV.DISCORD_BOT_AUTHOR_ID}>|<@${ENV.DISCORD_BOT_AUTHOR_ID}>.?.?$`,
+      'i'
+    );
+
+    if (beginEndMentionRegex.test(discordMessage.content)) {
       discordMessage.content = '!chat ' + discordMessage.content;
+      const blunderBotMentionRegex = new RegExp(
+        `<@${ENV.DISCORD_BOT_AUTHOR_ID}>`,
+        'gi'
+      );
       discordMessage.content = discordMessage.content.replace(
-        /<@1067564139251249162>/gi,
+        blunderBotMentionRegex,
         ''
       );
     }

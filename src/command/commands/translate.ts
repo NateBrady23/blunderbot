@@ -6,12 +6,11 @@ const command: Command = {
   queued: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    let reply;
     if (!ctx.body) {
-      reply = `Please provide the message to translate`;
-    } else {
-      reply = JSON.parse(await services.openaiService.translate(ctx.body));
+      ctx.botSpeak('You must provide a message to translate');
+      return;
     }
+    let reply = JSON.parse(await services.openaiService.translate(ctx.body));
 
     // Make any necessary changes based on the platform
     if (ctx.platform === 'twitch') {

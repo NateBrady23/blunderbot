@@ -48,7 +48,7 @@ const command: Command = {
         if the Blunder Master will win, lose, or draw his current game.
         `,
         {
-          usePersonality: true,
+          usePersonality: true
         }
       );
       await services.twitchService.ownerRunCommand(`!tts ${msg}`);
@@ -62,11 +62,13 @@ const command: Command = {
 
     const lastPrediction = res.data[0];
 
+    console.log(lastPrediction);
+
     if (!lastPrediction) {
       return false;
     }
 
-    const outcome = ctx.args[0].toLowerCase();
+    let outcome = ctx.args[0].toLowerCase();
     const req: {
       broadcaster_id: string;
       id: string;
@@ -77,6 +79,18 @@ const command: Command = {
       id: lastPrediction.id,
       status: 'RESOLVED'
     };
+
+    // If the prediction only has 1 outcome predicted on, just cancel it
+    // so those people don't lose their monies.
+    let predictionCount = 0;
+    for (const outcome of lastPrediction.outcomes) {
+      if (outcome.channel_points > 0) {
+        predictionCount++;
+      }
+    }
+    if (predictionCount === 1) {
+      outcome = 'cancel';
+    }
 
     if (outcome === 'cancel') {
       req.status = 'CANCELED';

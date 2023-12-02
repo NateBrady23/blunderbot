@@ -36,7 +36,7 @@ const command: Command = {
                 '!alert !s10 Join the team to play in the weekly BBB, simuls, and more! Link in chat!'
               ],
               [
-                "!twitchspeak It's NOvember! That means NO discounts on subs! Wooo! Subs get access to special subscriber-only commands like !gif, !vchat, !tts",
+                "!twitchspeak It's December but Santa isn't bringing subs. You gotta do that yourself! Subs get access to special subscriber-only commands like !gif, !vchat, !tts",
                 '!alert !s10 Sundays and Tuesdays are viewer challenge days! Check out the schedule in the !discord. !challenge'
               ],
               [

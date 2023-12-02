@@ -87,12 +87,16 @@ export class TwitchService {
 
     // TODO: Make env var to say hi to new chatters and change the welcome message
     if (!context.tags.follower) {
-      const displayName = context.tags['display-name'];
-      if (!newChatters.includes(displayName)) {
-        newChatters.push(displayName);
-        this.botSpeak(
-          `Welcome in, @${displayName}! Hope you stick around awhile!`
-        );
+      if (ENV.WELCOMING_NON_FOLLOWERS_ENABLED) {
+        const displayName = context.tags['display-name'];
+        if (!newChatters.includes(displayName)) {
+          newChatters.push(displayName);
+          const message = ENV.WELCOME_MESSAGE.replace(
+            /{user}/gi,
+            `@${displayName}`
+          );
+          this.botSpeak(message);
+        }
       }
     }
 
@@ -321,7 +325,7 @@ export class TwitchService {
         type: 'REFRESH'
       });
     } catch (e) {
-      console.log(e);
+      this.logger.error(e);
     }
   }
 
@@ -443,9 +447,7 @@ export class TwitchService {
 
     try {
       const res = await fetch(url, request);
-      const json = await res.json();
-      console.log(json);
-      return json;
+      return await res.json();
     } catch (e) {
       // no json to parse which is fine
     }
@@ -496,7 +498,7 @@ export class TwitchService {
         false
       );
     } catch (e) {
-      console.log(e);
+      this.logger.error(e);
       this.logger.error('Error sending shoutout');
     }
   }

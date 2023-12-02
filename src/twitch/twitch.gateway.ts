@@ -16,7 +16,7 @@ export class TwitchGateway
 {
   @WebSocketServer() wss: Server;
 
-  private logger: Logger = new Logger('TwitchGateway');
+  private logger: Logger = new Logger(TwitchGateway.name);
 
   private sockets = [];
 

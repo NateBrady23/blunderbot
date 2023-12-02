@@ -59,6 +59,12 @@ const fauxtog: MessageCommand = {
   message: '༼つ ◕_◕ ༽つ NATEBRADY TAKE MY ENERGY ༼ つ ◕_◕ ༽つ'
 };
 
+const github: MessageCommand = {
+  hideFromList: true,
+  message:
+    'BlunderBot is now open sourced at https://github.com/NateBrady23/blunderbot'
+};
+
 const insubordinate: MessageCommand = {
   hideFromList: true,
   message: 'AND CHURLISH!'
@@ -159,6 +165,7 @@ export default {
   discord,
   dm,
   fauxtog,
+  github,
   insubordinate,
   lurk,
   merch,
