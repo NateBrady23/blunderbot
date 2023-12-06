@@ -13,7 +13,7 @@ const client = new WebClient(ENV.SLACK_BOT_TOKEN);
 
 @Injectable()
 export class SlackService {
-  private logger: Logger = new Logger('SlackService');
+  private logger: Logger = new Logger(SlackService.name);
 
   constructor(
     @Inject(forwardRef(() => OpenaiService))

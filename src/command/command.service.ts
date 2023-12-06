@@ -9,10 +9,11 @@ import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { ENV } from '../config/config.service';
+import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
 
 @Injectable()
 export class CommandService {
-  private logger: Logger = new Logger('CommandService');
+  private logger: Logger = new Logger(CommandService.name);
   private commandState: CommandState;
   private readonly services: CommandServices;
 
@@ -21,6 +22,8 @@ export class CommandService {
     private readonly appGateway: AppGateway,
     @Inject(forwardRef(() => BrowserService))
     private readonly browserService: BrowserService,
+    @Inject(forwardRef(() => TwitchCustomRewardsService))
+    private readonly twitchCustomRewardsService: TwitchCustomRewardsService,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway,
     @Inject(forwardRef(() => TwitchService))
@@ -38,6 +41,7 @@ export class CommandService {
       appGateway: this.appGateway,
       browserService: this.browserService,
       discordService: this.discordService,
+      twitchCustomRewardsService: this.twitchCustomRewardsService,
       twitchGateway: this.twitchGateway,
       twitchService: this.twitchService,
       openaiService: this.openaiService,

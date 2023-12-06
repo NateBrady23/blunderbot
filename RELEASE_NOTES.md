@@ -1,5 +1,17 @@
 # Release Notes
 
+### 0.9.2 (2023-12-02)
+
+#### Bug Fixes
+
+- Fixed the `!live` command to work to turn on autochat and set the live state even if discord is disabled.
+
+#### Features
+
+- Added `OptionalEnvironmentVariable` enum
+- Moved twitch custom rewards to its own service
+- Added ENV vars for all existing twitch custom rewards
+
 ### 0.9.1 (2023-12-01)
 
 #### Bug Fixes

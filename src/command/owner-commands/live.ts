@@ -1,5 +1,5 @@
 import { Platform } from '../../enums';
-import { ENV } from "../../config/config.service";
+import { ENV } from '../../config/config.service';
 
 const command: Command = {
   name: 'live',
@@ -9,6 +9,11 @@ const command: Command = {
     let msg = ctx.body;
 
     commandState.isLive = true;
+    await services.twitchService.ownerRunCommand('!autochat on');
+
+    if (!ENV.DISCORD_ENABLED) {
+      return true;
+    }
 
     if (!msg) {
       try {
@@ -25,7 +30,6 @@ const command: Command = {
       }
     }
 
-    await services.twitchService.ownerRunCommand('!autochat on');
     services.discordService.makeAnnouncement(
       `@everyone ${msg} https://twitch.tv/${ENV.TWITCH_CHANNEL}`
     );

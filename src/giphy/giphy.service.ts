@@ -4,7 +4,7 @@ const GIPHY_API_KEY = process.env.GIPHY_API_KEY;
 
 @Injectable()
 export class GiphyService {
-  private logger: Logger = new Logger('GiphyService');
+  private logger: Logger = new Logger(GiphyService.name);
 
   constructor() {
     //

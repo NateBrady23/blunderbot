@@ -3,7 +3,7 @@ import { ENV } from '../config/config.service';
 
 @Injectable()
 export class LichessService {
-  private logger: Logger = new Logger('LichessService');
+  private logger: Logger = new Logger(LichessService.name);
 
   constructor() {
     //

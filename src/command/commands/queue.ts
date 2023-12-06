@@ -5,7 +5,8 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const queueCommand = (ctx.args[0] || '').toLowerCase();
-    const challengeQueue = services.twitchService.getChallengeQueue();
+    const challengeQueue =
+      services.twitchCustomRewardsService.getChallengeQueue();
 
     if (challengeQueue.length && queueCommand === 'pop' && ctx.tags.owner) {
       const next = challengeQueue.shift();

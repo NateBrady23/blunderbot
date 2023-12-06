@@ -21,7 +21,7 @@ export const baseMessages: any = [
 
 @Injectable()
 export class OpenaiService {
-  private logger: Logger = new Logger('OpenAiService');
+  private logger: Logger = new Logger(OpenaiService.name);
 
   constructor(
     @Inject(forwardRef(() => CommandService))

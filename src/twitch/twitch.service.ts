@@ -1,14 +1,13 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ENV } from '../config/config.service';
-import { removeSymbols } from '../utils/utils';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
+import { TwitchCustomRewardsService } from './twitch.custom-rewards';
 const tmi = require('tmi.js');
 
 let shoutoutUsers = ENV.SHOUTOUT_USERS;
-const challengeQueue = [];
 const newChatters = [];
 
 // Twitch user map is for determining followers and first time chatters
@@ -24,7 +23,7 @@ twitchUserMap[ENV.TWITCH_BOT_USERNAME.toLowerCase()] = {
 
 @Injectable()
 export class TwitchService {
-  private logger: Logger = new Logger('TwitchService');
+  private logger: Logger = new Logger(TwitchService.name);
 
   private opts = {
     identity: {
@@ -39,6 +38,8 @@ export class TwitchService {
   constructor(
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService,
+    @Inject(forwardRef(() => TwitchCustomRewardsService))
+    private readonly twitchCustomRewardsService: TwitchCustomRewardsService,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway
   ) {
@@ -115,7 +116,7 @@ export class TwitchService {
     }
 
     if (tags['custom-reward-id']) {
-      await this.handleCustomRewards(context);
+      await this.twitchCustomRewardsService.handleCustomRewards(context);
     } else {
       await this.commandService.run(context);
     }
@@ -206,117 +207,6 @@ export class TwitchService {
     };
 
     void this.ownerRunCommand(`!bits ${JSON.stringify(obj)}`);
-  }
-
-  // TODO: A better way to handle custom rewards so they can be easily added
-  async handleCustomRewards(ctx: Context): Promise<void> {
-    this.logger.log(`Custom Reward ID: ${ctx.tags['custom-reward-id']}`);
-    // Change my opponent's rating
-    if (
-      ctx.tags['custom-reward-id'] === 'dea7ef8d-eb78-4e59-966c-952db27ce50a'
-    ) {
-      let rating: string | number = ctx.message;
-      rating = parseInt(rating);
-      if (isNaN(rating) || rating < 1 || rating > 9999) {
-        return;
-      }
-
-      this.twitchGateway.sendDataToSockets('serverMessage', {
-        type: 'OPP_RATING',
-        rating,
-        user: ctx.tags['display-name']
-      });
-    }
-
-    // Add to the challenge queue
-    if (
-      ctx.tags['custom-reward-id'] === '281df6b2-4e17-4573-adde-403f7eb1f491'
-    ) {
-      challengeQueue.push({
-        twitchUser: ctx.tags['display-name'],
-        lichessUser: ctx.message
-      });
-      ctx.botSpeak(`@${ctx.tags['display-name']} has joined the queue!`);
-      void this.ownerRunCommand(
-        `!tts ${removeSymbols(ctx.tags['display-name'])} has joined the queue!`
-      );
-    }
-
-    // Change BlunderBot's Personality
-    if (
-      ctx.tags['custom-reward-id'] === '308d9f77-f238-46e0-9aef-bc1fe33c151b'
-    ) {
-      void this.ownerRunCommand(`!personality ${ctx.message}`);
-    }
-
-    // Buy a Square
-    if (
-      ctx.tags['custom-reward-id'] === '20379aae-5498-4a0f-8344-ae2ac391b8f2'
-    ) {
-      const square = ctx.message.trim().substring(0, 2).toLowerCase();
-      void this.ownerRunCommand(`!buy ${square} ${ctx.tags['display-name']}`);
-    }
-
-    // Play a gif
-    if (
-      ctx.tags['custom-reward-id'] === 'e4474c8e-eeaa-4724-abfb-af688ce88c47'
-    ) {
-      void this.ownerRunCommand(`!gif ${ctx.message}`);
-    }
-
-    // Title Me on Lichess
-    if (
-      ctx.tags['custom-reward-id'] === '7a23bf6a-74b7-4423-a659-dc502b428b6d'
-    ) {
-      void this.ownerRunCommand(
-        `!tts ${removeSymbols(
-          ctx.tags['display-name']
-        )} would like to be titled on lichess. They chose: ${ctx.message}`
-      );
-    }
-
-    // Create an opp king
-    if (
-      ctx.tags['custom-reward-id'] === '444a39bb-04ce-4b43-b68a-6d58a44fb678'
-    ) {
-      void this.ownerRunCommand(
-        `!tts ${removeSymbols(
-          ctx.tags['display-name']
-        )} would like you to create them an opponent king. They chose: ${
-          ctx.message
-        }`
-      );
-    }
-
-    // Invert the board colors
-    if (ctx.tags['custom-reward-id'] === 'Inverts the board colors') {
-      void this.ownerRunCommand(`!theme flipped`);
-    }
-
-    // Guide the raid
-    if (
-      ctx.tags['custom-reward-id'] === 'e4ec9f36-f2e6-4a5d-9b6f-5907fa45cfdb'
-    ) {
-      void this.ownerRunCommand(
-        `!tts ${removeSymbols(
-          ctx.tags['display-name']
-        )} is guiding the raid to ${removeSymbols(ctx.message)}`
-      );
-    }
-
-    // Change blunderbot's voice
-    if (
-      ctx.tags['custom-reward-id'] === 'ad81a974-233d-4910-abf2-be72aafebe66'
-    ) {
-      void this.ownerRunCommand(`!voice ${removeSymbols(ctx.message)}`);
-    }
-
-    // Run a poll
-    if (
-      ctx.tags['custom-reward-id'] === '8027dfce-78d4-49a6-b9ce-f018d0721dad'
-    ) {
-      void this.ownerRunCommand(`!poll ${removeSymbols(ctx.message)}`);
-    }
   }
 
   async tellAllConnectedClientsToRefresh() {
@@ -411,10 +301,6 @@ export class TwitchService {
     if (message.match(/1v1\?|want to play|wanna play/gi)) {
       return await this.ownerRunCommand('!challenge');
     }
-  }
-
-  getChallengeQueue() {
-    return challengeQueue;
   }
 
   /***

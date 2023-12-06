@@ -37,6 +37,7 @@ interface CommandServices {
   giphyService: any;
   lichessService: any;
   openaiService: any;
+  twitchCustomRewardsService: any;
   twitchGateway: any;
   twitchService: any;
 }

@@ -90,21 +90,27 @@ class ConfigService {
     return soundboard;
   }
 
-  public getEnvVar(envVar: EnvironmentVariable): any {
-    if (envVar === EnvironmentVariable.SHOUTOUT_USERS) {
+  public getEnvVar(
+    envVar: RequiredEnvironmentVariable | OptionalEnvironmentVariable
+  ): any {
+    if (envVar === RequiredEnvironmentVariable.SHOUTOUT_USERS) {
       return this.shoutoutUsers;
     }
 
-    if (envVar === EnvironmentVariable.TITLED_PLAYERS) {
+    if (envVar === RequiredEnvironmentVariable.TITLED_PLAYERS) {
       return this.titledPlayers;
     }
 
-    const value = this.getValue(envVar);
+    const value = this.getValue(
+      envVar,
+      Object.keys(RequiredEnvironmentVariable).includes(envVar)
+    );
 
-    if (value.toLowerCase() === 'true') {
+    if (value?.toLowerCase() === 'true') {
       return true;
     }
-    if (value.toLowerCase() === 'false') {
+
+    if (value?.toLowerCase() === 'false') {
       return false;
     }
 
@@ -112,7 +118,7 @@ class ConfigService {
   }
 }
 
-enum EnvironmentVariable {
+enum RequiredEnvironmentVariable {
   PORT = 'PORT',
   // Chat Platforms
   DISCORD_ENABLED = 'DISCORD_ENABLED',
@@ -165,13 +171,33 @@ enum EnvironmentVariable {
   WELCOME_MESSAGE = 'WELCOME_MESSAGE'
 }
 
+enum OptionalEnvironmentVariable {
+  TWITCH_CR_OPP_RATING = 'TWITCH_CR_OPP_RATING',
+  TWITCH_CR_CHALLENGE_QUEUE = 'TWITCH_CR_CHALLENGE_QUEUE',
+  TWITCH_CR_BB_PERSONALITY = 'TWITCH_CR_BB_PERSONALITY',
+  TWITCH_CR_BUY_SQUARE = 'TWITCH_CR_BUY_SQUARE',
+  TWITCH_CR_GIF = 'TWITCH_CR_GIF',
+  TWITCH_CR_LICHESS_TITLE = 'TWITCH_CR_LICHESS_TITLE',
+  TWITCH_CR_OPP_KING = 'TWITCH_CR_OPP_KING',
+  TWITCH_CR_GUIDE_RAID = 'TWITCH_CR_GUIDE_RAID',
+  TWITCH_CR_BB_VOICE = 'TWITCH_CR_BB_VOICE',
+  TWITCH_CR_RUN_POLL = 'TWITCH_CR_RUN_POLL'
+}
+
 const configService = new ConfigService(process.env).ensureValues(
-  Object.keys(EnvironmentVariable)
+  Object.keys(RequiredEnvironmentVariable)
 );
 
-const ENV: Partial<Record<EnvironmentVariable, any>> = {};
-Object.keys(EnvironmentVariable).map((key: EnvironmentVariable) => {
-  ENV[key] = configService.getEnvVar(key);
+const ENV: Partial<
+  Record<RequiredEnvironmentVariable | OptionalEnvironmentVariable, any>
+> = {};
+
+[RequiredEnvironmentVariable, OptionalEnvironmentVariable].forEach((obj) => {
+  Object.keys(obj).map(
+    (key: RequiredEnvironmentVariable | OptionalEnvironmentVariable) => {
+      ENV[key] = configService.getEnvVar(key);
+    }
+  );
 });
 
 export { configService, ENV };
