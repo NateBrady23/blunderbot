@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
+import * as yaml from 'js-yaml';
 
 config();
 
@@ -40,12 +41,18 @@ readdirSync('./public/images/themes').forEach((theme) => {
 class ConfigService {
   private readonly shoutoutUsers: string[];
   private readonly titledPlayers: string[][];
+  private readonly killedCommands: string[];
+
   constructor(private env: { [k: string]: string | undefined }) {
     // So we only have to parse these on load
     const shoutoutUsers = this.getValue('SHOUTOUT_USERS');
     this.shoutoutUsers = shoutoutUsers.split(', ');
 
     this.titledPlayers = JSON.parse(this.getValue('TITLED_PLAYERS'));
+
+    this.killedCommands = (this.getValue('KILLED_COMMANDS', false) || '').split(
+      ', '
+    );
   }
 
   private getValue(key: string, throwOnMissing = true): string {
@@ -101,6 +108,10 @@ class ConfigService {
       return this.titledPlayers;
     }
 
+    if (envVar === OptionalEnvironmentVariable.KILLED_COMMANDS) {
+      return this.killedCommands;
+    }
+
     const value = this.getValue(
       envVar,
       Object.keys(RequiredEnvironmentVariable).includes(envVar)
@@ -120,6 +131,7 @@ class ConfigService {
 
 enum RequiredEnvironmentVariable {
   PORT = 'PORT',
+  NICKNAME = 'NICKNAME',
   // Chat Platforms
   DISCORD_ENABLED = 'DISCORD_ENABLED',
   DISCORD_BOT_TOKEN = 'DISCORD_BOT_TOKEN',
@@ -181,7 +193,8 @@ enum OptionalEnvironmentVariable {
   TWITCH_CR_OPP_KING = 'TWITCH_CR_OPP_KING',
   TWITCH_CR_GUIDE_RAID = 'TWITCH_CR_GUIDE_RAID',
   TWITCH_CR_BB_VOICE = 'TWITCH_CR_BB_VOICE',
-  TWITCH_CR_RUN_POLL = 'TWITCH_CR_RUN_POLL'
+  TWITCH_CR_RUN_POLL = 'TWITCH_CR_RUN_POLL',
+  KILLED_COMMANDS = 'KILLED_COMMANDS'
 }
 
 const configService = new ConfigService(process.env).ensureValues(
@@ -200,4 +213,14 @@ const ENV: Partial<
   );
 });
 
-export { configService, ENV };
+let YAML_CONFIG: Partial<YAMLConfig> = {};
+
+try {
+  const fileContents = readFileSync('./config.yml', 'utf8');
+  YAML_CONFIG = yaml.load(fileContents);
+} catch (e) {
+  console.error('Error loading config.yml');
+  console.error(e);
+}
+
+export { configService, ENV, YAML_CONFIG };

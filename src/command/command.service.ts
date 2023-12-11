@@ -63,7 +63,7 @@ export class CommandService {
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: [],
+      killedCommands: ENV.KILLED_COMMANDS,
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: 'onyx',
@@ -94,7 +94,7 @@ export class CommandService {
           ) {
             this.commandState.heartRateHigh = heartRate;
             void this.twitchService.ownerRunCommand(
-              `!tts Nate's heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
+              `!tts ${ENV.NICKNAME}'s heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
             );
             if (threshold === 140) clearInterval(heartRateInterval);
             break;
@@ -128,9 +128,7 @@ export class CommandService {
     }
 
     if (cmd.requiresLive && !this.commandState.isLive) {
-      ctx.botSpeak(
-        `I have not made the Discord announcement yet, so NateBrady23 is not live yet. He's not live until I SAY HE'S LIVE!`
-      );
+      ctx.botSpeak(`${ENV.TWITCH_CHANNEL} is not live until I SAY HE'S LIVE!`);
       return false;
     }
 

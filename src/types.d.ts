@@ -37,3 +37,17 @@ interface Context {
 }
 
 type Platforms = 'twitch' | 'discord';
+
+interface YAMLConfig {
+  autoCommands: [
+    {
+      commands: string[];
+    }
+  ];
+  messageCommands: MessageCommand[];
+  raids: {
+    [key: string]: {
+      commands: string[];
+    };
+  };
+}

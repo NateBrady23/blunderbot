@@ -1,5 +1,16 @@
 # Release Notes
 
+### 0.10.0 (2023-12-11)
+
+### Features
+
+- Added a `config.yml(.sample)` file to the root of the project for more complicated environment variables.
+  - Moved the "autochat"ted commands out of the codebase and into this config
+  - Moved simple message commands out of the codebase and into this config
+  - Moved running commands on certain raids out of the codebase and into this config
+- Added a `NICKNAME` env var to help remove the hardcoded Nate Brady stuff.
+- Added an optional `KILLED_COMMANDS` env var to disable commands without having to alter the codebase.
+
 ### 0.9.2 (2023-12-02)
 
 #### Bug Fixes

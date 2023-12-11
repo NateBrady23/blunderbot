@@ -33,6 +33,7 @@ lerna-debug.log*
 
 # secrets
 .env
+*.yml
 
 # other
 myvideowithintro.mp4

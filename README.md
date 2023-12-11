@@ -69,3 +69,5 @@ I'll try to make those OS agnostic in the future.
 ### Environment Variables
 
 Copy the `.env.sample` to `.env` and fill in the values. You can ignore certain sections like Discord and Slack by leaving the *_ENABLED variables set to false.
+
+Copy the `config.yml.sample` to `config.yml` and change things around as you see fit.

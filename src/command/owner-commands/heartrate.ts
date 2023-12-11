@@ -11,7 +11,7 @@ const command: Command = {
     const heartrate = await services.browserService.getHeartRate();
     if (heartrate) {
       await services.twitchService.ownerRunCommand(
-        `!tts BM Nate's heart rate is ${heartrate} BPM`
+        `!tts ${ENV.NICKNAME}'s heart rate is ${heartrate} BPM`
       );
     }
     return true;

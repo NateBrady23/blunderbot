@@ -1,0 +1,124 @@
+# AutoCommands - These commands are run automatically by BlunderBot every (default 2.5 minutes) while the stream is
+# in the "live" state. Commands that are grouped together run at the same time.
+autoCommands:
+  - commands:
+      - "!youtube"
+      - "!alert Check out the socials with !youtube !discord !team"
+
+  - commands:
+      - "!blunder"
+      - "!alert !s10 You can change my king with the !king command like !king cry"
+
+  - commands:
+      - "!twitchspeak !opp random"
+
+  - commands:
+      - "!chat !t1.3 make up a chess quote with a fake grandmaster name. Respond in a format like this: \"quote\" - Grandmaster Fake Name"
+      - "!alert !s10 Add your name to the board with the \"Buy a Square\" channel redemption!"
+
+  - commands:
+      - "!quote"
+
+  - commands:
+      - "!opp random"
+      - "!king random"
+
+# Simple message commands
+messageCommands:
+  afm:
+    hideFromList: true
+    message: "AFM is a viewer title. It stands for Arena FIDE Master and is only visible on my stream. You can get titled on my stream with channel rewards."
+
+  backseat:
+    hideFromList: true
+    aliases:
+      - "suggestion"
+      - "suggestions"
+    message: "Please don't make move suggestions, especially during rated games. Happy to look at moves after games end, but not during."
+
+  blunderbot:
+    hideFromList: true
+    message: "I'm not mad Strobex, I am just disappointed."
+
+  blunderreport:
+    hideFromList: true
+    message: "The Blunder Report comes out the day after the BBB on the Discord at https://discord.gg/MfsRvaMeqU. It is a weekly report that measures the number of blunders made, strength of blunders and more!"
+
+  bm:
+    message: "BM is a title I made up for myself. BM stands for Blunder Master. A noble title exclusively awarded by this channel to individuals who consistently demonstrate the ability to achieve defeat from the jaws of victory."
+
+  chess:
+    hideFromList: true
+    message: "chess is hard..."
+
+  discord:
+    message: "Keep talking to me on the Discord at https://discord.gg/MfsRvaMeqU"
+
+  fauxtog:
+    hideFromList: true
+    message: "༼つ ◕_◕ ༽つ NATEBRADY TAKE MY ENERGY ༼ つ ◕_◕ ༽つ"
+
+  github:
+    hideFromList: true
+    message: "BlunderBot is now open sourced at https://github.com/NateBrady23/blunderbot"
+
+  insubordinate:
+    hideFromList: true
+    message: "AND CHURLISH!"
+
+  lurk:
+    aliases:
+      - "lurking"
+      - "lurker"
+      - "lurks"
+    hideFromList: true
+    message: "Thanks for lurking! I appreciate you."
+
+  merch:
+    aliases:
+      - "blundershop"
+      - "shop"
+      - "blunderstore"
+      - "store"
+    hideFromList: true
+    message: "The BlunderShop is now live! https://blundershop.com"
+
+  prime:
+    hideFromList: true
+    message: "If you have Amazon Prime, you can subscribe and support the channel for free!"
+
+  resign:
+    hideFromList: true
+    message: "It is time to end this madness!"
+
+  rosen:
+    aliases:
+      - "eric"
+      - "ericrosen"
+      - "imrosen"
+    message: "https://www.youtube.com/watch?v=tX8eW5JfZyE"
+
+  team:
+    message: "Join Brady's Blunder Buddies at https://lichess.org/team/bradys-blunder-buddies"
+
+  youtube:
+    aliases:
+      - "yt"
+    message: "Check out the youtubes at https://youtube.com/@natebrady"
+
+# Commands to run when certain users raid the channel
+raids:
+  imrosen:
+    commands:
+      - "!gif !s19 party"
+      - "!opp rosen"
+
+  art_vega1983:
+    commands:
+      - "!gif !s19 party"
+      - "!opp artvega"
+
+  thecheesemate:
+    commands:
+      - "!opp cheesemate"
+      - "!gif !s19 cheesy"
