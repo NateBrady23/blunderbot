@@ -45,15 +45,16 @@ interface YAMLConfig {
     }
   ];
   messageCommands: MessageCommand[];
-  raids: {
-    [key: string]: {
-      commands: string[];
-    };
-  };
   raidConfig: {
     alert: string;
     announcement: string;
     defaultCommands: string[];
+    matches: {
+      [key: string]: {
+        commands: string[];
+        alert: string;
+      };
+    };
   };
   bitsConfig: {
     matches: {

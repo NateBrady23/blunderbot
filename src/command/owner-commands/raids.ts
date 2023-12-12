@@ -4,7 +4,7 @@ import { Platform } from '../../enums';
 import { YAML_CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
-const raidersConfig = YAML_CONFIG.raids || {};
+const raidersConfig = YAML_CONFIG.raidConfig.matches || {};
 
 const command: Command = {
   name: 'raids',
@@ -16,19 +16,25 @@ const command: Command = {
         const username = ctx.args[0].toLowerCase();
         commandState.contributions.raids[username] = true;
 
+        let alert;
+
         if (Object.keys(raidersConfig).includes(username)) {
           const commands = raidersConfig[username].commands;
           for (const cmd of commands) {
             void services.twitchService.ownerRunCommand(cmd);
           }
+          if (raidersConfig[username].alert) {
+            alert = raidersConfig[username].alert;
+          }
         } else {
           for (const cmd of YAML_CONFIG?.raidConfig.defaultCommands) {
             void services.twitchService.ownerRunCommand(cmd);
           }
+          alert = YAML_CONFIG?.raidConfig?.alert;
         }
 
-        if (YAML_CONFIG.raidConfig?.alert) {
-          await playAudioFile(YAML_CONFIG.raidConfig.alert);
+        if (alert) {
+          await playAudioFile(alert);
         }
         let announcement = YAML_CONFIG.raidConfig?.announcement;
         if (announcement) {

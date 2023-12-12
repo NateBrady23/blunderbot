@@ -106,35 +106,36 @@ messageCommands:
       - "yt"
     message: "Check out the youtubes at https://youtube.com/@natebrady"
 
-# Commands to run when certain users raid the channel
-raids:
-  imrosen:
-    commands:
-      - "!gif !s19 party"
-      - "!opp rosen"
-
-  art_vega1983:
-    commands:
-      - "!gif !s19 party"
-      - "!opp artvega"
-
-  thecheesemate:
-    commands:
-      - "!opp cheesemate"
-      - "!gif !s19 cheesy"
-
 # For Sounds, Music, and Alerts
 # You can use the private/ or priv/ directory for sounds that you don't want to share with the world
 # These directories are .gitignored
 raidConfig:
-  # The sound to play when a raid is detected
-  alert: "./private/sounds/snoop.m4a"
   # BlunderBot makes an announcement when any raid is detected. Use {raider} to say the raider's name
   announcement: "Hey {raider} and raiders, it's me, BlunderBot! Thank you so much for the raid!"
-  # Default commands to run when a raid is detected but it's not from one of the users listed above
+  # Commands to run when certain users raid the channel
+  matches:
+    imrosen:
+      commands:
+        - "!gif !s19 party"
+        - "!opp rosen"
+      alert: "./private/sounds/snoop.m4a"
+
+    art_vega1983:
+      commands:
+        - "!gif !s19 party"
+        - "!opp artvega"
+
+    thecheesemate:
+      commands:
+        - "!opp cheesemate"
+        - "!gif !s19 cheesy"
+
+  # The default commands to run when a raid is detected but it's not from one of the users listed above
   defaultCommands:
     - "!gif !s19 party"
     - "!opp random"
+  # The sound to play when a raid is detected if there's no alert specified in the matches above
+  alert: "./private/sounds/snoop.m4a"
 
 bitsConfig:
   # If a user cheers more than this amount, BlunderBot will run the commands and alerts listed below

@@ -1,5 +1,15 @@
 # Release Notes
 
+### 0.11.0 (2023-12-12)
+
+#### Breaking Changes
+
+- Moved `raids` to `raidConfig` under `matches` in the same way we do `bitsConfig` so it makes more sense
+
+#### Features
+
+- Added the ability to add specific alert sounds for specific raid matches
+
 ### 0.10.1 (2023-12-12)
 
 #### Features
