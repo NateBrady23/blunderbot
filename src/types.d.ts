@@ -50,4 +50,25 @@ interface YAMLConfig {
       commands: string[];
     };
   };
+  raidConfig: {
+    alert: string;
+    announcement: string;
+    defaultCommands: string[];
+  };
+  bitsConfig: {
+    matches: {
+      [key: string]: {
+        commands: string[];
+        alert: string;
+      };
+    };
+    '100orMore': {
+      commands: string[];
+      alert: string;
+    };
+    '99orLess': {
+      commands: string[];
+      alert: string;
+    };
+  };
 }

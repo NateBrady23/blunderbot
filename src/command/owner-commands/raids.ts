@@ -4,7 +4,7 @@ import { Platform } from '../../enums';
 import { YAML_CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
-const raidConfig = YAML_CONFIG.raids || {};
+const raidersConfig = YAML_CONFIG.raids || {};
 
 const command: Command = {
   name: 'raids',
@@ -16,21 +16,28 @@ const command: Command = {
         const username = ctx.args[0].toLowerCase();
         commandState.contributions.raids[username] = true;
 
-        if (Object.keys(raidConfig).includes(username)) {
-          const commands = raidConfig[username].commands;
+        if (Object.keys(raidersConfig).includes(username)) {
+          const commands = raidersConfig[username].commands;
           for (const cmd of commands) {
             void services.twitchService.ownerRunCommand(cmd);
           }
         } else {
-          void services.twitchService.ownerRunCommand('!gif !s19 party');
+          for (const cmd of YAML_CONFIG?.raidConfig.defaultCommands) {
+            void services.twitchService.ownerRunCommand(cmd);
+          }
         }
 
-        await playAudioFile('./public/sounds/snoop.m4a');
-        void services.twitchService.ownerRunCommand(
-          `!tts hey ${removeSymbols(
-            username
-          )} and raiders, it's me, blunderbot! thank you so much for the raid!`
-        );
+        if (YAML_CONFIG.raidConfig?.alert) {
+          await playAudioFile(YAML_CONFIG.raidConfig.alert);
+        }
+        let announcement = YAML_CONFIG.raidConfig?.announcement;
+        if (announcement) {
+          announcement = announcement.replace(
+            /{raider}/g,
+            removeSymbols(username)
+          );
+          void services.twitchService.ownerRunCommand(`!tts ${announcement}`);
+        }
       } catch (e) {
         console.log('Error in raids command');
         console.error(e);

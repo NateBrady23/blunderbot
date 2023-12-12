@@ -36,7 +36,6 @@ lerna-debug.log*
 *.yml
 
 # other
-myvideowithintro.mp4
-blunder_temp.wav
-output.mp3
 temp/
+private/
+priv/

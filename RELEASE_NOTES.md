@@ -1,8 +1,16 @@
 # Release Notes
 
+### 0.10.1 (2023-12-12)
+
+#### Features
+
+- Added `/private` and `/priv` directories to the `.gitignore` file
+- Created a `raidsConfig` in the `config.yml(.sample)` file
+- Created a `bitsConfig` in the `config.yml(.sample)` file
+
 ### 0.10.0 (2023-12-11)
 
-### Features
+#### Features
 
 - Added a `config.yml(.sample)` file to the root of the project for more complicated environment variables.
   - Moved the "autochat"ted commands out of the codebase and into this config

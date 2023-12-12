@@ -122,3 +122,46 @@ raids:
     commands:
       - "!opp cheesemate"
       - "!gif !s19 cheesy"
+
+# For Sounds, Music, and Alerts
+# You can use the private/ or priv/ directory for sounds that you don't want to share with the world
+# These directories are .gitignored
+raidConfig:
+  # The sound to play when a raid is detected
+  alert: "./private/sounds/snoop.m4a"
+  # BlunderBot makes an announcement when any raid is detected. Use {raider} to say the raider's name
+  announcement: "Hey {raider} and raiders, it's me, BlunderBot! Thank you so much for the raid!"
+  # Default commands to run when a raid is detected but it's not from one of the users listed above
+  defaultCommands:
+    - "!gif !s19 party"
+    - "!opp random"
+
+bitsConfig:
+  # If a user cheers more than this amount, BlunderBot will run the commands and alerts listed below
+  # Note any kings/opps with "secret_" in front can only be changed to by the owner of the channel or
+  # the bot, and they won't be listed in the kings/opps command as generally available.
+  matches:
+    314:
+      commands:
+        - "!gif !s15 pi"
+        - "!king secret_pie"
+        - "!opp secret_pie"
+      alert: "./private/sounds/pie.m4a"
+    420:
+      commands:
+        - "!gif snoop dogg"
+        - "!king secret_smoking"
+        - "!opp secret_snoop"
+      alert: "./private/sounds/snoop.m4a"
+  # If there are no matches, run this for cheers 100 or more
+  100orMore:
+    commands:
+      - "!gif !s12 cheers"
+    alert: "./private/sounds/tig-ol-bitties.m4a"
+  # If there are no matches, run this for cheers 99 or less
+  99orLess:
+    commands:
+      - "!gif !s12 cheers"
+      - "!king random"
+      - "!opp random"
+    alert: "./private/sounds/tig-ol-bitties-short.m4a"
