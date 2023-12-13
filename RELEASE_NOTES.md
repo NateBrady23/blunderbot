@@ -1,5 +1,11 @@
 # Release Notes
 
+### 0.11.2 (2023-12-13)
+
+#### Bug Fixes
+
+- `/public/private` just isn't jiving for me. Adding `.gitignore`s to asset directories after putting a base number of assets in them. Now people can add/remove/whatever without affecting the git repository.
+
 ### 0.11.1 (2023-12-12)
 
 #### Bug Fixes

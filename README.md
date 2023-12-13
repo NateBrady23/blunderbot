@@ -71,3 +71,5 @@ I'll try to make those OS agnostic in the future.
 Copy the `.env.sample` to `.env` and fill in the values. You can ignore certain sections like Discord and Slack by leaving the *_ENABLED variables set to false.
 
 Copy the `config.yml.sample` to `config.yml` and change things around as you see fit.
+
+*IMPORTANT*: A lot of files (especially sounds) listed in the `config.yml` may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
