@@ -1,5 +1,16 @@
 # Release Notes
 
+### 0.11.1 (2023-12-12)
+
+#### Bug Fixes
+
+- Multiple root static paths weren't working, so added a `/public/private` (ridiculous) folder for serving static assets but keeping them out of git.
+
+#### Features
+
+- Added a `gifConfig` in the `config.yml(.sample)` file for tracking special gifs
+- Added an `openaiConfig` in the `config.yml(.sample)` file for tracking voices allowed for BlunderBot
+
 ### 0.11.0 (2023-12-12)
 
 #### Breaking Changes

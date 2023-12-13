@@ -118,7 +118,7 @@ raidConfig:
       commands:
         - "!gif !s19 party"
         - "!opp rosen"
-      alert: "./private/sounds/snoop.m4a"
+      alert: "./public/private/sounds/snoop.m4a"
 
     art_vega1983:
       commands:
@@ -135,7 +135,7 @@ raidConfig:
     - "!gif !s19 party"
     - "!opp random"
   # The sound to play when a raid is detected if there's no alert specified in the matches above
-  alert: "./private/sounds/snoop.m4a"
+  alert: "./public/private/sounds/snoop.m4a"
 
 bitsConfig:
   # If a user cheers more than this amount, BlunderBot will run the commands and alerts listed below
@@ -147,22 +147,32 @@ bitsConfig:
         - "!gif !s15 pi"
         - "!king secret_pie"
         - "!opp secret_pie"
-      alert: "./private/sounds/pie.m4a"
+      alert: "./public/private/sounds/pie.m4a"
     420:
       commands:
         - "!gif snoop dogg"
         - "!king secret_smoking"
         - "!opp secret_snoop"
-      alert: "./private/sounds/snoop.m4a"
+      alert: "./public/private/sounds/snoop.m4a"
   # If there are no matches, run this for cheers 100 or more
   100orMore:
     commands:
       - "!gif !s12 cheers"
-    alert: "./private/sounds/tig-ol-bitties.m4a"
+    alert: "./public/private/sounds/tig-ol-bitties.m4a"
   # If there are no matches, run this for cheers 99 or less
   99orLess:
     commands:
       - "!gif !s12 cheers"
       - "!king random"
       - "!opp random"
-    alert: "./private/sounds/tig-ol-bitties-short.m4a"
+    alert: "./public/private/sounds/tig-ol-bitties-short.m4a"
+
+openaiConfig:
+  # Voices available for BlunderBut. The first voice in the list is the default.
+  voices:
+    - "onyx"
+    - "alloy"
+    - "echo"
+    - "fable"
+    - "nova"
+    - "shimmer"

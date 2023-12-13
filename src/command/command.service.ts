@@ -8,7 +8,7 @@ import { GiphyService } from '../giphy/giphy.service';
 import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
-import { ENV } from '../config/config.service';
+import { ENV, YAML_CONFIG } from '../config/config.service';
 import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
 
 @Injectable()
@@ -66,7 +66,7 @@ export class CommandService {
       killedCommands: ENV.KILLED_COMMANDS,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: 'onyx',
+      blunderbotVoice: YAML_CONFIG.openaiConfig.voices[0],
       ephemeralCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},

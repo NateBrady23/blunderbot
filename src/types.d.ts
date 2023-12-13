@@ -72,4 +72,13 @@ interface YAMLConfig {
       alert: string;
     };
   };
+  gifConfig: {
+    matches: {
+      [key: string]: string;
+    };
+    notFound: string;
+  };
+  openaiConfig: {
+    voices: string[];
+  };
 }

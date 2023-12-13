@@ -10,18 +10,16 @@ import { OpenaiModule } from './openai/openai.module';
 import { AppGateway } from './app.gateway';
 import { BrowserModule } from './browser/browser.module';
 
-const staticModule = ServeStaticModule.forRoot({
-  rootPath: join(__dirname, '..', 'public')
-});
-
 @Module({
   imports: [
     BrowserModule,
     DiscordModule,
     TwitchModule,
-    staticModule,
     SlackModule,
-    OpenaiModule
+    OpenaiModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public')
+    })
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

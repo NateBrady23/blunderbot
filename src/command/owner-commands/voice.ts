@@ -1,4 +1,5 @@
 import { Platform } from '../../enums';
+import { YAML_CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'voice',
@@ -6,10 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     const voice = ctx.args[0]?.toLowerCase().trim();
-    if (
-      !voice ||
-      !['onyx', 'alloy', 'echo', 'fable', 'nova', 'shimmer'].includes(voice)
-    ) {
+    if (!voice || !YAML_CONFIG.openaiConfig.voices.includes(voice)) {
       return false;
     }
     commandState.blunderbotVoice = voice;

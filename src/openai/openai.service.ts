@@ -30,10 +30,7 @@ export class OpenaiService {
     //
   }
 
-  async tts(
-    message: string,
-    voice: 'onyx' | 'alloy' | 'echo' | 'fable' | 'nova' | 'shimmer' = 'onyx'
-  ): Promise<void> {
+  async tts(message: string, voice: any): Promise<void> {
     try {
       const response = await openai.audio.speech.create({
         model: ENV.OPENAI_TTS_MODEL,
