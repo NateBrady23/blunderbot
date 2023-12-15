@@ -15,7 +15,10 @@ export class LichessService {
     return !json.closed && !json.disabled && !json.tosViolation;
   }
 
-  async getCurrentGame(user = ENV.LICHESS_USER, opts: any = {}): Promise<any> {
+  async getCurrentGame(
+    user = ENV.LICHESS_USER,
+    opts: { gameId?: boolean } = {}
+  ): Promise<any> {
     const url = `https://lichess.org/api/users/status?withGameIds=true&ids=${user}`;
     const res = await (await fetch(url)).json();
     if (!res || !res[0]) {
@@ -27,6 +30,18 @@ export class LichessService {
       } else {
         return `https://lichess.org/${res[0].playingId}`;
       }
+    }
+  }
+
+  async getGameOpening(gameId: string): Promise<any> {
+    try {
+      const url = `https://lichess.org/game/export/${gameId}`;
+      const res = await fetch(url, { headers: { Accept: 'application/json' } });
+      const json = await res.json();
+      return json.opening.name;
+    } catch (e) {
+      this.logger.error(e);
+      return;
     }
   }
 

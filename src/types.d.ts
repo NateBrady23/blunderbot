@@ -72,6 +72,7 @@ interface YAMLConfig {
       alert: string;
     };
   };
+
   gifConfig: {
     matches: {
       [key: string]: string;
@@ -81,4 +82,8 @@ interface YAMLConfig {
   openaiConfig: {
     voices: string[];
   };
+  autoResponder: {
+    phrases: string[];
+    responses: string[];
+  }[];
 }

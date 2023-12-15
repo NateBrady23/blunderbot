@@ -37,6 +37,8 @@
 
 `!king <name>`: Change my king while I'm playing. Ex. `!king cry`
 
+`!opening <gameId>`: Displays the opening of <gameId>. If no <gameId> is provided, it will display the opening of the current game.
+
 `!opp <name>`: Change my opponent king. You can get your own for 15k channel points. Ex. `!opp ding`
 
 `!personality`: Displays BlunderBot's current personality. People can change the personality with channel points.

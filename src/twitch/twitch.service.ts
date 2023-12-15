@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { ENV } from '../config/config.service';
+import { ENV, YAML_CONFIG } from '../config/config.service';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
@@ -79,14 +79,16 @@ export class TwitchService {
     if (message) {
       void writeLog('chat', `${tags['display-name']}: ${message}`);
     }
-    // TODO: Replace with compiled regex using bot name env
-    // Turn blunderbot23 pings into !chat commands so it replies
-    if (message.match(/^@blunderbot23|@blunderbot23$/i)) {
-      message = '!chat ' + message.replace(/^@blunderbot23 /i, '');
+    const regex = new RegExp(
+      `^@${ENV.TWITCH_BOT_USERNAME}|@${ENV.TWITCH_BOT_USERNAME}$`,
+      'i'
+    );
+    if (regex.test(message)) {
+      const replaceRegex = new RegExp(`@${ENV.TWITCH_BOT_USERNAME} `, 'i');
+      message = '!chat ' + message.replace(replaceRegex, '');
     }
     const context: Context = await this.createContext(message, tags);
 
-    // TODO: Make env var to say hi to new chatters and change the welcome message
     if (!context.tags.follower) {
       if (ENV.WELCOMING_NON_FOLLOWERS_ENABLED) {
         const displayName = context.tags['display-name'];
@@ -109,8 +111,14 @@ export class TwitchService {
     }
 
     // The message isn't a command or custom reward, so see if it's something we
-    // should auto-respond to and then return.
-    if (!context.message.startsWith('!') && !tags['custom-reward-id']) {
+    // should auto-respond to and then return. Don't auto respond to the bot.
+    if (
+      !context.message.startsWith('!') &&
+      !tags['custom-reward-id'] &&
+      !tags['display-name']
+        .toLowerCase()
+        .includes(ENV.TWITCH_BOT_USERNAME.toLowerCase())
+    ) {
       void this.autoRespond(message);
       return;
     }
@@ -236,6 +244,7 @@ export class TwitchService {
     if (tags) {
       context.tags = tags;
     } else {
+      // If no tags, then it's a command being run directly by the owner
       context.tags = {
         username: ENV.TWITCH_OWNER_USERNAME,
         owner: true,
@@ -281,25 +290,25 @@ export class TwitchService {
   }
 
   async autoRespond(message: string) {
-    message = message.toLowerCase();
-    if (message.match(/^what(')?s bm$/gi)) {
-      return await this.ownerRunCommand('!bm');
-    }
+    if (!YAML_CONFIG.autoResponder) return;
 
-    if (
-      message.includes('what') &&
-      message.match(/is|does|stand|mean/gi) &&
-      message.includes('bm')
-    ) {
-      return await this.ownerRunCommand('!bm');
-    }
-
-    if (message.includes('your favorite opening')) {
-      return await this.ownerRunCommand('!opening');
-    }
-
-    if (message.match(/1v1\?|want to play|wanna play/gi)) {
-      return await this.ownerRunCommand('!challenge');
+    let found = false;
+    for (const match of YAML_CONFIG.autoResponder) {
+      if (found) break;
+      for (const phrase of match.phrases) {
+        const regex = new RegExp(phrase, 'gi');
+        if (message.match(regex)) {
+          for (const response of match.responses) {
+            if (response.startsWith('!')) {
+              await this.ownerRunCommand(response);
+            } else {
+              this.botSpeak(response);
+            }
+          }
+          found = true;
+          break;
+        }
+      }
     }
   }
 
@@ -370,10 +379,6 @@ export class TwitchService {
     return twitchUserMap[login];
   }
 
-  /***
-   * TODO: Maybe alternate between bot/owner tokens to avoid rate limiting
-   * @param login
-   */
   async helixShoutout(login: string) {
     try {
       const user = await this.helixGetTwitchUserInfo(login);

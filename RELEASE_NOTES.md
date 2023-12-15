@@ -1,5 +1,17 @@
 # Release Notes
 
+### 0.11.3 (2023-12-15)
+
+#### Bug Fixes
+
+- Fixed a spot where blunderbot23 was hardcoded in the twitch service so pinging a new bot name wouldn't auto respond.
+- Removed hardcoded blunderbot string from the openai service.
+
+#### Features
+
+- Added an `autoResponder` config to the `config.yml` file for tracking auto responses to messages in chat
+- Added a new command `!opening` to display the opening of the current game or a game id if provided.
+
 ### 0.11.2 (2023-12-13)
 
 #### Bug Fixes

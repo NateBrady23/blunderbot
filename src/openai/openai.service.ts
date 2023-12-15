@@ -155,11 +155,6 @@ export class OpenaiService {
   }
 
   cleanReplyAsBlunderBot(reply: string): string {
-    reply = reply.replace(
-      /(an AI language model)|(a language model AI)/gi,
-      'BlunderBot'
-    );
-
     if (
       reply.includes(`cannot comply`) ||
       reply.includes(`can't comply`) ||
@@ -171,7 +166,7 @@ export class OpenaiService {
       reply.includes(`was programmed`) ||
       reply.includes(`instructed`)
     ) {
-      reply = `I apologize, as BlunderBot I don't know how to reply to that.`;
+      reply = `I apologize. I don't know how to reply to that.`;
     }
 
     // Making sure the reply doesn't create another command
