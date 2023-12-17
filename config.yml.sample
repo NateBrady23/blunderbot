@@ -203,7 +203,6 @@ autoResponder:
   -
     phrases:
       - "1v1( .*)? me"
-      - "1v1\?"
     responses:
       - "1v1 me bro, I'll crush you"
       - "!challenge"
