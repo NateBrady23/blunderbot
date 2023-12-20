@@ -7,6 +7,11 @@
 - Fixed a bug in `!gpredict` where the bot would announce the game prediction even if creating the prediction failed
 - Fixed a bug in `!gpredict` where the bot would announce the default game prediction options even if custom options were passed.
 - Fixed a bug in `!suggest` where we were only caching and replaying the first response.
+- Replaced hardcoded Nate Brady with `NICKNAME` env var in the `!live` command.
+
+#### Features
+
+- Added a `nodiscord` option to the `!live` command such that `!live nodiscord` will turn on autochat and set the live state without sending a discord message.
 
 ### 0.11.3 (2023-12-15)
 
