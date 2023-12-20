@@ -1,5 +1,13 @@
 # Release Notes
 
+### 0.11.4 (2023-12-20)
+
+#### Bug Fixes
+
+- Fixed a bug in `!gpredict` where the bot would announce the game prediction even if creating the prediction failed
+- Fixed a bug in `!gpredict` where the bot would announce the default game prediction options even if custom options were passed.
+- Fixed a bug in `!suggest` where we were only caching and replaying the first response.
+
 ### 0.11.3 (2023-12-15)
 
 #### Bug Fixes

@@ -252,6 +252,7 @@ export class CommandService {
       return;
     }
 
+    // Run any commands created during the stream with !add
     if (this.commandState.ephemeralCommands[ctx.command]) {
       ctx.botSpeak(this.commandState.ephemeralCommands[ctx.command]);
       return;

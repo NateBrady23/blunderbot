@@ -14,38 +14,51 @@ const command: Command = {
   modOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const items = getItemsBetweenDelimiters(ctx.body, '"');
+    let items = getItemsBetweenDelimiters(ctx.body, '"');
 
-    if (!ctx.args[0] || items.length === 4) {
-      let currentGame = '';
-      // We're doing a game prediction. Get the game link to keep in the prediction, in case we forget.
-      if (!ctx.args[0]) {
-        currentGame =
-          (await services.lichessService.getCurrentGame(ENV.LICHESS_USER, {
-            gameId: true
-          })) || '';
-      }
-      await services.twitchService.helixOwnerApiCall(
+    // Starting a new prediction with no custom options.
+    if (!ctx.args[0] && !items.length) {
+      const currentGame =
+        (await services.lichessService.getCurrentGame(ENV.LICHESS_USER, {
+          gameId: true
+        })) || '';
+      items = [
+        `Game result for ${ENV.LICHESS_USER}? ${currentGame}`,
+        'Win',
+        'Loss',
+        'Draw'
+      ];
+    }
+
+    // This means we're starting a new prediction.
+    if (items.length === 4) {
+      const res = await services.twitchService.helixOwnerApiCall(
         'https://api.twitch.tv/helix/predictions',
         'POST',
         {
           broadcaster_id: ENV.TWITCH_OWNER_ID,
-          title:
-            items[0] || `Game result for ${ENV.LICHESS_USER}? ${currentGame}`,
+          title: items[0],
           outcomes: [
-            { title: items[1] || 'Win' },
-            { title: items[2] || 'Loss' },
-            { title: items[3] || 'Draw' }
+            { title: items[1] },
+            { title: items[2] },
+            { title: items[3] }
           ],
           prediction_window: 90
         }
       );
 
+      if (!res?.data) {
+        ctx.botSpeak(
+          'Something went wrong creating the prediction. Is there already an active prediction?'
+        );
+        return false;
+      }
+
       const msg = await services.openaiService.sendPrompt(
         `
-        Make an announcement that a game prediction is now available.
+        Make an announcement that a prediction is now available.
         Tell people in 2 sentences or less that they can wager their "Blunder Bucks" to predict
-        if the Blunder Master will win, lose, or draw his current game.
+        ${items.join(', ')}.
         `,
         {
           usePersonality: true
@@ -61,8 +74,6 @@ const command: Command = {
     );
 
     const lastPrediction = res.data[0];
-
-    console.log(lastPrediction);
 
     if (!lastPrediction) {
       return false;
