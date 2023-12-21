@@ -1,5 +1,5 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'blunder',
@@ -25,7 +25,7 @@ const command: Command = {
       `The following commands are available: [${availableCommands.join(', ')}]`
     );
     ctx.botSpeak(
-      `For a full list of commands, check out: ${ENV.COMMANDS_LIST_URL}`
+      `For a full list of commands, check out: ${CONFIG.commandsListUrl}`
     );
     return true;
   }

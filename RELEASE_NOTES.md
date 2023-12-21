@@ -1,5 +1,23 @@
 # Release Notes
 
+### 1.0.0 (2023-12-21)
+
+#### Breaking Changes
+
+- All the config now lives in the `config.yml(.sample)` file
+- Moved allowing specific users to run commands to the config file under `twitch.userRestrictedCommands`
+
+#### Bug Fixes
+
+- Removed all references to Blunder Master / Nate in commands
+- Fixed raid alerts when matching a specific raider
+- Moved the mute/unmute commands to the config under `sounds.mute.programs` and `sounds.unmute.programs`. This allows for people to easily change which programs they want muted and which command to run to do the muting.
+
+#### Features
+
+- Added an `enabled` config option for most APIs in the config
+- In most commands requiring an api key, now first check if that config section is `enabled` and log a message if the command is run and not enabled
+
 ### 0.11.4 (2023-12-20)
 
 #### Bug Fixes

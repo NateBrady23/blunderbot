@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { ENV, YAML_CONFIG } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
@@ -7,17 +7,17 @@ import { Platform } from '../enums';
 import { TwitchCustomRewardsService } from './twitch.custom-rewards';
 const tmi = require('tmi.js');
 
-let shoutoutUsers = ENV.SHOUTOUT_USERS;
+let shoutoutUsers = CONFIG.autoShoutouts;
 const newChatters = [];
 
 // Twitch user map is for determining followers and first time chatters
 const twitchUserMap: Record<string, { id: string; isFollower: boolean }> = {};
-twitchUserMap[ENV.TWITCH_OWNER_USERNAME.toLowerCase()] = {
-  id: ENV.TWITCH_OWNER_ID,
+twitchUserMap[CONFIG.twitch.ownerUsername.toLowerCase()] = {
+  id: CONFIG.twitch.ownerId,
   isFollower: true
 };
-twitchUserMap[ENV.TWITCH_BOT_USERNAME.toLowerCase()] = {
-  id: ENV.TWITCH_BOT_ID,
+twitchUserMap[CONFIG.twitch.botUsername.toLowerCase()] = {
+  id: CONFIG.twitch.botId,
   isFollower: true
 };
 
@@ -27,10 +27,10 @@ export class TwitchService {
 
   private opts = {
     identity: {
-      username: ENV.TWITCH_BOT_USERNAME,
-      password: ENV.TWITCH_BOT_PASSWORD
+      username: CONFIG.twitch.botUsername,
+      password: CONFIG.twitch.botPassword
     },
-    channels: [ENV.TWITCH_CHANNEL]
+    channels: [CONFIG.twitch.channel]
   };
 
   public client;
@@ -60,7 +60,7 @@ export class TwitchService {
   }
 
   botSpeak(message: string) {
-    this.client.say(ENV.TWITCH_CHANNEL, message);
+    this.client.say(CONFIG.twitch.channel, message);
   }
 
   checkForShoutout(ctx: Context) {
@@ -80,21 +80,21 @@ export class TwitchService {
       void writeLog('chat', `${tags['display-name']}: ${message}`);
     }
     const regex = new RegExp(
-      `^@${ENV.TWITCH_BOT_USERNAME}|@${ENV.TWITCH_BOT_USERNAME}$`,
+      `^@${CONFIG.twitch.botUsername}|@${CONFIG.twitch.botUsername}$`,
       'i'
     );
     if (regex.test(message)) {
-      const replaceRegex = new RegExp(`@${ENV.TWITCH_BOT_USERNAME} `, 'i');
+      const replaceRegex = new RegExp(`@${CONFIG.twitch.botUsername} `, 'i');
       message = '!chat ' + message.replace(replaceRegex, '');
     }
     const context: Context = await this.createContext(message, tags);
 
     if (!context.tags.follower) {
-      if (ENV.WELCOMING_NON_FOLLOWERS_ENABLED) {
+      if (CONFIG.welcome.enabled) {
         const displayName = context.tags['display-name'];
         if (!newChatters.includes(displayName)) {
           newChatters.push(displayName);
-          const message = ENV.WELCOME_MESSAGE.replace(
+          const message = CONFIG.welcome.message.replace(
             /{user}/gi,
             `@${displayName}`
           );
@@ -117,7 +117,7 @@ export class TwitchService {
       !tags['custom-reward-id'] &&
       !tags['display-name']
         .toLowerCase()
-        .includes(ENV.TWITCH_BOT_USERNAME.toLowerCase())
+        .includes(CONFIG.twitch.botUsername.toLowerCase())
     ) {
       void this.autoRespond(message);
       return;
@@ -235,7 +235,7 @@ export class TwitchService {
   async createContext(message: string, tags?: any): Promise<Context> {
     const context: Context = {
       client: this.client,
-      channel: ENV.TWITCH_CHANNEL,
+      channel: CONFIG.twitch.channel,
       message,
       botSpeak: this.botSpeak,
       platform: Platform.Twitch
@@ -246,11 +246,11 @@ export class TwitchService {
     } else {
       // If no tags, then it's a command being run directly by the owner
       context.tags = {
-        username: ENV.TWITCH_OWNER_USERNAME,
+        username: CONFIG.twitch.ownerUsername,
         owner: true,
         mod: true,
         subscriber: true,
-        ['display-name']: ENV.TWITCH_OWNER_USERNAME
+        ['display-name']: CONFIG.twitch.ownerUsername
       };
     }
 
@@ -276,8 +276,8 @@ export class TwitchService {
 
     if (
       [
-        ENV.TWITCH_OWNER_USERNAME.toLowerCase(),
-        ENV.TWITCH_BOT_USERNAME.toLowerCase()
+        CONFIG.twitch.ownerUsername.toLowerCase(),
+        CONFIG.twitch.botUsername.toLowerCase()
       ].includes(context.tags.username)
     ) {
       // Just make sure the owner gets everything
@@ -290,10 +290,10 @@ export class TwitchService {
   }
 
   async autoRespond(message: string) {
-    if (!YAML_CONFIG.autoResponder) return;
+    if (!CONFIG.autoResponder) return;
 
     let found = false;
-    for (const match of YAML_CONFIG.autoResponder) {
+    for (const match of CONFIG.autoResponder) {
       if (found) break;
       for (const phrase of match.phrases) {
         const regex = new RegExp(phrase, 'gi');
@@ -323,13 +323,13 @@ export class TwitchService {
     asOwner = true
   ): Promise<any> {
     const token = asOwner
-      ? ENV.TWITCH_API_OWNER_OAUTH_TOKEN
-      : ENV.TWITCH_API_BOT_OAUTH_TOKEN;
+      ? CONFIG.twitch.apiOwnerOauthToken
+      : CONFIG.twitch.apiBotOauthToken;
 
     const request = {
       url,
       headers: {
-        'Client-ID': ENV.TWITCH_API_CLIENT_ID,
+        'Client-ID': CONFIG.twitch.apiClientId,
         Authorization: `Bearer ${token}`
       },
       method
@@ -369,7 +369,7 @@ export class TwitchService {
 
       // See if they are a follower
       res = await this.helixOwnerApiCall(
-        `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${ENV.TWITCH_OWNER_ID}`,
+        `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${CONFIG.twitch.ownerId}`,
         'GET'
       );
       const isFollower = !!res?.data[0];
@@ -384,7 +384,7 @@ export class TwitchService {
       const user = await this.helixGetTwitchUserInfo(login);
       if (!user) return;
       await this.helixBotApiCall(
-        `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${ENV.TWITCH_OWNER_ID}&to_broadcaster_id=${user.id}&moderator_id=${ENV.TWITCH_BOT_ID}`,
+        `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${CONFIG.twitch.ownerId}&to_broadcaster_id=${user.id}&moderator_id=${CONFIG.twitch.botId}`,
         'POST',
         false
       );

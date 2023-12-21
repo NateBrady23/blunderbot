@@ -1,12 +1,12 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'accept',
   modOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const team = ENV.LICHESS_TEAM_ID;
+    const team = CONFIG.lichess.teamId;
     try {
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/team/${team}/requests`
@@ -25,7 +25,7 @@ const command: Command = {
           );
           const json = await res.json();
           if (json.ok) {
-            ctx.botSpeak(`Welcome ${user} to ${ENV.LICHESS_TEAM_NAME}`);
+            ctx.botSpeak(`Welcome ${user} to ${CONFIG.lichess.teamName}`);
           }
         } else {
           const res = await services.lichessService.apiCall(

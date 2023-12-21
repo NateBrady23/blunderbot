@@ -60,15 +60,11 @@ Most of the css selectors are based on the brown theme, so you'll need to switch
 
 ### Additional Software
 
-I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to mute or unmute desktop applications that may be playing music so BlunderBot is easier to hear.
+I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to mute or unmute desktop applications that may be playing music so BlunderBot is easier to hear. This is now configurable in the `config.yml` under `sounds.mute` and `sounds.unmute`. You can change the entire command that runs by Node's `execSync` to whatever you'd like to use.
 
 I use ffmpeg to capture the length of audio clips for mute duration and may end up using it for other things.
 
-I'll try to make those OS agnostic in the future.
-
-### Environment Variables
-
-Copy the `.env.sample` to `.env` and fill in the values. You can ignore certain sections like Discord and Slack by leaving the *_ENABLED variables set to false.
+### Configuration
 
 Copy the `config.yml.sample` to `config.yml` and change things around as you see fit.
 

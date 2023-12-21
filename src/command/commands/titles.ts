@@ -1,12 +1,12 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'titles',
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['titties'],
   run: async (ctx) => {
-    const titledPlayers = ENV.TITLED_PLAYERS;
+    const titledPlayers = CONFIG.titledPlayers;
     let say = '';
     for (let i = 0; i < titledPlayers.length; i++) {
       say += `${titledPlayers[i][1]} ${titledPlayers[i][0]}`;

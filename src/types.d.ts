@@ -39,13 +39,125 @@ interface Context {
 type Platforms = 'twitch' | 'discord';
 
 interface YAMLConfig {
+  port: number;
+  nickname: string;
+  commandsListUrl: string;
+
+  twitch: {
+    ownerUsername: string;
+    channel: string;
+    ownerId: string;
+    botId: string;
+    botUsername: string;
+    botPassword: string;
+    apiBotOauthToken: string;
+    apiOwnerOauthToken: string;
+    apiClientId: string;
+    apiClientSecret: string;
+    customRewards: {
+      oppRating: string;
+      challengeQueue: string;
+      bbPersonality: string;
+      buySquare: string;
+      gif: string;
+      lichessTitle: string;
+      oppKing: string;
+      guideRaid: string;
+      bbVoice: string;
+      runPoll: string;
+      myOwnCommand: string;
+    };
+    userRestrictedCommands: {
+      [key: string]: string[];
+    };
+  };
+
+  lichess: {
+    user: string;
+    oauthToken: string;
+    botOauthToken: string;
+    teamId: string;
+    teamName: string;
+  };
+
+  openai: {
+    apiKey: string;
+    ttsModel: string;
+    chatModel: string;
+    textModerationModel: string;
+    baseSystemMessage: string;
+    voices: string[];
+  };
+
+  discord: {
+    enabled: boolean;
+    botToken: string;
+    announcementChannelId: string;
+    generalChannelId: string;
+    modChannelId: string;
+    ownerAuthorId: string;
+    botAuthorId: string;
+    inviteLink: string;
+  };
+
+  slack: {
+    enabled: boolean;
+    appToken: string;
+    botToken: string;
+  };
+
+  decapi: {
+    enabled: boolean;
+    token: string;
+  };
+
+  heartRate: {
+    enabled: boolean;
+    url: string;
+    class: string;
+  };
+
+  giphy: {
+    enabled: boolean;
+    apiKey: string;
+  };
+
+  rapidApi: {
+    enabled: boolean;
+    keys: string[];
+  };
+
+  youtube: {
+    enabled: boolean;
+    apiKey: string;
+    shortsPlaylistId: string;
+  };
+
+  welcome: {
+    enabled: boolean;
+    message: string;
+    ignoreUsers: string[];
+  };
+
+  sounds: {
+    mute: {
+      programs: string[];
+    };
+  };
+
+  autoShoutouts: string[];
+  titledPlayers: [string[]];
+
   autoCommands: [
     {
       commands: string[];
     }
   ];
+
+  killedCommands: string[];
   messageCommands: MessageCommand[];
-  raidConfig: {
+
+  raids: {
     alert: string;
     announcement: string;
     defaultCommands: string[];
@@ -56,7 +168,8 @@ interface YAMLConfig {
       };
     };
   };
-  bitsConfig: {
+
+  bits: {
     matches: {
       [key: string]: {
         commands: string[];
@@ -73,15 +186,13 @@ interface YAMLConfig {
     };
   };
 
-  gifConfig: {
+  gif: {
     matches: {
       [key: string]: string;
     };
     notFound: string;
   };
-  openaiConfig: {
-    voices: string[];
-  };
+
   autoResponder: {
     phrases: string[];
     responses: string[];

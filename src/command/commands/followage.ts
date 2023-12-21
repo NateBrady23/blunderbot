@@ -1,8 +1,8 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
-const decapiToken = ENV.DECAPI_TOKEN;
-const channel = ENV.TWITCH_CHANNEL;
+const decapiToken = CONFIG.decapi.token;
+const channel = CONFIG.twitch.channel;
 
 const command: Command = {
   name: 'followage',

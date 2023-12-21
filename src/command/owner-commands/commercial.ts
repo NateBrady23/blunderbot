@@ -1,4 +1,4 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -10,7 +10,7 @@ const command: Command = {
       'https://api.twitch.tv/helix/channels/commercial',
       'POST',
       {
-        broadcaster_id: ENV.TWITCH_OWNER_ID,
+        broadcaster_id: CONFIG.twitch.ownerId,
         length: 90
       }
     );

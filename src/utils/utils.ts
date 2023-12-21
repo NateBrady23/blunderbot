@@ -1,4 +1,5 @@
 import { FunctionQueue } from './FunctionQueue';
+import { CONFIG } from '../config/config.service';
 
 const player = require('play-sound')();
 const ffmpeg = require('fluent-ffmpeg');
@@ -30,14 +31,11 @@ function getAudioDurationInSeconds(filePath): Promise<number> {
  * @param mute
  */
 export async function muteOrUnmuteDesktopApps(mute: boolean) {
-  const cmd = mute ? 'Mute' : 'Unmute';
+  const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
-    await execSync(
-      `SoundVolumeView /${cmd} "C:\\Program Files\\Mozilla Firefox\\firefox.exe"`
-    );
-    await execSync(
-      `SoundVolumeView /${cmd} "C:\\Program Files\\Streamlabs OBS\\Streamlabs OBS.exe"`
-    );
+    for (const command of CONFIG.sounds[muteOrUnmute].programs) {
+      await execSync(command);
+    }
   } catch (error) {
     console.log(`Error muting or unmuting desktop apps.`);
     console.log(error);

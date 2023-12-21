@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { readdirSync, readFileSync } from 'fs';
 import * as yaml from 'js-yaml';
+import { getRandomElement } from '../utils/utils';
 
 config();
 
@@ -38,43 +39,22 @@ readdirSync('./public/images/themes').forEach((theme) => {
   });
 });
 
+let CONFIG: Partial<YAMLConfig> = {};
+
+try {
+  const fileContents = readFileSync('./config.yml', 'utf8');
+  CONFIG = yaml.load(fileContents);
+  console.log(CONFIG);
+} catch (e) {
+  console.error('Error loading config.yml');
+  console.error(e);
+}
+
 class ConfigService {
-  private readonly shoutoutUsers: string[];
-  private readonly titledPlayers: string[][];
-  private readonly killedCommands: string[];
-
-  constructor(private env: { [k: string]: string | undefined }) {
-    // So we only have to parse these on load
-    const shoutoutUsers = this.getValue('SHOUTOUT_USERS');
-    this.shoutoutUsers = shoutoutUsers.split(', ');
-
-    this.titledPlayers = JSON.parse(this.getValue('TITLED_PLAYERS'));
-
-    this.killedCommands = (this.getValue('KILLED_COMMANDS', false) || '').split(
-      ', '
-    );
-  }
-
-  private getValue(key: string, throwOnMissing = true): string {
-    const value = this.env[key];
-    if (!value && throwOnMissing) {
-      console.log('Missing env var: ', key);
-      throw new Error('config error - missing env.');
-    }
-
-    return value;
-  }
-
-  public ensureValues(keys: string[]) {
-    keys.forEach((k) => this.getValue(k, true));
-    return this;
-  }
+  constructor() {}
 
   public getRandomRapidApiKey() {
-    const api1 = this.getValue('RAPID_API_KEY_1');
-    const api2 = this.getValue('RAPID_API_KEY_2');
-    // return one of the api keys at random
-    return Math.random() < 0.5 ? api1 : api2;
+    return getRandomElement(CONFIG.rapidApi.keys);
   }
 
   public getThemeConfig() {
@@ -96,131 +76,8 @@ class ConfigService {
   public getSoundboard() {
     return soundboard;
   }
-
-  public getEnvVar(
-    envVar: RequiredEnvironmentVariable | OptionalEnvironmentVariable
-  ): any {
-    if (envVar === RequiredEnvironmentVariable.SHOUTOUT_USERS) {
-      return this.shoutoutUsers;
-    }
-
-    if (envVar === RequiredEnvironmentVariable.TITLED_PLAYERS) {
-      return this.titledPlayers;
-    }
-
-    if (envVar === OptionalEnvironmentVariable.KILLED_COMMANDS) {
-      return this.killedCommands;
-    }
-
-    const value = this.getValue(
-      envVar,
-      Object.keys(RequiredEnvironmentVariable).includes(envVar)
-    );
-
-    if (value?.toLowerCase() === 'true') {
-      return true;
-    }
-
-    if (value?.toLowerCase() === 'false') {
-      return false;
-    }
-
-    return value;
-  }
 }
 
-enum RequiredEnvironmentVariable {
-  PORT = 'PORT',
-  NICKNAME = 'NICKNAME',
-  // Chat Platforms
-  DISCORD_ENABLED = 'DISCORD_ENABLED',
-  DISCORD_BOT_TOKEN = 'DISCORD_BOT_TOKEN',
-  DISCORD_ANNOUNCEMENT_CHANNEL = 'DISCORD_ANNOUNCEMENT_CHANNEL',
-  DISCORD_GENERAL_CHANNEL = 'DISCORD_GENERAL_CHANNEL',
-  DISCORD_MOD_CHANNEL = 'DISCORD_MOD_CHANNEL',
-  DISCORD_OWNER_AUTHOR_ID = 'DISCORD_OWNER_AUTHOR_ID',
-  DISCORD_BOT_AUTHOR_ID = 'DISCORD_BOT_AUTHOR_ID',
-  DISCORD_INVITE_LINK = 'DISCORD_INVITE_LINK',
-  SLACK_ENABLED = 'SLACK_ENABLED',
-  SLACK_APP_TOKEN = 'SLACK_APP_TOKEN',
-  SLACK_BOT_TOKEN = 'SLACK_BOT_TOKEN',
-  // AI
-  OPENAI_API_KEY = 'OPENAI_API_KEY',
-  OPENAI_TTS_MODEL = 'OPENAI_TTS_MODEL',
-  OPENAI_CHAT_MODEL = 'OPENAI_CHAT_MODEL',
-  OPENAI_BASE_SYSTEM_MESSAGE = 'OPENAI_BASE_SYSTEM_MESSAGE',
-  OPENAI_TEXT_MODERATION_MODEL = 'OPENAI_TEXT_MODERATION_MODEL',
-  // Lichess
-  LICHESS_OAUTH_TOKEN = 'LICHESS_OAUTH_TOKEN',
-  LICHESS_TEAM_ID = 'LICHESS_TEAM_ID',
-  LICHESS_USER = 'LICHESS_USER',
-  LICHESS_TEAM_NAME = 'LICHESS_TEAM_NAME',
-  // Twitch
-  TWITCH_API_CLIENT_ID = 'TWITCH_API_CLIENT_ID',
-  TWITCH_API_BOT_OAUTH_TOKEN = 'TWITCH_API_BOT_OAUTH_TOKEN',
-  TWITCH_API_OWNER_OAUTH_TOKEN = 'TWITCH_API_OWNER_OAUTH_TOKEN',
-  TWITCH_BOT_USERNAME = 'TWITCH_BOT_USERNAME',
-  TWITCH_BOT_PASSWORD = 'TWITCH_BOT_PASSWORD',
-  TWITCH_OWNER_USERNAME = 'TWITCH_OWNER_USERNAME',
-  TWITCH_OWNER_ID = 'TWITCH_OWNER_ID',
-  TWITCH_BOT_ID = 'TWITCH_BOT_ID',
-  TWITCH_CHANNEL = 'TWITCH_CHANNEL',
-  // Other APIs
-  DECAPI_TOKEN = 'DECAPI_TOKEN',
-  GIPHY_API_KEY = 'GIPHY_API_KEY',
-  HEART_RATE_ENABLED = 'HEART_RATE_ENABLED',
-  HEART_RATE_URL = 'HEART_RATE_URL',
-  HEART_RATE_CLASS = 'HEART_RATE_CLASS',
-  RAPID_API_KEY_1 = 'RAPID_API_KEY_1',
-  RAPID_API_KEY_2 = 'RAPID_API_KEY_2',
-  YOUTUBE_API_KEY = 'YOUTUBE_API_KEY',
-  YOUTUBE_SHORTS_PLAYLIST_ID = 'YOUTUBE_SHORTS_PLAYLIST_ID',
-  // Other
-  COMMANDS_LIST_URL = 'COMMANDS_LIST_URL',
-  SHOUTOUT_USERS = 'SHOUTOUT_USERS',
-  TITLED_PLAYERS = 'TITLED_PLAYERS',
-  WELCOMING_NON_FOLLOWERS_ENABLED = 'WELCOMING_NON_FOLLOWERS_ENABLED',
-  WELCOME_MESSAGE = 'WELCOME_MESSAGE'
-}
+const configService = new ConfigService();
 
-enum OptionalEnvironmentVariable {
-  TWITCH_CR_OPP_RATING = 'TWITCH_CR_OPP_RATING',
-  TWITCH_CR_CHALLENGE_QUEUE = 'TWITCH_CR_CHALLENGE_QUEUE',
-  TWITCH_CR_BB_PERSONALITY = 'TWITCH_CR_BB_PERSONALITY',
-  TWITCH_CR_BUY_SQUARE = 'TWITCH_CR_BUY_SQUARE',
-  TWITCH_CR_GIF = 'TWITCH_CR_GIF',
-  TWITCH_CR_LICHESS_TITLE = 'TWITCH_CR_LICHESS_TITLE',
-  TWITCH_CR_OPP_KING = 'TWITCH_CR_OPP_KING',
-  TWITCH_CR_GUIDE_RAID = 'TWITCH_CR_GUIDE_RAID',
-  TWITCH_CR_BB_VOICE = 'TWITCH_CR_BB_VOICE',
-  TWITCH_CR_RUN_POLL = 'TWITCH_CR_RUN_POLL',
-  KILLED_COMMANDS = 'KILLED_COMMANDS'
-}
-
-const configService = new ConfigService(process.env).ensureValues(
-  Object.keys(RequiredEnvironmentVariable)
-);
-
-const ENV: Partial<
-  Record<RequiredEnvironmentVariable | OptionalEnvironmentVariable, any>
-> = {};
-
-[RequiredEnvironmentVariable, OptionalEnvironmentVariable].forEach((obj) => {
-  Object.keys(obj).map(
-    (key: RequiredEnvironmentVariable | OptionalEnvironmentVariable) => {
-      ENV[key] = configService.getEnvVar(key);
-    }
-  );
-});
-
-let YAML_CONFIG: Partial<YAMLConfig> = {};
-
-try {
-  const fileContents = readFileSync('./config.yml', 'utf8');
-  YAML_CONFIG = yaml.load(fileContents);
-} catch (e) {
-  console.error('Error loading config.yml');
-  console.error(e);
-}
-
-export { configService, ENV, YAML_CONFIG };
+export { configService, CONFIG };

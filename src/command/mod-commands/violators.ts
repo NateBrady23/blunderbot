@@ -1,13 +1,13 @@
 // TODO: Call the kick api https://lichess.org/team/{teamId}/kick/{userId}
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'violators',
   modOnly: true,
   platforms: [Platform.Discord],
   run: async (ctx) => {
-    const teamId = ENV.LICHESS_TEAM_ID;
+    const teamId = CONFIG.lichess.teamId;
 
     fetch(`https://lichess.org/api/team/${teamId}/users`)
       .then((res) => res.text())

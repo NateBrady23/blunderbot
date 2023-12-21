@@ -1,5 +1,5 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 /**
  * The !live command without any arguments will announce that the streamer is live on discord if
@@ -19,26 +19,26 @@ const command: Command = {
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
 
-    if (!ENV.DISCORD_ENABLED || msg.toLowerCase().includes('nodiscord')) {
+    if (!CONFIG.discord.enabled || msg.toLowerCase().includes('nodiscord')) {
       return true;
     }
 
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `${ENV.NICKNAME} is about to go live on twitch. Say something to get people excited`,
+          `${CONFIG.nickname} is about to go live on twitch. Say something to get people excited`,
           {
             temp: 1.4,
             includeBlunderBotContext: true
           }
         );
       } catch (e) {
-        msg = `Are you ready? It's time. ${ENV.NICKNAME} is here and he's ready to play some chess!`;
+        msg = `Are you ready? It's time. ${CONFIG.nickname} is here and he's ready to play some chess!`;
       }
     }
 
     services.discordService.makeAnnouncement(
-      `@everyone ${msg} https://twitch.tv/${ENV.TWITCH_CHANNEL}`
+      `@everyone ${msg} https://twitch.tv/${CONFIG.twitch.channel}`
     );
     return true;
   }

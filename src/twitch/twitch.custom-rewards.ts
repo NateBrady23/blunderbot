@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { ENV } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 import { removeSymbols } from '../utils/utils';
 import { TwitchService } from './twitch.service';
 import { TwitchGateway } from './twitch.gateway';
@@ -22,7 +22,9 @@ export class TwitchCustomRewardsService {
   async handleCustomRewards(ctx: Context): Promise<void> {
     this.logger.log(`Custom Reward ID: ${ctx.tags['custom-reward-id']}`);
     // Change my opponent's rating
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_OPP_RATING) {
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.oppRating
+    ) {
       let rating: string | number = ctx.message;
       rating = parseInt(rating);
       if (isNaN(rating) || rating < 1 || rating > 9999) {
@@ -37,7 +39,10 @@ export class TwitchCustomRewardsService {
     }
 
     // Add to the challenge queue
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_CHALLENGE_QUEUE) {
+    if (
+      ctx.tags['custom-reward-id'] ===
+      CONFIG.twitch.customRewards.challengeQueue
+    ) {
       challengeQueue.push({
         twitchUser: ctx.tags['display-name'],
         lichessUser: ctx.message
@@ -49,12 +54,16 @@ export class TwitchCustomRewardsService {
     }
 
     // Change BlunderBot's Personality
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_BB_PERSONALITY) {
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.bbPersonality
+    ) {
       void this.twitchService.ownerRunCommand(`!personality ${ctx.message}`);
     }
 
     // Buy a Square
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_BUY_SQUARE) {
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.buySquare
+    ) {
       const square = ctx.message.trim().substring(0, 2).toLowerCase();
       void this.twitchService.ownerRunCommand(
         `!buy ${square} ${ctx.tags['display-name']}`
@@ -62,12 +71,14 @@ export class TwitchCustomRewardsService {
     }
 
     // Play a gif
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_GIF) {
+    if (ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.gif) {
       void this.twitchService.ownerRunCommand(`!gif ${ctx.message}`);
     }
 
     // Title Me on Lichess
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_LICHESS_TITLE) {
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.lichessTitle
+    ) {
       void this.twitchService.ownerRunCommand(
         `!tts ${removeSymbols(
           ctx.tags['display-name']
@@ -76,7 +87,7 @@ export class TwitchCustomRewardsService {
     }
 
     // Create an opp king
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_OPP_KING) {
+    if (ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.oppKing) {
       void this.twitchService.ownerRunCommand(
         `!tts ${removeSymbols(
           ctx.tags['display-name']
@@ -86,8 +97,21 @@ export class TwitchCustomRewardsService {
       );
     }
 
+    // Create my own command
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.myOwnCommand
+    ) {
+      void this.twitchService.ownerRunCommand(
+        `!tts ${removeSymbols(
+          ctx.tags['display-name']
+        )} wants their own command! They chose: ${ctx.message}`
+      );
+    }
+
     // Guide the raid
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_GUIDE_RAID) {
+    if (
+      ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.guideRaid
+    ) {
       void this.twitchService.ownerRunCommand(
         `!tts ${removeSymbols(
           ctx.tags['display-name']
@@ -96,14 +120,14 @@ export class TwitchCustomRewardsService {
     }
 
     // Change blunderbot's voice
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_BB_VOICE) {
+    if (ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.bbVoice) {
       void this.twitchService.ownerRunCommand(
         `!voice ${removeSymbols(ctx.message)}`
       );
     }
 
     // Run a poll
-    if (ctx.tags['custom-reward-id'] === ENV.TWITCH_CR_RUN_POLL) {
+    if (ctx.tags['custom-reward-id'] === CONFIG.twitch.customRewards.runPoll) {
       void this.twitchService.ownerRunCommand(
         `!poll ${removeSymbols(ctx.message)}`
       );

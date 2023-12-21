@@ -1,15 +1,15 @@
 const { google } = require('googleapis');
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 let cachedLatestShort = [];
 
 async function getLastVideosByPlaylist(
-  playlistId = ENV.YOUTUBE_SHORTS_PLAYLIST_ID
+  playlistId = CONFIG.youtube.shortsPlaylistId
 ) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: ENV.YOUTUBE_API_KEY
+    auth: CONFIG.youtube.apiKey
   });
 
   let itemsToReturn = [];
@@ -41,6 +41,10 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   ownerOnly: true,
   run: async (ctx) => {
+    if (!CONFIG.youtube.enabled) {
+      console.log('YouTube not enabled in config for !shortslist command');
+      return false;
+    }
     if (!cachedLatestShort.length) {
       cachedLatestShort = await getLastVideosByPlaylist();
     }

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TwitchService } from './twitch.service';
-import { configService, ENV } from '../config/config.service';
+import { configService, CONFIG } from '../config/config.service';
 
 @Controller('twitch')
 export class TwitchController {
@@ -38,7 +38,7 @@ export class TwitchController {
 
   @Get('titles')
   getTitles(): string[][] {
-    return ENV.TITLED_PLAYERS;
+    return CONFIG.titledPlayers;
   }
 
   @Post('/command')
