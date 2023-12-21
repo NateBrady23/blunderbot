@@ -59,6 +59,8 @@
 
 `!titles`: Displays all the players with special titles on the stream
 
+`!today:`: Displays a historical fact about this day in history.
+
 `!translate <message>` :people_hugging:: Will translate the message to English.
 
 `!tts <message>` :gem::five: : BlunderBot will read the message. Donating 100 bits or more will also get BlunderBot to read the message.

@@ -17,6 +17,7 @@
 
 - Added an `enabled` config option for most APIs in the config
 - In most commands requiring an api key, now first check if that config section is `enabled` and log a message if the command is run and not enabled
+- Added a `!today` command to display a historical fact about this day in history
 
 ### 0.11.4 (2023-12-20)
 
