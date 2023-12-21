@@ -1,32 +1,22 @@
-import { CONFIG, configService } from '../../config/config.service';
 import { Platform } from '../../enums';
-async function getHistory() {
-  try {
-    const response = await fetch(
-      'https://today-in-history.p.rapidapi.com/thisday',
-      {
-        headers: {
-          'X-RapidAPI-Key': configService.getRandomRapidApiKey(),
-          'X-RapidAPI-Host': 'today-in-history.p.rapidapi.com'
-        }
-      }
-    );
-    const res = await response.json();
-    return `Today in history: On ${res.article.date}, ${res.article.title} ${res.article.url}`;
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 const command: Command = {
   name: 'today',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
-    if (!CONFIG.rapidApi.enabled) {
-      ctx.botSpeak('RapidAPI is disabled in !today.');
-      return false;
-    }
-    ctx.botSpeak(await getHistory());
+  run: async (ctx, { services }) => {
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric'
+    });
+    const msg = await services.openaiService.sendPrompt(
+      `!chat Today is ${formattedDate}. Give me a historical fact from a previous year on the same date. 40 words or less.`,
+      {
+        includeBlunderBotContext: true,
+        usePersonality: true
+      }
+    );
+    ctx.botSpeak(msg);
     return true;
   }
 };
