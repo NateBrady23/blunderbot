@@ -1,19 +1,28 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
+
+const availableCommands = [];
 
 const command: Command = {
   name: 'blunder',
   aliases: ['commands'],
   help: 'Displays a list of available commands.',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: (ctx, { commands }) => {
-    const availableCommands = [];
+  run: (ctx, { commands, commandState }) => {
     Object.keys(commands).forEach((commandName) => {
+      // Hide all message commands and hidden and killed commands
+      if (
+        Object.keys(CONFIG.messageCommands).includes(commandName) ||
+        CONFIG.hiddenCommands.includes(commandName) ||
+        CONFIG.killedCommands.includes(commandName) ||
+        commandState.killedCommands.includes(commandName)
+      ) {
+        return;
+      }
       const command = commands[commandName];
       if (
-        !command.hideFromList &&
-        // No platform is fine (messageCommands) otherwise check for platform match
-        (!command.platforms || command.platforms.includes(ctx.platform)) &&
+        // If we're on the right platform and it's not a mod or owner command
+        command.platforms.includes(ctx.platform) &&
         !command.ownerOnly &&
         !command.modOnly
       ) {
@@ -25,7 +34,7 @@ const command: Command = {
       `The following commands are available: [${availableCommands.join(', ')}]`
     );
     ctx.botSpeak(
-      `For a full list of commands, check out: ${ENV.COMMANDS_LIST_URL}`
+      `For a full list of commands, check out: ${CONFIG.commandsListUrl}`
     );
     return true;
   }

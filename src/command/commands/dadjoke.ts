@@ -1,4 +1,4 @@
-import { configService } from '../../config/config.service';
+import { CONFIG, configService } from '../../config/config.service';
 import { Platform } from '../../enums';
 async function getJoke() {
   try {
@@ -20,16 +20,14 @@ async function getJoke() {
 
 const command: Command = {
   name: 'dadjoke',
-  modOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (
-      ctx.tags.owner ||
-      ctx.tags['display-name'].toLowerCase() === 'northcarolinadan'
-    ) {
-      ctx.botSpeak(await getJoke());
+    if (!CONFIG.rapidApi.enabled) {
+      ctx.botSpeak('RapidAPI is disabled in !dadjoke.');
+      return false;
     }
-    return false;
+    ctx.botSpeak(await getJoke());
+    return true;
   }
 };
 

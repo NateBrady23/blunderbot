@@ -1,9 +1,9 @@
 import { readdirSync } from 'fs';
 import { Platform } from '../../enums';
-import { YAML_CONFIG } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const messageCommands = {};
-const messageCommandsConfig = YAML_CONFIG.messageCommands;
+const messageCommandsConfig = CONFIG.messageCommands;
 
 Object.keys(messageCommandsConfig).forEach((key) => {
   messageCommands[key] = {

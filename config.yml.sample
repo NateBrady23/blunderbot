@@ -1,3 +1,168 @@
+port: 3000
+nickname: "BM Nate Brady"
+commandsListUrl: https://github.com/NateBrady23/blunderbot/blob/main/COMMANDS.md
+
+# Twitch
+# The following was an application created in the BlunderBot23 twitch account to get API access
+twitch:
+  ownerUsername: YourTwitchUsername
+  channel: YourTwitchUsername
+  ownerId: 111111111
+  botId: 111111112
+  botUsername: YourBotUsername
+  botPassword: "oauth:pass"
+  apiBotOauthToken: "bottoken"
+  apiOwnerOauthToken: "ownertoken"
+  apiClientId: "apiClientID"
+  apiClientSecret: "apiClientSecret"
+  # The following are Twitch Custom Reward ID's. These are optional.
+  customRewards:
+    oppRating: dea7ef8d-eb78-4e59-966c-952db27ce50a
+    challengeQueue: 281df6b2-4e17-4573-adde-403f7eb1f491
+    bbPersonality: 308d9f77-f238-46e0-9aef-bc1fe33c151b
+    buySquare: 20379aae-5498-4a0f-8344-ae2ac391b8f2
+    gif: e4474c8e-eeaa-4724-abfb-af688ce88c47
+    lichessTitle: 7a23bf6a-74b7-4423-a659-dc502b428b6d
+    oppKing: 444a39bb-04ce-4b43-b68a-6d58a44fb678
+    guideRaid: e4ec9f36-f2e6-4a5d-9b6f-5907fa45cfdb
+    bbVoice: ad81a974-233d-4910-abf2-be72aafebe66
+    runPoll: 8027dfce-78d4-49a6-b9ce-f018d0721dad
+    myOwnCommand: e4bf4b37-d9ea-4ffd-a351-4f6888c8b5d5
+  # I like to make commands for specific people, like trevlar_ is the only one
+  # who can use the !trophy command. Note that the owner and bot can run all commands.
+  # These users can't run commands above their role, so a non-mod can't run a mod command
+  # even if they're listed here, so it's best to make restricted commands non-mod.
+  userRestrictedCommands:
+    clock: ["mammali77"]
+    dadjoke: ["northcarolinadan"]
+    skipsong: ["loldayzo"]
+    trophy: ["trevlar_"]
+
+# LICHESS
+# example https://lichess.org/account/oauth/token/create?scopes[]=preference:read,preference:write,email:read,challenge:read,challenge:write,challenge:bulk,study:read,study:write,tournament:write,racer:write,puzzle:read,team:read,team:write,team:lead,follow:read,follow:write,msg:write,board:play&description=natebrady23
+lichess:
+  # My account
+  user: YourLichessUsername
+  oauthToken: "lip_token"
+  botOauthToken: "lip_bot_token"
+  teamId: "bradys-blunder-buddies"
+  teamName: "Brady's Blunder Buddies"
+
+openai:
+  apiKey: "sk-youropenai-api-key"
+  ttsModel: "tts-1"
+  chatModel: "gpt-4-1106-preview"
+  textModerationModel: "text-moderation-stable"
+  # BlunderBot's instructions to the OpenAI chat model
+  baseSystemMessage: "From now on, you are Nate Brady's creation: BlunderBot, Created to assist Nate with streaming on Twitch"
+  # Voices available for BlunderBot. The first voice in the list is the default.
+  voices:
+    - "onyx"
+    - "alloy"
+    - "echo"
+    - "fable"
+    - "nova"
+    - "shimmer"
+
+discord:
+  enabled: false
+  botToken: your.bot.token
+  # Make sure to keep the channel ID's as strings, else they will be converted to numbers
+  # and won't work
+  announcementChannelId: "888888888888888888"
+  generalChannelId: "888888888888888889"
+  modChannelId: "8888888888888888122"
+  ownerAuthorId: "388888888888888888"
+  botAuthorId: "1888888888888888882"
+  inviteLink: https://discord.gg/MfsRvaMeqU
+
+# I invite blunderbot to my slack channel, but this isn't necessary for the bot to work
+slack:
+  enabled: false
+  appToken: "xapp-1-token"
+  botToken: "xoxb-token"
+
+# Some commands require the decapi API. If disabled, those commands will not work.
+decapi:
+  enabled: false
+  token: "54yourtokenHA"
+
+heartRate:
+  enabled: true
+  # Web URL for heart rate monitor
+  url: "https://app.hyperate.io/XXXX"
+  # Class where BlunderBot can pull just the heart rate text from
+  class: ".heartrate"
+
+# Some commands require the giphy API. If disabled, those commands will not work.
+giphy:
+  enabled: false
+  apiKey: "yourapikey"
+
+# Some commands require Rapid API Keys. If disabled, those commands will not work.
+rapidApi:
+  enabled: false
+  # Use multiple keys to avoid rate limiting if you want, though I haven't had that problem.
+  # When a command requiring a key is used, the bot will choose a random key from the list.
+  # You only need one, though. You can get a free key at https://rapidapi.com/
+  keys:
+    - "somekey"
+
+youtube:
+  enabled: false
+  apiKey: "yourapikey"
+  shortsPlaylistId: "PLI3ZmOU7TLd_dTZGyzfUmi2-KfYHmOSDc"
+
+# Welcoming new users to the stream
+welcome:
+  enabled: true
+  message: "Welcome in, {user}, Hope you stick around awhile."
+  # A list of users to ignore when welcoming new users, like bots that aren't following you.
+  ignoreUsers:
+    - PretzelRocks
+
+sounds:
+  # Mutes or unmutes Firefox and Streamlabs OBS. I use one or both of these apps to play music
+  # while streaming, and I want to mute them when I play a sound effect or BlunderBot talks.
+  mute:
+    programs:
+      - 'SoundVolumeView /Mute "C:\Program Files\Mozilla Firefox\firefox.exe"'
+      - 'SoundVolumeView /Mute "C:\Program Files\Streamlabs OBS\Streamlabs OBS.exe"'
+  unmute:
+    programs:
+      - 'SoundVolumeView /Unmute "C:\Program Files\Mozilla Firefox\firefox.exe"'
+      - 'SoundVolumeView /Unmute "C:\Program Files\Streamlabs OBS\Streamlabs OBS.exe"'
+
+# Users to auto shoutout every time they chat for the first time each stream
+autoShoutouts:
+  - natebrady23
+  - thecheesemate
+  - trevlar_
+
+# A list of players you want titled on your stream. Use their lichess username and it is case sensitive.
+titledPlayers:
+  - ["NateBrady", "BM"]
+  - ["TheCheesemate","BBBXV M17 DM"]
+  - ["ttrv","TM"]
+
+# A list of commands you want disabled at the start of every stream
+killedCommands:
+  - somecommand
+  - someothercommand
+
+# A list of commands that won't show up in the !blunder commands list.
+# None of the owner, mod commands, or simple message commands show up there by default.
+hiddenCommands:
+  - clock
+  - dadjoke
+  - followage
+  - follows
+  - redsox
+  - skipsong
+  - subscribers
+  - title
+  - trophy
+
 # AutoCommands - These commands are run automatically by BlunderBot every (default 2.5 minutes) while the stream is
 # in the "live" state. Commands that are grouped together run at the same time.
 autoCommands:
@@ -26,44 +191,36 @@ autoCommands:
 # Simple message commands
 messageCommands:
   afm:
-    hideFromList: true
     message: "AFM is a viewer title. It stands for Arena FIDE Master and is only visible on my stream. You can get titled on my stream with channel rewards."
 
   backseat:
-    hideFromList: true
     aliases:
       - "suggestion"
       - "suggestions"
     message: "Please don't make move suggestions, especially during rated games. Happy to look at moves after games end, but not during."
 
   blunderbot:
-    hideFromList: true
     message: "I'm not mad Strobex, I am just disappointed."
 
   blunderreport:
-    hideFromList: true
     message: "The Blunder Report comes out the day after the BBB on the Discord at https://discord.gg/MfsRvaMeqU. It is a weekly report that measures the number of blunders made, strength of blunders and more!"
 
   bm:
     message: "BM is a title I made up for myself. BM stands for Blunder Master. A noble title exclusively awarded by this channel to individuals who consistently demonstrate the ability to achieve defeat from the jaws of victory."
 
   chess:
-    hideFromList: true
     message: "chess is hard..."
 
   discord:
     message: "Keep talking to me on the Discord at https://discord.gg/MfsRvaMeqU"
 
   fauxtog:
-    hideFromList: true
     message: "༼つ ◕_◕ ༽つ NATEBRADY TAKE MY ENERGY ༼ つ ◕_◕ ༽つ"
 
   github:
-    hideFromList: true
     message: "BlunderBot is now open sourced at https://github.com/NateBrady23/blunderbot"
 
   insubordinate:
-    hideFromList: true
     message: "AND CHURLISH!"
 
   lurk:
@@ -71,7 +228,6 @@ messageCommands:
       - "lurking"
       - "lurker"
       - "lurks"
-    hideFromList: true
     message: "Thanks for lurking! I appreciate you."
 
   merch:
@@ -80,15 +236,12 @@ messageCommands:
       - "shop"
       - "blunderstore"
       - "store"
-    hideFromList: true
     message: "The BlunderShop is now live! https://blundershop.com"
 
   prime:
-    hideFromList: true
     message: "If you have Amazon Prime, you can subscribe and support the channel for free!"
 
   resign:
-    hideFromList: true
     message: "It is time to end this madness!"
 
   rosen:
@@ -107,7 +260,7 @@ messageCommands:
     message: "Check out the youtubes at https://youtube.com/@natebrady"
 
 # For Sounds, Music, and Alerts
-raidConfig:
+raids:
   # BlunderBot makes an announcement when any raid is detected. Use {raider} to say the raider's name
   announcement: "Hey {raider} and raiders, it's me, BlunderBot! Thank you so much for the raid!"
   # Commands to run when certain users raid the channel
@@ -135,7 +288,7 @@ raidConfig:
   # The sound to play when a raid is detected if there's no alert specified in the matches above
   alert: "./public/sounds/replace-me-with-a-sound.m4a"
 
-bitsConfig:
+bits:
   # If a user cheers more than this amount, BlunderBot will run the commands and alerts listed below
   # Any kings/opps with "secret_" in front can only be changed to by the owner of the channel or
   # the bot, and they won't be listed in the kings/opps command as generally available.
@@ -166,23 +319,13 @@ bitsConfig:
       - "!opp random"
     alert: "./public/sounds/replace-me.m4a"
 
-gifConfig:
+gif:
   # If the !gif <phrase> matches one of these keys, use that gif URL instead
   # Use lowercase for the keys
   matches:
     silly: "https://lichess.org/blunderbot/gifs/doesnt-exist.gif"
   # If there are no matches, use this gif URL
   notFound: "https://lichess.org/blunderbot/gifs/404.gif"
-
-openaiConfig:
-  # Voices available for BlunderBut. The first voice in the list is the default.
-  voices:
-    - "onyx"
-    - "alloy"
-    - "echo"
-    - "fable"
-    - "nova"
-    - "shimmer"
 
 autoResponder:
   # For each group, if a message matches one of the phrases, BlunderBot will respond automatically

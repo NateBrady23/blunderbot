@@ -3,7 +3,7 @@
  * Description: Cancels the current poll.
  */
 
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -12,13 +12,14 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const currPoll = await services.twitchService.helixOwnerApiCall(
-      'https://api.twitch.tv/helix/polls?broadcaster_id=' + ENV.TWITCH_OWNER_ID,
+      'https://api.twitch.tv/helix/polls?broadcaster_id=' +
+        CONFIG.twitch.ownerId,
       'GET'
     );
 
     await services.twitchService.helixOwnerApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
-        ENV.TWITCH_OWNER_ID +
+        CONFIG.twitch.ownerId +
         '&status=TERMINATED' +
         '&id=' +
         currPoll.data[0].id,

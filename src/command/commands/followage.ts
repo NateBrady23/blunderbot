@@ -1,14 +1,13 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
-const decapiToken = ENV.DECAPI_TOKEN;
-const channel = ENV.TWITCH_CHANNEL;
+const decapiToken = CONFIG.decapi.token;
+const channel = CONFIG.twitch.channel;
 
 const command: Command = {
   name: 'followage',
   help: 'How long a twitch user has been following my channel. If no user is provided, it will display the followage for the user using the command.',
   followerOnly: true,
-  hideFromList: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
     let user = ctx.args[0];

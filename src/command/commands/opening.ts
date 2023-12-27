@@ -1,7 +1,7 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
-const lichessUser = ENV.LICHESS_USER;
+const lichessUser = CONFIG.lichess.user;
 
 const command: Command = {
   name: 'opening',

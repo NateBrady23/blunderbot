@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -10,7 +10,7 @@ const command: Command = {
   run: async (ctx) => {
     let user = ctx.args[0];
     if (!user) {
-      user = ENV.LICHESS_USER;
+      user = CONFIG.lichess.user;
     }
     try {
       const res = await fetch(`https://lichess.org/api/user/${user}`);

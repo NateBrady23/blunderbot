@@ -33,6 +33,8 @@
 
 `!gif <message>`:gem:: Displays a gif based on the message on the chessboard. (non-subscribers can use the channel redemption for 1k blunderbucks to do the same)
 
+`!help <command>`: Displays help for a specific command. Ex. `!help chat`
+
 `!highlight <squares> <color>`: Highlights squares on the board. Ex. `!highlight e4e5 red`
 
 `!king <name>`: Change my king while I'm playing. Ex. `!king cry`
@@ -58,6 +60,8 @@
 `!title`: Displays the title of the current or last stream.
 
 `!titles`: Displays all the players with special titles on the stream
+
+`!today:`: Displays a historical fact about this day in history.
 
 `!translate <message>` :people_hugging:: Will translate the message to English.
 

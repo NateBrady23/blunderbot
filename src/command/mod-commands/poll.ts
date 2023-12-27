@@ -1,4 +1,4 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -32,7 +32,7 @@ const command: Command = {
         }
         return choice;
       });
-      question['broadcaster_id'] = ENV.TWITCH_OWNER_ID;
+      question['broadcaster_id'] = CONFIG.twitch.ownerId;
       question['duration'] = 180;
     } catch (e) {
       console.log(e);

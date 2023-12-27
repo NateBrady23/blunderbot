@@ -2,14 +2,14 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { OpenaiService } from '../openai/openai.service';
 import { WebClient } from '@slack/web-api';
 import { SocketModeClient } from '@slack/socket-mode';
-import { ENV } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 
-const appToken = ENV.SLACK_APP_TOKEN;
+const appToken = CONFIG.slack.appToken;
 const socketModeClient = new SocketModeClient({
   appToken
 });
 
-const client = new WebClient(ENV.SLACK_BOT_TOKEN);
+const client = new WebClient(CONFIG.slack.botToken);
 
 @Injectable()
 export class SlackService {
@@ -19,7 +19,7 @@ export class SlackService {
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService
   ) {
-    if (!ENV.SLACK_ENABLED) {
+    if (!CONFIG.slack.enabled) {
       this.logger.log('Slack disabled');
       return;
     }

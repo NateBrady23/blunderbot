@@ -5,7 +5,7 @@
  *   !gpredict win -- resolves the prediction as a win
  */
 
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { getItemsBetweenDelimiters } from '../../utils/utils';
 import { Platform } from '../../enums';
 
@@ -19,11 +19,11 @@ const command: Command = {
     // Starting a new prediction with no custom options.
     if (!ctx.args[0] && !items.length) {
       const currentGame =
-        (await services.lichessService.getCurrentGame(ENV.LICHESS_USER, {
+        (await services.lichessService.getCurrentGame(CONFIG.lichess.user, {
           gameId: true
         })) || '';
       items = [
-        `Game result for ${ENV.LICHESS_USER}? ${currentGame}`,
+        `Game result for ${CONFIG.lichess.user}? ${currentGame}`,
         'Win',
         'Loss',
         'Draw'
@@ -36,7 +36,7 @@ const command: Command = {
         'https://api.twitch.tv/helix/predictions',
         'POST',
         {
-          broadcaster_id: ENV.TWITCH_OWNER_ID,
+          broadcaster_id: CONFIG.twitch.ownerId,
           title: items[0],
           outcomes: [
             { title: items[1] },
@@ -70,7 +70,7 @@ const command: Command = {
     }
 
     const res = await services.twitchService.helixOwnerApiCall(
-      `https://api.twitch.tv/helix/predictions?broadcaster_id=${ENV.TWITCH_OWNER_ID}`
+      `https://api.twitch.tv/helix/predictions?broadcaster_id=${CONFIG.twitch.ownerId}`
     );
 
     const lastPrediction = res.data[0];
@@ -86,7 +86,7 @@ const command: Command = {
       status: string;
       winning_outcome_id?: string;
     } = {
-      broadcaster_id: ENV.TWITCH_OWNER_ID,
+      broadcaster_id: CONFIG.twitch.ownerId,
       id: lastPrediction.id,
       status: 'RESOLVED'
     };

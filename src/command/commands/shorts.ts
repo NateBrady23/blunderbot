@@ -1,17 +1,17 @@
 import { isNHoursLater } from '../../utils/utils';
 const { google } = require('googleapis');
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 let cachedLatestShort;
 const cachedLatestShortAt = Date.now();
 
 async function getLastVideoByPlaylist(
-  playlistId = ENV.YOUTUBE_SHORTS_PLAYLIST_ID
+  playlistId = CONFIG.youtube.shortsPlaylistId
 ) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: ENV.YOUTUBE_API_KEY
+    auth: CONFIG.youtube.apiKey
   });
 
   try {
@@ -43,6 +43,10 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['pants'],
   run: async (ctx) => {
+    if (!CONFIG.youtube.enabled) {
+      console.log('YouTube is not enabled for !shorts command.');
+      return false;
+    }
     // Get a new video if we don't have one cached or if the cached one is more than 8 hours old
     if (
       !cachedLatestShort ||

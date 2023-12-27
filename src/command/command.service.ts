@@ -8,7 +8,7 @@ import { GiphyService } from '../giphy/giphy.service';
 import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
-import { ENV, YAML_CONFIG } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class CommandService {
 
     this.setInitialCommandState();
 
-    if (ENV.HEART_RATE_ENABLED) {
+    if (CONFIG.heartRate.enabled) {
       void this.heartRateCheck();
     }
   }
@@ -63,10 +63,10 @@ export class CommandService {
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: ENV.KILLED_COMMANDS,
+      killedCommands: CONFIG.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: YAML_CONFIG.openaiConfig.voices[0],
+      blunderbotVoice: CONFIG.openai.voices[0],
       ephemeralCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
@@ -94,7 +94,7 @@ export class CommandService {
           ) {
             this.commandState.heartRateHigh = heartRate;
             void this.twitchService.ownerRunCommand(
-              `!tts ${ENV.NICKNAME}'s heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
+              `!tts ${CONFIG.nickname}'s heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
             );
             if (threshold === 140) clearInterval(heartRateInterval);
             break;
@@ -128,7 +128,9 @@ export class CommandService {
     }
 
     if (cmd.requiresLive && !this.commandState.isLive) {
-      ctx.botSpeak(`${ENV.TWITCH_CHANNEL} is not live until I SAY HE'S LIVE!`);
+      ctx.botSpeak(
+        `${CONFIG.twitch.channel} is not live until I SAY HE'S LIVE!`
+      );
       return false;
     }
 
@@ -196,6 +198,20 @@ export class CommandService {
         return false;
       }
       this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']]++;
+    }
+
+    const userRestricted = CONFIG.twitch.userRestrictedCommands[cmd.name];
+    if (userRestricted) {
+      const found = userRestricted.some((user) => {
+        return user.toLowerCase() === ctx.tags['display-name'].toLowerCase();
+      });
+      if (!found) {
+        ctx.botSpeak(
+          `The !${cmd.name} command is only for${userRestricted.join(' and ')}`
+        );
+        return false;
+      }
+      return true;
     }
 
     return true;

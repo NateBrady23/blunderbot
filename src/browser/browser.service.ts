@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { sleep } from '../utils/utils';
-import { ENV } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 
 @Injectable()
 export class BrowserService {
@@ -16,7 +16,7 @@ export class BrowserService {
     // Preload some frequently used pages
     (async () => {
       this.logger.log('Preloading browser pages');
-      if (ENV.HEART_RATE_ENABLED) {
+      if (CONFIG.heartRate.enabled) {
         await this.getHeartRatePage();
       }
     })();
@@ -42,7 +42,7 @@ export class BrowserService {
     if (!this.heartRatePage) {
       const browser = await this.getBrowser();
       this.heartRatePage = await browser.newPage();
-      await this.heartRatePage.goto(ENV.HEART_RATE_URL);
+      await this.heartRatePage.goto(CONFIG.heartRate.url);
       // It takes this long for the heart rate to show up on the page
       await sleep(5000);
     }
@@ -54,7 +54,7 @@ export class BrowserService {
     const page = await this.getHeartRatePage();
 
     try {
-      const textSelector = await page.waitForSelector(ENV.HEART_RATE_CLASS, {
+      const textSelector = await page.waitForSelector(CONFIG.heartRate.class, {
         timeout: 5_000
       });
       return parseInt(

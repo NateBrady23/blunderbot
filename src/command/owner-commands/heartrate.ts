@@ -1,17 +1,20 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'heartrate',
   ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!ENV.HEART_RATE_ENABLED) return;
+    if (!CONFIG.heartRate.enabled) {
+      console.log('Heart rate not enabled in config for !heartrate command');
+      return false;
+    }
 
     const heartrate = await services.browserService.getHeartRate();
     if (heartrate) {
       await services.twitchService.ownerRunCommand(
-        `!tts ${ENV.NICKNAME}'s heart rate is ${heartrate} BPM`
+        `!tts ${CONFIG.nickname}'s heart rate is ${heartrate} BPM`
       );
     }
     return true;

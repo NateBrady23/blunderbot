@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { ENV } from '../config/config.service';
 import { CommandService } from '../command/command.service';
 import { Platform } from '../enums';
+import { CONFIG } from '../config/config.service';
 
 const { Client, GatewayIntentBits } = require('discord.js');
 
@@ -16,7 +16,7 @@ export class DiscordService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService
   ) {
-    if (!ENV.DISCORD_ENABLED) {
+    if (!CONFIG.discord.enabled) {
       this.logger.log('Discord disabled');
       return;
     }
@@ -52,13 +52,13 @@ export class DiscordService {
         });
     });
 
-    this.client.login(ENV.DISCORD_BOT_TOKEN);
+    this.client.login(CONFIG.discord.botToken);
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
   makeAnnouncement(content) {
     const channel = this.client.channels.cache.get(
-      ENV.DISCORD_ANNOUNCEMENT_CHANNEL
+      CONFIG.discord.announcementChannelId
     );
     channel.send(content);
   }
@@ -70,20 +70,18 @@ export class DiscordService {
 
   // TODO: There's a bug sometimes where there's no message or context?
   onMessageHandler(discordMessage) {
+    const botAuthorId = CONFIG.discord.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
     // end of the message, so it can respond.
     const beginEndMentionRegex = new RegExp(
-      `^<@${ENV.DISCORD_BOT_AUTHOR_ID}>|<@${ENV.DISCORD_BOT_AUTHOR_ID}>.?.?$`,
+      `^<@${botAuthorId}>|<@${botAuthorId}>.?.?$`,
       'i'
     );
 
     if (beginEndMentionRegex.test(discordMessage.content)) {
       discordMessage.content = '!chat ' + discordMessage.content;
-      const blunderBotMentionRegex = new RegExp(
-        `<@${ENV.DISCORD_BOT_AUTHOR_ID}>`,
-        'gi'
-      );
+      const blunderBotMentionRegex = new RegExp(`<@${botAuthorId}>`, 'gi');
       discordMessage.content = discordMessage.content.replace(
         blunderBotMentionRegex,
         ''
@@ -128,13 +126,13 @@ export class DiscordService {
       username: discordMessage.author.username,
       'display-name': discordMessage.author.username,
       userId: discordMessage.author.id,
-      owner: discordMessage.author.id === ENV.DISCORD_OWNER_AUTHOR_ID,
+      owner: discordMessage.author.id === CONFIG.discord.ownerAuthorId,
       // We determine a mod by seeing if they're in the mod channel
       mod:
-        discordMessage.author.id === ENV.DISCORD_OWNER_AUTHOR_ID ||
-        discordMessage.channelId === ENV.DISCORD_MOD_CHANNEL,
+        discordMessage.author.id === CONFIG.discord.ownerAuthorId ||
+        discordMessage.channelId === CONFIG.discord.modChannelId,
       // Unused atm - Just the owner is marked as a subscriber
-      subscriber: discordMessage.author.id === ENV.DISCORD_OWNER_AUTHOR_ID
+      subscriber: discordMessage.author.id === CONFIG.discord.ownerAuthorId
     };
 
     return context;

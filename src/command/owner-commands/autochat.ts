@@ -1,7 +1,7 @@
 import { Platform } from '../../enums';
-import { YAML_CONFIG } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
-let commandsToCycle = YAML_CONFIG.autoCommands || [];
+let commandsToCycle = CONFIG.autoCommands || [];
 let currentInterval = null;
 
 const command: Command = {
@@ -15,7 +15,7 @@ const command: Command = {
       currentInterval = setInterval(
         () => {
           if (!commandsToCycle.length) {
-            commandsToCycle = YAML_CONFIG.autoCommands || [];
+            commandsToCycle = CONFIG.autoCommands || [];
           }
 
           // If there are still no commands to cycle, don't run anything

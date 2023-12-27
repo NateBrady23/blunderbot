@@ -2,20 +2,20 @@
  * TODO: All of this goes in favor of the new assistance API
  */
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { ENV } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 import OpenAI from 'openai';
 import { CommandService } from '../command/command.service';
 const fs = require('fs');
 import { generateUUID, playAudioFile } from '../utils/utils';
 
 const openai = new OpenAI({
-  apiKey: ENV.OPENAI_API_KEY
+  apiKey: CONFIG.openai.apiKey
 });
 
 export const baseMessages: any = [
   {
     role: 'system',
-    content: ENV.OPENAI_BASE_SYSTEM_MESSAGE
+    content: CONFIG.openai.baseSystemMessage
   }
 ];
 
@@ -33,7 +33,7 @@ export class OpenaiService {
   async tts(message: string, voice: any): Promise<void> {
     try {
       const response = await openai.audio.speech.create({
-        model: ENV.OPENAI_TTS_MODEL,
+        model: CONFIG.openai.ttsModel,
         voice,
         input: message
       });
@@ -59,7 +59,7 @@ export class OpenaiService {
       ];
 
       const completion = await openai.chat.completions.create({
-        model: ENV.OPENAI_CHAT_MODEL,
+        model: CONFIG.openai.chatModel,
         messages
       });
       console.log(completion.choices[0].message.content);
@@ -117,7 +117,7 @@ export class OpenaiService {
 
       messages = [...systemMessages, ...messages];
       const completion = await openai.chat.completions.create({
-        model: ENV.OPENAI_CHAT_MODEL,
+        model: CONFIG.openai.chatModel,
         messages,
         temperature: opts?.temp || 0.9
       });
@@ -176,7 +176,7 @@ export class OpenaiService {
 
   async isFlagged(message: string): Promise<boolean> {
     const moderation = await openai.moderations.create({
-      model: ENV.OPENAI_TEXT_MODERATION_MODEL,
+      model: CONFIG.openai.textModerationModel,
       input: message
     });
     return moderation.results[0].flagged;

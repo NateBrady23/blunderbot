@@ -1,5 +1,5 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'discordspeak',
@@ -9,7 +9,7 @@ const command: Command = {
     const msg = ctx.body;
     if (msg) {
       const channel = {
-        channelId: ENV.DISCORD_GENERAL_CHANNEL
+        channelId: CONFIG.discord.generalChannelId
       };
       services.discordService.botSpeak(channel, msg);
     }

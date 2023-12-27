@@ -1,15 +1,19 @@
 import { Platform } from '../../enums';
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'subscribers',
   aliases: ['subs', 'subcount'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    const url = `https://decapi.me/twitch/subcount/${ENV.TWITCH_CHANNEL}`;
+    if (!CONFIG.decapi.enabled) {
+      console.log('DecAPI is not enabled for !subscribers command.');
+      return false;
+    }
+    const url = `https://decapi.me/twitch/subcount/${CONFIG.twitch.channel}`;
 
     const res = await (await fetch(url)).text();
-    ctx.botSpeak(`${ENV.TWITCH_CHANNEL} has ${res} subscribers on Twitch!`);
+    ctx.botSpeak(`${CONFIG.twitch.channel} has ${res} subscribers on Twitch!`);
 
     return true;
   }

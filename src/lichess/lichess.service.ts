@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ENV } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 
 @Injectable()
 export class LichessService {
@@ -16,7 +16,7 @@ export class LichessService {
   }
 
   async getCurrentGame(
-    user = ENV.LICHESS_USER,
+    user = CONFIG.lichess.user,
     opts: { gameId?: boolean } = {}
   ): Promise<any> {
     const url = `https://lichess.org/api/users/status?withGameIds=true&ids=${user}`;
@@ -52,7 +52,7 @@ export class LichessService {
       json: true
     }
   ): Promise<any> {
-    const token = ENV.LICHESS_OAUTH_TOKEN;
+    const token = CONFIG.lichess.oauthToken;
 
     const request = {
       url,

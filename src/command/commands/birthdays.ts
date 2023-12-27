@@ -8,7 +8,6 @@ const birthdays = {};
 const command: Command = {
   name: 'birthdays',
   help: 'Displays GMs born on this day.',
-  hideFromList: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
     const date = new Date();

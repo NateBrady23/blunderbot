@@ -1,6 +1,7 @@
 import { FunctionQueue } from '../../utils/FunctionQueue';
 import { sleep } from '../../utils/utils';
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
 
@@ -10,6 +11,10 @@ const command: Command = {
   subOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (CONFIG.giphy.enabled === false) {
+      ctx.botSpeak('Giphy is disabled in !gif.');
+      return false;
+    }
     return queue.enqueue(async function () {
       try {
         let milliseconds = 7000;

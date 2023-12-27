@@ -1,7 +1,7 @@
-import { ENV } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
-const channel = ENV.TWITCH_CHANNEL;
+const channel = CONFIG.twitch.channel;
 
 const command: Command = {
   name: 'follows',
