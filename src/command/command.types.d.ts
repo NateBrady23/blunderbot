@@ -25,8 +25,6 @@ interface Command {
   // timestamp
   lastRun?: number;
   aliases?: string[];
-  // Hides the command from the !blunder list
-  hideFromList?: boolean;
   platforms: Platforms[];
 }
 

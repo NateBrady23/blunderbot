@@ -5,15 +5,6 @@ async function blunderBotMenu() {
     'https://lichess.org/blunderbot/twitch/crowns'
   );
 
-  const versusUserNode = document.querySelector(
-    '#main-wrap > main > div > div.ruser-top.ruser.user-link > a'
-  );
-  let versusUser;
-  if (versusUserNode) {
-    const texts = versusUserNode.textContent.split(' ');
-    versusUser = texts[texts.length - 1];
-  }
-
   let section = document.createElement('section');
   section.innerHTML = `
     <a href="#">Blunderbot23</a>
@@ -41,7 +32,6 @@ async function blunderBotMenu() {
       <a href="#" data-command="!team" class="send-command">!team</a>
       <a href="#" data-command="!youtube" class="send-command">!youtube</a>
       <hr style="margin: 0;"/>
-      <a href="#" class="send-command" data-command="!rating ${versusUser}">!rating ${versusUser}</a>
       <a href="#" class="send-command" data-command="!queue list">!queue</a>
       <a href="#" class="send-command" data-command="!queue pop">!queue pop</a>
       <hr style="margin: 0;"/>
@@ -93,11 +83,6 @@ async function blunderBotMenu() {
   `;
   document.querySelector('#topnav').appendChild(section);
 
-  document.querySelectorAll('.send-command').forEach((node) => {
-    node.addEventListener('click', function (event) {
-      sendCommandByOwner(event.target.getAttribute('data-command'));
-    });
-  });
   document
     .querySelector('.reset-bought-squares')
     .addEventListener('click', removeBoughtSquares);
@@ -118,12 +103,28 @@ async function blunderBotMenu() {
 }
 
 function commandInput() {
+  const versusUserNode = document.querySelector(
+    '#main-wrap > main > div > div.ruser-top.ruser.user-link > a'
+  );
+  let versusUser;
+  if (versusUserNode) {
+    const texts = versusUserNode.textContent.split(' ');
+    versusUser = texts[texts.length - 1];
+  }
+
   const commandInputDiv = document.createElement('div');
+  commandInputDiv.classList.add('command-input-wrapper');
   commandInputDiv.innerHTML = `
     <form class="command-input">
         <input type="text" id="owner-command" placeholder="!command" autocomplete="off"/>
     </form>
   `;
+  if (versusUser) {
+    commandInputDiv.innerHTML += `
+      <button class="send-command" data-command="!rating ${versusUser}">Rating</button>
+      <button class="send-command" data-command="!opening">Opening</button>
+    `;
+  }
   body.append(commandInputDiv);
   commandForm = document.querySelector('.command-input');
   commandInput = commandForm.querySelector('input');
@@ -153,6 +154,12 @@ function commandInput() {
 
 void blunderBotMenu();
 void commandInput();
+
+document.querySelectorAll('.send-command').forEach((node) => {
+  node.addEventListener('click', function (event) {
+    sendCommandByOwner(event.target.getAttribute('data-command'));
+  });
+});
 
 document.querySelectorAll('.mchat__messages li t')?.forEach((node) => {
   node.addEventListener('click', async function (_event) {

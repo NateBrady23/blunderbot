@@ -1,23 +1,28 @@
 # Release Notes
 
-### 1.0.0 (2023-12-21)
+### 1.0.0 (2023-12-27)
 
 #### Breaking Changes
 
 - All the config now lives in the `config.yml(.sample)` file
 - Moved allowing specific users to run commands to the config file under `twitch.userRestrictedCommands`
+- Moved `hiddenCommands` to the config file to allow other users more granular control over which commands are hidden
+- Added a `!help` command
 
 #### Bug Fixes
 
 - Removed all references to Blunder Master / Nate in commands
 - Fixed raid alerts when matching a specific raider
 - Moved the mute/unmute commands to the config under `sounds.mute.programs` and `sounds.unmute.programs`. This allows for people to easily change which programs they want muted and which command to run to do the muting.
+- Fix the lichess command input to stick to the bottom left corner of the browser
+- Fixed the title that shows up in the lichess header for the current user
 
 #### Features
 
 - Added an `enabled` config option for most APIs in the config
 - In most commands requiring an api key, now first check if that config section is `enabled` and log a message if the command is run and not enabled
 - Added a `!today` command to display a historical fact about this day in history
+- Added a `rating` and `opening` button to the lichess overlay during active games
 
 ### 0.11.4 (2023-12-20)
 

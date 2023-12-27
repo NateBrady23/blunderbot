@@ -44,7 +44,6 @@ let CONFIG: Partial<YAMLConfig> = {};
 try {
   const fileContents = readFileSync('./config.yml', 'utf8');
   CONFIG = yaml.load(fileContents);
-  console.log(CONFIG);
 } catch (e) {
   console.error('Error loading config.yml');
   console.error(e);

@@ -20,10 +20,17 @@ async function setStyle() {
     localStorage.getItem(LOCAL_STORAGE_KEYS.TITLED_PLAYERS) || '[]'
   );
 
+  // Adds the current lichess user's name as a class so we can add the title by name
+  const headerUser = document.querySelector(
+    'header .dasher a#user_tag.toggle.link'
+  );
+  headerUser?.classList.add(headerUser.innerText);
+
   for (let i = 0; i < titledPlayers.length; i++) {
     const player = titledPlayers[i][0];
     const title = titledPlayers[i][1];
     styleTag.innerHTML += `
+      header .dasher a#user_tag.toggle.${player}::before,
       a.user-link:not(.text)[href="/@/${player}"]::before,
       a.user-link[data-href="/@/${player}"] span.name::before,
       a[data-pt-pos="s"][href="/@/${player}"]::before,

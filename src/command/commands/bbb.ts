@@ -85,7 +85,7 @@ const command: Command = {
     'xxx',
     'zzz'
   ],
-  help: ' Displays the team link, the current :BBB: tournament, and the previous winner.',
+  help: ' Displays the team link, the current natebr4Bbb tournament, and the previous winner.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
     if (cached.length && cachedAt && !isNHoursLater(8, cachedAt)) {

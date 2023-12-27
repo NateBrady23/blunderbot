@@ -89,21 +89,28 @@ export class TwitchService {
     }
     const context: Context = await this.createContext(message, tags);
 
-    if (!context.tags.follower) {
-      if (CONFIG.welcome.enabled) {
-        const displayName = context.tags['display-name'];
-        if (!newChatters.includes(displayName)) {
-          newChatters.push(displayName);
+    const displayName = context.tags['display-name'];
+    if (!newChatters.includes(displayName)) {
+      newChatters.push(displayName);
+      // Welcome in new chatters (non-followers)
+      if (!context.tags.follower) {
+        if (
+          CONFIG.welcome.enabled &&
+          !CONFIG.welcome.ignoreUsers.includes(displayName)
+        ) {
           const message = CONFIG.welcome.message.replace(
             /{user}/gi,
             `@${displayName}`
           );
           this.botSpeak(message);
         }
+      } else {
+        // TODO: Do something for followers chatting for the first time
+        //       A fun idea is adding them to the board, but we don't track bought squares here.
+        //       Request from the frontend?
       }
     }
 
-    // TODO: Make env var to enable/disable auto shoutouts
     // If the message isn't a !so command, check to see if this user needs
     // to be shouted out!
     if (!context.message.startsWith('!so ')) {

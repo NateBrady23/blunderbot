@@ -1,9 +1,3 @@
-a#user_tag.toggle.link::before {
-    content: 'BM ';
-    color: #bf811d;
-    font-weight: bold;
-}
-
 body {
     background-image: url(https://lichess.org/blunderbot/images/bg/space.webp) !important;
     background-size: cover !important;
@@ -118,12 +112,16 @@ body {
     20% { top: 0; left: 0; }
 }
 
-.command-input {
+.command-input-wrapper {
     position: fixed;
-    top: 782px;
-    left: 10px;
+    bottom: 0;
     z-index: 100;
     background: #222121;
+    display: flex;
+}
+.command-input-wrapper button {
+    margin-left: 5px;
+    padding: 0 2px;
 }
 
 .gif-above-board {

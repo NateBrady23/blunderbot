@@ -155,6 +155,7 @@ interface YAMLConfig {
   ];
 
   killedCommands: string[];
+  hiddenCommands: string[];
   messageCommands: MessageCommand[];
 
   raids: {
