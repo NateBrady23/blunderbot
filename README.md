@@ -69,3 +69,13 @@ I use ffmpeg to capture the length of audio clips for mute duration and may end 
 Copy the `config.yml.sample` to `config.yml` and change things around as you see fit.
 
 *IMPORTANT*: A lot of files (especially sounds) listed in the `config.yml` may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
+
+### Overlays / Browser Source
+
+Two commands require adding a browser source to your streaming software.
+
+For the `!alert` command to show up, add a browser source that points to: `http://localhost:3000/blunder-alerts.html`
+
+For the `!image` command, add a browser source that points to: `http://localhost:3000/images.html`
+
+Replace with a different port if you changed the `port` in the `config.yml`.

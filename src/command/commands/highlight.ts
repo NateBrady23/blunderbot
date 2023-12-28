@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'highlight',
-  limitedTo: 5,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const square = ctx.args[0]?.split('');

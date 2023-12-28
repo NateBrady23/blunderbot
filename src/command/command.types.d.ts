@@ -15,13 +15,9 @@ interface Command {
   help?: string;
   coolDown?: number;
   modOnly?: boolean;
-  followerOnly?: boolean;
   ownerOnly?: boolean;
-  subOnly?: boolean;
   // If true, the twitch stream must be live for the command to run
   requiresLive?: boolean;
-  // If a number is provided, the command can only be run that many times per user per stream
-  limitedTo?: number;
   // timestamp
   lastRun?: number;
   aliases?: string[];

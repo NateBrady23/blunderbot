@@ -67,6 +67,9 @@ interface YAMLConfig {
       runPoll: string;
       myOwnCommand: string;
     };
+    followerCommands: string[];
+    subsCommands: string[];
+    limitedCommands: { [key: string]: number };
     userRestrictedCommands: {
       [key: string]: string[];
     };
@@ -82,8 +85,9 @@ interface YAMLConfig {
 
   openai: {
     apiKey: string;
-    ttsModel: string;
     chatModel: string;
+    imageModel: string;
+    ttsModel: string;
     textModerationModel: string;
     baseSystemMessage: string;
     voices: string[];

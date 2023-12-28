@@ -1,5 +1,6 @@
 import { FunctionQueue } from './FunctionQueue';
 import { CONFIG } from '../config/config.service';
+import * as fs from 'fs';
 
 const player = require('play-sound')();
 const ffmpeg = require('fluent-ffmpeg');
@@ -129,4 +130,40 @@ export function getRandomElement(arr) {
 
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
+}
+
+// I'm so good at naming things
+export function addStrToFileAfterStr(
+  str: string,
+  filePath: string,
+  afterStr: string
+) {
+  try {
+    const data = fs.readFileSync(filePath, 'utf8');
+    // Split the file content by lines
+    const lines = data.split('\n');
+    let found = false;
+
+    // Find the line with <div class="gallery-wrapper">
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].includes(afterStr)) {
+        // Add the new text after this line
+        lines.splice(i + 1, 0, str);
+        found = true;
+        break;
+      }
+    }
+
+    if (!afterStr || !found) {
+      lines.push(str);
+    }
+
+    // Join the lines back into a single string
+    const updatedData = lines.join('\n');
+
+    // Write the modified content back to the file
+    fs.writeFileSync(filePath, updatedData, 'utf8');
+  } catch (e) {
+    console.error(e);
+  }
 }

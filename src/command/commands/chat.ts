@@ -3,7 +3,6 @@ import { Platform } from '../../enums';
 const command: Command = {
   name: 'chat',
   help: 'Talk to BlunderBot! Also @BlunderBot in the beginning or end of a message to talk.',
-  followerOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     let reply: string;

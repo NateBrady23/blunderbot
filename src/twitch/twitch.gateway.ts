@@ -30,6 +30,11 @@ export class TwitchGateway
     this.twitchService.botSpeak(payload);
   }
 
+  @SubscribeMessage('updateBoughtSquares')
+  handleUpdateBoughtSquares(client: any, payload: any) {
+    this.twitchService.updateBoughtSquares(payload);
+  }
+
   afterInit(_server: any): any {
     this.logger.log('Initialized!');
   }

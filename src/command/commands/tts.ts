@@ -5,8 +5,6 @@ const queue = new FunctionQueue();
 
 const command: Command = {
   name: 'tts',
-  limitedTo: 5,
-  subOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
