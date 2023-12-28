@@ -8,7 +8,6 @@ const queue = new FunctionQueue();
 const command: Command = {
   name: 'gif',
   help: `Displays a gif based on the message on the chessboard. (non-subscribers can use the channel redemption for 1k BlunderBucks to do the same)`,
-  subOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (CONFIG.giphy.enabled === false) {

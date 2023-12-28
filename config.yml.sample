@@ -37,6 +37,26 @@ twitch:
     dadjoke: ["northcarolinadan"]
     skipsong: ["loldayzo"]
     trophy: ["trevlar_"]
+  # These commands are limited to followers only
+  followerCommands:
+    - king
+    - opp
+    - chat
+    - followage
+    - translate
+  # These commands are limited to subscribers only
+  subCommands:
+    - gif
+    - image
+    - vchat
+    - tts
+  # These commands can only be run {n} times per user per stream
+  limitedCommands:
+    highlight: 5
+    image: 6
+    tts: 5
+    vchat: 3
+
 
 # LICHESS
 # example https://lichess.org/account/oauth/token/create?scopes[]=preference:read,preference:write,email:read,challenge:read,challenge:write,challenge:bulk,study:read,study:write,tournament:write,racer:write,puzzle:read,team:read,team:write,team:lead,follow:read,follow:write,msg:write,board:play&description=natebrady23
@@ -51,6 +71,7 @@ lichess:
 openai:
   apiKey: "sk-youropenai-api-key"
   ttsModel: "tts-1"
+  imageModel: "dall-e-3"
   chatModel: "gpt-4-1106-preview"
   textModerationModel: "text-moderation-stable"
   # BlunderBot's instructions to the OpenAI chat model

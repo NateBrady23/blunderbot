@@ -307,11 +307,12 @@ function drawBoughtSquares() {
     console.log('Trouble in drawBoughtSquares()');
     console.log(e);
   }
+  updateBoughtSquares();
 }
 
 function drawGiphy(url, milliseconds) {
   try {
-    let node = document.querySelector('cg-board');
+    let node = document.querySelector('.main-board');
     let className = 'gif-above-board';
     if (!node) {
       className = 'gif-above-all';
@@ -340,6 +341,13 @@ function removeBoughtSquares(removeFromLocalStorage = true) {
 
 function blunderBotSay(say) {
   socket.emit('botSpeak', say);
+}
+
+function updateBoughtSquares() {
+  const data = JSON.parse(
+    localStorage.getItem(LOCAL_STORAGE_KEYS.BOUGHT_SQUARES) || '{}'
+  );
+  socket.emit('updateBoughtSquares', data);
 }
 
 function sleep(ms) {

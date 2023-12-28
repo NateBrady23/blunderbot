@@ -30,6 +30,16 @@ export class OpenaiService {
     //
   }
 
+  async createImage(prompt: string): Promise<string> {
+    const response = await openai.images.generate({
+      model: CONFIG.openai?.imageModel || 'dall-e-3',
+      prompt,
+      quality: 'standard',
+      n: 1
+    });
+    return response.data[0].url;
+  }
+
   async tts(message: string, voice: any): Promise<void> {
     try {
       const response = await openai.audio.speech.create({

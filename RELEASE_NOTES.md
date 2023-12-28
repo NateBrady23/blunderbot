@@ -1,5 +1,22 @@
 # Release Notes
 
+### 1.1.0 (2023-12-28)
+
+#### Breaking Changes
+
+- Moved `followerCommands`, `subScommands`, and `limitedCommands` to the config file under `twitch`
+
+#### Bug Fixes
+
+- Fixed determining whether a main board is present for the `!gif` command
+- Fixed a bug with Blunder Alerts not connecting to the right socket namespace
+
+#### Features
+
+- Added a `!image <description>` command to generate images using the OpenAI API
+- First time chatters that are followers will now get a random square on the board
+
+
 ### 1.0.0 (2023-12-27)
 
 #### Breaking Changes

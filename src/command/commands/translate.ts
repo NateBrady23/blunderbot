@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'translate',
-  followerOnly: true,
   queued: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {

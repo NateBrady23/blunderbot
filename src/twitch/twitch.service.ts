@@ -5,6 +5,8 @@ import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 import { TwitchCustomRewardsService } from './twitch.custom-rewards';
+import { chessSquares } from '../utils/constants';
+import { getRandomElement } from '../utils/utils';
 const tmi = require('tmi.js');
 
 let shoutoutUsers = CONFIG.autoShoutouts;
@@ -20,6 +22,8 @@ twitchUserMap[CONFIG.twitch.botUsername.toLowerCase()] = {
   id: CONFIG.twitch.botId,
   isFollower: true
 };
+
+let boughtSquares = {};
 
 @Injectable()
 export class TwitchService {
@@ -75,6 +79,10 @@ export class TwitchService {
     this.logger.log(`* Connected to ${address}:${port}`);
   }
 
+  updateBoughtSquares(data) {
+    boughtSquares = data;
+  }
+
   async onMessageHandler(channel, tags, message) {
     if (message) {
       void writeLog('chat', `${tags['display-name']}: ${message}`);
@@ -104,10 +112,15 @@ export class TwitchService {
           );
           this.botSpeak(message);
         }
-      } else {
-        // TODO: Do something for followers chatting for the first time
-        //       A fun idea is adding them to the board, but we don't track bought squares here.
-        //       Request from the frontend?
+      } else if (!context.tags.owner) {
+        const squares = Object.keys(boughtSquares || {});
+        const remainingSquares = chessSquares.filter(
+          (sq) => !squares.includes(sq)
+        );
+        if (remainingSquares.length) {
+          const square = getRandomElement(remainingSquares);
+          void this.ownerRunCommand(`!buy ${square} ${displayName}`);
+        }
       }
     }
 

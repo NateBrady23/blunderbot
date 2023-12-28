@@ -148,14 +148,22 @@ export class CommandService {
       return false;
     }
 
-    if (ctx.platform === 'twitch' && cmd.subOnly && !ctx.tags.subscriber) {
+    if (
+      ctx.platform === 'twitch' &&
+      CONFIG.twitch.subsCommands.includes(cmd.name) &&
+      !ctx.tags.subscriber
+    ) {
       ctx.botSpeak(
         `@${ctx.tags['display-name']} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
       );
       return false;
     }
 
-    if (ctx.platform === 'twitch' && cmd.followerOnly && !ctx.tags.follower) {
+    if (
+      ctx.platform === 'twitch' &&
+      CONFIG.twitch.followerCommands.includes(cmd.name) &&
+      !ctx.tags.follower
+    ) {
       ctx.botSpeak(
         `@${ctx.tags['display-name']} !${cmd.name} is for followers only.`
       );
@@ -176,7 +184,8 @@ export class CommandService {
     }
 
     // Checks to see if the command is limited
-    if (cmd?.limitedTo > 0) {
+    const limitedTo = CONFIG.twitch.limitedCommands[cmd.name];
+    if (limitedTo && limitedTo > 0) {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
       }
@@ -189,11 +198,11 @@ export class CommandService {
       }
       if (
         this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']] >=
-        cmd.limitedTo
+        limitedTo
       ) {
         // If the user has used the command too many times, don't run
         ctx.botSpeak(
-          `@${ctx.tags['display-name']} !${cmd.name} is limited to ${cmd.limitedTo} time(s) per stream.`
+          `@${ctx.tags['display-name']} !${cmd.name} is limited to ${limitedTo} time(s) per stream.`
         );
         return false;
       }
