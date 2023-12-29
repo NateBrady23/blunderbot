@@ -97,6 +97,7 @@ interface YAMLConfig {
     enabled: boolean;
     botToken: string;
     announcementChannelId: string;
+    galleryChannelId: string;
     generalChannelId: string;
     modChannelId: string;
     ownerAuthorId: string;

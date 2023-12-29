@@ -3,7 +3,7 @@ import { CommandService } from '../command/command.service';
 import { Platform } from '../enums';
 import { CONFIG } from '../config/config.service';
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { AttachmentBuilder, Client, GatewayIntentBits } = require('discord.js');
 
 @Injectable()
 export class DiscordService {
@@ -61,6 +61,18 @@ export class DiscordService {
       CONFIG.discord.announcementChannelId
     );
     channel.send(content);
+  }
+
+  postImageToGallery(content: string, buffer: Buffer) {
+    try {
+      const channel = this.client.channels.cache.get(
+        CONFIG.discord.galleryChannelId
+      );
+      const attachment = new AttachmentBuilder(buffer, 'image.png');
+      channel.send({ content, files: [attachment] });
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   botSpeak(discordMessage: DiscordMessage | { channelId }, message: string) {

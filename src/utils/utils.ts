@@ -144,7 +144,6 @@ export function addStrToFileAfterStr(
     const lines = data.split('\n');
     let found = false;
 
-    // Find the line with <div class="gallery-wrapper">
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].includes(afterStr)) {
         // Add the new text after this line

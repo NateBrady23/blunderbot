@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from '../config/config.service';
 
-const GIPHY_API_KEY = process.env.GIPHY_API_KEY;
-
 @Injectable()
 export class GiphyService {
   private logger: Logger = new Logger(GiphyService.name);
@@ -18,11 +16,12 @@ export class GiphyService {
     }
     const encodedPhrase = encodeURIComponent(phrase);
     const response = await fetch(
-      `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodedPhrase}&limit=1`
+      `https://api.giphy.com/v1/gifs/search?api_key=${CONFIG.giphy.apiKey}&q=${encodedPhrase}&limit=1`
     );
     const data = await response.json();
     // Sometimes giphy doesn't return a gif for a phrase, so we return a default gif
-    if (!data.data[0] && CONFIG.gif?.notFound) {
+    if (!data?.data[0] && CONFIG.gif?.notFound) {
+      console.error(data);
       return CONFIG.gif.notFound;
     }
     // The URL is changed here to match what the proxy expects

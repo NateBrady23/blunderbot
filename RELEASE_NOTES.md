@@ -1,5 +1,15 @@
 # Release Notes
 
+### 1.1.1 (2023-12-30)
+
+#### Bug Fixes
+
+- Fixed the `!gif` command where gifs the API KEY wasn't being passed in the request after the move from .env
+
+#### Features
+
+- Added the ability to upload images from the !image command to discord
+
 ### 1.1.0 (2023-12-28)
 
 #### Breaking Changes
