@@ -3,7 +3,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'end',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     commandState.isLive = false;

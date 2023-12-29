@@ -14,7 +14,6 @@ const command: Command = {
       !cmd ||
       !cmd.help ||
       !cmd.platforms.includes(ctx.platform) ||
-      CONFIG.killedCommands.includes(commandName) ||
       commandState.killedCommands.includes(commandName)
     ) {
       ctx.botSpeak(`There is no help available for that command.`);

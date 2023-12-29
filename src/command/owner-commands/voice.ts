@@ -3,7 +3,6 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'voice',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     const voice = ctx.args[0]?.toLowerCase().trim();

@@ -35,6 +35,7 @@ twitch:
   userRestrictedCommands:
     clock: ["mammali77"]
     dadjoke: ["northcarolinadan"]
+    resign: ["strobex_gaming"]
     skipsong: ["loldayzo"]
     trophy: ["trevlar_"]
   # These commands are limited to followers only
@@ -263,9 +264,6 @@ messageCommands:
 
   prime:
     message: "If you have Amazon Prime, you can subscribe and support the channel for free!"
-
-  resign:
-    message: "It is time to end this madness!"
 
   rosen:
     aliases:

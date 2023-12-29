@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'buy',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const square = ctx.args[0].trim().substring(0, 2).toLowerCase();

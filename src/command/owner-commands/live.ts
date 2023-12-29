@@ -11,7 +11,6 @@ import { CONFIG } from '../../config/config.service';
  */
 const command: Command = {
   name: 'live',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;

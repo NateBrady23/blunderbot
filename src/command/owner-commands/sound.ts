@@ -7,7 +7,6 @@ const queue = new FunctionQueue();
 
 const command: Command = {
   name: 'sound',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx) => {
     return queue.enqueue(async function () {

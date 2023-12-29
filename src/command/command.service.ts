@@ -150,7 +150,7 @@ export class CommandService {
 
     if (
       ctx.platform === 'twitch' &&
-      CONFIG.twitch.subsCommands.includes(cmd.name) &&
+      CONFIG.twitch.subCommands.includes(cmd.name) &&
       !ctx.tags.subscriber
     ) {
       ctx.botSpeak(

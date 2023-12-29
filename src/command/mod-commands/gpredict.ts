@@ -11,7 +11,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'gpredict',
-  modOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     let items = getItemsBetweenDelimiters(ctx.body, '"');

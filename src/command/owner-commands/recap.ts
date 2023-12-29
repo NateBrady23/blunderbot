@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'recap',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     let res = await fetch(

@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'kill',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     if (commandState.killedCommands.includes(ctx.args[0])) {

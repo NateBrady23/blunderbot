@@ -5,18 +5,18 @@ import { getRandomElement } from '../utils/utils';
 
 config();
 
-const kings = [];
-const crowns = [];
-const oppKings = [];
+const kings: string[] = [];
+const crowns: string[] = [];
+const oppKings: string[] = [];
 const themeConfig = {};
-const soundboard = [];
+const soundboard: string[] = [];
 
 [
   ['./public/images/kings', kings],
   ['./public/images/crowns', crowns],
   ['./public/images/opponents', oppKings],
   ['./public/sounds/soundboard', soundboard]
-].forEach((publicFiles: [string, any]) => {
+].forEach((publicFiles: [string, string[]]) => {
   readdirSync(publicFiles[0]).forEach((file) => {
     const fileName = file.split('.')[0];
     publicFiles[1].push(fileName);

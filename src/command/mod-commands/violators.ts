@@ -4,7 +4,6 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'violators',
-  modOnly: true,
   platforms: [Platform.Discord],
   run: async (ctx) => {
     const teamId = CONFIG.lichess.teamId;

@@ -3,7 +3,6 @@ import { Platform } from '../../enums';
 const command: Command = {
   name: 'race',
   aliases: ['racer'],
-  ownerOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     try {

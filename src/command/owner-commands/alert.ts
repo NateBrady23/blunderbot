@@ -6,7 +6,6 @@ const queue = new FunctionQueue();
 
 const command: Command = {
   name: 'alert',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     return queue.enqueue(async function () {

@@ -1,5 +1,19 @@
 # Release Notes
 
+### 1.1.2 (2023-12-30)
+
+#### Bug Fixes
+
+- There was at least one command in the `owner-commands` dir that I forgot to add `ownerOnly: true` to, so now all commands in the owner directory and mod directory will automatically get `ownerOnly: true` and `modOnly: true` respectively.
+- Fix `any` usage in `command.types.d.ts` to properly type services in command files.
+- Fix an issue with `!bits` where users weren't getting added to the contributions to be thanked at the end of the stream.
+- Fix an issue with subCommands being wrong in the types file.
+
+#### Features
+
+- Added a `!resetlimits` owner command. Without an arg, it resets the limits on all commands. Or you can reset the limits on one command like `!resetlimits image`.
+- Added a `!resign` command to tell the streamer it's time to end the madness. I added this as a user restricted command in the config.
+
 ### 1.1.1 (2023-12-30)
 
 #### Bug Fixes

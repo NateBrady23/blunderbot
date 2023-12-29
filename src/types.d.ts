@@ -68,7 +68,7 @@ interface YAMLConfig {
       myOwnCommand: string;
     };
     followerCommands: string[];
-    subsCommands: string[];
+    subCommands: string[];
     limitedCommands: { [key: string]: number };
     userRestrictedCommands: {
       [key: string]: string[];

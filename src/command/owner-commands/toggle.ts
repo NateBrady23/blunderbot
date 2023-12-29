@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'toggle',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     if (commandState.toggledOffCommands.includes(ctx.args[0])) {

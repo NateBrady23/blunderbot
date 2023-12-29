@@ -3,7 +3,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'poll',
-  modOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     let question: any = ctx.body;

@@ -5,34 +5,30 @@ import { configService, CONFIG } from '../config/config.service';
 @Controller('twitch')
 export class TwitchController {
   constructor(private readonly twitchService: TwitchService) {}
-  @Get('config')
-  getTwitchConfig(): any {
-    return {};
-  }
 
   @Get('kings')
-  getTwitchKings(): any {
+  getTwitchKings(): string[] {
     return configService.getKings();
   }
 
   @Get('opps')
-  getOpponentKings(): any {
+  getOpponentKings(): string[] {
     return configService.getOppKings();
   }
 
   @Get('crowns')
-  getTwitchCrowns(): any {
+  getTwitchCrowns(): string[] {
     return configService.getCrowns();
   }
 
   @Get('themeconfig')
-  getThemeConfig(): any {
+  getThemeConfig(): unknown {
     return configService.getThemeConfig();
   }
 
   // Load sounds for the soundboard menu
   @Get('soundboard')
-  getSoundboard(): any {
+  getSoundboard(): string[] {
     return configService.getSoundboard();
   }
 
@@ -42,7 +38,7 @@ export class TwitchController {
   }
 
   @Post('/command')
-  postOwnerRunCommand(@Body() body) {
+  postOwnerRunCommand(@Body() body: { command: string }) {
     void this.twitchService.ownerRunCommand(body.command);
   }
 

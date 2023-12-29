@@ -18,20 +18,20 @@ export class AppGateway
 
   private sockets = [];
 
-  afterInit(_server: any): any {
+  afterInit(_server: unknown): undefined {
     this.logger.log('Initialized!');
   }
 
-  handleConnection(client: Socket, ..._args): any {
+  handleConnection(client: Socket) {
     this.logger.log(`App-Socket Client connected: ${client.id}`);
     this.sockets.push(client);
   }
 
-  handleDisconnect(client: Socket): any {
+  handleDisconnect(client: Socket) {
     this.logger.log(`App-Socket Client disconnected: ${client.id}`);
   }
 
-  public sendDataToSockets(event, data): any {
+  public sendDataToSockets(event: string, data: unknown) {
     this.logger.log(`Sending ${event} event to sockets.`);
     this.sockets.forEach((socket: Socket) => {
       if (socket.connected) {
@@ -39,15 +39,5 @@ export class AppGateway
         socket.emit(event, data);
       }
     });
-  }
-
-  public sendDataToOneSocket(event, data): any {
-    this.logger.log(`Sending ${event} event to a single socket.`);
-    for (let i = 0; i < this.sockets.length; i++) {
-      if (this.sockets[i].connected) {
-        this.sockets[i].emit(event, data);
-        break;
-      }
-    }
   }
 }

@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'cban',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     const user = ctx.args[0]?.toLowerCase();

@@ -3,7 +3,6 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'accept',
-  modOnly: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     const team = CONFIG.lichess.teamId;

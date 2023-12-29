@@ -8,7 +8,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'cancel',
-  modOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const currPoll = await services.twitchService.helixOwnerApiCall(
