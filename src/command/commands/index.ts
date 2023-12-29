@@ -22,17 +22,25 @@ export const commands = {
   ...messageCommands
 };
 
+const MOD_DIR = './src/command/mod-commands';
+const OWNER_DIR = './src/command/owner-commands';
+
 const dirImports = [
   ['./src/command/commands', './'],
-  ['./src/command/mod-commands', '../mod-commands/'],
-  ['./src/command/owner-commands', '../owner-commands/']
+  [MOD_DIR, '../mod-commands/'],
+  [OWNER_DIR, '../owner-commands/']
 ];
 
 dirImports.forEach((dir) => {
   readdirSync(dir[0]).forEach((file) => {
     const fileName = file.split('.')[0];
-    if (fileName !== 'index' && fileName !== 'messageCommands') {
+    if (fileName !== 'index') {
       commands[fileName] = require(`${dir[1]}${fileName}`).default;
+      if (dir[0] === MOD_DIR) {
+        commands[fileName].modOnly = true;
+      } else if (dir[0] === OWNER_DIR) {
+        commands[fileName].ownerOnly = true;
+      }
     }
   });
 });

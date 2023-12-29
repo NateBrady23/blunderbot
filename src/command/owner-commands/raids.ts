@@ -8,7 +8,6 @@ const raidersConfig = CONFIG.raids.matches || {};
 
 const command: Command = {
   name: 'raids',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {

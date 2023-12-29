@@ -6,7 +6,6 @@ let currentInterval = null;
 
 const command: Command = {
   name: 'autochat',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     // Always clearing the interval so multiple "on"s don't stack and anything else shuts it off

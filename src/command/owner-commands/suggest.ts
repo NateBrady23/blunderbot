@@ -2,7 +2,6 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'suggest',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     if (!commandState.wouldBeCommands[ctx.body]) {

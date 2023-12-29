@@ -5,7 +5,6 @@ const queue = new FunctionQueue();
 
 const command: Command = {
   name: 'subs',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     return queue.enqueue(async function () {

@@ -39,7 +39,6 @@ async function getLastVideosByPlaylist(
 const command: Command = {
   name: 'shortslist',
   platforms: [Platform.Twitch, Platform.Discord],
-  ownerOnly: true,
   run: async (ctx) => {
     if (!CONFIG.youtube.enabled) {
       console.log('YouTube not enabled in config for !shortslist command');

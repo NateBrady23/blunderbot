@@ -3,7 +3,6 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'heartrate',
-  ownerOnly: true,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     if (!CONFIG.heartRate.enabled) {

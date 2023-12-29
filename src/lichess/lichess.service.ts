@@ -33,7 +33,7 @@ export class LichessService {
     }
   }
 
-  async getGameOpening(gameId: string): Promise<any> {
+  async getGameOpening(gameId: string): Promise<string> {
     try {
       const url = `https://lichess.org/game/export/${gameId}`;
       const res = await fetch(url, { headers: { Accept: 'application/json' } });

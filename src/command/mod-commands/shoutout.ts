@@ -5,7 +5,6 @@ const queue = new FunctionQueue();
 
 const command: Command = {
   name: 'shoutout',
-  modOnly: true,
   aliases: ['so'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx: Context, { services }) => {

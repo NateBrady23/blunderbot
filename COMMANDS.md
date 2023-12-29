@@ -1,5 +1,8 @@
 # BlunderBot Twitch Commands
 
+#### NOTE: Channel redemptions and Bits may change depending on the streamer using BlunderBot. The following currently apply to [NateBrady23](https://twitch.tv/natebrady23)'s stream.
+
+
 :people_hugging: - Follower only
 
 :gem: - Subscriber only
@@ -19,7 +22,11 @@
 
 `!chat <message>` :people_hugging:: Asks BlunderBot a question.
 
+`!clock`: BlunderBot announces that the streamer is low on time.
+
 `!crown <name>`: Change my crown while I'm playing. Ex. `!crown tophat`
+
+`!dadjoke`: BlunderBot tells a dad joke.
 
 `!daily`: Displays the lichess daily puzzle link
 
@@ -37,6 +44,8 @@
 
 `!highlight <squares> <color>`: Highlights squares on the board. Ex. `!highlight e4e5 red`
 
+`!image <description>`:gem:: Displays an image based on the description on the stream and sends that image to the galler channel in Discord..
+
 `!king <name>`: Change my king while I'm playing. Ex. `!king cry`
 
 `!opening <gameId>`: Displays the opening of <gameId>. If no <gameId> is provided, it will display the opening of the current game.
@@ -53,7 +62,11 @@
 
 `!redsox`: Displays the current score of the Red Sox game
 
+`!resign`: BlunderBot announces a user thinks the streamer should resign the current game.
+
 `!shorts`: Displays the latest YouTube shorts link.
+
+`!skipsong`: BlunderBot announces that a user would like to skip the current song.
 
 `!subsribers`: Displays the number of subscribers NateBrady23 has on Twitch. Also: `!subs`
 
@@ -65,39 +78,13 @@
 
 `!translate <message>` :people_hugging:: Will translate the message to English.
 
+`!trophy`: BlunderBot announces that the streamer has won a rosen trophy.
+
 `!tts <message>` :gem::five: : BlunderBot will read the message. Donating 100 bits or more will also get BlunderBot to read the message.
 
 `!uptime`: Displays how long the current stream has been live.
 
 `!vchat <message>` :gem::three: : Asks BlunderBot a question but BlunderBot responds with voice instead of text.
-
-### Channel Redemptions
-
-`Buy a Square (5)`: For only 5 BlunderBucks (channel points), you can buy a square on the board and your name will stay there for the rest of the stream.
-
-`Change my opponent's rating (100)`: Allows you to change the rating displayed for my opponent in the current game.
-
-`Challenge Me (350)`: On viewer challenge nights, enter the queue by redeeming this.
-
-`Play a gif on the board (1000)`: Where subscribers have the `!gif` command, anyone can use this redemption to play a gif on the board.
-
-`Run a poll (1000)`: Allows anyone to run a poll on the channel.
-
-`Title me on lichess (7000)`: Adds a title beside your name anytime your name appears on stream on lichess.org. Can't be an actual title. Use the `!titles` command to see who is titled on the stream. This title doesn't expire.
-
-`Create me an opponent king (15000)`: I'll create a king for you so you can use the `!opp <name>` command.
-
-
-### Bits
-
-`cheer69`: BlunderBot changes my king and the opponent king to characters that otherwise can't be chosen.
-
-`cheer314`: ^ Does the same with different characters.
-
-`cheer420`: ^ Does the same with different characters.
-
-`cheer100`: 100 bits or more and BlunderBot will read the attached message and play a longer clip of the bits alert.
-
 
 ### Mod Commands
 
@@ -111,19 +98,30 @@
 
 `poll <message>`: BlunderBot will start a poll with some choices based on the message. Use like: `!poll favorite chess opening`
 
+### Channel Redemptions
 
-### Personal Mod Commands
+`Buy a Square`: You can buy a square on the board and your name will stay there for the rest of the stream.
 
-`clock`: This is a Mammali-only command!
+`Change my opponent's rating`: Allows you to change the rating displayed for my opponent in the current game.
 
-`dadjoke`: This is a northcarolinadan-only command!
+`Challenge Me`: On viewer challenge nights, enter the queue by redeeming this.
 
-`skipsong`: This is a Dayzo-only command!
+`Play a gif on the board`: Where subscribers have the `!gif` command, anyone can use this redemption to play a gif on the board.
 
-`trophy`: This a Trevlar-only command!
+`Run a poll`: Allows anyone to run a poll on the channel.
 
-### Simple Commands
+`Title me on lichess`: Adds a title beside your name anytime your name appears on stream on lichess.org. Can't be an actual title. Use the `!titles` command to see who is titled on the stream. This title doesn't expire.
 
-Each of these commands display a simple static message in chat.
+`Create me an opponent king`: I'll create a king for you so you can use the `!opp <name>` command.
 
-`afm`, `backseat`, `beholdg4`, `blunderbot`, `blunderreport`, `bm`, `em`, `chess`, `discord`, `dm`, `fauxtog`, `insubordinate`, `lurk`, `merch`, `onlychess`, `onlyfans`, `prime`, `resign`, `rip`, `rosen`, `rm`, `streamlabs`, `team`, `tess`, `tiktok`, `tip`, `youtube`
+`Create my own command`: I'll create a command that only you can use on the stream.
+
+### Bits
+
+`cheer69`: BlunderBot changes my king and the opponent king to characters that otherwise can't be chosen.
+
+`cheer314`: ^ Does the same with different characters.
+
+`cheer420`: ^ Does the same with different characters.
+
+`cheer100`: 100 bits or more and BlunderBot will read the attached message and play a longer clip of the bits alert.
