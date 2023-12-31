@@ -1,5 +1,14 @@
 # Release Notes
 
+### 1.1.3 (2023-12-30)
+
+#### Bug Fixes
+
+- Fixed a missing space in the message about user restricted commands.
+- Fixed the opacity on the board so gifs show up better.
+- Fixed an issue with the `!buy` command where it wasn't trimming the username.
+- Fixed an issue with the BlunderBot menu not getting event listeners on time.
+
 ### 1.1.2 (2023-12-30)
 
 #### Bug Fixes

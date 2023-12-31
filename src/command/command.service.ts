@@ -216,7 +216,7 @@ export class CommandService {
       });
       if (!found) {
         ctx.botSpeak(
-          `The !${cmd.name} command is only for${userRestricted.join(' and ')}`
+          `The !${cmd.name} command is only for ${userRestricted.join(' and ')}`
         );
         return false;
       }
