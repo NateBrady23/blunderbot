@@ -4,6 +4,18 @@ body {
     position: relative;
 }
 
+#board,
+.brown .is2d cg-board::before {
+    opacity: 40%;
+    background-size: cover;
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
 .user-rating {
     position: absolute;
     top: 118px;
@@ -134,7 +146,6 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    opacity: 50%;
 }
 .gif-above-all {
     position: fixed;

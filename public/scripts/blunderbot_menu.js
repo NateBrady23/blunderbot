@@ -152,20 +152,24 @@ function commandInput() {
   });
 }
 
-void blunderBotMenu();
-void commandInput();
+async function loadBlunderBotMenu() {
+  await blunderBotMenu();
+  commandInput();
 
-document.querySelectorAll('.send-command').forEach((node) => {
-  node.addEventListener('click', function (event) {
-    sendCommandByOwner(event.target.getAttribute('data-command'));
+  document.querySelectorAll('.mchat__messages li t')?.forEach((node) => {
+    node.addEventListener('click', async function (_event) {
+      const translation = await translate(node.textContent);
+      if (translation) {
+        node.innerHTML = `${translation.translation} (${translation.language})`;
+      }
+    });
   });
-});
 
-document.querySelectorAll('.mchat__messages li t')?.forEach((node) => {
-  node.addEventListener('click', async function (_event) {
-    const translation = await translate(node.textContent);
-    if (translation) {
-      node.innerHTML = `${translation.translation} (${translation.language})`;
-    }
+  document.querySelectorAll('.send-command').forEach((node) => {
+    node.addEventListener('click', function (event) {
+      sendCommandByOwner(event.target.getAttribute('data-command'));
+    });
   });
-});
+}
+
+loadBlunderBotMenu();

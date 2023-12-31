@@ -109,15 +109,6 @@ async function setCustomStyle() {
           ? `url('https://lichess.org/blunderbot/images/themes/${theme}/board.png')`
           : `url('https://lichess1.org/assets/_1FzRvx/images/board/svg/brown.svg')`
       };
-      opacity: 50%;
-      background-size: cover;
-      content: "";
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      opacity: 0.65;
     }
   `;
 
