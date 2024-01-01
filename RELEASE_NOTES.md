@@ -1,5 +1,13 @@
 # Release Notes
 
+### 1.1.4 (2024-01-01)
+
+#### Features
+
+- images can now be edited, thanks Trevlar!
+- If `!image` includes `nodiscord`, the image won't be sent to discord even if discord is enabled.
+
+
 ### 1.1.3 (2023-12-30)
 
 #### Bug Fixes

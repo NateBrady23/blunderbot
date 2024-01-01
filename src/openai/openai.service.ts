@@ -43,7 +43,7 @@ export class OpenaiService {
   async editImage(maskImg: string, prompt: string): Promise<string> {
     const response = await openai.images.edit({
       image: fs.createReadStream(maskImg),
-      model: CONFIG.openai?.imageModel || 'dall-e-3',
+      // model: CONFIG.openai?.imageModel || 'dall-e-3',
       prompt,
       n: 1
     });
