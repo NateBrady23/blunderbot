@@ -17,7 +17,14 @@ const command: Command = {
       `@${user} Please give me a few moments while I draw your image.`
     );
 
-    const url = await services.openaiService.createImage(prompt);
+    let url = '';
+    const firstWord = prompt.split(' ')[0].toLowerCase();
+
+    if (firstWord === 'nate') {
+      url = await services.openaiService.editImage(`./public/images/edits/nate.png`, prompt.replace(/nate/i, 'this person'));
+    } else {
+      url = await services.openaiService.createImage(prompt);
+    }
 
     console.log(`Image URL: ${url}`);
 
