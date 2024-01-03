@@ -1,3 +1,4 @@
+import { fixPronunciations } from 'src/utils/utils';
 import { Platform } from '../../enums';
 import { FunctionQueue } from '../../utils/FunctionQueue';
 
@@ -9,7 +10,9 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
       if (!ctx.body) return;
-      await services.openaiService.tts(ctx.body, commandState.blunderbotVoice);
+      let text = ctx.body;
+      text = fixPronunciations(text);
+      await services.openaiService.tts(text, commandState.blunderbotVoice);
       return true;
     });
   }
