@@ -2,13 +2,13 @@ import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'add',
+  aliases: ['addcom'],
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
-    commandState.ephemeralCommands[ctx.args[0]] = ctx.body.replace(
-      `${ctx.args[0]} `,
-      ''
-    );
-    console.log(commandState.ephemeralCommands);
+    const command = ctx.args[0].replace('!', '');
+    const regex = new RegExp(`^${command} `);
+    commandState.ephemeralCommands[command] = ctx.body.replace(regex, '');
+    console.log(`The ephemeral commands are: `, commandState.ephemeralCommands);
     return true;
   }
 };

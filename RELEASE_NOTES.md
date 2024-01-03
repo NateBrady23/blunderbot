@@ -21,6 +21,7 @@
 - Removed all cheer messages from the `!bits` command before `!tts` is used.
 - Fixed the `!help` command to show help when an alias is used.
 - General code cleanup and refactoring.
+- Fixed the `!add` command removing the command from the body if it existed. Also allows syntax like `!addcom !somecom <body>` for people familiar with other bots.
 
 ### 1.1.3 (2023-12-30)
 
