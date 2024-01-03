@@ -166,3 +166,15 @@ export function addStrToFileAfterStr(
     console.error(e);
   }
 }
+
+export function fixPronunciations(text: string): string {
+  const phrases = new Map([
+    ['lichess', 'lee-chess'],
+  ]);
+
+  for (const [key, value] of phrases.entries()) {
+    text = text.replace(new RegExp(key, 'gi'), value);
+  }
+
+  return text;
+}
