@@ -1,5 +1,6 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
+import { commands } from './index';
 
 const availableCommands = [];
 
@@ -8,7 +9,7 @@ const command: Command = {
   aliases: ['commands'],
   help: 'Displays a list of available commands.',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: (ctx, { commands, commandState }) => {
+  run: (ctx, { commandState }) => {
     Object.keys(commands).forEach((commandName) => {
       // Hide all message commands and hidden and killed commands
       if (
@@ -19,7 +20,9 @@ const command: Command = {
       ) {
         return;
       }
+
       const command = commands[commandName];
+
       if (
         // If we're on the right platform and it's not a mod or owner command
         command.platforms.includes(ctx.platform) &&

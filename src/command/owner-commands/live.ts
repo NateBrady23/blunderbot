@@ -14,11 +14,25 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
+    let sendToDiscord =
+      CONFIG.discord.enabled && !!CONFIG.discord?.announcementChannelId;
+    let sendToTwitter = CONFIG.twitter.enabled && CONFIG.twitter.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
+    ctx.botSpeak(`We're live!`);
 
-    if (!CONFIG.discord.enabled || msg.toLowerCase().includes('nodiscord')) {
+    if (msg.toLowerCase().includes('nodiscord')) {
+      msg = msg.replace(/nodiscord/gi, '');
+      sendToDiscord = false;
+    }
+
+    if (msg.toLowerCase().includes('notwitter')) {
+      msg = msg.replace(/notwitter/gi, '');
+      sendToTwitter = false;
+    }
+
+    if (!sendToDiscord && !sendToTwitter) {
       return true;
     }
 
@@ -36,9 +50,18 @@ const command: Command = {
       }
     }
 
-    services.discordService.makeAnnouncement(
-      `@everyone ${msg} https://twitch.tv/${CONFIG.twitch.channel}`
-    );
+    if (sendToDiscord) {
+      services.discordService.makeAnnouncement(
+        `@everyone ${msg} https://twitch.tv/${CONFIG.twitch.channel}`
+      );
+    }
+
+    if (sendToTwitter) {
+      void services.twitterService.postTweet(
+        `${msg} https://twitch.tv/${CONFIG.twitch.channel} ${CONFIG.twitter.tweetHashtags}`
+      );
+    }
+
     return true;
   }
 };

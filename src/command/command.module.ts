@@ -7,6 +7,7 @@ import { GiphyModule } from '../giphy/giphy.module';
 import { LichessModule } from '../lichess/lichess.module';
 import { AppModule } from '../app.module';
 import { BrowserModule } from '../browser/browser.module';
+import { TwitterModule } from '../twitter/twitter.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BrowserModule } from '../browser/browser.module';
     forwardRef(() => BrowserModule),
     forwardRef(() => DiscordModule),
     forwardRef(() => TwitchModule),
+    forwardRef(() => TwitterModule),
     GiphyModule,
     LichessModule,
     OpenaiModule

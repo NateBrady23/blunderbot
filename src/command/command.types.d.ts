@@ -7,12 +7,13 @@ import { GiphyService } from '../giphy/giphy.service';
 import { DiscordService } from '../discord/discord.service';
 import { BrowserService } from '../browser/browser.service';
 import { AppGateway } from '../app.gateway';
+import { TwitterService } from '../twitter/twitter.service';
+import { CommandService } from './command.service';
 
 declare global {
   interface CommandRunFuncOptions {
     services: CommandServices;
     commandState: CommandState;
-    commands: Command[];
   }
 
   interface CommandRunFunc {
@@ -39,6 +40,7 @@ declare global {
   interface CommandServices {
     appGateway: AppGateway;
     browserService: BrowserService;
+    commandService: CommandService;
     discordService: DiscordService;
     giphyService: GiphyService;
     lichessService: LichessService;
@@ -46,6 +48,7 @@ declare global {
     twitchCustomRewardsService: TwitchCustomRewardsService;
     twitchGateway: TwitchGateway;
     twitchService: TwitchService;
+    twitterService: TwitterService;
   }
 
   interface CommandState {

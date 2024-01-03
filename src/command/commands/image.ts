@@ -3,11 +3,15 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'image',
+  aliases: ['img', 'mage', 'imagine'],
   help: '!image <prompt> - Creates an image based on the prompt.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     let prompt = ctx.body?.trim();
-    let sendToDiscord = true;
+    let sendToDiscord =
+      CONFIG.discord.enabled && !!CONFIG.discord?.galleryChannelId;
+    let sendToTwitter =
+      CONFIG.twitter.enabled && CONFIG.twitter.tweetImagesEnabled;
 
     const user = ctx.tags['display-name'];
     if (!prompt) {
@@ -19,18 +23,24 @@ const command: Command = {
       `@${user} Please give me a few moments while I draw your image.`
     );
 
-    if (prompt.includes('nodiscord')) {
+    if (prompt.toLowerCase().includes('nodiscord')) {
       sendToDiscord = false;
-      prompt = prompt.replace(/nodiscord/gi, '').trim();
+      prompt = prompt.replace(/nodiscord/gi, '');
+    }
+
+    if (prompt.toLowerCase().includes('notwitter')) {
+      sendToTwitter = false;
+      prompt = prompt.replace(/notwitter/gi, '');
     }
 
     let url = '';
     const firstWord = prompt.split(' ')[0].toLowerCase();
 
-    if (firstWord === 'nate') {
+    if (CONFIG.openai.imageEdits.includes(firstWord)) {
+      const regex = new RegExp(`${firstWord} `, 'i');
       url = await services.openaiService.editImage(
-        `./public/images/edits/nate.png`,
-        prompt.replace(/nate/i, 'this person')
+        `./public/images/edits/${firstWord}.png`,
+        prompt.replace(regex, 'this person')
       );
     } else {
       url = await services.openaiService.createImage(prompt);
@@ -43,19 +53,23 @@ const command: Command = {
       url
     });
 
-    if (
-      sendToDiscord &&
-      CONFIG.discord.enabled &&
-      CONFIG.discord.galleryChannelId
-    ) {
-      const res = await fetch(url);
-      const buffer = Buffer.from(await res.arrayBuffer());
+    const res = await fetch(url);
+    const buffer = Buffer.from(await res.arrayBuffer());
+
+    if (sendToDiscord) {
       services.discordService.postImageToGallery(
-        `@${user} on Twitch used !image ${prompt}`,
+        `@${user} on Twitch used "!image ${prompt}"`,
         buffer
       );
     }
-    return true;
+
+    if (sendToTwitter) {
+      const hashtags = CONFIG.twitter.tweetHashtags || '';
+      services.twitterService.postImage(
+        buffer,
+        `${user} on Twitch used "!image ${prompt}" ${hashtags}`
+      );
+    }
   }
 };
 

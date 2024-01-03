@@ -13,7 +13,7 @@ const command: Command = {
         console.error('Error parsing commercial length. Setting to 30.', e);
       }
     }
-    void services.twitchService.helixOwnerApiCall(
+    void services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/channels/commercial',
       'POST',
       {

@@ -168,11 +168,7 @@ export function addStrToFileAfterStr(
 }
 
 export function fixPronunciations(text: string): string {
-  const phrases = new Map([
-    ['lichess', 'lee-chess'],
-  ]);
-
-  for (const [key, value] of phrases.entries()) {
+  for (const [key, value] of CONFIG.openai.pronunciations) {
     text = text.replace(new RegExp(key, 'gi'), value);
   }
 
