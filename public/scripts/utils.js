@@ -397,3 +397,11 @@ async function translate(message) {
   });
   return await res.json();
 }
+
+function randomInRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

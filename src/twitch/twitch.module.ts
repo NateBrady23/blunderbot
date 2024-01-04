@@ -5,7 +5,6 @@ import { TwitchGateway } from './twitch.gateway';
 import { CommandModule } from '../command/command.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { GiphyModule } from '../giphy/giphy.module';
-import { TwitchCustomRewardsService } from './twitch.custom-rewards';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { TwitchCustomRewardsService } from './twitch.custom-rewards';
     GiphyModule
   ],
   controllers: [TwitchController],
-  providers: [TwitchCustomRewardsService, TwitchService, TwitchGateway],
-  exports: [TwitchCustomRewardsService, TwitchGateway, TwitchService]
+  providers: [TwitchService, TwitchGateway],
+  exports: [TwitchGateway, TwitchService]
 })
 export class TwitchModule {}
