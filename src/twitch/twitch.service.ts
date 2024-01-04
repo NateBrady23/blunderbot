@@ -67,11 +67,11 @@ export class TwitchService {
     this.client.say(CONFIG.twitch.channel, message);
   }
 
-  checkForShoutout(ctx: Context) {
-    const userToCheck = ctx.tags.username.toLowerCase();
-    if (shoutoutUsers.includes(userToCheck)) {
-      void this.ownerRunCommand(`!so ${userToCheck}`);
-      shoutoutUsers = shoutoutUsers.filter((user) => user !== userToCheck);
+  checkForShoutout(user: string) {
+    user = user.toLowerCase();
+    if (shoutoutUsers.includes(user)) {
+      void this.ownerRunCommand(`!so ${user}`);
+      shoutoutUsers = shoutoutUsers.filter((u) => u !== user);
     }
   }
 
@@ -127,7 +127,7 @@ export class TwitchService {
     // If the message isn't a !so command, check to see if this user needs
     // to be shouted out!
     if (!context.message.startsWith('!so ')) {
-      this.checkForShoutout(context);
+      this.checkForShoutout(context.tags.username);
     }
 
     // The message isn't a command or custom reward, so see if it's something we
@@ -224,6 +224,7 @@ export class TwitchService {
 
   async onRaidHandler(channel, username, _viewers) {
     void this.ownerRunCommand(`!raids ${username}`);
+    void this.ownerRunCommand(`!so ${username}`);
   }
 
   async onCheerHandler(channel, userstate, message) {
@@ -252,7 +253,7 @@ export class TwitchService {
     await this.commandService.run(context);
   }
 
-  async createContext(message: string, tags?: any): Promise<Context> {
+  async createContext(message: string, tags?: ContextTags): Promise<Context> {
     const context: Context = {
       client: this.client,
       channel: CONFIG.twitch.channel,
@@ -368,19 +369,11 @@ export class TwitchService {
     }
   }
 
-  async helixOwnerApiCall(url, method = 'GET', body = undefined): Promise<any> {
-    return this.helixApiCall(url, method, body, true);
-  }
-
-  async helixBotApiCall(url, method = 'GET', body = undefined): Promise<any> {
-    return this.helixApiCall(url, method, body, false);
-  }
-
   async helixGetTwitchUserInfo(login: string) {
     login = login.toLowerCase();
     if (!twitchUserMap[login]) {
       // Get their twitch id
-      let res = await this.helixOwnerApiCall(
+      let res = await this.helixApiCall(
         `https://api.twitch.tv/helix/users?login=${login}`,
         'GET'
       );
@@ -388,7 +381,7 @@ export class TwitchService {
       if (!id) return;
 
       // See if they are a follower
-      res = await this.helixOwnerApiCall(
+      res = await this.helixApiCall(
         `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${CONFIG.twitch.ownerId}`,
         'GET'
       );
@@ -403,9 +396,10 @@ export class TwitchService {
     try {
       const user = await this.helixGetTwitchUserInfo(login);
       if (!user) return;
-      await this.helixBotApiCall(
+      await this.helixApiCall(
         `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${CONFIG.twitch.ownerId}&to_broadcaster_id=${user.id}&moderator_id=${CONFIG.twitch.botId}`,
         'POST',
+        false,
         false
       );
     } catch (e) {

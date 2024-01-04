@@ -16,13 +16,18 @@ const command: Command = {
         body = '{ "bits": ' + body + ' }';
       }
       body = JSON.parse(body);
+
+      const user = body.user;
       const bits = parseInt(body.bits) || 0;
+      let message = body.message;
 
       // If there's a user, add them to the contributions to thank them at the end of the stream
-      if (body.user) {
-        commandState.contributions[body.user] =
-          bits + (commandState.contributions[body.user] || 0);
+      if (user) {
+        commandState.contributions.bits[user] =
+          bits + (commandState.contributions.bits[user] || 0);
       }
+
+      console.log(commandState.contributions);
 
       let commands: string[], alert: string;
       if (CONFIG?.bits.matches && CONFIG.bits.matches[bits]) {
@@ -43,9 +48,10 @@ const command: Command = {
       }
 
       // Play a message after all the other alerts and sounds play
-      if (body?.message && bits >= 100) {
-        body.message = body.message.replace(/cheer\d{1,10}/gi, '').trim();
-        await services.twitchService.ownerRunCommand(`!tts ${body.message}`);
+      if (message && bits >= 100) {
+        message = message.replace(/[a-z]\d{1,10}/gi, '').trim();
+        message &&
+          (await services.twitchService.ownerRunCommand(`!tts ${message}`));
       }
     });
   }

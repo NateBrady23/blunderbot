@@ -10,13 +10,13 @@ const command: Command = {
   name: 'cancel',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const currPoll = await services.twitchService.helixOwnerApiCall(
+    const currPoll = await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
         CONFIG.twitch.ownerId,
       'GET'
     );
 
-    await services.twitchService.helixOwnerApiCall(
+    await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
         CONFIG.twitch.ownerId +
         '&status=TERMINATED' +

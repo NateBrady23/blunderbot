@@ -9,14 +9,16 @@ import { SlackModule } from './slack/slack.module';
 import { OpenaiModule } from './openai/openai.module';
 import { AppGateway } from './app.gateway';
 import { BrowserModule } from './browser/browser.module';
+import { TwitterModule } from './twitter/twitter.module';
 
 @Module({
   imports: [
     BrowserModule,
     DiscordModule,
-    TwitchModule,
-    SlackModule,
     OpenaiModule,
+    SlackModule,
+    TwitchModule,
+    TwitterModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public')
     })

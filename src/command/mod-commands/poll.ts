@@ -47,7 +47,7 @@ const command: Command = {
       ctx.botSpeak(reply);
       return true;
     }
-    await services.twitchService.helixOwnerApiCall(
+    await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/polls',
       'POST',
       question

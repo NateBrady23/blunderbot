@@ -1,5 +1,28 @@
 # Release Notes
 
+### 1.2.0 (2024-01-02)
+
+#### Breaking Changes
+
+- New twitter package and other package updates.
+
+#### Features
+
+- Added Twitter API support for going live announcements and sharing images from the `!image` command.
+- `notwitter` and `nodiscord` can both be used in the `!live` and `!image` commands to prevent sending to those platforms even if those platforms are enabled.
+- images can now be edited, thanks Trevlar! Unfortunately this is still using dall-e-2, so it's not perfect, but it's a fun start.
+- If `!image` includes `nodiscord`, the image won't be sent to discord even if discord is enabled.
+- Added ability to fix pronunciations before they're sent to the tts service, thanks Trevlar!
+- AutoShoutout all raiders, even if they're not in the autoShoutout list.
+
+#### Bug Fixes
+
+- Fixed an issue with the bits not adding users to the contributions list properly.
+- Removed all cheer messages from the `!bits` command before `!tts` is used.
+- Fixed the `!help` command to show help when an alias is used.
+- General code cleanup and refactoring.
+- Fixed the `!add` command removing the command from the body if it existed. Also allows syntax like `!addcom !somecom <body>` for people familiar with other bots.
+
 ### 1.1.3 (2023-12-30)
 
 #### Bug Fixes

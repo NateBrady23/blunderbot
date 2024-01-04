@@ -40,6 +40,17 @@ export class OpenaiService {
     return response.data[0].url;
   }
 
+  async editImage(maskImg: string, prompt: string): Promise<string> {
+    const response = await openai.images.edit({
+      image: fs.createReadStream(maskImg),
+      // TODO: Currently does not accept model parameter
+      // model: CONFIG.openai?.imageModel || 'dall-e-3',
+      prompt,
+      n: 1
+    });
+    return response.data[0].url;
+  }
+
   async tts(message: string, voice: any): Promise<void> {
     try {
       const response = await openai.audio.speech.create({

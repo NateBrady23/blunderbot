@@ -31,7 +31,7 @@ const command: Command = {
 
     // This means we're starting a new prediction.
     if (items.length === 4) {
-      const res = await services.twitchService.helixOwnerApiCall(
+      const res = await services.twitchService.helixApiCall(
         'https://api.twitch.tv/helix/predictions',
         'POST',
         {
@@ -68,7 +68,7 @@ const command: Command = {
       return true;
     }
 
-    const res = await services.twitchService.helixOwnerApiCall(
+    const res = await services.twitchService.helixApiCall(
       `https://api.twitch.tv/helix/predictions?broadcaster_id=${CONFIG.twitch.ownerId}`
     );
 
@@ -116,7 +116,7 @@ const command: Command = {
       }
     }
 
-    await services.twitchService.helixOwnerApiCall(
+    await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/predictions',
       'PATCH',
       req

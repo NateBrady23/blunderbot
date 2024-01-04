@@ -10,6 +10,7 @@ import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
 import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
+import { TwitterService } from '../twitter/twitter.service';
 
 @Injectable()
 export class CommandService {
@@ -28,6 +29,8 @@ export class CommandService {
     private readonly twitchGateway: TwitchGateway,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService,
+    @Inject(forwardRef(() => TwitterService))
+    private readonly twitterService: TwitterService,
     @Inject(forwardRef(() => DiscordService))
     private readonly discordService: DiscordService,
     @Inject(forwardRef(() => GiphyService))
@@ -40,10 +43,12 @@ export class CommandService {
     this.services = {
       appGateway: this.appGateway,
       browserService: this.browserService,
+      commandService: this,
       discordService: this.discordService,
       twitchCustomRewardsService: this.twitchCustomRewardsService,
       twitchGateway: this.twitchGateway,
       twitchService: this.twitchService,
+      twitterService: this.twitterService,
       openaiService: this.openaiService,
       lichessService: this.lichessService,
       giphyService: this.giphyService
@@ -226,6 +231,32 @@ export class CommandService {
     return true;
   }
 
+  findCommand(name: string): Command | undefined {
+    const commandKeys = Object.keys(commands);
+
+    let cmd: Command | undefined;
+
+    // First let's look for an exact match for command names
+    if (commandKeys.includes(name)) {
+      cmd = commands[name];
+    } else {
+      for (const c of commandKeys) {
+        // Look for the first command that starts with the command sent to provide a shortcut for making commands
+        if (!cmd && c.startsWith(name)) {
+          cmd = commands[c];
+        }
+        // However, prefer an exact match for aliases
+        const currCmd = commands[c];
+        if (currCmd.aliases && currCmd.aliases.includes(name)) {
+          cmd = currCmd;
+          break;
+        }
+      }
+    }
+
+    return cmd;
+  }
+
   async run(ctx: Context) {
     if (!ctx.command) return;
 
@@ -235,26 +266,7 @@ export class CommandService {
       return;
     }
 
-    let cmd;
-    const commandKeys = Object.keys(commands);
-
-    // First let's look for an exact match for command names
-    if (commandKeys.includes(ctx.command)) {
-      cmd = commands[ctx.command];
-    } else {
-      for (const c of commandKeys) {
-        // Look for the first command that starts with the command sent to provide a shortcut for making commands
-        if (!cmd && c.startsWith(ctx.command)) {
-          cmd = commands[c];
-        }
-        // However, prefer an exact match for aliases
-        const currCmd = commands[c];
-        if (currCmd.aliases && currCmd.aliases.includes(ctx.command)) {
-          cmd = currCmd;
-          break;
-        }
-      }
-    }
+    const cmd = this.findCommand(ctx.command);
 
     // If we have a command but for some reason can't run it, short circuit
     if (cmd) {
@@ -264,7 +276,6 @@ export class CommandService {
         if (
           await cmd.run(ctx, {
             services: this.services,
-            commands,
             commandState: this.commandState
           })
         ) {

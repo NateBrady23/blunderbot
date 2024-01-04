@@ -77,6 +77,10 @@ openai:
   textModerationModel: "text-moderation-stable"
   # BlunderBot's instructions to the OpenAI chat model
   baseSystemMessage: "From now on, you are Nate Brady's creation: BlunderBot, Created to assist Nate with streaming on Twitch"
+  # If an image prompt starts with any of these, BlunderBot will edit the image using a .png in the public/images/edits directory.
+  # For example, "nate playing chess" will use the public/images/edits/nate.png file to edit the image.
+  imageEdits:
+    - "nate"
   # Voices available for BlunderBot. The first voice in the list is the default.
   voices:
     - "onyx"
@@ -85,6 +89,9 @@ openai:
     - "fable"
     - "nova"
     - "shimmer"
+  # Fix some common mispronunciations
+  pronunciations:
+    - ["lichess", "lee-chess"]
 
 discord:
   enabled: false
@@ -99,6 +106,16 @@ discord:
   ownerAuthorId: "388888888888888888"
   botAuthorId: "1888888888888888882"
   inviteLink: https://discord.gg/MfsRvaMeqU
+
+twitter:
+  enabled: false
+  apiKey: "your api key"
+  apiSecret: "your api secret"
+  accessToken: "your access token"
+  accessSecret: "your access secret"
+  tweetImagesEnabled: false
+  tweetHashtags: "#Twitch"
+  announceLive: false
 
 # I invite blunderbot to my slack channel, but this isn't necessary for the bot to work
 slack:

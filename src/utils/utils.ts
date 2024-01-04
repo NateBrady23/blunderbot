@@ -166,3 +166,11 @@ export function addStrToFileAfterStr(
     console.error(e);
   }
 }
+
+export function fixPronunciations(text: string): string {
+  for (const [key, value] of CONFIG.openai.pronunciations) {
+    text = text.replace(new RegExp(key, 'gi'), value);
+  }
+
+  return text;
+}
