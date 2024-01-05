@@ -59,28 +59,6 @@ export class TwitchService {
     this.client.on('resub', this.onResubHandler.bind(this));
     this.client.on('subgift', this.onSubGiftHandler.bind(this));
     this.client.on('submysterygift', this.onSubMysteryGiftHandler.bind(this));
-
-    // TODO: Eventually move everything to PubSub
-    const pubSubConnection = new WebSocket('wss://pubsub-edge.twitch.tv');
-    pubSubConnection.onopen = () => {
-      this.logger.log('PubSub connection opened');
-      pubSubConnection.send(
-        JSON.stringify({
-          type: 'LISTEN',
-          data: {
-            topics: [
-              `channel-points-channel-v1.${CONFIG.twitch.ownerId}`,
-              `channel-subscribe-events-v1.${CONFIG.twitch.ownerId}`,
-              `channel-bits-badge-unlocks.${CONFIG.twitch.ownerId}`,
-              `channel-bits-events-v2.${CONFIG.twitch.ownerId}`
-            ],
-            auth_token: CONFIG.twitch.apiOwnerOauthToken
-          }
-        })
-      );
-    };
-
-    pubSubConnection.onmessage = this.pubSubMessageHandler.bind(this);
   }
 
   botSpeak(message: string) {
@@ -101,33 +79,6 @@ export class TwitchService {
 
   updateBoughtSquares(data) {
     boughtSquares = data;
-  }
-
-  async pubSubMessageHandler(data) {
-    const event = JSON.parse(data.data);
-
-    if (event.type === 'MESSAGE') {
-      const message = JSON.parse(event.data.message);
-      console.log(message);
-
-      if (message.type === 'reward-redeemed') {
-        const username = message.data.redemption.user.display_name;
-        const userInput = message.data.redemption.user_input;
-        const reward = message.data.redemption.reward;
-
-        this.logger.log(`User ${username} redeemed ${reward.title}`);
-
-        if (CONFIG.twitch.customRewardCommands[reward.title]) {
-          for (let command of CONFIG.twitch.customRewardCommands[
-            reward.title
-          ]) {
-            command = command.replace(/{username}/gi, `${username}`);
-            command = command.replace(/{message}/gi, `${userInput}`);
-            void this.ownerRunCommand(`${command}`);
-          }
-        }
-      }
-    }
   }
 
   async onMessageHandler(channel, tags, message) {

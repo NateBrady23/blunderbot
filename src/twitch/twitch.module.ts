@@ -5,6 +5,8 @@ import { TwitchGateway } from './twitch.gateway';
 import { CommandModule } from '../command/command.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { GiphyModule } from '../giphy/giphy.module';
+import { TwitchPubSub } from './twitch.pubsub';
+import { TwitchEventSub } from './twitch.eventsub';
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { GiphyModule } from '../giphy/giphy.module';
     GiphyModule
   ],
   controllers: [TwitchController],
-  providers: [TwitchService, TwitchGateway],
+  providers: [TwitchService, TwitchEventSub, TwitchPubSub, TwitchGateway],
   exports: [TwitchGateway, TwitchService]
 })
 export class TwitchModule {}
