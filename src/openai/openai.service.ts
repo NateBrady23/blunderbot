@@ -12,7 +12,7 @@ const openai = new OpenAI({
   apiKey: CONFIG.openai.apiKey
 });
 
-export const baseMessages: any = [
+export const baseMessages: OpenAiChatMessage[] = [
   {
     role: 'system',
     content: CONFIG.openai.baseSystemMessage
@@ -22,6 +22,7 @@ export const baseMessages: any = [
 @Injectable()
 export class OpenaiService {
   private logger: Logger = new Logger(OpenaiService.name);
+  private savedMessages: OpenAiChatMessage[] = [];
 
   constructor(
     @Inject(forwardRef(() => CommandService))
@@ -70,7 +71,7 @@ export class OpenaiService {
 
   async translate(message: string): Promise<string> {
     try {
-      const messages: any = [
+      const messages: OpenAiChatMessage[] = [
         {
           role: 'system',
           content:
@@ -83,7 +84,6 @@ export class OpenaiService {
         model: CONFIG.openai.chatModel,
         messages
       });
-      console.log(completion.choices[0].message.content);
       return completion.choices[0].message.content;
     } catch (e) {
       this.logger.error(e);
@@ -99,10 +99,13 @@ export class OpenaiService {
       platform?: string;
       moderate?: boolean;
       usePersonality?: boolean;
+      user?: string;
     }
   ): Promise<string> {
-    let messages: any = [{ role: 'user', content: userMessage }];
-    let systemMessages: any = [];
+    let messages: OpenAiChatMessage[] = [
+      { role: 'user', content: userMessage }
+    ];
+    let systemMessages: OpenAiChatMessage[] = [];
     try {
       if (opts?.moderate) {
         try {
@@ -136,7 +139,15 @@ export class OpenaiService {
         });
       }
 
-      messages = [...systemMessages, ...messages];
+      if (opts?.user) {
+        this.savedMessages.push({
+          role: 'system',
+          content: `The following message is from ${opts.user}.`
+        });
+      }
+
+      this.savedMessages = [...this.savedMessages, ...messages];
+      messages = [...systemMessages, ...this.savedMessages];
       const completion = await openai.chat.completions.create({
         model: CONFIG.openai.chatModel,
         messages,
@@ -148,6 +159,12 @@ export class OpenaiService {
 
       if (opts?.includeBlunderBotContext) {
         reply = this.cleanReplyAsBlunderBot(reply);
+      }
+
+      this.savedMessages.push({ role: 'assistant', content: reply });
+
+      while (this.savedMessages.length > CONFIG.openai.memoryCount || 0) {
+        this.savedMessages.shift();
       }
       return reply;
     } catch (e) {
@@ -170,7 +187,8 @@ export class OpenaiService {
         moderate: true,
         usePersonality: true,
         includeBlunderBotContext: true,
-        platform: ctx.platform
+        platform: ctx.platform,
+        user: ctx.tags.username
       });
     }
   }
@@ -184,8 +202,7 @@ export class OpenaiService {
       reply.includes(`not able`) ||
       reply.includes(`not allowed`) ||
       reply.includes(`was not programmed`) ||
-      reply.includes(`was programmed`) ||
-      reply.includes(`instructed`)
+      reply.includes(`was programmed`)
     ) {
       reply = `I apologize. I don't know how to reply to that.`;
     }

@@ -41,6 +41,7 @@ interface YAMLConfig {
     imageEdits: string[];
     voices: string[];
     pronunciations: [[string, string]];
+    memoryCount: number;
   };
 
   twitter: {

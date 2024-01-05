@@ -111,6 +111,9 @@ openai:
   # Fix some common mispronunciations
   pronunciations:
     - ["lichess", "lee-chess"]
+  # The number of messages to remember for the !chat command before it starts
+  # deleting old messages. If 0, blunderbot won't have any memory of previous conversations.
+  memoryCount: 50
 
 discord:
   enabled: false

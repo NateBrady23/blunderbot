@@ -6,9 +6,11 @@
 
 - PUBSUB is here!
 - Removed all the custom rewards functionality from the previous iteration. All custom rewards are now under `twitch.customRewardCommands`. Getting the custom reward id is no longer necessary.
+- BlunderBot will start remembering conversations with users. In this config this is under `openai.memoryCount`
 
 #### Features
 
+- Added twitch's eventsub as well just to start looking at events coming in
 - Added an `!opp-rating` owner command to support the new custom reward changes.
 - Edited the `!queue` command with "add" support for owners to support the new custom reward changes and moved the queue to command state.
 
