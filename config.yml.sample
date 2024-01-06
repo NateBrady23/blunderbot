@@ -42,9 +42,9 @@ twitch:
     "Set BlunderBot's Personality":
       - "!personality {message}"
     "Buy a Square":
-      - "!buy ${message} {username}"
+      - "!buy {message} {username}"
     "Challenge me!":
-      - "!queue add ${username} ${message}"
+      - "!queue add {username} {message}"
     "Sound: I don't need a queen":
       - "!sound naka-i-dont-need-a-queen"
   # I like to make commands for specific people, like trevlar_ is the only one

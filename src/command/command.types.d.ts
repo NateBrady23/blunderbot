@@ -61,7 +61,7 @@ declare global {
     toggledOffCommands: string[];
     killedCommands: string[];
     blunderBotPersonality: string;
-    blunderbotVoice: string;
+    blunderbotVoice: OpenAiVoiceOptions;
     ephemeralCommands: { [key: string]: string };
     cbanUsers: string[];
     wouldBeCommands: { [key: string]: string };

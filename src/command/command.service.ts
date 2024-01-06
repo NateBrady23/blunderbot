@@ -68,7 +68,7 @@ export class CommandService {
       killedCommands: CONFIG.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: CONFIG.openai.voices[0],
+      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.openai.voices[0],
       ephemeralCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
@@ -293,7 +293,7 @@ export class CommandService {
 
     // If we're here, we didn't find a command, so let's see if we can use the AI to find one
     // unless this is a non-follower.
-    if (ctx.platform === 'twitch' && ctx.tags.follower) {
+    if (!ctx.tags.owner && ctx.platform === 'twitch' && ctx.tags.follower) {
       void this.twitchService.ownerRunCommand('!suggest ' + ctx.command);
     }
   }

@@ -36,6 +36,12 @@ interface Context {
   botSpeak?: (string) => void;
   reply?: (Context, string) => void;
   platform: Platforms;
+  isOwnerRun?: boolean;
+  onBehalfOf?: string;
 }
 
 type Platforms = 'twitch' | 'discord';
+
+interface CreateContextOptions {
+  onBehalfOf?: string;
+}

@@ -6,8 +6,8 @@ import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 import { chessSquares } from '../utils/constants';
 import { getRandomElement } from '../utils/utils';
-import WebSocket = require('ws');
 import tmi = require('tmi.js');
+import { Client } from 'tmi.js';
 
 let shoutoutUsers = CONFIG.autoShoutouts;
 const newChatters = [];
@@ -37,7 +37,7 @@ export class TwitchService {
     channels: [CONFIG.twitch.channel]
   };
 
-  public client;
+  public client: Client;
 
   constructor(
     @Inject(forwardRef(() => CommandService))
@@ -47,7 +47,7 @@ export class TwitchService {
   ) {
     this.client = new tmi.client(this.opts);
 
-    this.client.connect();
+    void this.client.connect();
 
     this.client.on('connected', this.onConnectedHandler.bind(this));
 
@@ -62,7 +62,7 @@ export class TwitchService {
   }
 
   botSpeak(message: string) {
-    this.client.say(CONFIG.twitch.channel, message);
+    void this.client.say(CONFIG.twitch.channel, message);
   }
 
   checkForShoutout(user: string) {
@@ -73,15 +73,15 @@ export class TwitchService {
     }
   }
 
-  onConnectedHandler(address, port) {
+  onConnectedHandler(address: string, port: number) {
     this.logger.log(`* Connected to ${address}:${port}`);
   }
 
-  updateBoughtSquares(data) {
+  updateBoughtSquares(data: unknown) {
     boughtSquares = data;
   }
 
-  async onMessageHandler(channel, tags, message) {
+  async onMessageHandler(_channel: string, tags: ContextTags, message: string) {
     if (message) {
       void writeLog('chat', `${tags['display-name']}: ${message}`);
     }
@@ -146,8 +146,13 @@ export class TwitchService {
     }
   }
 
-  async onSubscriptionHandler(channel, username, method, message, userstate) {
-    // Do your stuff.
+  async onSubscriptionHandler(
+    channel: string,
+    username: string,
+    method: string,
+    message: string,
+    userstate: unknown
+  ) {
     const toLog = {
       event: 'onSubscriptionHandler',
       channel,
@@ -160,8 +165,14 @@ export class TwitchService {
     void writeLog('events', JSON.stringify(toLog));
   }
 
-  async onResubHandler(channel, username, months, message, userstate, methods) {
-    // Do your stuff.
+  async onResubHandler(
+    channel: string,
+    username: string,
+    months: string,
+    message: string,
+    userstate: unknown,
+    methods: unknown
+  ) {
     const toLog = {
       event: 'onResubHandler',
       channel,
@@ -176,14 +187,13 @@ export class TwitchService {
   }
 
   async onSubGiftHandler(
-    channel,
-    username,
-    streakMonths,
-    recipient,
-    methods,
-    userstate
+    channel: string,
+    username: string,
+    streakMonths: string,
+    recipient: string,
+    methods: unknown,
+    userstate: unknown
   ) {
-    // Do your stuff.
     const toLog = {
       event: 'onSubGiftHandler',
       channel,
@@ -198,14 +208,13 @@ export class TwitchService {
   }
 
   async onSubMysteryGiftHandler(
-    channel,
-    username,
-    streakMonths,
-    recipient,
-    methods,
-    userstate
+    channel: string,
+    username: string,
+    streakMonths: string,
+    recipient: string,
+    methods: unknown,
+    userstate: unknown
   ) {
-    // Do your stuff.
     const toLog = {
       event: 'onSubMysteryGiftHandler',
       channel,
@@ -218,12 +227,16 @@ export class TwitchService {
     void writeLog('events', JSON.stringify(toLog));
   }
 
-  async onRaidHandler(channel, username, _viewers) {
+  async onRaidHandler(_channel: string, username: string, _viewers: number) {
     void this.ownerRunCommand(`!raids ${username}`);
     void this.ownerRunCommand(`!so ${username}`);
   }
 
-  async onCheerHandler(channel, userstate, message) {
+  async onCheerHandler(
+    _channel: string,
+    userstate: { 'display-name': string; bits: string },
+    message: string
+  ) {
     const bits = parseInt(userstate.bits) || 0;
     const obj = {
       message,
@@ -244,12 +257,16 @@ export class TwitchService {
     }
   }
 
-  async ownerRunCommand(message: string) {
-    const context: Context = await this.createContext(message);
+  async ownerRunCommand(message: string, opts: CreateContextOptions = {}) {
+    const context: Context = await this.createContext(message, undefined, opts);
     await this.commandService.run(context);
   }
 
-  async createContext(message: string, tags?: ContextTags): Promise<Context> {
+  async createContext(
+    message: string,
+    tags?: ContextTags,
+    opts?: CreateContextOptions
+  ): Promise<Context> {
     const context: Context = {
       client: this.client,
       channel: CONFIG.twitch.channel,
@@ -262,6 +279,8 @@ export class TwitchService {
       context.tags = tags;
     } else {
       // If no tags, then it's a command being run directly by the owner
+      context.isOwnerRun = true;
+      context.onBehalfOf = opts?.onBehalfOf;
       context.tags = {
         username: CONFIG.twitch.ownerUsername,
         owner: true,
@@ -283,7 +302,7 @@ export class TwitchService {
       const args = context.message
         .slice(1)
         .split(' ')
-        .filter((e) => e !== ' ');
+        .filter((e) => e !== '');
       const command = args.shift();
 
       context.body = context.message.replace(`!${command}`, '').trim();
@@ -334,11 +353,11 @@ export class TwitchService {
    */
 
   async helixApiCall(
-    url,
+    url: string,
     method = 'GET',
     body = undefined,
     asOwner = true
-  ): Promise<any> {
+  ): Promise<{ data: unknown }> {
     const token = asOwner
       ? CONFIG.twitch.apiOwnerOauthToken
       : CONFIG.twitch.apiBotOauthToken;
@@ -369,19 +388,23 @@ export class TwitchService {
     login = login.toLowerCase();
     if (!twitchUserMap[login]) {
       // Get their twitch id
-      let res = await this.helixApiCall(
-        `https://api.twitch.tv/helix/users?login=${login}`,
-        'GET'
+      const res: { data: [{ id: string }] } = <{ data: [{ id: string }] }>(
+        await this.helixApiCall(
+          `https://api.twitch.tv/helix/users?login=${login}`,
+          'GET'
+        )
       );
       const id = res?.data[0]?.id;
       if (!id) return;
 
       // See if they are a follower
-      res = await this.helixApiCall(
-        `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${CONFIG.twitch.ownerId}`,
-        'GET'
+      const res2: { data: unknown[] } = <{ data: unknown[] }>(
+        await this.helixApiCall(
+          `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${CONFIG.twitch.ownerId}`,
+          'GET'
+        )
       );
-      const isFollower = !!res?.data[0];
+      const isFollower = !!res2?.data[0];
 
       twitchUserMap[login] = { id, isFollower };
     }

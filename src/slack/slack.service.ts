@@ -48,7 +48,7 @@ export class SlackService {
       this.logger.log(JSON.stringify(args));
     });
 
-    socketModeClient.on('app_mention', async ({ event, _body, ack }) => {
+    socketModeClient.on('app_mention', async ({ event, ack }) => {
       await ack();
       const prompt = event.text.split('>')[1];
 

@@ -9,11 +9,13 @@ const command: Command = {
   run: async (ctx, { services }) => {
     let prompt = ctx.body?.trim();
     let sendToDiscord =
-      CONFIG.discord.enabled && !!CONFIG.discord?.galleryChannelId;
+      CONFIG.discord.enabled &&
+      !!CONFIG.discord?.galleryChannelId &&
+      !Platform.Discord;
     let sendToTwitter =
       CONFIG.twitter.enabled && CONFIG.twitter.tweetImagesEnabled;
 
-    const user = ctx.tags['display-name'];
+    const user = ctx.onBehalfOf || ctx.tags['display-name'];
     if (!prompt) {
       ctx.botSpeak(`You need to provide a prompt.`);
       return false;
@@ -55,6 +57,12 @@ const command: Command = {
 
     const res = await fetch(url);
     const buffer = Buffer.from(await res.arrayBuffer());
+
+    // If this is a command run by the owner, don't send to Discord or Twitter
+    // Unless it was onBehalf of a user (most common case: Channel Redemption)
+    if (ctx.isOwnerRun && !ctx.onBehalfOf) {
+      return;
+    }
 
     if (sendToDiscord) {
       services.discordService.postImageToGallery(

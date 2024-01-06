@@ -52,7 +52,7 @@ export class OpenaiService {
     return response.data[0].url;
   }
 
-  async tts(message: string, voice: any): Promise<void> {
+  async tts(message: string, voice: OpenAiVoiceOptions): Promise<void> {
     try {
       const response = await openai.audio.speech.create({
         model: CONFIG.openai.ttsModel,
@@ -188,7 +188,7 @@ export class OpenaiService {
         usePersonality: true,
         includeBlunderBotContext: true,
         platform: ctx.platform,
-        user: ctx.tags.username
+        user: ctx.onBehalfOf || ctx.tags.username
       });
     }
   }

@@ -95,7 +95,9 @@ export class TwitchPubSub {
           ]) {
             command = command.replace(/{username}/gi, `${username}`);
             command = command.replace(/{message}/gi, `${userInput}`);
-            void this.twitchService.ownerRunCommand(`${command}`);
+            void this.twitchService.ownerRunCommand(`${command}`, {
+              onBehalfOf: username
+            });
           }
         }
       }

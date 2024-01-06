@@ -7,12 +7,21 @@
 - PUBSUB is here!
 - Removed all the custom rewards functionality from the previous iteration. All custom rewards are now under `twitch.customRewardCommands`. Getting the custom reward id is no longer necessary.
 - BlunderBot will start remembering conversations with users. In this config this is under `openai.memoryCount`
+- Added tmi.js types package.
 
 #### Features
 
 - Added twitch's eventsub as well just to start looking at events coming in
 - Added an `!opp-rating` owner command to support the new custom reward changes.
 - Edited the `!queue` command with "add" support for owners to support the new custom reward changes and moved the queue to command state.
+- OwnerRunCommands now have "onBehalfOf" support for the new custom reward changes.
+- Owner generated images don't get posted to twitter/discord by default, unless they were "onBehalfOf" a user.
+
+#### Bug Fixes
+
+- Fixed a bug where empty args weren't being filtered out of context
+- Owner run commands from the command input are no longer being "suggested" if they are typos.
+- Fixed types and other code cleanup.
 
 ### 1.2.0 (2024-01-02)
 
