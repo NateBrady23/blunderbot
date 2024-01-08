@@ -127,7 +127,7 @@ export class DiscordService {
     const args = message
       .slice(1)
       .split(' ')
-      .filter((e) => e !== ' ');
+      .filter((e) => e !== '');
     const command = args.shift();
 
     context.body = context.message.replace(`!${command}`, '').trim();

@@ -15,19 +15,38 @@ twitch:
   apiOwnerOauthToken: "ownertoken"
   apiClientId: "apiClientID"
   apiClientSecret: "apiClientSecret"
-  # The following are Twitch Custom Reward ID's. These are optional.
-  customRewards:
-    oppRating: dea7ef8d-eb78-4e59-966c-952db27ce50a
-    challengeQueue: 281df6b2-4e17-4573-adde-403f7eb1f491
-    bbPersonality: 308d9f77-f238-46e0-9aef-bc1fe33c151b
-    buySquare: 20379aae-5498-4a0f-8344-ae2ac391b8f2
-    gif: e4474c8e-eeaa-4724-abfb-af688ce88c47
-    lichessTitle: 7a23bf6a-74b7-4423-a659-dc502b428b6d
-    oppKing: 444a39bb-04ce-4b43-b68a-6d58a44fb678
-    guideRaid: e4ec9f36-f2e6-4a5d-9b6f-5907fa45cfdb
-    bbVoice: ad81a974-233d-4910-abf2-be72aafebe66
-    runPoll: 8027dfce-78d4-49a6-b9ce-f018d0721dad
-    myOwnCommand: e4bf4b37-d9ea-4ffd-a351-4f6888c8b5d5
+  # Custom reward titles. If the server sees a custom reward with one of these titles, it will run the commands (as owner).
+  # Make sure the title is exactly the same as it is on Twitch. Use {username} to insert the user's name into the command.
+  # Use {message} to insert the user's message into the command.
+  customRewardCommands:
+    "Let it Snow":
+      - "!confetti snow"
+    "Change my opponent's rating":
+      - "!opp-rating {message}"
+    "Title me on LiChess":
+      - "!tts Blunder Master, {username} would like to be titled on lichess. They chose: {message}"
+    "My own !command":
+      - "!tts {username} has redeemed their own command. They chose: {message}"
+    "Make me VIP":
+      - "!tts {username} has redeemed VIP status."
+    "Create me an opponent king":
+      - "!tts {username} has redeemed a custom opponent king. They chose: {message}"
+    "Play a gif on the board":
+      - "!gif {message}"
+    "Run a Poll":
+      - "!poll {message}"
+    "Guide the Raid":
+      - "!tts {username} has redeemed guide the raid. They would like to raid {message}"
+    "Change BlunderBot's Voice":
+      - "!voice {message}"
+    "Set BlunderBot's Personality":
+      - "!personality {message}"
+    "Buy a Square":
+      - "!buy {message} {username}"
+    "Challenge me!":
+      - "!queue add {username} {message}"
+    "Sound: I don't need a queen":
+      - "!sound naka-i-dont-need-a-queen"
   # I like to make commands for specific people, like trevlar_ is the only one
   # who can use the !trophy command. Note that the owner and bot can run all commands.
   # These users can't run commands above their role, so a non-mod can't run a mod command
@@ -92,6 +111,9 @@ openai:
   # Fix some common mispronunciations
   pronunciations:
     - ["lichess", "lee-chess"]
+  # The number of messages to remember for the !chat command before it starts
+  # deleting old messages. If 0, blunderbot won't have any memory of previous conversations.
+  memoryCount: 50
 
 discord:
   enabled: false

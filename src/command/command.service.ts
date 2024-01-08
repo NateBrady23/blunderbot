@@ -9,7 +9,6 @@ import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
-import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
 import { TwitterService } from '../twitter/twitter.service';
 
 @Injectable()
@@ -23,8 +22,6 @@ export class CommandService {
     private readonly appGateway: AppGateway,
     @Inject(forwardRef(() => BrowserService))
     private readonly browserService: BrowserService,
-    @Inject(forwardRef(() => TwitchCustomRewardsService))
-    private readonly twitchCustomRewardsService: TwitchCustomRewardsService,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway,
     @Inject(forwardRef(() => TwitchService))
@@ -45,7 +42,6 @@ export class CommandService {
       browserService: this.browserService,
       commandService: this,
       discordService: this.discordService,
-      twitchCustomRewardsService: this.twitchCustomRewardsService,
       twitchGateway: this.twitchGateway,
       twitchService: this.twitchService,
       twitterService: this.twitterService,
@@ -65,13 +61,14 @@ export class CommandService {
     this.commandState = {
       arena: '',
       first: '',
+      challengeQueue: [],
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
       killedCommands: CONFIG.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: CONFIG.openai.voices[0],
+      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.openai.voices[0],
       ephemeralCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
@@ -296,7 +293,7 @@ export class CommandService {
 
     // If we're here, we didn't find a command, so let's see if we can use the AI to find one
     // unless this is a non-follower.
-    if (ctx.platform === 'twitch' && ctx.tags.follower) {
+    if (!ctx.tags.owner && ctx.platform === 'twitch' && ctx.tags.follower) {
       void this.twitchService.ownerRunCommand('!suggest ' + ctx.command);
     }
   }

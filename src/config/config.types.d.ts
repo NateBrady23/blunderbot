@@ -14,19 +14,7 @@ interface YAMLConfig {
     apiOwnerOauthToken: string;
     apiClientId: string;
     apiClientSecret: string;
-    customRewards: {
-      oppRating: string;
-      challengeQueue: string;
-      bbPersonality: string;
-      buySquare: string;
-      gif: string;
-      lichessTitle: string;
-      oppKing: string;
-      guideRaid: string;
-      bbVoice: string;
-      runPoll: string;
-      myOwnCommand: string;
-    };
+    customRewardCommands: { [key: string]: string[] };
     followerCommands: string[];
     subCommands: string[];
     limitedCommands: { [key: string]: number };
@@ -53,6 +41,7 @@ interface YAMLConfig {
     imageEdits: string[];
     voices: string[];
     pronunciations: [[string, string]];
+    memoryCount: number;
   };
 
   twitter: {

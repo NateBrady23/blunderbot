@@ -4,6 +4,7 @@ const command: Command = {
   name: 'buy',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
+    console.log(ctx.args);
     const square = ctx.args[0].trim().substring(0, 2).toLowerCase();
     const user = ctx.args[1].trim();
 

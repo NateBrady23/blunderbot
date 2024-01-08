@@ -1,27 +1,41 @@
 import { Platform } from '../../enums';
+import { removeSymbols } from '../../utils/utils';
 
 const command: Command = {
   name: 'queue',
   platforms: [Platform.Twitch],
-  run: async (ctx, { services }) => {
+  run: async (ctx, { services, commandState }) => {
     const queueCommand = (ctx.args[0] || '').toLowerCase();
-    const challengeQueue =
-      services.twitchCustomRewardsService.getChallengeQueue();
 
-    if (challengeQueue.length && queueCommand === 'pop' && ctx.tags.owner) {
-      const next = challengeQueue.shift();
+    if (
+      commandState.challengeQueue.length &&
+      queueCommand === 'pop' &&
+      ctx.tags.owner
+    ) {
+      const next = commandState.challengeQueue.shift();
       ctx.botSpeak(
         `${next.twitchUser}->${next.lichessUser} has been removed from the queue (in a good way)`
       );
     }
 
-    if (!challengeQueue.length) {
+    if (queueCommand === 'add' && ctx.tags.owner) {
+      commandState.challengeQueue.push({
+        twitchUser: ctx.args[1],
+        lichessUser: ctx.args.slice(2).join(' ')
+      });
+      ctx.botSpeak(`@${ctx.args[1]} has joined the queue!`);
+      void services.twitchService.ownerRunCommand(
+        `!tts ${removeSymbols(ctx.args[1])} has joined the queue!`
+      );
+    }
+
+    if (!commandState.challengeQueue.length) {
       ctx.botSpeak('The queue is empty');
       return false;
     }
 
     const toSay = [];
-    challengeQueue.forEach((item) => {
+    commandState.challengeQueue.forEach((item) => {
       toSay.push(`${item.twitchUser}->${item.lichessUser}`);
     });
     ctx.botSpeak('The queue is: ' + toSay.join(', '));

@@ -1,6 +1,5 @@
 import { TwitchGateway } from '../twitch/twitch.gateway';
 import { TwitchService } from '../twitch/twitch.service';
-import { TwitchCustomRewardsService } from '../twitch/twitch.custom-rewards';
 import { OpenaiService } from '../openai/openai.service';
 import { LichessService } from '../lichess/lichess.service';
 import { GiphyService } from '../giphy/giphy.service';
@@ -45,7 +44,6 @@ declare global {
     giphyService: GiphyService;
     lichessService: LichessService;
     openaiService: OpenaiService;
-    twitchCustomRewardsService: TwitchCustomRewardsService;
     twitchGateway: TwitchGateway;
     twitchService: TwitchService;
     twitterService: TwitterService;
@@ -55,11 +53,15 @@ declare global {
     arena: string;
     first: string;
     isLive: boolean;
+    challengeQueue: {
+      twitchUser: string;
+      lichessUser: string;
+    }[];
     limitedCommands: { [key: string]: { [key: string]: number } };
     toggledOffCommands: string[];
     killedCommands: string[];
     blunderBotPersonality: string;
-    blunderbotVoice: string;
+    blunderbotVoice: OpenAiVoiceOptions;
     ephemeralCommands: { [key: string]: string };
     cbanUsers: string[];
     wouldBeCommands: { [key: string]: string };
