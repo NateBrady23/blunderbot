@@ -1,6 +1,6 @@
 # Release Notes
 
-### 1.3.0 (2024-01-04)
+### 1.3.0 (2024-01-08)
 
 #### Breaking Changes
 

@@ -23,9 +23,9 @@ const command: Command = {
         twitchUser: ctx.args[1],
         lichessUser: ctx.args.slice(2).join(' ')
       });
-      ctx.botSpeak(`@${ctx.tags['display-name']} has joined the queue!`);
+      ctx.botSpeak(`@${ctx.args[1]} has joined the queue!`);
       void services.twitchService.ownerRunCommand(
-        `!tts ${removeSymbols(ctx.tags['display-name'])} has joined the queue!`
+        `!tts ${removeSymbols(ctx.args[1])} has joined the queue!`
       );
     }
 
