@@ -88,6 +88,8 @@
 
 `!vchat <message>` :gem::three: : Asks BlunderBot a question but BlunderBot responds with voice instead of text.
 
+`!version`: BlunderBot states his current version.
+
 ### Mod Commands
 
 `accept`: Accepts any members waiting to join the BBB team

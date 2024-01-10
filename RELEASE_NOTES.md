@@ -15,6 +15,7 @@
 - Added `twitch.onSubscribe` to the `config.yml` file for a list of commands to run during a twitch subscription event.
 - `!sound` can now take a filepath instead of just sounds restricted to the soundboard.
 - A new `!cursor` command that changes the cursor while it's over the board. Shoutout to @fitztrev for the contribution!
+- `!version` command to display the current version of the bot. Thanks to @fitztrev for the contribution!
 
 ### 1.3.0 (2024-01-08)
 
