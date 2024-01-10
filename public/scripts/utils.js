@@ -124,6 +124,30 @@ function isOrientation(color) {
   }
 }
 
+async function setCursorStyle() {
+  window.requestAnimationFrame(async () => {
+    console.log('Resetting cursor style');
+
+    // Remove the style if it already exists
+    document.querySelector('#cursor-style')?.remove();
+
+    const styleTag = document.createElement('style');
+    styleTag.id = 'cursor-style';
+
+    const cursor = localStorage.getItem(LOCAL_STORAGE_KEYS.CURSOR);
+
+    if (cursor) {
+      styleTag.innerHTML += `
+        * {
+          cursor: url('https://lichess.org/blunderbot/images/cursors/${cursor}.cur'), default !important;
+        }
+      `;
+    }
+
+    head.appendChild(styleTag);
+  });
+}
+
 async function setKingStyle() {
   window.requestAnimationFrame(async () => {
     console.log('Resetting king style');

@@ -10,12 +10,14 @@ const crowns: string[] = [];
 const oppKings: string[] = [];
 const themeConfig = {};
 const soundboard: string[] = [];
+const cursors: string[] = [];
 
 [
   ['./public/images/kings', kings],
   ['./public/images/crowns', crowns],
   ['./public/images/opponents', oppKings],
-  ['./public/sounds/soundboard', soundboard]
+  ['./public/sounds/soundboard', soundboard],
+  ['./public/images/cursors', cursors],
 ].forEach((publicFiles: [string, string[]]) => {
   readdirSync(publicFiles[0]).forEach((file) => {
     const fileName = file.split('.')[0];
@@ -74,6 +76,10 @@ class ConfigService {
 
   public getSoundboard() {
     return soundboard;
+  }
+
+  public getCursors() {
+    return cursors;
   }
 }
 
