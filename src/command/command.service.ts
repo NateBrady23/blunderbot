@@ -229,6 +229,7 @@ export class CommandService {
   }
 
   findCommand(name: string): Command | undefined {
+    name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
 
     let cmd: Command | undefined;

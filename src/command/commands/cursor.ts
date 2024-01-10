@@ -7,9 +7,20 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const cursors = configService.getCursors();
     let cursor = (ctx.args[0] || '').toLowerCase();
+
+    if (cursor === 'reset') {
+      services.twitchGateway.sendDataToOneSocket('serverMessage', {
+        type: 'CURSOR',
+        crown: '',
+        user: ctx.tags['display-name']
+      });
+      return true;
+    }
+
     if (cursor === 'random') {
       const filteredCursors = cursors.filter((k) => !k.startsWith('secret_'));
-      cursor = filteredCursors[Math.floor(Math.random() * filteredCursors.length)];
+      cursor =
+        filteredCursors[Math.floor(Math.random() * filteredCursors.length)];
     } else if (!cursor || !cursors.includes(cursor)) {
       ctx.botSpeak(
         `The following cursors are available: ${configService
@@ -25,7 +36,7 @@ const command: Command = {
       cursor
     });
     if (!ctx.tags.owner && !cursor.startsWith('secret_')) {
-      services.twitchService.ownerRunCommand(
+      void services.twitchService.ownerRunCommand(
         `!alert ${user} changed the cursor to ${cursor}`
       );
     }

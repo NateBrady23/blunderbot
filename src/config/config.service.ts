@@ -17,7 +17,7 @@ const cursors: string[] = [];
   ['./public/images/crowns', crowns],
   ['./public/images/opponents', oppKings],
   ['./public/sounds/soundboard', soundboard],
-  ['./public/images/cursors', cursors],
+  ['./public/images/cursors', cursors]
 ].forEach((publicFiles: [string, string[]]) => {
   readdirSync(publicFiles[0]).forEach((file) => {
     const fileName = file.split('.')[0];

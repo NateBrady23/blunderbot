@@ -23,7 +23,7 @@ interface Context {
   channel?: string;
   // tags coming from tmi
   tags?: ContextTags;
-  // the entire message
+  // the entire message including any commands
   message: string;
   // the discord message object
   discordMessage?: DiscordMessage;

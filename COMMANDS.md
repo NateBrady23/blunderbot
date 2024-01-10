@@ -26,6 +26,8 @@
 
 `!crown <name>`: Change my crown while I'm playing. Ex. `!crown tophat`
 
+`!cursor <name>`: Changes the mouse cursor! Ex. `!cursor blunder`
+
 `!dadjoke`: BlunderBot tells a dad joke.
 
 `!daily`: Displays the lichess daily puzzle link

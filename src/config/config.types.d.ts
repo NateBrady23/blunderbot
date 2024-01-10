@@ -14,6 +14,7 @@ interface YAMLConfig {
     apiOwnerOauthToken: string;
     apiClientId: string;
     apiClientSecret: string;
+    onSubscribe: string[];
     customRewardCommands: { [key: string]: string[] };
     followerCommands: string[];
     subCommands: string[];

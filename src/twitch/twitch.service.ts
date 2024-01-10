@@ -303,11 +303,13 @@ export class TwitchService {
         .slice(1)
         .split(' ')
         .filter((e) => e !== '');
-      const command = args.shift();
 
-      context.body = context.message.replace(`!${command}`, '').trim();
-      context.args = args;
-      context.command = command.toLowerCase();
+      if (args.length && args[0].length) {
+        const command = args.shift();
+        context.body = context.message.replace(`!${command}`, '').trim();
+        context.args = args;
+        context.command = command.toLowerCase();
+      }
     }
 
     if (

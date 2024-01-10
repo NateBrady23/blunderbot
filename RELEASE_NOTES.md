@@ -1,5 +1,21 @@
 # Release Notes
 
+### 1.3.1 (2024-01-10)
+
+#### Bug Fixes
+
+- Fixed a bug where the kill command wasn't working properly with command abbreviations.
+- Fixed a bug where just a `!` message was killing the bot. RIP. 
+- Fixed a bug where the `!image` command wasn't sending the image to discord when it should.
+- Fixed a bug where `!opp-rating` wasn't working properly. 
+
+#### Features
+
+- Added a `!socket` owner command to test socket connections and for sending messages to the app socket for things like custom rewards without having to create a special command each time.
+- Added `twitch.onSubscribe` to the `config.yml` file for a list of commands to run during a twitch subscription event.
+- `!sound` can now take a filepath instead of just sounds restricted to the soundboard.
+- A new `!cursor` command that changes the cursor while it's over the board. Shoutout to @fitztrev for the contribution!
+
 ### 1.3.0 (2024-01-08)
 
 #### Breaking Changes

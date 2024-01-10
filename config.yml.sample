@@ -15,6 +15,9 @@ twitch:
   apiOwnerOauthToken: "ownertoken"
   apiClientId: "apiClientID"
   apiClientSecret: "apiClientSecret"
+  # A list of commands to run when a subscription is detected
+  onSubscribe:
+    - "!sound ./public/sounds/thank-you-for-being-a-friend.mp3"
   # Custom reward titles. If the server sees a custom reward with one of these titles, it will run the commands (as owner).
   # Make sure the title is exactly the same as it is on Twitch. Use {username} to insert the user's name into the command.
   # Use {message} to insert the user's message into the command.

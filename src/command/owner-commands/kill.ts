@@ -3,15 +3,17 @@ import { Platform } from '../../enums';
 const command: Command = {
   name: 'kill',
   platforms: [Platform.Twitch],
-  run: async (ctx, { commandState }) => {
-    if (commandState.killedCommands.includes(ctx.args[0])) {
+  run: async (ctx, { commandState, services }) => {
+    const cmd = services.commandService.findCommand(ctx.args[0]);
+
+    if (commandState.killedCommands.includes(cmd.name)) {
       commandState.killedCommands = commandState.killedCommands.filter(
-        (cmd) => cmd !== ctx.args[0]
+        (commandName) => commandName !== cmd.name
       );
-      ctx.botSpeak(`Bringing !${ctx.args[0]} command back to life`);
+      ctx.botSpeak(`Bringing !${cmd.name} command back to life`);
     } else {
-      commandState.killedCommands.push(ctx.args[0]);
-      ctx.botSpeak(`Killed !${ctx.args[0]} command`);
+      commandState.killedCommands.push(cmd.name);
+      ctx.botSpeak(`Killed !${cmd.name} command`);
     }
     return true;
   }

@@ -135,10 +135,11 @@ async function setCursorStyle() {
     styleTag.id = 'cursor-style';
 
     const cursor = localStorage.getItem(LOCAL_STORAGE_KEYS.CURSOR);
+    console.log(cursor);
 
     if (cursor) {
       styleTag.innerHTML += `
-        * {
+        cg-board {
           cursor: url('https://lichess.org/blunderbot/images/cursors/${cursor}.cur'), default !important;
         }
       `;
