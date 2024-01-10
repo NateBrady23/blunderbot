@@ -7,7 +7,8 @@ const LOCAL_STORAGE_KEYS = {
   THEME_CONFIG: 'themeConfig',
   TITLED_PLAYERS: 'titledPlayers',
   BOUGHT_SQUARES: 'boughtSquares',
-  SOUNDBOARD: 'soundboard'
+  SOUNDBOARD: 'soundboard',
+  CURSOR: 'cursor'
 };
 
 const MESSAGE_TYPE = {
@@ -17,6 +18,7 @@ const MESSAGE_TYPE = {
   HIGHLIGHT: 'HIGHLIGHT',
   GIPHY: 'GIPHY',
   KING: 'KING',
+  CURSOR: 'CURSOR',
   LICHESS_CHAT: 'LICHESS_CHAT',
   OPPONENT_KING: 'OPP_KING',
   OPPONENT_RATING: 'OPP_RATING',
@@ -46,6 +48,11 @@ socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
     const currKing = localStorage.getItem(LOCAL_STORAGE_KEYS.OPPONENT_KING);
     if (currKing === data.king) return;
     localStorage.setItem(LOCAL_STORAGE_KEYS.OPPONENT_KING, data.king);
+    await forceClientsToRefresh();
+  } else if (data.type === MESSAGE_TYPE.CURSOR) {
+    const currCursor = localStorage.getItem(LOCAL_STORAGE_KEYS.CURSOR);
+    if (currCursor === data.cursor) return;
+    localStorage.setItem(LOCAL_STORAGE_KEYS.CURSOR, data.cursor);
     await forceClientsToRefresh();
   } else if (data.type === MESSAGE_TYPE.CROWN) {
     localStorage.setItem(LOCAL_STORAGE_KEYS.CROWN, data.crown);
@@ -101,6 +108,7 @@ async function load() {
   void setStyle();
   void setCustomStyle();
   void setKingStyle();
+  void setCursorStyle();
   drawBoughtSquares();
 
   fetch('https://lichess.org/blunderbot/twitch/titles')
