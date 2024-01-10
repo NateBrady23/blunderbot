@@ -11,7 +11,7 @@ const command: Command = {
     if (cursor === 'reset') {
       services.twitchGateway.sendDataToOneSocket('serverMessage', {
         type: 'CURSOR',
-        crown: '',
+        cursor: '',
         user: ctx.tags['display-name']
       });
       return true;
