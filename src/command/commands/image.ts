@@ -7,13 +7,17 @@ const command: Command = {
   help: '!image <prompt> - Creates an image based on the prompt.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (!CONFIG.openai?.enabled) {
+      console.log(`OpenAI is not enabled in !image command.`);
+      return false;
+    }
     let prompt = ctx.body?.trim();
     let sendToDiscord =
-      CONFIG.discord.enabled &&
+      CONFIG.discord?.enabled &&
       !!CONFIG.discord?.galleryChannelId &&
       !(ctx.platform === Platform.Discord);
     let sendToTwitter =
-      CONFIG.twitter.enabled && CONFIG.twitter.tweetImagesEnabled;
+      CONFIG.twitter?.enabled && CONFIG.twitter.tweetImagesEnabled;
 
     const user = ctx.onBehalfOf || ctx.tags['display-name'];
     if (!prompt) {

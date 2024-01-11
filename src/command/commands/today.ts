@@ -1,9 +1,14 @@
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'today',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (!CONFIG.openai?.enabled) {
+      console.log(`OpenAI is not enabled in !today command.`);
+      return false;
+    }
     const date = new Date();
     const formattedDate = date.toLocaleDateString('en-US', {
       month: 'long',

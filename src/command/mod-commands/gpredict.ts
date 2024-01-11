@@ -53,18 +53,19 @@ const command: Command = {
         return false;
       }
 
-      const msg = await services.openaiService.sendPrompt(
-        `
+      if (CONFIG.openai?.enabled) {
+        const msg = await services.openaiService.sendPrompt(
+          `
         Make an announcement that a prediction is now available.
         Tell people in 2 sentences or less that they can wager their "Blunder Bucks" to predict
         ${items.join(', ')}.
         `,
-        {
-          usePersonality: true
-        }
-      );
-      await services.twitchService.ownerRunCommand(`!tts ${msg}`);
-
+          {
+            usePersonality: true
+          }
+        );
+        await services.twitchService.ownerRunCommand(`!tts ${msg}`);
+      }
       return true;
     }
 

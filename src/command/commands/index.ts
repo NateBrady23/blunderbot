@@ -1,21 +1,44 @@
 import { readdirSync } from 'fs';
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
+import { removeSymbols } from '../../utils/utils';
 
-const messageCommands = {};
-const messageCommandsConfig = CONFIG.messageCommands;
-
-Object.keys(messageCommandsConfig).forEach((key) => {
-  messageCommands[key] = {
-    aliases: messageCommandsConfig[key].aliases,
-    hideFromList: messageCommandsConfig[key].hideFromList,
-    platforms: [Platform.Twitch, Platform.Discord],
-    run: (ctx: Context) => {
-      ctx.botSpeak(messageCommandsConfig[key].message);
+function getCommandProperties(obj: MessageCommand, name: string): Command {
+  return {
+    name,
+    ownerOnly: obj.ownerOnly,
+    aliases: obj.aliases,
+    platforms: obj.platforms || [Platform.Twitch, Platform.Discord],
+    ownerRunCommands: obj.ownerRunCommands,
+    run: (ctx: Context, { services }) => {
+      if (obj.commands) {
+        obj.commands.forEach((command: string) => {
+          if (ctx.platform === Platform.Twitch) {
+            command = command.replace(
+              /{username}/g,
+              removeSymbols(ctx.tags['display-name'])
+            );
+            void services.twitchService.ownerRunCommand(command, {
+              onBehalfOf: ctx.tags['display-name']
+            });
+          }
+        });
+      }
+      if (obj.message) {
+        ctx.botSpeak(obj.message);
+      }
       return true;
     },
     coolDown: 2000
   };
+}
+
+//
+
+const messageCommands = {};
+const messageCommandsConfig = CONFIG?.messageCommands || {};
+Object.keys(messageCommandsConfig).forEach((key) => {
+  messageCommands[key] = getCommandProperties(messageCommandsConfig[key], key);
 });
 
 export const commands = {

@@ -33,6 +33,7 @@ interface YAMLConfig {
   };
 
   openai: {
+    enabled: boolean;
     apiKey: string;
     chatModel: string;
     imageModel: string;

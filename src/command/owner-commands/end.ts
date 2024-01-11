@@ -5,8 +5,6 @@ const command: Command = {
   name: 'end',
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    commandState.isLive = false;
-
     await services.twitchService.ownerRunCommand('!autochat off');
     const bits = Object.keys(commandState.contributions.bits);
     const subs = Object.keys(commandState.contributions.subs);
@@ -34,13 +32,20 @@ const command: Command = {
           .map((r) => ` ${removeSymbols(r)} for the sub`)
           .join(', ')}`;
       }
-      await services.twitchService.ownerRunCommand(`!tts ${msg}`);
+      void services.twitchService.ownerRunCommand(`!tts ${msg}`);
     }
 
-    await services.twitchService.ownerRunCommand(
+    void services.twitchService.ownerRunCommand(
       `!vchat Thank everyone for watching the stream and tell them we'll see them next time, in your own words.`
     );
-    commandState.first = null;
+
+    setTimeout(
+      () => {
+        services.commandService.setInitialCommandState();
+      },
+      1000 * 60 * 5
+    );
+
     return true;
   }
 };

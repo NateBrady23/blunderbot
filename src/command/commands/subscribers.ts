@@ -6,7 +6,7 @@ const command: Command = {
   aliases: ['subs', 'subcount'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.decapi.enabled) {
+    if (!CONFIG.decapi?.enabled) {
       console.log('DecAPI is not enabled for !subscribers command.');
       return false;
     }

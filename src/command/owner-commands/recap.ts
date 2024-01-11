@@ -1,9 +1,14 @@
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'recap',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
+    if (!CONFIG.openai?.enabled) {
+      console.log(`OpenAI is not enabled in !recap command.`);
+      return false;
+    }
     let res = await fetch(
       `https://lichess.org/api/team/bradys-blunder-buddies/arena?max=1`
     );

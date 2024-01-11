@@ -92,6 +92,7 @@ lichess:
   teamName: "Brady's Blunder Buddies"
 
 openai:
+  enabled: true
   apiKey: "sk-youropenai-api-key"
   ttsModel: "tts-1"
   imageModel: "dall-e-3"
@@ -254,40 +255,27 @@ autoCommands:
       - "!opp random"
       - "!king random"
 
-# Simple message commands
+# Message commands can either be simple messages or a list of owner run commands.
+# User {username} to insert the user's name that used the command. Commands list will only run on twitch.
 messageCommands:
-  afm:
-    message: "AFM is a viewer title. It stands for Arena FIDE Master and is only visible on my stream. You can get titled on my stream with channel rewards."
-
   backseat:
     aliases:
       - "suggestion"
       - "suggestions"
     message: "Please don't make move suggestions, especially during rated games. Happy to look at moves after games end, but not during."
 
-  blunderbot:
-    message: "I'm not mad Strobex, I am just disappointed."
-
-  blunderreport:
-    message: "The Blunder Report comes out the day after the BBB on the Discord at https://discord.gg/MfsRvaMeqU. It is a weekly report that measures the number of blunders made, strength of blunders and more!"
-
   bm:
     message: "BM is a title I made up for myself. BM stands for Blunder Master. A noble title exclusively awarded by this channel to individuals who consistently demonstrate the ability to achieve defeat from the jaws of victory."
 
-  chess:
-    message: "chess is hard..."
+  clock:
+    commands:
+      - "!tts {username} wants you to know that you're running low on the clock."
 
   discord:
     message: "Keep talking to me on the Discord at https://discord.gg/MfsRvaMeqU"
 
-  fauxtog:
-    message: "༼つ ◕_◕ ༽つ NATEBRADY TAKE MY ENERGY ༼ つ ◕_◕ ༽つ"
-
   github:
     message: "BlunderBot is now open sourced at https://github.com/NateBrady23/blunderbot"
-
-  insubordinate:
-    message: "AND CHURLISH!"
 
   lurk:
     aliases:
@@ -304,18 +292,30 @@ messageCommands:
       - "store"
     message: "The BlunderShop is now live! https://blundershop.com"
 
-  prime:
-    message: "If you have Amazon Prime, you can subscribe and support the channel for free!"
-
-  rosen:
-    aliases:
-      - "eric"
-      - "ericrosen"
-      - "imrosen"
-    message: "https://www.youtube.com/watch?v=tX8eW5JfZyE"
+  # Message commands can now have a list of commands to run when the command is used.
+  # These will be run by the owner as "ownerRunCommands" so be careful what you put here if you're
+  # allowing anyone to use it. This is only supported for twitch commands atm.
+  party:
+    ownerOnly: true
+    message: "It's time to party"
+    commands:
+      - "!gif !s19 party"
+      - "!sound ./public/sounds/snoop.m4a"
 
   team:
     message: "Join Brady's Blunder Buddies at https://lichess.org/team/bradys-blunder-buddies"
+
+  train:
+    ownerOnly: true
+    commands:
+      - "!gif !s29 Sunglasses Racing GIF By Burger Records"
+      - "!king secret_train"
+      - "!sound ./public/sounds/train.m4a"
+
+  trophy:
+    commands:
+      - "!king secret_trophy"
+      - "!tts {username} wants you to know that you've got yourself another Rosen trophy."
 
   youtube:
     aliases:

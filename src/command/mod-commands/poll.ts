@@ -5,9 +5,13 @@ const command: Command = {
   name: 'poll',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (!CONFIG.openai?.enabled) {
+      console.log(`OpenAI is not enabled in !poll command.`);
+      return false;
+    }
     let question: any = ctx.body;
     if (!question) {
-      return;
+      return false;
     }
     question = 'Create a poll around the topic of ' + question + '.';
     question +=

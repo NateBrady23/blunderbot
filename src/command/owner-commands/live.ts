@@ -15,8 +15,8 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      CONFIG.discord.enabled && !!CONFIG.discord?.announcementChannelId;
-    let sendToTwitter = CONFIG.twitter.enabled && CONFIG.twitter.announceLive;
+      CONFIG.discord?.enabled && !!CONFIG.discord?.announcementChannelId;
+    let sendToTwitter = CONFIG.twitter?.enabled && CONFIG.twitter?.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');

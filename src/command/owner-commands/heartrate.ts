@@ -5,7 +5,7 @@ const command: Command = {
   name: 'heartrate',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.heartRate.enabled) {
+    if (!CONFIG.heartRate?.enabled) {
       console.log('Heart rate not enabled in config for !heartrate command');
       return false;
     }

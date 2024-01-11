@@ -1,16 +1,9 @@
-/**
- * TODO: All of this goes in favor of the new assistance API
- */
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from '../config/config.service';
 import OpenAI from 'openai';
 import { CommandService } from '../command/command.service';
 const fs = require('fs');
 import { generateUUID, playAudioFile } from '../utils/utils';
-
-const openai = new OpenAI({
-  apiKey: CONFIG.openai.apiKey
-});
 
 export const baseMessages: OpenAiChatMessage[] = [
   {
@@ -23,16 +16,24 @@ export const baseMessages: OpenAiChatMessage[] = [
 export class OpenaiService {
   private logger: Logger = new Logger(OpenaiService.name);
   private savedMessages: OpenAiChatMessage[] = [];
+  private openai: OpenAI;
 
   constructor(
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService
   ) {
-    //
+    if (!CONFIG.openai?.enabled || !CONFIG.openai?.apiKey) {
+      this.logger.log('OpenAI disabled');
+      return;
+    }
+
+    this.openai = new OpenAI({
+      apiKey: CONFIG.openai.apiKey
+    });
   }
 
   async createImage(prompt: string): Promise<string> {
-    const response = await openai.images.generate({
+    const response = await this.openai.images.generate({
       model: CONFIG.openai?.imageModel || 'dall-e-3',
       prompt,
       quality: 'standard',
@@ -42,7 +43,7 @@ export class OpenaiService {
   }
 
   async editImage(maskImg: string, prompt: string): Promise<string> {
-    const response = await openai.images.edit({
+    const response = await this.openai.images.edit({
       image: fs.createReadStream(maskImg),
       // TODO: Currently does not accept model parameter
       // model: CONFIG.openai?.imageModel || 'dall-e-3',
@@ -54,7 +55,7 @@ export class OpenaiService {
 
   async tts(message: string, voice: OpenAiVoiceOptions): Promise<void> {
     try {
-      const response = await openai.audio.speech.create({
+      const response = await this.openai.audio.speech.create({
         model: CONFIG.openai.ttsModel,
         voice,
         input: message
@@ -80,7 +81,7 @@ export class OpenaiService {
         { role: 'user', content: message }
       ];
 
-      const completion = await openai.chat.completions.create({
+      const completion = await this.openai.chat.completions.create({
         model: CONFIG.openai.chatModel,
         messages
       });
@@ -148,7 +149,7 @@ export class OpenaiService {
 
       this.savedMessages = [...this.savedMessages, ...messages];
       messages = [...systemMessages, ...this.savedMessages];
-      const completion = await openai.chat.completions.create({
+      const completion = await this.openai.chat.completions.create({
         model: CONFIG.openai.chatModel,
         messages,
         temperature: opts?.temp || 0.9
@@ -213,7 +214,7 @@ export class OpenaiService {
   }
 
   async isFlagged(message: string): Promise<boolean> {
-    const moderation = await openai.moderations.create({
+    const moderation = await this.openai.moderations.create({
       model: CONFIG.openai.textModerationModel,
       input: message
     });

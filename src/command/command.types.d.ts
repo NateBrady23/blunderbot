@@ -34,6 +34,12 @@ declare global {
     lastRun?: number;
     aliases?: string[];
     platforms: Platforms[];
+    ownerRunCommands?: string[];
+  }
+
+  interface MessageCommand extends Command {
+    message?: string;
+    commands?: string[];
   }
 
   interface CommandServices {
@@ -71,11 +77,5 @@ declare global {
       raids: { [key: string]: boolean };
     };
     heartRateHigh: number;
-  }
-
-  interface MessageCommand {
-    aliases?: string[];
-    hideFromList?: boolean;
-    message: string;
   }
 }
