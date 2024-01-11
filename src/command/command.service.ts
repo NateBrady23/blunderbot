@@ -52,7 +52,7 @@ export class CommandService {
 
     this.setInitialCommandState();
 
-    if (CONFIG.heartRate.enabled) {
+    if (CONFIG.heartRate?.enabled) {
       void this.heartRateCheck();
     }
   }
@@ -229,6 +229,7 @@ export class CommandService {
   }
 
   findCommand(name: string): Command | undefined {
+    name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
 
     let cmd: Command | undefined;
@@ -270,6 +271,18 @@ export class CommandService {
       if (!(await this.canRun(ctx, cmd))) return;
       // Run the command. If it returns true, it ran successfully, so update the lastRun time
       try {
+        // If there's a list of ownerRunCommands (from a groupCommand) run those
+        if (cmd.ownerRunCommands) {
+          for (const ownerRunCommand of cmd.ownerRunCommands) {
+            void this.twitchService.ownerRunCommand(ownerRunCommand, {
+              onBehalfOf: ctx.tags['display-name']
+            });
+          }
+          cmd.lastRun = Date.now();
+          return;
+        }
+
+        // Otherwise, use the command's run function
         if (
           await cmd.run(ctx, {
             services: this.services,

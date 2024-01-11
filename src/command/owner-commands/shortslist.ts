@@ -40,7 +40,7 @@ const command: Command = {
   name: 'shortslist',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.youtube.enabled) {
+    if (!CONFIG.youtube?.enabled) {
       console.log('YouTube not enabled in config for !shortslist command');
       return false;
     }

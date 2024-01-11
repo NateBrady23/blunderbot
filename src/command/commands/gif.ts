@@ -10,7 +10,7 @@ const command: Command = {
   help: `Displays a gif based on the message on the chessboard. (non-subscribers can use the channel redemption for 1k BlunderBucks to do the same)`,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (CONFIG.giphy.enabled === false) {
+    if (CONFIG.giphy?.enabled === false) {
       ctx.botSpeak('Giphy is disabled in !gif.');
       return false;
     }

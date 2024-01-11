@@ -5,6 +5,10 @@ const command: Command = {
   name: 'voice',
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
+    if (!CONFIG.openai?.enabled) {
+      ctx.botSpeak('OpenAI is disabled in !voice.');
+      return false;
+    }
     const voice: OpenAiVoiceOptions = <OpenAiVoiceOptions>(
       ctx.args[0]?.toLowerCase().trim()
     );

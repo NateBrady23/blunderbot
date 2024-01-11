@@ -15,7 +15,8 @@
 <script>
   const CONFETTI_TYPE = {
       CONFETTI: 'CONFETTI',
-      SNOW: 'SNOW'
+      SNOW: 'SNOW',
+      RAIN: 'RAIN'
   };
 
   const MESSAGE_TYPE = {
@@ -38,6 +39,9 @@
         if (data.confettiType === CONFETTI_TYPE.SNOW) {
             void showSnow();
         }
+        if (data.confettiType === CONFETTI_TYPE.RAIN) {
+            void showRain();
+        }
     }
   });
 
@@ -54,13 +58,13 @@
   }
 
   async function showSnow() {
-      var duration = 15 * 1000;
-      var animationEnd = Date.now() + duration;
-      var skew = 1;
+      let duration = 15 * 1000;
+      let animationEnd = Date.now() + duration;
+      let skew = 1;
 
       (function frame() {
-          var timeLeft = animationEnd - Date.now();
-          var ticks = Math.max(200, 500 * (timeLeft / duration));
+          let timeLeft = animationEnd - Date.now();
+          let ticks = Math.max(200, 500 * (timeLeft / duration));
           skew = Math.max(0.8, skew - 0.001);
 
           confetti({
@@ -83,6 +87,70 @@
               requestAnimationFrame(frame);
           }
       }());
+  }
+
+  async function showRain() {
+      const id = Math.floor(randomInRange(1, 10000));
+      document.querySelector('body').insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
+      const canvas = document.querySelector(`#canvas-${id}`);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      if(canvas.getContext) {
+          let ctx = canvas.getContext('2d');
+          let w = canvas.width;
+          let h = canvas.height;
+          ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+          ctx.lineWidth = 1;
+          ctx.lineCap = 'round';
+
+
+          let init = [];
+          let maxParts = 1000;
+          for(let a = 0; a < maxParts; a++) {
+              init.push({
+                  x: Math.random() * w,
+                  y: Math.random() * h,
+                  l: Math.random() * 1,
+                  xs: -4 + Math.random() * 4 + 2,
+                  ys: Math.random() * 10 + 10
+              })
+          }
+
+          let particles = [];
+          for(let b = 0; b < maxParts; b++) {
+              particles[b] = init[b];
+          }
+
+          function draw() {
+              ctx.clearRect(0, 0, w, h);
+              for(let c = 0; c < particles.length; c++) {
+                  let p = particles[c];
+                  ctx.beginPath();
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
+                  ctx.stroke();
+              }
+              move();
+          }
+
+          function move() {
+              for(let b = 0; b < particles.length; b++) {
+                  let p = particles[b];
+                  p.x += p.xs;
+                  p.y += p.ys;
+                  if(p.x > w || p.y > h) {
+                      p.x = Math.random() * w;
+                      p.y = -20;
+                  }
+              }
+          }
+
+          setInterval(draw, 30);
+          setTimeout(()  => {
+              canvas.remove();
+          }, 15000);
+      }
   }
 </script>
 </html>

@@ -1,13 +1,18 @@
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'translate',
   queued: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (!CONFIG.openai?.enabled) {
+      console.log(`OpenAI is not enabled in !translate command.`);
+      return false;
+    }
     if (!ctx.body) {
       ctx.botSpeak('You must provide a message to translate');
-      return;
+      return false;
     }
     let reply = JSON.parse(await services.openaiService.translate(ctx.body));
 

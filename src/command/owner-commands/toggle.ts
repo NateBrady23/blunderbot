@@ -3,15 +3,18 @@ import { Platform } from '../../enums';
 const command: Command = {
   name: 'toggle',
   platforms: [Platform.Twitch],
-  run: async (ctx, { commandState }) => {
-    if (commandState.toggledOffCommands.includes(ctx.args[0])) {
+  run: async (ctx, { commandState, services }) => {
+    const command = services.commandService.findCommand(ctx.args[0]);
+    const name = command.name;
+
+    if (commandState.toggledOffCommands.includes(name)) {
       commandState.toggledOffCommands = commandState.toggledOffCommands.filter(
-        (cmd) => cmd !== ctx.args[0]
+        (cmd) => cmd !== name
       );
-      ctx.botSpeak(`Enabled !${ctx.args[0]} command`);
+      ctx.botSpeak(`Enabled !${name} command`);
     } else {
       commandState.toggledOffCommands.push(ctx.args[0]);
-      ctx.botSpeak(`Disabled !${ctx.args[0]} command`);
+      ctx.botSpeak(`Disabled !${name} command`);
     }
     return true;
   }

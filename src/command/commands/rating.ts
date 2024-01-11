@@ -16,7 +16,7 @@ const command: Command = {
       const res = await fetch(`https://lichess.org/api/user/${user}`);
       const json = await res.json();
 
-      let dt: any = new Date(json.createdAt);
+      let dt: Date | string = new Date(json.createdAt);
       dt = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear();
 
       const { rapid, blitz, classical, bullet, puzzle } = json.perfs;

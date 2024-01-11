@@ -22,7 +22,7 @@ const command: Command = {
   name: 'dadjoke',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.rapidApi.enabled) {
+    if (!CONFIG.rapidApi?.enabled) {
       ctx.botSpeak('RapidAPI is disabled in !dadjoke.');
       return false;
     }

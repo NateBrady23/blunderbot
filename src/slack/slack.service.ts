@@ -19,7 +19,7 @@ export class SlackService {
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService
   ) {
-    if (!CONFIG.slack.enabled) {
+    if (!CONFIG.slack?.enabled) {
       this.logger.log('Slack disabled');
       return;
     }

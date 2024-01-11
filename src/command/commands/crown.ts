@@ -14,7 +14,7 @@ const command: Command = {
         user: ctx.tags['display-name']
       });
       if (!ctx.tags.owner) {
-        services.twitchService.ownerRunCommand(
+        void services.twitchService.ownerRunCommand(
           `!alert ${ctx.tags['display-name']} reset my crown`
         );
       }
@@ -36,7 +36,7 @@ const command: Command = {
       user: ctx.tags['display-name']
     });
     if (!ctx.tags.owner && !crown.startsWith('secret_')) {
-      services.twitchService.ownerRunCommand(
+      void services.twitchService.ownerRunCommand(
         `!alert ${ctx.tags['display-name']} changed my crown to ${crown}`
       );
     }

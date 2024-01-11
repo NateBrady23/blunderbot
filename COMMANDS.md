@@ -26,6 +26,8 @@
 
 `!crown <name>`: Change my crown while I'm playing. Ex. `!crown tophat`
 
+`!cursor <name>`: Changes the mouse cursor! Ex. `!cursor blunder`
+
 `!dadjoke`: BlunderBot tells a dad joke.
 
 `!daily`: Displays the lichess daily puzzle link
@@ -85,6 +87,8 @@
 `!uptime`: Displays how long the current stream has been live.
 
 `!vchat <message>` :gem::three: : Asks BlunderBot a question but BlunderBot responds with voice instead of text.
+
+`!version`: BlunderBot states his current version.
 
 ### Mod Commands
 

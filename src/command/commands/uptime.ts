@@ -5,7 +5,7 @@ const command: Command = {
   name: 'uptime',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.decapi.enabled) {
+    if (!CONFIG.decapi?.enabled) {
       console.log('DecAPI is not enabled for !uptime command.');
       return false;
     }

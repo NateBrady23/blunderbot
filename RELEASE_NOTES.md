@@ -1,5 +1,30 @@
 # Release Notes
 
+### 1.4.0 (2024-01-11)
+
+#### Breaking Changes
+
+- Added `openai.enabled` to the `config.yml` file.
+- Removed the `!party`, `!resign`, `!skipsong`, `!train`, `!trophy` commands as they can now be easily reproduced in the config. See the new feature for `messageCommands`.
+
+#### Bug Fixes
+
+- Fixed a bug where the `!kill` and `!toggle` commands weren't working properly with command abbreviations.
+- Fixed a bug where just a `!` message was killing the bot. RIP. 
+- Fixed a bug where the `!image` command wasn't sending the image to discord when it should.
+- Fixed a bug where `!opp-rating` wasn't working properly. 
+
+#### Features
+
+- Added a `!socket` owner command to test socket connections and for sending messages to the app socket for things like custom rewards without having to create a special command each time.
+- Added `twitch.onSubscribe` to the `config.yml` file for a list of commands to run during a twitch subscription event.
+- `!sound` can now take a filepath instead of just sounds restricted to the soundboard.
+- A new `!cursor` command that changes the cursor while it's over the board. Shoutout to @fitztrev for the contribution!
+- `!version` command to display the current version of the bot. Thanks to @fitztrev for the contribution!
+- `!end` now resets the entire command state 5 minutes after the command is used (so it doesn't reset limits, etc while the stream is wrapping up.)
+- Now large parts of the config can be removed if unused. For example, if you don't want to use the `!image` command, you can remove the `openai` section from the config instead of just setting `enabled` to false.
+- `messageCommands` in the config can now take an array of owner run commands. This allows for slightly more complicated command groupings. See the `party` and `train` commands in the `config.yml` for an example.
+
 ### 1.3.0 (2024-01-08)
 
 #### Breaking Changes

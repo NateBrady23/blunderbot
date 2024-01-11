@@ -79,3 +79,16 @@ For the `!alert` command to show up, add a browser source that points to: `http:
 For the `!image` command, add a browser source that points to: `http://localhost:3000/images.html`
 
 Replace with a different port if you changed the `port` in the `config.yml`.
+
+### Cursors
+
+To convert SVG->PNG->CUR, necessary for custom css cursors:
+
+```bash
+## svg to png
+npm install --global convert-svg-to-png
+convert-svg-to-png blunder.svg
+
+## png to cur
+icotool --create --cursor --output=blunder.cur blunder.png
+```

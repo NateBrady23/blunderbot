@@ -43,7 +43,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['pants'],
   run: async (ctx) => {
-    if (!CONFIG.youtube.enabled) {
+    if (!CONFIG.youtube?.enabled) {
       console.log('YouTube is not enabled for !shorts command.');
       return false;
     }

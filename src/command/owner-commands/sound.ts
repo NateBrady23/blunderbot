@@ -13,15 +13,20 @@ const command: Command = {
       if (!ctx.body) {
         return false;
       }
-      const filename = ctx.body.split(' ').join('-');
       let file;
-      const extensions = ['.m4a', '.mp3', '.wav'];
-      for (const extension of extensions) {
-        if (
-          fs.existsSync(`./public/sounds/soundboard/${filename}${extension}`)
-        ) {
-          file = `${filename}${extension}`;
-          break;
+
+      if (ctx.body.includes('/')) {
+        file = ctx.body;
+      } else {
+        const filename = ctx.body.split(' ').join('-');
+        const extensions = ['.m4a', '.mp3', '.wav'];
+        for (const extension of extensions) {
+          if (
+            fs.existsSync(`./public/sounds/soundboard/${filename}${extension}`)
+          ) {
+            file = `./public/sounds/soundboard/${filename}${extension}`;
+            break;
+          }
         }
       }
 
@@ -29,7 +34,7 @@ const command: Command = {
         return false;
       }
 
-      await playAudioFile(`./public/sounds/soundboard/${file}`);
+      await playAudioFile(file);
       return true;
     });
   }
