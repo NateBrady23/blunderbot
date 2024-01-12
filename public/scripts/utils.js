@@ -371,16 +371,41 @@ function sleep(ms) {
 }
 
 function drawAlert(message, milliseconds) {
-  document.querySelector('.blunder-alert')?.remove();
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <div class="blunder-alert">
-      <img src="https://lichess.org/blunderbot/images/other/blunderbot.png" />
-      <span>${message}</span>
-    </div>`;
-  document.querySelector('body')?.prepend(div);
+  message = message.split('');
+  document.querySelector('#dialog')?.remove();
+  const dialogDiv = document.createElement('div');
+  dialogDiv.id = 'dialog';
+  dialogDiv.innerHTML =
+    '<img src="http://localhost:3000/images/other/blunderbot-dialogue.png" />';
+  document.querySelector('body')?.prepend(dialogDiv);
+  let accented = false;
+  for (let i = 0; i < message.length; i++) {
+    (function (i) {
+      setTimeout(function () {
+        if (message[i] === '{') {
+          accented = true;
+          dialogDiv.innerHTML += '<span class="accent"></span>';
+        } else if (message[i] === '}') {
+          accented = false;
+        } else if (accented) {
+          // Insert the character 7 characters from the end of the string
+          dialogDiv.innerHTML =
+            dialogDiv.innerHTML.slice(0, -7) +
+            message[i] +
+            dialogDiv.innerHTML.slice(-7);
+        } else {
+          dialogDiv.innerHTML += message[i];
+        }
+        if (i === message.length - 1) {
+          const arrowDiv = document.createElement('div');
+          arrowDiv.id = 'arrow';
+          dialogDiv.prepend(arrowDiv);
+        }
+      }, 50 * i);
+    })(i);
+  }
   setTimeout(() => {
-    document.querySelector('.blunder-alert')?.remove();
+    document.querySelector('#dialog')?.remove();
   }, milliseconds);
 }
 

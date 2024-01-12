@@ -1,8 +1,18 @@
 # Release Notes
 
-### 1.4.1 (2024-01-12)
+### 1.5.0 (2024-01-12)
+
+#### Breaking Changes
+
+- Blunder Alerts have gotten a face lift.
+
+#### Features
 
 - Added a `!trivia` command and a `trivia` config section.
+
+#### In Progress
+
+- A config file for the frontend.
 
 ### 1.4.0 (2024-01-11)
 

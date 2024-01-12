@@ -416,6 +416,7 @@ autoResponder:
 # A list of question/answers for the !trivia command.
 # Make sure all answers are in lowercase as they are matched to lowercased answers.
 # A user gets it correct if they match any of the answers.
+# Don't use keywords: "start", "question", "next", "round", "leaderboard" as answers.
 trivia:
   - question: "What is the most common opening move in chess?"
 	answers: ["1. e4", "e4", "1 e4", "e4!"]

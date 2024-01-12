@@ -37,9 +37,6 @@ const command: Command = {
       const json = await res.json();
       if (json.challenge.url) {
         console.log(json.challenge.url);
-        void services.twitchService.ownerRunCommand(
-          `!alert Challenge started: <a href="${json.challenge.url}">${json.challenge.url}</a>`
-        );
       }
     } catch (e) {
       console.log(e);

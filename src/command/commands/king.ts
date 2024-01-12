@@ -26,7 +26,7 @@ const command: Command = {
     });
     if (!ctx.tags.owner && !king.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
-        `!alert ${user} changed the king to ${king}`
+        `!alert {${user}} changed the king to {${king}}`
       );
     }
   }

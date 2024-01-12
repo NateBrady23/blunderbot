@@ -27,7 +27,7 @@ const command: Command = {
           }`
         );
         void services.twitchService.ownerRunCommand(
-          `!alert Blunder Buddies, please join me in following @${user}! Link in the chat!`
+          `!alert Blunder Buddies, please join me in following {@${user}}! Link in the chat!`
         );
         void services.twitchService.helixShoutout(user);
       }
