@@ -167,4 +167,6 @@ interface YAMLConfig {
     phrases: string[];
     responses: string[];
   }[];
+
+  trivia: [{ question: string; answers: string[] }];
 }

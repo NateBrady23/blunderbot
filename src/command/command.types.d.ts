@@ -77,5 +77,12 @@ declare global {
       raids: { [key: string]: boolean };
     };
     heartRateHigh: number;
+    trivia: {
+      started: boolean;
+      round: number;
+      leaderboard: { [key: string]: number };
+      incorrectUsers: string[];
+      roundAnswered?: boolean;
+    };
   }
 }

@@ -76,6 +76,12 @@ export class CommandService {
         bits: {},
         subs: {},
         raids: {}
+      },
+      trivia: {
+        started: false,
+        round: 0,
+        leaderboard: {},
+        incorrectUsers: []
       }
     };
   }

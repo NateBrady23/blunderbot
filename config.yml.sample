@@ -412,3 +412,12 @@ autoResponder:
     responses:
       - "1v1 me bro, I'll crush you"
       - "!challenge"
+
+# A list of question/answers for the !trivia command.
+# Make sure all answers are in lowercase as they are matched to lowercased answers.
+# A user gets it correct if they match any of the answers.
+trivia:
+  - question: "What is the most common opening move in chess?"
+	answers: ["1. e4", "e4", "1 e4", "e4!"]
+  - question: "What is NateBrady23's favorite opening move in chess?"
+	answers: ["1. c4", "c4", "1 c4", "c4!"]

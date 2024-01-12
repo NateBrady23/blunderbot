@@ -1,5 +1,9 @@
 # Release Notes
 
+### 1.4.1 (2024-01-12)
+
+- Added a `!trivia` command and a `trivia` config section.
+
 ### 1.4.0 (2024-01-11)
 
 #### Breaking Changes
