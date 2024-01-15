@@ -42,7 +42,7 @@ const command: Command = {
         }
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       ctx.botSpeak(
         `I'm sorry, something went terribly wrong! Please don't fire me!`
       );

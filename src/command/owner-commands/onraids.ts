@@ -7,7 +7,7 @@ const queue = new FunctionQueue();
 const raidersConfig = CONFIG.raids.matches || {};
 
 const command: Command = {
-  name: 'raids',
+  name: 'onraids',
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
@@ -45,7 +45,7 @@ const command: Command = {
           void services.twitchService.ownerRunCommand(`!tts ${announcement}`);
         }
       } catch (e) {
-        console.log('Error in raids command');
+        console.error('Error in raids command');
         console.error(e);
       }
     });

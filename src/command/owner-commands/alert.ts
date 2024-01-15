@@ -23,6 +23,7 @@ const command: Command = {
         message,
         milliseconds
       });
+      console.log(`Alert: ${message}`);
       await sleep(milliseconds);
     });
   }

@@ -169,7 +169,7 @@ export class OpenaiService {
       }
       return reply;
     } catch (e) {
-      this.logger.log(e);
+      this.logger.error(e);
       return `I'm sorry, I'm not feeling well. I need to take a break.`;
     }
   }
