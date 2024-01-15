@@ -61,7 +61,7 @@ export class BrowserService {
         (await textSelector?.evaluate((el) => el.textContent))?.trim()
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 }

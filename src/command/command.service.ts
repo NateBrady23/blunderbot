@@ -76,6 +76,12 @@ export class CommandService {
         bits: {},
         subs: {},
         raids: {}
+      },
+      trivia: {
+        started: false,
+        round: 0,
+        leaderboard: {},
+        incorrectUsers: []
       }
     };
   }
@@ -292,8 +298,8 @@ export class CommandService {
           cmd.lastRun = Date.now();
         }
       } catch (e) {
-        this.logger.log(e);
-        this.logger.log(`Error running ${ctx.command} command`);
+        this.logger.error(e);
+        this.logger.error(`Error running ${ctx.command} command`);
       }
       return;
     }

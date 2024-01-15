@@ -33,8 +33,8 @@ const command: Command = {
       ctx.botSpeak(reply);
     } catch (e) {
       ctx.botSpeak(`There was a problem trying to fetch ${user}'s ratings.`);
-      console.log(`Error getting rating for ${user}`);
-      console.log(e);
+      console.error(`Error getting rating for ${user}`);
+      console.error(e);
     }
     return true;
   }

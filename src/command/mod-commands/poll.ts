@@ -38,7 +38,7 @@ const command: Command = {
       question['broadcaster_id'] = CONFIG.twitch.ownerId;
       question['duration'] = 180;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return false;
     }
 

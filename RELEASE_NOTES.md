@@ -1,5 +1,20 @@
 # Release Notes
 
+### 1.5.0 (2024-01-15)
+
+#### Breaking Changes
+
+- Blunder Alerts have gotten a face lift.
+- Renamed the owner commands `bits`, `raids`, `subs`, to `onbits`, `onraids`, `onsubs` to avoid confusion with other commands and to show that they're typically run on events.
+
+#### Bug Fixes
+
+- `twitch.onSubscribe` now works properly when a sub event happens
+
+#### Features
+
+- Added a `!trivia` command and a `trivia` config section.
+
 ### 1.4.0 (2024-01-11)
 
 #### Breaking Changes

@@ -1,70 +1,30 @@
 <!- This is a separate html file to be used as a browser source in streamlabs obs. -->
 <html lang="en">
 <head>
-    <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
-    <script src="http://localhost:3000/scripts/utils.js" ></script>
-  <style>
-      .blunder-alert {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          background: #222121;
-          position: fixed;
-          color: #e1dfdf;
-          top: 275px;
-          left: 10px;
-          border: 8px solid #222121;
-          width: 301px;
-          height: 369px;
-          text-align: center;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-          z-index: 100;
-          font-size: 1.4rem;
-      }
-
-      .blunder-alert img {
-          display: block;
-          width: 150px;
-          padding-bottom: 5px;
-      }
-  </style>
+  <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
+  <script src="http://localhost:3000/scripts/utils.js" ></script>
+  <link rel="stylesheet" href="http://localhost:3000/css/blunder-alerts.css" ></link>
   <title></title>
 </head>
 <body>
 </body>
 <script>
-    const LOCAL_STORAGE_KEYS = {
-        CROWN: 'crown',
-        KING: 'king',
-        OPPONENT_KING: 'opp_king',
-        SWAP_KING: 'swap_king_opp',
-        THEME: 'theme',
-        THEME_CONFIG: 'themeConfig',
-        TITLED_PLAYERS: 'titledPlayers',
-        BOUGHT_SQUARES: 'boughtSquares',
-        SOUNDBOARD: 'soundboard',
-        CURSOR: 'cursor'
-    };
+  const MESSAGE_TYPE = {
+    ALERT: 'ALERT',
+    SERVER_MESSAGE: 'serverMessage'
+  };
+  const socket = io(`http://localhost:3000/app-socket`, {
+    transports: ['polling'],
+    timeout: 200000000
+  });
+  socket.on('connect', () => console.log('Connected!'));
+  socket.on('connect_error', (err) => console.log(`connect_error due to ${err.message}`));
+  socket.on('disconnect', () => console.log('Disconnected!'));
 
-    const MESSAGE_TYPE = {
-        ALERT: 'ALERT',
-        SERVER_MESSAGE: 'serverMessage'
-    };
-
-    let socket;
-    socket = io(`http://localhost:3000/app-socket`, {
-        transports: ['polling'],
-        timeout: 200000000
-    });
-    socket.on('connect', () => console.log('Connected!'));
-    socket.on('connect_error', (err) => console.log(`connect_error due to ${err.message}`));
-    socket.on('disconnect', () => console.log('Disconnected!'));
-
-    socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
-        if (data.type === MESSAGE_TYPE.ALERT) {
-            drawAlert(data.message, data.milliseconds);
-        }
-    });
+  socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
+    if (data.type === MESSAGE_TYPE.ALERT) {
+      drawAlert(data.message, data.milliseconds);
+    }
+  });
 </script>
 </html>

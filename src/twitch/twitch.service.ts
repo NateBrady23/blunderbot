@@ -161,7 +161,7 @@ export class TwitchService {
       message,
       userstate
     };
-    void this.ownerRunCommand(`!subs ${JSON.stringify(toLog)}`);
+    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
     void writeLog('events', JSON.stringify(toLog));
   }
 
@@ -182,7 +182,7 @@ export class TwitchService {
       message,
       userstate
     };
-    void this.ownerRunCommand(`!subs ${JSON.stringify(toLog)}`);
+    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
     void writeLog('events', JSON.stringify(toLog));
   }
 
@@ -203,7 +203,7 @@ export class TwitchService {
       methods,
       userstate
     };
-    void this.ownerRunCommand(`!subs ${JSON.stringify(toLog)}`);
+    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
     void writeLog('events', JSON.stringify(toLog));
   }
 
@@ -228,7 +228,7 @@ export class TwitchService {
   }
 
   async onRaidHandler(_channel: string, username: string, _viewers: number) {
-    void this.ownerRunCommand(`!raids ${username}`);
+    void this.ownerRunCommand(`!onraids ${username}`);
     void this.ownerRunCommand(`!so ${username}`);
   }
 
@@ -244,7 +244,7 @@ export class TwitchService {
       user: userstate['display-name']
     };
 
-    void this.ownerRunCommand(`!bits ${JSON.stringify(obj)}`);
+    void this.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
   }
 
   async tellAllConnectedClientsToRefresh() {

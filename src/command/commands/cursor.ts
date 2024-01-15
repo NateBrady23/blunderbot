@@ -37,7 +37,7 @@ const command: Command = {
     });
     if (!ctx.tags.owner && !cursor.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
-        `!alert ${user} changed the cursor to ${cursor}`
+        `!alert {${user}} changed the cursor to {${cursor}}`
       );
     }
   }

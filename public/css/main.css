@@ -1,7 +1,8 @@
 body {
-    background-image: url(https://lichess.org/blunderbot/images/bg/space.webp) !important;
-    background-size: cover !important;
-    position: relative;
+    /*background-image: url(https://lichess.org/blunderbot/images/bg/space.webp) !important;*/
+    /*background-size: cover !important;*/
+    /*position: relative;*/
+    background: black;
 }
 
 #board,

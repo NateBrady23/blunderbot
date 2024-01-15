@@ -72,11 +72,13 @@ Copy the `config.yml.sample` to `config.yml` and change things around as you see
 
 ### Overlays / Browser Source
 
-Two commands require adding a browser source to your streaming software.
+Some commands require adding a browser source to your streaming software.
 
 For the `!alert` command to show up, add a browser source that points to: `http://localhost:3000/blunder-alerts.html`
 
 For the `!image` command, add a browser source that points to: `http://localhost:3000/images.html`
+
+For the `!confetti` command and future full screen overlays, add a browser source that points to: `http://localhost:3000/full-screen.html`
 
 Replace with a different port if you changed the `port` in the `config.yml`.
 

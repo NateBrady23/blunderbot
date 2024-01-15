@@ -16,7 +16,7 @@ export async function writeLog(filename, message) {
     }
     fs.appendFileSync(logFile, `${message}\n`);
   } catch (e) {
-    console.log(e);
-    console.log('Error writing to log file:', filename, message);
+    console.error(e);
+    console.error('Error writing to log file:', filename, message);
   }
 }

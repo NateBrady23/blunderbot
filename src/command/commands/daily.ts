@@ -17,7 +17,7 @@ const command: Command = {
         );
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     return true;
   }

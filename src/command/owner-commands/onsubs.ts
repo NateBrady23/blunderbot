@@ -5,13 +5,13 @@ import { CONFIG } from '../../config/config.service';
 const queue = new FunctionQueue();
 
 const command: Command = {
-  name: 'subs',
+  name: 'onsubs',
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     return queue.enqueue(async function () {
       const body = JSON.parse(ctx.body);
-      if (CONFIG.twitch.subCommands?.length) {
-        for (const command of CONFIG.twitch.subCommands) {
+      if (CONFIG.twitch.onSubscribe?.length) {
+        for (const command of CONFIG.twitch.onSubscribe) {
           void services.twitchService.ownerRunCommand(command);
         }
       }

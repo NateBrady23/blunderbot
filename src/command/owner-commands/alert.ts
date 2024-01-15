@@ -16,13 +16,14 @@ const command: Command = {
         message = message.replace(ctx.args[0], '').trim();
       }
       if (!milliseconds) {
-        milliseconds = 7000;
+        milliseconds = 10000;
       }
       services.appGateway.sendDataToSockets('serverMessage', {
         type: 'ALERT',
         message,
         milliseconds
       });
+      console.log(`Alert: ${message}`);
       await sleep(milliseconds);
     });
   }

@@ -17,7 +17,7 @@ const command: Command = {
         ctx.botSpeak('Start your blunder engines! ' + json.url);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     return true;
   }

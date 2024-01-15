@@ -18,7 +18,7 @@ const command: Command = {
       square
     });
     void services.twitchService.ownerRunCommand(
-      `!alert ${user} just bought the ${square} square!`
+      `!alert {${user}} just bought the {${square}} square!`
     );
     return true;
   }

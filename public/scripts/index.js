@@ -93,9 +93,6 @@ socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
       );
       drawBoughtSquares();
       await forceClientsToRefresh();
-      blunderBotSay(
-        `@${data.user} You've got the ${square} square! Let's gooooo!`
-      );
     }
   } else if (data.type === MESSAGE_TYPE.REFRESH) {
     load();

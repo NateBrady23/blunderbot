@@ -1,5 +1,4 @@
 /**
- * TODO: Add an option to break the cache.
  * TODO: Type the expected response from the Lichess API. Use the LichessService for this.
  */
 import fetch from 'node-fetch';
@@ -33,8 +32,8 @@ const cacheBBB = async () => {
       cached.push(`${current.fullName} winner: ${current.winner.name}`);
     }
   } catch (e) {
-    console.log('Error caching BBB');
-    console.log(e);
+    console.error('Error caching BBB');
+    console.error(e);
   }
 };
 
@@ -88,6 +87,10 @@ const command: Command = {
   help: ' Displays the team link, the current natebr4Bbb tournament, and the previous winner.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
+    // Allow any extra args to be a cache buster
+    if (ctx.args[0]) {
+      cached = [];
+    }
     if (cached.length && cachedAt && !isNHoursLater(8, cachedAt)) {
       speak(ctx);
       return true;
@@ -96,7 +99,7 @@ const command: Command = {
       await cacheBBB();
       speak(ctx);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     return true;
   }
