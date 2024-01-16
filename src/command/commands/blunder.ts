@@ -1,6 +1,5 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
-import { commands } from './index';
 
 const availableCommands = [];
 
@@ -10,12 +9,13 @@ const command: Command = {
   help: 'Displays a list of available commands.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: (ctx, { commandState }) => {
+    const commands = CONFIG.get().commands;
     Object.keys(commands).forEach((commandName) => {
       // Hide all message commands and hidden and killed commands
       if (
-        Object.keys(CONFIG.messageCommands).includes(commandName) ||
-        CONFIG.hiddenCommands.includes(commandName) ||
-        CONFIG.killedCommands.includes(commandName) ||
+        Object.keys(CONFIG.get().messageCommands).includes(commandName) ||
+        CONFIG.get().hiddenCommands.includes(commandName) ||
+        CONFIG.get().killedCommands.includes(commandName) ||
         commandState.killedCommands.includes(commandName)
       ) {
         return;
@@ -37,7 +37,7 @@ const command: Command = {
       `The following commands are available: [${availableCommands.join(', ')}]`
     );
     ctx.botSpeak(
-      `For a full list of commands, check out: ${CONFIG.commandsListUrl}`
+      `For a full list of commands, check out: ${CONFIG.get().commandsListUrl}`
     );
     return true;
   }

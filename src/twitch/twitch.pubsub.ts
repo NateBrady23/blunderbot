@@ -12,10 +12,10 @@ export class TwitchPubSub {
 
   private opts = {
     identity: {
-      username: CONFIG.twitch.botUsername,
-      password: CONFIG.twitch.botPassword
+      username: CONFIG.get().twitch.botUsername,
+      password: CONFIG.get().twitch.botPassword
     },
-    channels: [CONFIG.twitch.channel]
+    channels: [CONFIG.get().twitch.channel]
   };
 
   public client;
@@ -36,12 +36,12 @@ export class TwitchPubSub {
           type: 'LISTEN',
           data: {
             topics: [
-              `channel-points-channel-v1.${CONFIG.twitch.ownerId}`,
-              `channel-subscribe-events-v1.${CONFIG.twitch.ownerId}`,
-              `channel-bits-badge-unlocks.${CONFIG.twitch.ownerId}`,
-              `channel-bits-events-v2.${CONFIG.twitch.ownerId}`
+              `channel-points-channel-v1.${CONFIG.get().twitch.ownerId}`,
+              `channel-subscribe-events-v1.${CONFIG.get().twitch.ownerId}`,
+              `channel-bits-badge-unlocks.${CONFIG.get().twitch.ownerId}`,
+              `channel-bits-events-v2.${CONFIG.get().twitch.ownerId}`
             ],
-            auth_token: CONFIG.twitch.apiOwnerOauthToken
+            auth_token: CONFIG.get().twitch.apiOwnerOauthToken
           }
         })
       );
@@ -89,8 +89,8 @@ export class TwitchPubSub {
 
         this.logger.log(`User ${username} redeemed ${reward.title}`);
 
-        if (CONFIG.twitch.customRewardCommands[reward.title]) {
-          for (let command of CONFIG.twitch.customRewardCommands[
+        if (CONFIG.get().twitch.customRewardCommands[reward.title]) {
+          for (let command of CONFIG.get().twitch.customRewardCommands[
             reward.title
           ]) {
             command = command.replace(/{username}/gi, `${username}`);

@@ -21,7 +21,7 @@ function showLeaderboard(ctx: Context, commandState: CommandState) {
 function showQuestion(ctx: Context, commandState: CommandState) {
   ctx.botSpeak(
     `Round ${commandState.trivia.round + 1}: ${
-      CONFIG.trivia[commandState.trivia.round].question
+      CONFIG.get().trivia[commandState.trivia.round].question
     }`
   );
 }
@@ -30,14 +30,14 @@ function nextQuestion(ctx: Context, commandState: CommandState) {
   if (commandState.trivia.round !== -1 && !commandState.trivia.roundAnswered) {
     ctx.botSpeak(
       `Nobody answered correctly! The correct answer was "${
-        CONFIG.trivia[commandState.trivia.round].answers[0]
+        CONFIG.get().trivia[commandState.trivia.round].answers[0]
       }"`
     );
   }
   commandState.trivia.incorrectUsers = [];
   commandState.trivia.round++;
   commandState.trivia.roundAnswered = false;
-  if (commandState.trivia.round >= CONFIG.trivia.length) {
+  if (commandState.trivia.round >= CONFIG.get().trivia.length) {
     ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     showLeaderboard(ctx, commandState);
     commandState.trivia.started = false;
@@ -86,7 +86,7 @@ const command: Command = {
     if (answer === 'round') {
       ctx.botSpeak(
         `It's currently Round ${commandState.trivia.round + 1}/${
-          CONFIG.trivia.length
+          CONFIG.get().trivia.length
         }`
       );
       return true;
@@ -105,7 +105,7 @@ const command: Command = {
     }
 
     if (
-      CONFIG.trivia[commandState.trivia.round].answers.includes(
+      CONFIG.get().trivia[commandState.trivia.round].answers.includes(
         answer.toLowerCase()
       )
     ) {

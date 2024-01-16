@@ -4,12 +4,12 @@ import { WebClient } from '@slack/web-api';
 import { SocketModeClient } from '@slack/socket-mode';
 import { CONFIG } from '../config/config.service';
 
-const appToken = CONFIG.slack.appToken;
+const appToken = CONFIG.get().slack.appToken;
 const socketModeClient = new SocketModeClient({
   appToken
 });
 
-const client = new WebClient(CONFIG.slack.botToken);
+const client = new WebClient(CONFIG.get().slack.botToken);
 
 @Injectable()
 export class SlackService {
@@ -19,7 +19,7 @@ export class SlackService {
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService
   ) {
-    if (!CONFIG.slack?.enabled) {
+    if (!CONFIG.get().slack?.enabled) {
       this.logger.log('Slack disabled');
       return;
     }

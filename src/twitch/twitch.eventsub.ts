@@ -12,10 +12,10 @@ export class TwitchEventSub {
 
   private opts = {
     identity: {
-      username: CONFIG.twitch.botUsername,
-      password: CONFIG.twitch.botPassword
+      username: CONFIG.get().twitch.botUsername,
+      password: CONFIG.get().twitch.botPassword
     },
-    channels: [CONFIG.twitch.channel]
+    channels: [CONFIG.get().twitch.channel]
   };
 
   public client;

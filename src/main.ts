@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new IoAdapter(app));
 
   app.enableCors({ origin: '*', methods: '*' });
-  await app.listen(CONFIG.port);
+  await app.listen(CONFIG.get().port);
 }
 
 bootstrap();

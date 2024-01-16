@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TwitchService } from './twitch.service';
-import { configService, CONFIG } from '../config/config.service';
+import { CONFIG } from '../config/config.service';
 
 @Controller('twitch')
 export class TwitchController {
@@ -8,33 +8,33 @@ export class TwitchController {
 
   @Get('kings')
   getTwitchKings(): string[] {
-    return configService.getKings();
+    return CONFIG.get().kings;
   }
 
   @Get('opps')
   getOpponentKings(): string[] {
-    return configService.getOppKings();
+    return CONFIG.get().oppKings;
   }
 
   @Get('crowns')
   getTwitchCrowns(): string[] {
-    return configService.getCrowns();
+    return CONFIG.get().crowns;
   }
 
   @Get('themeconfig')
   getThemeConfig(): unknown {
-    return configService.getThemeConfig();
+    return CONFIG.get().themeConfig;
   }
 
   // Load sounds for the soundboard menu
   @Get('soundboard')
   getSoundboard(): string[] {
-    return configService.getSoundboard();
+    return CONFIG.get().soundboard;
   }
 
   @Get('titles')
   getTitles(): string[][] {
-    return CONFIG.titledPlayers;
+    return CONFIG.get().titledPlayers;
   }
 
   @Post('/command')

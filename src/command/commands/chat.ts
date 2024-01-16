@@ -6,7 +6,7 @@ const command: Command = {
   help: 'Talk to BlunderBot! Also @BlunderBot in the beginning or end of a message to talk.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log('OpenAI disabled in !chat command');
       return false;
     }

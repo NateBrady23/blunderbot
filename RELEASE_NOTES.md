@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.5.1
+
+#### Features
+
+- Rewrote internal config handling to allow for `!reload` command. Now you can make changes to most sections of the config (like new message commands), add new kings and other public files, and fix other config typos without restarting the server. Just `!reload` the config.
+
 ### 1.5.0 (2024-01-15)
 
 #### Breaking Changes

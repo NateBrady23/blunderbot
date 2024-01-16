@@ -10,7 +10,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
-      if (!CONFIG.openai?.enabled) {
+      if (!CONFIG.get().openai?.enabled) {
         console.log(`OpenAI is not enabled in !tts command.`);
         return false;
       }

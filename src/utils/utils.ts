@@ -34,7 +34,7 @@ function getAudioDurationInSeconds(filePath): Promise<number> {
 export async function muteOrUnmuteDesktopApps(mute: boolean) {
   const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
-    for (const command of CONFIG.sounds[muteOrUnmute].programs) {
+    for (const command of CONFIG.get().sounds[muteOrUnmute].programs) {
       await execSync(command);
     }
   } catch (error) {
@@ -168,7 +168,7 @@ export function addStrToFileAfterStr(
 }
 
 export function fixPronunciations(text: string): string {
-  for (const [key, value] of CONFIG.openai.pronunciations) {
+  for (const [key, value] of CONFIG.get().openai.pronunciations) {
     text = text.replace(new RegExp(key, 'gi'), value);
   }
 

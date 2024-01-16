@@ -16,7 +16,7 @@ export class BrowserService {
     // Preload some frequently used pages
     (async () => {
       this.logger.log('Preloading browser pages');
-      if (CONFIG.heartRate.enabled) {
+      if (CONFIG.get().heartRate.enabled) {
         await this.getHeartRatePage();
       }
     })();
@@ -42,7 +42,7 @@ export class BrowserService {
     if (!this.heartRatePage) {
       const browser = await this.getBrowser();
       this.heartRatePage = await browser.newPage();
-      await this.heartRatePage.goto(CONFIG.heartRate.url);
+      await this.heartRatePage.goto(CONFIG.get().heartRate.url);
       // It takes this long for the heart rate to show up on the page
       await sleep(5000);
     }
@@ -54,9 +54,12 @@ export class BrowserService {
     const page = await this.getHeartRatePage();
 
     try {
-      const textSelector = await page.waitForSelector(CONFIG.heartRate.class, {
-        timeout: 5_000
-      });
+      const textSelector = await page.waitForSelector(
+        CONFIG.get().heartRate.class,
+        {
+          timeout: 5_000
+        }
+      );
       return parseInt(
         (await textSelector?.evaluate((el) => el.textContent))?.trim()
       );

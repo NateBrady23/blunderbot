@@ -16,7 +16,7 @@ export class DiscordService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService
   ) {
-    if (!CONFIG.discord.enabled) {
+    if (!CONFIG.get().discord.enabled) {
       this.logger.log('Discord disabled');
       return;
     }
@@ -52,13 +52,13 @@ export class DiscordService {
         });
     });
 
-    this.client.login(CONFIG.discord.botToken);
+    this.client.login(CONFIG.get().discord.botToken);
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
   makeAnnouncement(content) {
     const channel = this.client.channels.cache.get(
-      CONFIG.discord.announcementChannelId
+      CONFIG.get().discord.announcementChannelId
     );
     channel.send(content);
   }
@@ -66,7 +66,7 @@ export class DiscordService {
   postImageToGallery(content: string, buffer: Buffer) {
     try {
       const channel = this.client.channels.cache.get(
-        CONFIG.discord.galleryChannelId
+        CONFIG.get().discord.galleryChannelId
       );
       const attachment = new AttachmentBuilder(buffer, 'image.png');
       channel.send({ content, files: [attachment] });
@@ -82,7 +82,7 @@ export class DiscordService {
 
   // TODO: There's a bug sometimes where there's no message or context?
   onMessageHandler(discordMessage) {
-    const botAuthorId = CONFIG.discord.botAuthorId;
+    const botAuthorId = CONFIG.get().discord.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
     // end of the message, so it can respond.
@@ -140,13 +140,14 @@ export class DiscordService {
       username: discordMessage.author.username,
       'display-name': discordMessage.author.username,
       userId: discordMessage.author.id,
-      owner: discordMessage.author.id === CONFIG.discord.ownerAuthorId,
+      owner: discordMessage.author.id === CONFIG.get().discord.ownerAuthorId,
       // We determine a mod by seeing if they're in the mod channel
       mod:
-        discordMessage.author.id === CONFIG.discord.ownerAuthorId ||
-        discordMessage.channelId === CONFIG.discord.modChannelId,
+        discordMessage.author.id === CONFIG.get().discord.ownerAuthorId ||
+        discordMessage.channelId === CONFIG.get().discord.modChannelId,
       // Unused atm - Just the owner is marked as a subscriber
-      subscriber: discordMessage.author.id === CONFIG.discord.ownerAuthorId
+      subscriber:
+        discordMessage.author.id === CONFIG.get().discord.ownerAuthorId
     };
 
     return context;

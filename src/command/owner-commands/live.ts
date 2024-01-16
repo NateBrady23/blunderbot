@@ -15,8 +15,10 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      CONFIG.discord?.enabled && !!CONFIG.discord?.announcementChannelId;
-    let sendToTwitter = CONFIG.twitter?.enabled && CONFIG.twitter?.announceLive;
+      CONFIG.get().discord?.enabled &&
+      !!CONFIG.get().discord?.announcementChannelId;
+    let sendToTwitter =
+      CONFIG.get().twitter?.enabled && CONFIG.get().twitter?.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -39,26 +41,32 @@ const command: Command = {
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `${CONFIG.nickname} is about to go live on twitch. Say something to get people excited`,
+          `${
+            CONFIG.get().nickname
+          } is about to go live on twitch. Say something to get people excited`,
           {
             temp: 1.4,
             includeBlunderBotContext: true
           }
         );
       } catch (e) {
-        msg = `Are you ready? It's time. ${CONFIG.nickname} is here and he's ready to play some chess!`;
+        msg = `Are you ready? It's time. ${
+          CONFIG.get().nickname
+        } is here and he's ready to play some chess!`;
       }
     }
 
     if (sendToDiscord) {
       services.discordService.makeAnnouncement(
-        `@everyone ${msg} https://twitch.tv/${CONFIG.twitch.channel}`
+        `@everyone ${msg} https://twitch.tv/${CONFIG.get().twitch.channel}`
       );
     }
 
     if (sendToTwitter) {
       void services.twitterService.postTweet(
-        `${msg} https://twitch.tv/${CONFIG.twitch.channel} ${CONFIG.twitter.tweetHashtags}`
+        `${msg} https://twitch.tv/${CONFIG.get().twitch.channel} ${
+          CONFIG.get().twitter.tweetHashtags
+        }`
       );
     }
 

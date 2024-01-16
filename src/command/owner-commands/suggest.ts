@@ -5,7 +5,7 @@ const command: Command = {
   name: 'suggest',
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       ctx.botSpeak('OpenAI is disabled in !suggest.');
       return false;
     }

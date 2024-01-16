@@ -12,13 +12,13 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const currPoll = await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
-        CONFIG.twitch.ownerId,
+        CONFIG.get().twitch.ownerId,
       'GET'
     );
 
     await services.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
-        CONFIG.twitch.ownerId +
+        CONFIG.get().twitch.ownerId +
         '&status=TERMINATED' +
         '&id=' +
         currPoll.data[0].id,

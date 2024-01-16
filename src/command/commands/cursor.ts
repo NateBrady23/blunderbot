@@ -1,11 +1,11 @@
-import { configService } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'cursor',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const cursors = configService.getCursors();
+    const cursors = CONFIG.get().cursors;
     let cursor = (ctx.args[0] || '').toLowerCase();
 
     if (cursor === 'reset') {
@@ -23,9 +23,8 @@ const command: Command = {
         filteredCursors[Math.floor(Math.random() * filteredCursors.length)];
     } else if (!cursor || !cursors.includes(cursor)) {
       ctx.botSpeak(
-        `The following cursors are available: ${configService
-          .getCursors()
-          .filter((k) => !k.startsWith('secret_'))
+        `The following cursors are available: ${CONFIG.get()
+          .cursors.filter((k) => !k.startsWith('secret_'))
           .join(', ')}`
       );
       return false;

@@ -5,7 +5,7 @@ const command: Command = {
   name: 'heartrate',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.heartRate?.enabled) {
+    if (!CONFIG.get().heartRate?.enabled) {
       console.log('Heart rate not enabled in config for !heartrate command');
       return false;
     }
@@ -13,7 +13,7 @@ const command: Command = {
     const heartrate = await services.browserService.getHeartRate();
     if (heartrate) {
       await services.twitchService.ownerRunCommand(
-        `!tts ${CONFIG.nickname}'s heart rate is ${heartrate} BPM`
+        `!tts ${CONFIG.get().nickname}'s heart rate is ${heartrate} BPM`
       );
     }
     return true;

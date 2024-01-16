@@ -5,7 +5,7 @@ const command: Command = {
   name: 'accept',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const team = CONFIG.lichess.teamId;
+    const team = CONFIG.get().lichess.teamId;
     try {
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/team/${team}/requests`
@@ -24,7 +24,7 @@ const command: Command = {
           );
           const json = await res.json();
           if (json.ok) {
-            ctx.botSpeak(`Welcome ${user} to ${CONFIG.lichess.teamName}`);
+            ctx.botSpeak(`Welcome ${user} to ${CONFIG.get().lichess.teamName}`);
           }
         } else {
           const res = await services.lichessService.apiCall(

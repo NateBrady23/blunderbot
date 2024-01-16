@@ -5,7 +5,7 @@ const command: Command = {
   name: 'recap',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !recap command.`);
       return false;
     }

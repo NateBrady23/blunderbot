@@ -1,14 +1,12 @@
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
-const lichessUser = CONFIG.lichess.user;
-
 const command: Command = {
   name: 'game',
-  help: `Displays a link to the currently played game by user. If no user, defaults to ${lichessUser}.`,
+  help: `Displays a link to the currently played game by user. If no user, defaults to the streamer.`,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    let user = lichessUser;
+    let user = CONFIG.get().lichess.user;
     if (ctx.args[0]) {
       user = ctx.args[0];
     }

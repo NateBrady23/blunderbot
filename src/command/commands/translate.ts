@@ -6,7 +6,7 @@ const command: Command = {
   queued: true,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !translate command.`);
       return false;
     }

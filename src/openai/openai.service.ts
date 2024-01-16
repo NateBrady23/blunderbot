@@ -8,7 +8,7 @@ import { generateUUID, playAudioFile } from '../utils/utils';
 export const baseMessages: OpenAiChatMessage[] = [
   {
     role: 'system',
-    content: CONFIG.openai.baseSystemMessage
+    content: CONFIG.get().openai.baseSystemMessage
   }
 ];
 
@@ -22,19 +22,19 @@ export class OpenaiService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService
   ) {
-    if (!CONFIG.openai?.enabled || !CONFIG.openai?.apiKey) {
+    if (!CONFIG.get().openai?.enabled || !CONFIG.get().openai?.apiKey) {
       this.logger.log('OpenAI disabled');
       return;
     }
 
     this.openai = new OpenAI({
-      apiKey: CONFIG.openai.apiKey
+      apiKey: CONFIG.get().openai.apiKey
     });
   }
 
   async createImage(prompt: string): Promise<string> {
     const response = await this.openai.images.generate({
-      model: CONFIG.openai?.imageModel || 'dall-e-3',
+      model: CONFIG.get().openai?.imageModel || 'dall-e-3',
       prompt,
       quality: 'standard',
       n: 1
@@ -46,7 +46,7 @@ export class OpenaiService {
     const response = await this.openai.images.edit({
       image: fs.createReadStream(maskImg),
       // TODO: Currently does not accept model parameter
-      // model: CONFIG.openai?.imageModel || 'dall-e-3',
+      // model: CONFIG.get().openai?.imageModel || 'dall-e-3',
       prompt,
       n: 1
     });
@@ -56,7 +56,7 @@ export class OpenaiService {
   async tts(message: string, voice: OpenAiVoiceOptions): Promise<void> {
     try {
       const response = await this.openai.audio.speech.create({
-        model: CONFIG.openai.ttsModel,
+        model: CONFIG.get().openai.ttsModel,
         voice,
         input: message
       });
@@ -82,7 +82,7 @@ export class OpenaiService {
       ];
 
       const completion = await this.openai.chat.completions.create({
-        model: CONFIG.openai.chatModel,
+        model: CONFIG.get().openai.chatModel,
         messages
       });
       return completion.choices[0].message.content;
@@ -150,7 +150,7 @@ export class OpenaiService {
       this.savedMessages = [...this.savedMessages, ...messages];
       messages = [...systemMessages, ...this.savedMessages];
       const completion = await this.openai.chat.completions.create({
-        model: CONFIG.openai.chatModel,
+        model: CONFIG.get().openai.chatModel,
         messages,
         temperature: opts?.temp || 0.9
       });
@@ -164,7 +164,7 @@ export class OpenaiService {
 
       this.savedMessages.push({ role: 'assistant', content: reply });
 
-      while (this.savedMessages.length > CONFIG.openai.memoryCount || 0) {
+      while (this.savedMessages.length > CONFIG.get().openai.memoryCount || 0) {
         this.savedMessages.shift();
       }
       return reply;
@@ -215,7 +215,7 @@ export class OpenaiService {
 
   async isFlagged(message: string): Promise<boolean> {
     const moderation = await this.openai.moderations.create({
-      model: CONFIG.openai.textModerationModel,
+      model: CONFIG.get().openai.textModerationModel,
       input: message
     });
     return moderation.results[0].flagged;

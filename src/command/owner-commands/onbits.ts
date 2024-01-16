@@ -30,13 +30,13 @@ const command: Command = {
       console.log(commandState.contributions);
 
       let commands: string[], alert: string;
-      if (CONFIG?.bits.matches && CONFIG.bits.matches[bits]) {
-        commands = CONFIG.bits.matches[bits].commands;
-        alert = CONFIG.bits.matches[bits].alert;
+      if (CONFIG.get().bits?.matches && CONFIG.get().bits.matches[bits]) {
+        commands = CONFIG.get().bits.matches[bits].commands;
+        alert = CONFIG.get().bits.matches[bits].alert;
       } else {
         const key = bits < 100 ? '99orLess' : '100orMore';
-        commands = CONFIG.bits[key].commands;
-        alert = CONFIG.bits[key].alert;
+        commands = CONFIG.get().bits[key].commands;
+        alert = CONFIG.get().bits[key].alert;
       }
       if (commands) {
         for (const cmd of commands) {

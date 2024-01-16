@@ -16,7 +16,7 @@ export class LichessService {
   }
 
   async getCurrentGame(
-    user = CONFIG.lichess.user,
+    user = CONFIG.get().lichess.user,
     opts: { gameId?: boolean } = {}
   ): Promise<any> {
     const url = `https://lichess.org/api/users/status?withGameIds=true&ids=${user}`;
@@ -52,7 +52,7 @@ export class LichessService {
       json: true
     }
   ): Promise<any> {
-    const token = CONFIG.lichess.oauthToken;
+    const token = CONFIG.get().lichess.oauthToken;
 
     const request = {
       url,

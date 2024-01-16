@@ -1,20 +1,19 @@
-import { configService } from '../../config/config.service';
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'king',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = configService.getKings();
+    const kings = CONFIG.get().kings;
     let king = (ctx.args[0] || '').toLowerCase();
     if (king === 'random') {
       const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
       king = filteredKings[Math.floor(Math.random() * filteredKings.length)];
     } else if (!king || !kings.includes(king)) {
       ctx.botSpeak(
-        `The following kings are available: ${configService
-          .getKings()
-          .filter((k) => !k.startsWith('secret_'))
+        `The following kings are available: ${CONFIG.get()
+          .kings.filter((k) => !k.startsWith('secret_'))
           .join(', ')}`
       );
       return false;
