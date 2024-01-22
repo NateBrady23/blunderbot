@@ -3,7 +3,7 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'image',
-  aliases: ['img', 'mage', 'imagine'],
+  aliases: ['img', 'mage', 'imagine', 'draw'],
   help: '!image <prompt> - Creates an image based on the prompt.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {

@@ -124,7 +124,7 @@ export function getRandomIntBetween(min: number, max: number): number {
 }
 
 export function getRandomElement(arr) {
-  if (arr.length === 0) {
+  if (!arr || arr.length === 0) {
     return;
   }
 

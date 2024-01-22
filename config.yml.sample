@@ -7,8 +7,8 @@ commandsListUrl: https://github.com/NateBrady23/blunderbot/blob/main/COMMANDS.md
 twitch:
   ownerUsername: YourTwitchUsername
   channel: YourTwitchUsername
-  ownerId: 111111111
-  botId: 111111112
+  ownerId: "111111111"
+  botId: "111111112"
   botUsername: YourBotUsername
   botPassword: "oauth:pass"
   apiBotOauthToken: "bottoken"
@@ -79,7 +79,10 @@ twitch:
     image: 6
     tts: 5
     vchat: 3
-
+  # You don't need to edit this unless you're doing local testing using the twitch cli
+  # https://dev.twitch.tv/docs/cli/websocket-event-command/
+  eventWebsocketUrl: "wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=600"
+  eventSubscriptionUrl: "https://api.twitch.tv/helix/eventsub/subscriptions"
 
 # LICHESS
 # example https://lichess.org/account/oauth/token/create?scopes[]=preference:read,preference:write,email:read,challenge:read,challenge:write,challenge:bulk,study:read,study:write,tournament:write,racer:write,puzzle:read,team:read,team:write,team:lead,follow:read,follow:write,msg:write,board:play&description=natebrady23

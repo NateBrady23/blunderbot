@@ -1,5 +1,6 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
+import { sleep } from '../../utils/utils';
 
 function showLeaderboard(ctx: Context, commandState: CommandState) {
   if (!Object.keys(commandState.trivia.leaderboard).length) {
@@ -18,7 +19,14 @@ function showLeaderboard(ctx: Context, commandState: CommandState) {
   ctx.botSpeak(`Leaderboard: ${leaderboard}`);
 }
 
-function showQuestion(ctx: Context, commandState: CommandState) {
+async function showQuestion(ctx: Context, commandState: CommandState) {
+  ctx.botSpeak('Next question in 3...');
+  await sleep(2000);
+  ctx.botSpeak('2...');
+  await sleep(2000);
+  ctx.botSpeak('1...');
+  await sleep(2000);
+  commandState.trivia.roundStartTime = Date.now();
   ctx.botSpeak(
     `Round ${commandState.trivia.round + 1}: ${
       CONFIG.get().trivia[commandState.trivia.round].question
@@ -49,7 +57,7 @@ function nextQuestion(ctx: Context, commandState: CommandState) {
 const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx, { commandState }) => {
+  run: async (ctx, { commandState, services }) => {
     const answer = ctx.body?.toLowerCase().trim();
     if (answer === 'start' && ctx.tags.owner) {
       commandState.trivia.started = true;
@@ -97,6 +105,17 @@ const command: Command = {
       return true;
     }
 
+    if (answer === 'fastest') {
+      if (!commandState.trivia.fastestAnswer) {
+        ctx.botSpeak('No one has answered correctly yet!');
+      } else {
+        ctx.botSpeak(
+          `@${commandState.trivia.fastestAnswer.user} answered correctly in ${commandState.trivia.fastestAnswer.seconds} seconds!`
+        );
+      }
+      return true;
+    }
+
     if (
       commandState.trivia.roundAnswered ||
       commandState.trivia.incorrectUsers.includes(ctx.tags['display-name'])
@@ -109,13 +128,37 @@ const command: Command = {
         answer.toLowerCase()
       )
     ) {
+      const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
+      const roundPoints =
+        CONFIG.get().trivia[commandState.trivia.round].points || 1;
       const points =
-        (commandState.trivia.leaderboard[ctx.tags['display-name']] || 0) + 1;
+        (commandState.trivia.leaderboard[ctx.tags['display-name']] || 0) +
+        roundPoints;
       commandState.trivia.roundAnswered = true;
+      // If it's not the first acceptable answer, put it in parens. For instance, if we accept
+      // "franklin", but the first answer is "benjamin franklin", we'll put "franklin" in parens.
+      let finalAnswer =
+        CONFIG.get().trivia[commandState.trivia.round].answers[0];
+      if (answer !== finalAnswer) {
+        finalAnswer = `${finalAnswer} (${answer})`;
+      }
       ctx.botSpeak(
-        `"${answer}" is correct! @${ctx.tags['display-name']} got it right! They now have ${points} point(s).`
+        `"${finalAnswer}" is correct! @${ctx.tags['display-name']} got it right in ${seconds} seconds and earned ${roundPoints} points! They now have ${points} point(s).`
+      );
+      void services.twitchService.ownerRunCommand(
+        `!alert {"${finalAnswer}"} is correct! {@${ctx.tags['display-name']}} got it right in {${seconds} seconds} and earned {${roundPoints} points}!`
       );
       commandState.trivia.leaderboard[ctx.tags['display-name']] = points;
+
+      if (
+        !commandState.trivia.fastestAnswer ||
+        seconds < commandState.trivia.fastestAnswer.seconds
+      ) {
+        commandState.trivia.fastestAnswer = {
+          user: ctx.tags['display-name'],
+          seconds
+        };
+      }
     } else {
       commandState.trivia.incorrectUsers.push(ctx.tags['display-name']);
     }

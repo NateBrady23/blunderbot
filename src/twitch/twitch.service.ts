@@ -388,12 +388,13 @@ export class TwitchService {
       return await res.json();
     } catch (e) {
       // no json to parse which is fine
+      this.logger.log(`No JSON to parse for ${url}`);
     }
   }
 
-  async helixGetTwitchUserInfo(login: string) {
+  async helixGetTwitchUserInfo(login: string, bustCache = false) {
     login = login.toLowerCase();
-    if (!twitchUserMap[login]) {
+    if (bustCache || !twitchUserMap[login]) {
       // Get their twitch id
       const res: { data: [{ id: string }] } = <{ data: [{ id: string }] }>(
         await this.helixApiCall(

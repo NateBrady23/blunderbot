@@ -44,6 +44,21 @@ class ConfigService {
     try {
       const fileContents = readFileSync('./config.yml', 'utf8');
       this.loadedConfig = yaml.load(fileContents);
+
+      // Edits to the config here to prevent breaking changes. To be removed in future versions.
+      this.loadedConfig.twitch.ownerId =
+        this.loadedConfig.twitch.ownerId.toString();
+      this.loadedConfig.twitch.botId =
+        this.loadedConfig.twitch.botId.toString();
+      if (!this.loadedConfig.twitch.eventWebsocketUrl) {
+        this.loadedConfig.twitch.eventWebsocketUrl =
+          'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=600';
+      }
+      if (!this.loadedConfig.twitch.eventSubscriptionUrl) {
+        this.loadedConfig.twitch.eventSubscriptionUrl =
+          'https://api.twitch.tv/helix/eventsub/subscriptions';
+      }
+      //
     } catch (e) {
       console.error('Error loading config.yml');
       console.error(e);
@@ -137,14 +152,10 @@ class ConfigService {
   }
 
   public getRandomRapidApiKey() {
-    return getRandomElement(CONFIG.get().rapidApi.keys);
+    return getRandomElement(CONFIG.get().rapidApi?.keys);
   }
 }
 
 const CONFIG = new ConfigService();
-
-setTimeout(() => {
-  CONFIG.loadConfig();
-}, 30000);
 
 export { CONFIG };

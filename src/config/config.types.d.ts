@@ -22,6 +22,8 @@ interface YAMLConfig {
     userRestrictedCommands: {
       [key: string]: string[];
     };
+    eventWebsocketUrl: string;
+    eventSubscriptionUrl: string;
   };
 
   lichess: {
@@ -168,7 +170,7 @@ interface YAMLConfig {
     responses: string[];
   }[];
 
-  trivia: [{ question: string; answers: string[] }];
+  trivia: [{ question: string; answers: string[]; points: number }];
 }
 
 interface Config extends YAMLConfig {
