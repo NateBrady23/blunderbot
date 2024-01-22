@@ -52,13 +52,8 @@ export class TwitchService {
     this.client.on('connected', this.onConnectedHandler.bind(this));
 
     // Actions
-    this.client.on('cheer', this.onCheerHandler.bind(this));
     this.client.on('message', this.onMessageHandler.bind(this));
-    this.client.on('raided', this.onRaidHandler.bind(this));
-    this.client.on('subscription', this.onSubscriptionHandler.bind(this));
     this.client.on('resub', this.onResubHandler.bind(this));
-    this.client.on('subgift', this.onSubGiftHandler.bind(this));
-    this.client.on('submysterygift', this.onSubMysteryGiftHandler.bind(this));
   }
 
   botSpeak(message: string) {
@@ -151,25 +146,6 @@ export class TwitchService {
     }
   }
 
-  async onSubscriptionHandler(
-    channel: string,
-    username: string,
-    method: string,
-    message: string,
-    userstate: unknown
-  ) {
-    const toLog = {
-      event: 'onSubscriptionHandler',
-      channel,
-      username,
-      method,
-      message,
-      userstate
-    };
-    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
-    void writeLog('events', JSON.stringify(toLog));
-  }
-
   async onResubHandler(
     channel: string,
     username: string,
@@ -188,68 +164,7 @@ export class TwitchService {
       userstate
     };
     void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
-    void writeLog('events', JSON.stringify(toLog));
-  }
-
-  async onSubGiftHandler(
-    channel: string,
-    username: string,
-    streakMonths: string,
-    recipient: string,
-    methods: unknown,
-    userstate: unknown
-  ) {
-    const toLog = {
-      event: 'onSubGiftHandler',
-      channel,
-      username,
-      streakMonths,
-      recipient,
-      methods,
-      userstate
-    };
-    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
-    void writeLog('events', JSON.stringify(toLog));
-  }
-
-  async onSubMysteryGiftHandler(
-    channel: string,
-    username: string,
-    streakMonths: string,
-    recipient: string,
-    methods: unknown,
-    userstate: unknown
-  ) {
-    const toLog = {
-      event: 'onSubMysteryGiftHandler',
-      channel,
-      username,
-      streakMonths,
-      recipient,
-      methods,
-      userstate
-    };
-    void writeLog('events', JSON.stringify(toLog));
-  }
-
-  async onRaidHandler(_channel: string, username: string, _viewers: number) {
-    void this.ownerRunCommand(`!onraids ${username}`);
-    void this.ownerRunCommand(`!so ${username}`);
-  }
-
-  async onCheerHandler(
-    _channel: string,
-    userstate: { 'display-name': string; bits: string },
-    message: string
-  ) {
-    const bits = parseInt(userstate.bits) || 0;
-    const obj = {
-      message,
-      bits,
-      user: userstate['display-name']
-    };
-
-    void this.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
+    void writeLog('events', toLog);
   }
 
   async tellAllConnectedClientsToRefresh() {
@@ -364,7 +279,7 @@ export class TwitchService {
     method = 'GET',
     body = undefined,
     asOwner = true
-  ): Promise<{ data: unknown }> {
+  ): Promise<any> {
     const token = asOwner
       ? CONFIG.get().twitch.apiOwnerOauthToken
       : CONFIG.get().twitch.apiBotOauthToken;

@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from '../config/config.service';
 import WebSocket = require('ws');
 import { TwitchService } from './twitch.service';
+import { writeLog } from '../utils/logs';
 
 @Injectable()
 export class TwitchPubSub {
@@ -69,6 +70,12 @@ export class TwitchPubSub {
       this.pubSubCreateConnection();
       return;
     }
+
+    if (event.type === 'PONG') {
+      return;
+    }
+
+    void writeLog('pubsub', event, { excludeDate: true });
 
     if (event.type === 'MESSAGE') {
       const message = JSON.parse(event.data.message);

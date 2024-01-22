@@ -10,6 +10,8 @@
 - BlunderBot gives a 3, 2, 1 countdown before the next trivia question is asked.
 - Added `!trivia fastest` command to show the fastest answer during trivia.
 - Added `twitch.eventWebsocketUrl` and `twitch.eventSubscriptionUrl` to the config for use with the twitch cli for debugging. Not required fields (no breaking changes).
+- Now listening to train events. Will automagically run `!train` owner command when a hype train begins or progresses.
+- Most events have been moved from tmi.js to eventSub or pubSub. Unfortunately, resubscribe and some other events are not at parity with pubSub yet, so more updates needed. CLOSE to removing tmi.js dependency.
 
 #### Bug Fixes
 
