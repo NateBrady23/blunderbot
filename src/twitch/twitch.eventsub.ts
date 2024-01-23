@@ -82,76 +82,51 @@ export class TwitchEventSub {
       void writeLog('events', JSON.stringify(data));
       const subType = data.payload.subscription.type;
       this.logger.log('EventSub notification received: ' + subType);
-      if (subType === 'channel.follow') {
-        void this.twitchService.helixGetTwitchUserInfo(
-          data.payload.event.user_login,
-          true
-        );
-      }
 
-      if (subType === 'stream.online') {
-        this.logger.log('Stream is online!');
-      }
+      try {
+        switch (subType) {
+          case 'channel.follow':
+            await this.onFollow(data);
+            break;
 
-      if (
-        subType === 'channel.hype_train.begin' ||
-        subType === 'channel.hype_train.progress'
-      ) {
-        void this.twitchService.ownerRunCommand('!train');
-      }
+          case 'stream.online':
+            await this.onStreamOnline(data);
+            break;
 
-      if (subType === 'channel.raid') {
-        void this.twitchService.ownerRunCommand(
-          `!onraids ${data.event.from_broadcaster_user_login}`
-        );
-        void this.twitchService.ownerRunCommand(
-          `!so ${data.event.from_broadcaster_user_login}`
-        );
-      }
+          case 'channel.hype_train.begin':
+          case 'channel.hype_train.progress':
+            await this.onTrain(data);
+            break;
 
-      if (subType === 'channel.cheer') {
-        const obj = {
-          message: data.event.message,
-          bits: parseInt(data.event.bits) || 0,
-          user: data.event.is_anonymous ? 'Anonymous' : data.event.user_name
-        };
+          case 'channel.raid':
+            await this.onRaid(data);
+            break;
 
-        void this.twitchService.ownerRunCommand(
-          `!onbits ${JSON.stringify(obj)}`
-        );
-      }
+          case 'channel.cheer':
+            await this.onCheer(data);
+            break;
 
-      // NOTE: This doesn't include resubscribes
-      if (subType === 'channel.subscribe') {
-        if (data.event.is_gift) {
-          // This will be handled by the gift sub event
-          return;
+          case 'channel.subscribe':
+            // NOTE: This doesn't include resubscribes
+            await this.onSubscribe(data);
+            break;
+
+          case 'channel.subscription.gift':
+            await this.onSubscriptionGift(data);
+            break;
+
+          default:
+            break;
         }
-        const obj = {
-          username: data.event.user_name
-        };
-        void this.twitchService.ownerRunCommand(
-          `!onsubs ${JSON.stringify(obj)}`
-        );
-      }
-
-      if (subType === 'channel.subscription.gift') {
-        const obj = {
-          username: data.event.is_anonymous
-            ? 'Anonymous'
-            : data.event.user_name,
-          isGifter: true
-        };
-        void this.twitchService.ownerRunCommand(
-          `!ongiftsubs ${JSON.stringify(obj)}`
-        );
+      } catch (e) {
+        this.logger.error(e);
       }
     }
   }
 
   async deleteExistingSubscriptions() {
     // Delete existing subscriptions
-    const existingSubs: any = await this.twitchService.helixApiCall(
+    const existingSubs = await this.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/eventsub/subscriptions'
     );
     for (const sub of existingSubs?.data) {
@@ -203,5 +178,62 @@ export class TwitchEventSub {
         this.logger.log(`Subscribed to ${event.eventType}`);
       }
     }
+  }
+
+  async onCheer(data) {
+    const obj = {
+      message: data.payload.event.message,
+      bits: parseInt(data.payload.event.bits) || 0,
+      user: data.payload.event.is_anonymous
+        ? 'Anonymous'
+        : data.payload.event.user_name
+    };
+
+    void this.twitchService.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
+  }
+
+  async onFollow(data) {
+    void this.twitchService.helixGetTwitchUserInfo(
+      data.payload.event.user_login,
+      true
+    );
+  }
+
+  async onSubscribe(data) {
+    if (data.payload.event.is_gift) {
+      // This will be handled by the gift sub event
+      return;
+    }
+    const obj = {
+      username: data.payload.event.user_name
+    };
+    void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
+  }
+
+  async onSubscriptionGift(data) {
+    const obj = {
+      username: data.payload.event.is_anonymous
+        ? 'Anonymous'
+        : data.payload.event.user_name,
+      isGifter: true
+    };
+    void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
+  }
+
+  async onRaid(data) {
+    void this.twitchService.ownerRunCommand(
+      `!onraids ${data.payload.event.from_broadcaster_user_login}`
+    );
+    void this.twitchService.ownerRunCommand(
+      `!so ${data.payload.event.from_broadcaster_user_login}`
+    );
+  }
+
+  async onTrain(_data) {
+    void this.twitchService.ownerRunCommand('!train');
+  }
+
+  async onStreamOnline(_data) {
+    this.logger.log('Stream is online!');
   }
 }
