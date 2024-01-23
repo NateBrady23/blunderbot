@@ -9,12 +9,12 @@ export class TwitterService {
   private client;
 
   constructor() {
-    if (CONFIG.twitter.enabled) {
+    if (CONFIG.get().twitter.enabled) {
       this.client = new TwitterApi({
-        appKey: CONFIG.twitter.apiKey,
-        appSecret: CONFIG.twitter.apiSecret,
-        accessToken: CONFIG.twitter.accessToken,
-        accessSecret: CONFIG.twitter.accessSecret
+        appKey: CONFIG.get().twitter.apiKey,
+        appSecret: CONFIG.get().twitter.apiSecret,
+        accessToken: CONFIG.get().twitter.accessToken,
+        accessSecret: CONFIG.get().twitter.accessSecret
       });
     }
   }

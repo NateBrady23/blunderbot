@@ -1,11 +1,11 @@
-import { configService } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'theme',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const themes = configService.getThemeConfig();
+    const themes = CONFIG.get().themeConfig;
     if (themes[ctx.args[0]]) {
       const theme = (ctx.args[0] || '').toLowerCase();
       services.twitchGateway.sendDataToOneSocket('serverMessage', {

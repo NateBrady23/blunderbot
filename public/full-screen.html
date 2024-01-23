@@ -11,9 +11,10 @@
 </body>
 <script>
   const CONFETTI_TYPE = {
-      CONFETTI: 'CONFETTI',
-      SNOW: 'SNOW',
-      RAIN: 'RAIN'
+    CONFETTI: 'CONFETTI',
+    MATRIX: 'MATRIX',
+    SNOW: 'SNOW',
+    RAIN: 'RAIN'
   };
 
   const MESSAGE_TYPE = {
@@ -38,6 +39,9 @@
       }
       if (data.confettiType === CONFETTI_TYPE.RAIN) {
         void showRain();
+      }
+      if (data.confettiType === CONFETTI_TYPE.MATRIX) {
+        void enterTheMatrix();
       }
     }
   });
@@ -143,11 +147,65 @@
               }
           }
 
-          setInterval(draw, 30);
+          const myInterval = setInterval(draw, 30);
           setTimeout(()  => {
+              clearInterval(myInterval);
               canvas.remove();
           }, 15000);
       }
+  }
+
+  function enterTheMatrix() {
+    const id = Math.floor(randomInRange(1, 10000));
+    document.querySelector('body').insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
+    const canvas = document.querySelector(`#canvas-${id}`);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const context = canvas.getContext('2d');
+
+    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width/fontSize;
+
+    const rainDrops = [];
+
+    for( let x = 0; x < columns; x++ ) {
+      rainDrops[x] = 1;
+    }
+
+    let matrixDrawCount = -1;
+    const fullMatrixDrawCount = Math.round(canvas.height / fontSize);
+    function drawMatrix() {
+      matrixDrawCount++;
+      context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      if (matrixDrawCount === fullMatrixDrawCount) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      context.fillStyle = 'rgba(0,255,0,0.18)';
+      context.font = fontSize + 'px monospace';
+
+      for(let i = 0; i < rainDrops.length; i++)
+      {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        context.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+
+        if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975){
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    }
+
+    const myInterval = setInterval(drawMatrix, 30);
+    setTimeout(()  => {
+      clearInterval(myInterval);
+      canvas.remove();
+    }, 15000);
   }
 </script>
 </html>

@@ -1,4 +1,4 @@
-import { CONFIG, configService } from '../../config/config.service';
+import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 async function getJoke() {
   try {
@@ -6,7 +6,7 @@ async function getJoke() {
       'https://dad-jokes-by-api-ninjas.p.rapidapi.com/v1/dadjokes',
       {
         headers: {
-          'X-RapidAPI-Key': configService.getRandomRapidApiKey(),
+          'X-RapidAPI-Key': CONFIG.getRandomRapidApiKey(),
           'X-RapidAPI-Host': 'dad-jokes-by-api-ninjas.p.rapidapi.com'
         }
       }
@@ -22,7 +22,7 @@ const command: Command = {
   name: 'dadjoke',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.rapidApi?.enabled) {
+    if (!CONFIG.get().rapidApi?.enabled) {
       ctx.botSpeak('RapidAPI is disabled in !dadjoke.');
       return false;
     }

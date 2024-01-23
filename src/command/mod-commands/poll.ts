@@ -5,7 +5,7 @@ const command: Command = {
   name: 'poll',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !poll command.`);
       return false;
     }
@@ -35,7 +35,7 @@ const command: Command = {
         }
         return choice;
       });
-      question['broadcaster_id'] = CONFIG.twitch.ownerId;
+      question['broadcaster_id'] = CONFIG.get().twitch.ownerId;
       question['duration'] = 180;
     } catch (e) {
       console.error(e);

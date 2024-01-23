@@ -1,5 +1,23 @@
 # Release Notes
 
+### 1.5.1 (2024-01-22)
+
+#### Features
+
+- Rewrote internal config handling to allow for `!reload` command. Now you can make changes to most sections of the config (like new message commands), add new kings and other public files, and fix other config typos without restarting the server. Just `!reload` the config.
+- `!violators` command can now take a lichess team id to find violators in other teams.
+- Added `!draw` as an alias to `!image`.
+- BlunderBot gives a 3, 2, 1 countdown before the next trivia question is asked.
+- Added `!trivia fastest` command to show the fastest answer during trivia.
+- Added `twitch.eventWebsocketUrl` and `twitch.eventSubscriptionUrl` to the config for use with the twitch cli for debugging. Not required fields (no breaking changes).
+- Now listening to train events. Will automagically run `!train` owner command when a hype train begins or progresses.
+- Most events have been moved from tmi.js to eventSub or pubSub. Unfortunately, resubscribe and some other events are not at parity with pubSub yet, so more updates needed. CLOSE to removing tmi.js dependency.
+
+#### Bug Fixes
+
+- Owner/Bot ID should be strings in the config. Fixed the sample config and for now, ensure they're strings in the config service to avoid breaking changes.
+- Fixed an issue where new followers weren't getting access to follower-only commands because of a caching issue.
+
 ### 1.5.0 (2024-01-15)
 
 #### Breaking Changes

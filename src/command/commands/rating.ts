@@ -10,7 +10,7 @@ const command: Command = {
   run: async (ctx) => {
     let user = ctx.args[0];
     if (!user) {
-      user = CONFIG.lichess.user;
+      user = CONFIG.get().lichess.user;
     }
     try {
       const res = await fetch(`https://lichess.org/api/user/${user}`);

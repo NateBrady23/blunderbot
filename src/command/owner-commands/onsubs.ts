@@ -10,8 +10,8 @@ const command: Command = {
   run: async (ctx, { commandState, services }) => {
     return queue.enqueue(async function () {
       const body = JSON.parse(ctx.body);
-      if (CONFIG.twitch.onSubscribe?.length) {
-        for (const command of CONFIG.twitch.onSubscribe) {
+      if (CONFIG.get().twitch.onSubscribe?.length) {
+        for (const command of CONFIG.get().twitch.onSubscribe) {
           void services.twitchService.ownerRunCommand(command);
         }
       }

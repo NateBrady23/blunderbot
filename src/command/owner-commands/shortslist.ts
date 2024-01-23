@@ -5,11 +5,11 @@ import { Platform } from '../../enums';
 let cachedLatestShort = [];
 
 async function getLastVideosByPlaylist(
-  playlistId = CONFIG.youtube.shortsPlaylistId
+  playlistId = CONFIG.get().youtube.shortsPlaylistId
 ) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: CONFIG.youtube.apiKey
+    auth: CONFIG.get().youtube.apiKey
   });
 
   let itemsToReturn = [];
@@ -40,7 +40,7 @@ const command: Command = {
   name: 'shortslist',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.youtube?.enabled) {
+    if (!CONFIG.get().youtube?.enabled) {
       console.log('YouTube not enabled in config for !shortslist command');
       return false;
     }

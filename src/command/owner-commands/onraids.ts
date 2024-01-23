@@ -4,12 +4,13 @@ import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
-const raidersConfig = CONFIG.raids.matches || {};
 
 const command: Command = {
   name: 'onraids',
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
+    const raidersConfig = CONFIG.get().raids.matches || {};
+
     return queue.enqueue(async function () {
       try {
         const username = ctx.args[0].toLowerCase();
@@ -26,17 +27,17 @@ const command: Command = {
             alert = raidersConfig[username].alert;
           }
         } else {
-          for (const cmd of CONFIG.raids?.defaultCommands) {
+          for (const cmd of CONFIG.get().raids?.defaultCommands) {
             void services.twitchService.ownerRunCommand(cmd);
           }
         }
         if (!alert) {
-          alert = CONFIG.raids?.alert;
+          alert = CONFIG.get().raids?.alert;
         }
         if (alert) {
           await playAudioFile(alert);
         }
-        let announcement = CONFIG.raids?.announcement;
+        let announcement = CONFIG.get().raids?.announcement;
         if (announcement) {
           announcement = announcement.replace(
             /{raider}/g,

@@ -5,7 +5,7 @@ const command: Command = {
   name: 'today',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !today command.`);
       return false;
     }

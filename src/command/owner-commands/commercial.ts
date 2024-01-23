@@ -17,7 +17,7 @@ const command: Command = {
       'https://api.twitch.tv/helix/channels/commercial',
       'POST',
       {
-        broadcaster_id: CONFIG.twitch.ownerId,
+        broadcaster_id: CONFIG.get().twitch.ownerId,
         length
       }
     );

@@ -1,20 +1,21 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
 
-let commandsToCycle = CONFIG.autoCommands || [];
 let currentInterval = null;
 
 const command: Command = {
   name: 'autochat',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
+    let commandsToCycle = CONFIG.get().autoCommands || [];
+
     // Always clearing the interval so multiple "on"s don't stack and anything else shuts it off
     clearInterval(currentInterval);
     if (ctx.body === 'on') {
       currentInterval = setInterval(
         () => {
           if (!commandsToCycle.length) {
-            commandsToCycle = CONFIG.autoCommands || [];
+            commandsToCycle = CONFIG.get().autoCommands || [];
           }
 
           // If there are still no commands to cycle, don't run anything

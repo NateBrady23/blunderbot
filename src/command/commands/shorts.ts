@@ -7,11 +7,11 @@ let cachedLatestShort;
 const cachedLatestShortAt = Date.now();
 
 async function getLastVideoByPlaylist(
-  playlistId = CONFIG.youtube.shortsPlaylistId
+  playlistId = CONFIG.get().youtube.shortsPlaylistId
 ) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: CONFIG.youtube.apiKey
+    auth: CONFIG.get().youtube.apiKey
   });
 
   try {
@@ -43,7 +43,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['pants'],
   run: async (ctx) => {
-    if (!CONFIG.youtube?.enabled) {
+    if (!CONFIG.get().youtube?.enabled) {
       console.log('YouTube is not enabled for !shorts command.');
       return false;
     }

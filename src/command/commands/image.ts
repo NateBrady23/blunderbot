@@ -3,21 +3,21 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'image',
-  aliases: ['img', 'mage', 'imagine'],
+  aliases: ['img', 'mage', 'imagine', 'draw'],
   help: '!image <prompt> - Creates an image based on the prompt.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.openai?.enabled) {
+    if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !image command.`);
       return false;
     }
     let prompt = ctx.body?.trim();
     let sendToDiscord =
-      CONFIG.discord?.enabled &&
-      !!CONFIG.discord?.galleryChannelId &&
+      CONFIG.get().discord?.enabled &&
+      !!CONFIG.get().discord?.galleryChannelId &&
       !(ctx.platform === Platform.Discord);
     let sendToTwitter =
-      CONFIG.twitter?.enabled && CONFIG.twitter.tweetImagesEnabled;
+      CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
 
     const user = ctx.onBehalfOf || ctx.tags['display-name'];
     if (!prompt) {
@@ -42,7 +42,7 @@ const command: Command = {
     let url = '';
     const firstWord = prompt.split(' ')[0].toLowerCase();
 
-    if (CONFIG.openai.imageEdits.includes(firstWord)) {
+    if (CONFIG.get().openai.imageEdits.includes(firstWord)) {
       const regex = new RegExp(`${firstWord} `, 'i');
       url = await services.openaiService.editImage(
         `./public/images/edits/${firstWord}.png`,
@@ -76,7 +76,7 @@ const command: Command = {
     }
 
     if (sendToTwitter) {
-      const hashtags = CONFIG.twitter.tweetHashtags || '';
+      const hashtags = CONFIG.get().twitter.tweetHashtags || '';
       services.twitterService.postImage(
         buffer,
         `${user} on Twitch used "!image ${prompt}" ${hashtags}`

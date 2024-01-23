@@ -78,7 +78,12 @@ declare global {
     };
     heartRateHigh: number;
     trivia: {
+      fastestAnswer?: {
+        user: string;
+        seconds: number;
+      };
       started: boolean;
+      roundStartTime?: number;
       round: number;
       leaderboard: { [key: string]: number };
       incorrectUsers: string[];

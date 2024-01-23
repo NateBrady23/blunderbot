@@ -6,13 +6,13 @@ const command: Command = {
   help: 'How long a twitch user has been following my channel. If no user is provided, it will display the followage for the user using the command.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    if (!CONFIG.decapi?.enabled) {
+    if (!CONFIG.get().decapi?.enabled) {
       console.log('DecAPI is not enabled for !followage command.');
       return false;
     }
 
-    const decapiToken = CONFIG.decapi.token;
-    const channel = CONFIG.twitch.channel;
+    const decapiToken = CONFIG.get().decapi.token;
+    const channel = CONFIG.get().twitch.channel;
 
     let user = ctx.args[0];
     if (!user) {

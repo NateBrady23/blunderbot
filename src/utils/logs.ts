@@ -1,10 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-export async function writeLog(filename, message) {
+export async function writeLog(
+  filename,
+  message,
+  opts?: { excludeDate?: boolean }
+) {
+  if (typeof message !== 'string') {
+    message = JSON.stringify(message);
+  }
   try {
-    // Get current date in format: YYYY-MM-DD
-    const date = new Date().toISOString().split('T')[0];
-    filename += `-${date}.log`;
+    if (!opts?.excludeDate) {
+      // Get current date in format: YYYY-MM-DD
+      const date = new Date().toISOString().split('T')[0];
+      filename += `-${date}.log`;
+    }
     console.log(`${filename}: ${message}`);
     const logPath = path.join(__dirname, '../../logs');
     const logFile = path.join(logPath, filename);
