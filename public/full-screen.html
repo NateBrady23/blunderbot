@@ -21,7 +21,7 @@
     CONFETTI: 'CONFETTI',
     SERVER_MESSAGE: 'serverMessage'
   };
-  const socket = io(`wss://explorer.lichess.ovh/app-socket`, {
+  const socket = io(`https://localhost/app-socket`, {
     transports: ['polling'],
     timeout: 200000000
   });
