@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "http://localhost:3000/twitch-socket"
+      }
+    },
+    "condition": {
+      "urlFilter": "https://lichess.org/twitch-socket",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "http://localhost:3000/socket.io\\1"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://lichess.org/socket.io(.*)",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

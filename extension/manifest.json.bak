@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "BlunderBot-Extension",
+  "version": "1.0",
+  "description": "A Chrome extension to enhance your experience on lichess.org.",
+  "host_permissions": [
+    "https://lichess.org/*",
+    "http://localhost:3000/*"
+  ],
+  "permissions": ["activeTab", "storage", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
+  "action": {
+    "default_icon": {
+      "48": "images/icon.png"
+    }
+  },
+  "icons": {
+    "48": "images/icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://lichess.org/*"],
+      "js": [
+        "scripts/socket.io.min.js",
+        "scripts/utils.js",
+        "scripts/index.js",
+        "scripts/arena-setup.js",
+        "scripts/blunderbot_menu.js",
+        "scripts/soundboard.js"
+      ]
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  }
+}
