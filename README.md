@@ -9,60 +9,25 @@ An interactive Twitch and Discord bot for chess streamers.
 
 You may see some references to chess.com, but currently BlunderBot only supports lichess.org.
 
-### WARNING
-
-This is a work in progress. This was a personal project I had worked on for a couple of years and I'm releasing it before I think it's ready, but it will help me work harder on it. Though it works for me, there's still a lot of hard coded details that might not make it ideal for others. Feel free to contribute, fork, and use however you'd like; but don't tell me I blundered!
-
-I may iterate quickly on the main branch while this is still v0.* without warning but aim for a v1.0 release soon.
-
 ## Setup
 
-The setup is fairly complicated, due to the fact that all major browsers have disabled the ability to turn off CSP in meta tags/headers. This means we have to set up a proxy to allow certain injections into the lichess frontend.
+The setup is much easier in v1.6.0. Here are the steps. You'll find more details about each step below.
 
-BlunderBot, as is, only works on Windows, but I'm working toward making it OS agnostic.
+1. Install Chrome Extension
+2. Edit config files 
+3. Run server for the first time (`npm install`, `npm run start`)
+4. Visit https://localhost in your browser and accept the risk of the self-signed certificate
+5. Visit https://lichess.org and enjoy!
 
-Along with the software mentioned below, you'll need to have Visual Studio installed for `node-gyp`. Working on removing that.
+### Chrome Extension
 
-### Fiddler Proxy
+- Visit `chrome://extensions` in your browser
+- Click `Load unpacked` and select the `public` folder
+- Click the puzzle piece icon in the top right of your browser and pin the BlunderBot extension (optional for easier access)
 
-Note: You can use any proxy you want, but this is the one I use.
+Reminder: If you're doing development, you'll need to reload the extension after making changes. You can do this by clicking the reload icon in the extension details in `chrome://extensions`.
 
-Download and install [Fiddler](https://www.telerik.com/download/fiddler) V4
-
-Make sure these rewrites are applied in the AutoResponder tab:
-
-```
-regex:https://lichess1?.org/blunderbot/*	http://localhost:3000/
-regex:https://lichess.org/socket.io/*	http://localhost:3000/socket.io/
-regex:*://socket5.lichess.org/twitch-socket/*	ws://localhost:3000/twitch-socket/
-regex:https://www.chess.com/socket.io/*	http://localhost:3000/socket.io/
-regex:https://lichess1?.org/giphy/*   https://i.giphy.com/
-```
-
-### Add this Monkey Script to your browser
-
-I use [Violentmonkey](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag?pli=1) for Chrome. 
-
-Add the script `public/scripts/lichess-violentmonkey.js`
-
-
-### Some other settings
-
-These settings may be important to get the overlay to work properly. The size of the browser window doesn't matter, it's just what I use for my streamlabs layout, but the size of the lichess board does.
-
- - Google Chrome Browser window in FanzyZones is 1265x938
- - The lichess board is 677.33 x 677.33
- - Each square is 84.667x84.667
-
-Most of the css selectors are based on the brown theme, so you'll need to switch to that if it's not already set. Working on removing this restriction as well.
-
-<img width="163" alt="image" src="https://github.com/NateBrady23/blunderbot/assets/1304934/7a712ef0-4654-425c-b37e-4dddb1de64e2">
-
-### Additional Software
-
-I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to mute or unmute desktop applications that may be playing music so BlunderBot is easier to hear. This is now configurable in the `config.yml` under `sounds.mute` and `sounds.unmute`. You can change the entire command that runs by Node's `execSync` to whatever you'd like to use.
-
-I use ffmpeg to capture the length of audio clips for mute duration and may end up using it for other things.
+Note: Not all files in the public folder are needed for the extension to work, but some files, like utils.js, are shared between the extension and things like the overlay HTML files.
 
 ### Configuration - MAJOR CHANGE IN v1.6.0
 
@@ -76,15 +41,33 @@ This will get blunderbot working with twitch and lichess. For the best BlunderBo
 
 *IMPORTANT*: A lot of files (especially sounds) listed in the config files may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
 
+### Some other settings
+
+These settings may be important to get the overlay to work properly. The size of the browser window doesn't matter, it's just what I use for my streamlabs layout, but the size of the lichess board does.
+
+- Google Chrome Browser window in FanzyZones is 1265x938
+- The lichess board is 677.33 x 677.33
+- Each square is 84.667x84.667
+
+Most of the css selectors are based on the brown theme, so you'll need to switch to that if it's not already set. Working on removing this restriction as well.
+
+<img width="163" alt="image" src="https://github.com/NateBrady23/blunderbot/assets/1304934/7a712ef0-4654-425c-b37e-4dddb1de64e2">
+
+### Additional Software
+
+I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to mute or unmute desktop applications that may be playing music so BlunderBot is easier to hear. This is now configurable in the `config.ts` under `sounds.mute` and `sounds.unmute`. You can change the entire command that runs by Node's `execSync` to whatever you'd like to use.
+
+I use ffmpeg to capture the length of audio clips for mute duration and may end up using it for other things.
+
 ### Overlays / Browser Source
 
 Some commands require adding a browser source to your streaming software.
 
-For the `!alert` command to show up, add a browser source that points to: `http://localhost:3000/blunder-alerts.html`
+For the `!alert` command to show up, add a browser source that points to: `https://localhost/blunder-alerts.html`
 
-For the `!image` command, add a browser source that points to: `http://localhost:3000/images.html`
+For the `!image` command, add a browser source that points to: `https://localhost/images.html`
 
-For the `!confetti` command and future full screen overlays, add a browser source that points to: `http://localhost:3000/full-screen.html`
+For the `!confetti` command and future full screen overlays, add a browser source that points to: `https://localhost/full-screen.html`
 
 Replace with a different port if you changed the `port` in the `config.yml`.
 

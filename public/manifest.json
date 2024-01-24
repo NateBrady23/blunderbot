@@ -5,7 +5,7 @@
   "description": "A Chrome extension to enhance your experience on lichess.org.",
   "host_permissions": [
     "https://lichess.org/*",
-    "http://localhost:3000/*"
+    "https://localhost/*"
   ],
   "permissions": ["activeTab", "storage", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
   "action": {
@@ -26,14 +26,8 @@
         "scripts/arena-setup.js",
         "scripts/blunderbot_menu.js",
         "scripts/soundboard.js"
-      ]
+      ],
+      "css": ["css/main.css"]
     }
-  ],
-  "declarative_net_request": {
-    "rule_resources": [{
-      "id": "ruleset_1",
-      "enabled": true,
-      "path": "rules.json"
-    }]
-  }
+  ]
 }

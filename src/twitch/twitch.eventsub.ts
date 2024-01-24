@@ -14,6 +14,8 @@ export class TwitchEventSub {
   private eventSubMessageIds: string[] = [];
   private eventSubConnection: WebSocket;
 
+  private currentHypeTrainLevel = 1;
+
   private opts = {
     identity: {
       username: CONFIG.get().twitch.botUsername,
@@ -45,7 +47,7 @@ export class TwitchEventSub {
 
     this.eventSubConnection.onclose = (data) => {
       this.logger.error('EventSub connection closed');
-      this.logger.error(data);
+      this.logger.error(JSON.stringify(data));
       this.eventSubCreateConnection();
     };
 
@@ -94,8 +96,11 @@ export class TwitchEventSub {
             break;
 
           case 'channel.hype_train.begin':
-          case 'channel.hype_train.progress':
             await this.onTrain(data);
+            break;
+
+          case 'channel.hype_train.progress':
+            await this.onTrainProgress(data);
             break;
 
           case 'channel.raid':
@@ -230,7 +235,20 @@ export class TwitchEventSub {
   }
 
   async onTrain(_data) {
+    this.currentHypeTrainLevel = 1;
+    this.twitchService.botSpeak(
+      `Hype train level 1! Come on the train, choo choo ride it!!`
+    );
     void this.twitchService.ownerRunCommand('!train');
+  }
+
+  async onTrainProgress(data) {
+    const level = data.payload.event.level;
+    if (level > this.currentHypeTrainLevel) {
+      this.currentHypeTrainLevel = level;
+      this.twitchService.botSpeak(`Hype train level ${level}! LET'S GOOOOOOO!`);
+      void this.twitchService.ownerRunCommand('!train');
+    }
   }
 
   async onStreamOnline(_data) {

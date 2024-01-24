@@ -67,7 +67,7 @@ async function setCustomStyle() {
         if (themeConfig[theme][color][piece]) {
           styleTag.innerHTML += `
           .is2d .${piece}.${color} {
-             background-image: url('https://lichess.org/blunderbot/images/themes/${theme}/${color}/${piece}.png') !important;
+             background-image: url('https://localhost/images/themes/${theme}/${color}/${piece}.png') !important;
           }
         `;
         }
@@ -93,7 +93,7 @@ async function setCustomStyle() {
         if (themeConfig[theme][color[0]][piece[0]]) {
           styleTag.innerHTML += `
           .piece.${color[1]}${piece[1]} {
-             background-image: url('https://lichess.org/blunderbot/images/themes/${theme}/${color[0]}/${piece[0]}.png') !important;
+             background-image: url('https://localhost/images/themes/${theme}/${color[0]}/${piece[0]}.png') !important;
           }
         `;
         }
@@ -106,7 +106,7 @@ async function setCustomStyle() {
     .brown .is2d cg-board::before {
       background-image: ${
         themeConfig[theme]?.boardExists
-          ? `url('https://lichess.org/blunderbot/images/themes/${theme}/board.png')`
+          ? `url('https://localhost/images/themes/${theme}/board.png')`
           : `url('https://lichess1.org/assets/_1FzRvx/images/board/svg/brown.svg')`
       };
     }
@@ -140,7 +140,7 @@ async function setCursorStyle() {
     if (cursor) {
       styleTag.innerHTML += `
         cg-board {
-          cursor: url('https://lichess.org/blunderbot/images/cursors/${cursor}.cur'), default !important;
+          cursor: url('https://localhost/images/cursors/${cursor}.cur'), default !important;
         }
       `;
     }
@@ -195,12 +195,12 @@ async function setKingStyle() {
           background-image:
             ${
               hasCrown
-                ? `url('https://lichess.org/blunderbot/images/themes/${theme}/${oppColor}/crown.png'),`
+                ? `url('https://localhost/images/themes/${theme}/${oppColor}/crown.png'),`
                 : ''
             }
-            url('https://lichess.org/blunderbot/images/${
-              swapped ? 'kings' : 'opponents'
-            }/${swapped ? king : opponent}.png') !important;}
+            url('https://localhost/images/${swapped ? 'kings' : 'opponents'}/${
+              swapped ? king : opponent
+            }.png') !important;}
       `;
     }
 
@@ -228,11 +228,11 @@ async function setKingStyle() {
         }
         document.querySelector('#buttery-style')?.remove();
         let background_url = toggle
-          ? `https://lichess.org/blunderbot/images/opponents/buttery_flaky.png`
-          : `https://lichess.org/blunderbot/images/other/buttery_flaky2.png`;
+          ? `https://localhost/images/opponents/buttery_flaky.png`
+          : `https://localhost/images/other/buttery_flaky2.png`;
         toggle = !toggle;
         if (swapped) {
-          background_url = `https://lichess.org/blunderbot/images/kings/${king}.png`;
+          background_url = `https://localhost/images/kings/${king}.png`;
         }
         const styleTag = document.createElement('style');
         styleTag.id = 'buttery-style';
@@ -242,7 +242,7 @@ async function setKingStyle() {
         .is2d .puzzle .orientation-${myColor} .king.${oppColor},
         .playing .is2d .orientation-${myColor} .king.${oppColor} {
           background-image:
-            url('https://lichess.org/blunderbot/images/themes/${theme}/${oppColor}/crown.png'),
+            url('https://localhost/images/themes/${theme}/${oppColor}/crown.png'),
             url('${background_url}') !important;}
       `;
         head.appendChild(styleTag);
@@ -260,11 +260,11 @@ async function setKingStyle() {
         }
         document.querySelector('#batman-style')?.remove();
         let background_url = toggle
-          ? `https://lichess.org/blunderbot/images/opponents/batman.png`
-          : `https://lichess.org/blunderbot/images/other/bat_signal.png`;
+          ? `https://localhost/images/opponents/batman.png`
+          : `https://localhost/images/other/bat_signal.png`;
         toggle = !toggle;
         if (swapped) {
-          background_url = `https://lichess.org/blunderbot/images/kings/${king}.png`;
+          background_url = `https://localhost/images/kings/${king}.png`;
         }
         const styleTag = document.createElement('style');
         styleTag.id = 'batman-style';
@@ -274,7 +274,7 @@ async function setKingStyle() {
         .is2d .puzzle .orientation-${myColor} .king.${oppColor},
         .playing .is2d .orientation-${myColor} .king.${oppColor} {
           background-image:
-            url('https://lichess.org/blunderbot/images/themes/${theme}/${oppColor}/crown.png'),
+            url('https://localhost/images/themes/${theme}/${oppColor}/crown.png'),
             url('${background_url}') !important;}
       `;
         head.appendChild(styleTag);
@@ -283,8 +283,8 @@ async function setKingStyle() {
 
     // Draw my king and crown based on the orientation of the board.
     const crownURL = crown
-      ? `url('https://lichess.org/blunderbot/images/crowns/${crown}.png')`
-      : `url('https://lichess.org/blunderbot/images/themes/${theme}/${myColor}/crown.png')`;
+      ? `url('https://localhost/images/crowns/${crown}.png')`
+      : `url('https://localhost/images/themes/${theme}/${myColor}/crown.png')`;
 
     styleTag.innerHTML += `
       .piece.${myColor[0]}k,
@@ -293,9 +293,9 @@ async function setKingStyle() {
       .playing .is2d .orientation-${myColor} .king.${myColor} {
         background-image:
           ${crownURL},
-          url('https://lichess.org/blunderbot/images/${
-            swapped ? 'opponents' : 'kings'
-          }/${swapped ? opponent : king}.png') !important
+          url('https://localhost/images/${swapped ? 'opponents' : 'kings'}/${
+            swapped ? opponent : king
+          }.png') !important
       }
     `;
 
@@ -376,7 +376,7 @@ function drawAlert(message, milliseconds) {
   const dialogDiv = document.createElement('div');
   dialogDiv.id = 'dialog';
   dialogDiv.innerHTML =
-    '<img src="http://localhost:3000/images/other/blunderbot-dialogue.png" />';
+    '<img src="https://localhost/images/other/blunderbot-dialogue.png" />';
   document.querySelector('body')?.prepend(dialogDiv);
   let accented = false;
   for (let i = 0; i < message.length; i++) {
@@ -416,7 +416,7 @@ function drawAlert(message, milliseconds) {
  * @returns {Promise<void>}
  */
 async function sendCommandByOwner(command) {
-  await apiPost('https://lichess.org/blunderbot/twitch/command', { command });
+  await apiPost('https://localhost/twitch/command', { command });
 }
 
 /**
@@ -424,10 +424,7 @@ async function sendCommandByOwner(command) {
  * @returns {Promise<void>}
  */
 async function forceClientsToRefresh() {
-  await apiPost(
-    'https://lichess.org/blunderbot/twitch/force-clients-refresh',
-    {}
-  );
+  await apiPost('https://localhost/twitch/force-clients-refresh', {});
 }
 
 async function apiPost(url, body) {
@@ -442,7 +439,7 @@ async function apiPost(url, body) {
 }
 
 async function translate(message) {
-  const res = await apiPost('https://lichess.org/blunderbot/openai/translate', {
+  const res = await apiPost('https://localhost/openai/translate', {
     message
   });
   return await res.json();

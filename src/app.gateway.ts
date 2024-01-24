@@ -8,7 +8,11 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({ namespace: 'app-socket', transports: ['polling'] })
+@WebSocketGateway({
+  namespace: 'app-socket',
+  transports: ['polling'],
+  cors: { origin: '*', methods: '*' }
+})
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
