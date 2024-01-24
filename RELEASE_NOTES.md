@@ -5,7 +5,7 @@
 #### Breaking Changes
 
 - Major configuration change. See README.md for more details.
-- REMOVING THE NEED FOR A PROXY!!!!! See README.md for more details. HUGE shoutout to @dannovikov for resolving issue #1!
+- REMOVING THE NEED FOR A PROXY!!!!! See README.md for more details. HUGE shoutout to @dannovikov for resolving issue #2!
 
 #### Bug Fixes
 
