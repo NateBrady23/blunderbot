@@ -131,7 +131,7 @@ export class CommandService {
     }
 
     // If the command is killed, don't run for anyone including the owner
-    if (this.commandState.killedCommands.includes(cmd.name)) {
+    if (this.commandState.killedCommands?.includes(cmd.name)) {
       this.logger.log(`${cmd.name} is killed and will not run`);
       return false;
     }

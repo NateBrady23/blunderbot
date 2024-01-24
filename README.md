@@ -64,11 +64,17 @@ I use [SoundVolumeView](https://www.nirsoft.net/utils/sound_volume_view.html) to
 
 I use ffmpeg to capture the length of audio clips for mute duration and may end up using it for other things.
 
-### Configuration
+### Configuration - MAJOR CHANGE IN v1.6.0
 
-Copy the `config.yml.sample` to `config.yml` and change things around as you see fit.
+The config may look daunting, but there's only a few files you have to touch to get BlunderBot started now. The rest are separated out because they can get large as you add your own things in.
 
-*IMPORTANT*: A lot of files (especially sounds) listed in the `config.yml` may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
+1. `src/config/config.sample.ts` - Copy this to `config.ts` and follow the instructions.
+2. `src/config/config.twitch.sample.ts` - Copy this to `config.twitch.ts` and fill in the proper values.
+3. `src/config/config.lichess.sample.ts` - Copy this to `config.discord.ts` and fill in the proper values.
+
+This will get blunderbot working with twitch and lichess. For the best BlunderBot experience, I'd do the same for `config.openai.sample.ts` next!
+
+*IMPORTANT*: A lot of files (especially sounds) listed in the config files may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
 
 ### Overlays / Browser Source
 

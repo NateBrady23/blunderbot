@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.6.0 (2024-01-23)
+
+#### Breaking Changes
+
+- Major configuration change. See README.md for more details.
+
 ### 1.5.1 (2024-01-22)
 
 #### Features

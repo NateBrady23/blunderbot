@@ -34,7 +34,9 @@ lerna-debug.log*
 # secrets
 .env
 *.yml
-
+src/config/config.ts
+config.*.ts
+!config.*.sample.ts
 # other
 temp/
 private/
