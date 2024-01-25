@@ -9,7 +9,7 @@ export class GiphyService {
     //
   }
 
-  async fetchGif(phrase: string, replaceURL = true) {
+  async fetchGif(phrase: string) {
     const phraseToMatch = phrase.trim().toLowerCase();
     if (CONFIG.get().gif?.matches[phraseToMatch]) {
       return CONFIG.get().gif.matches[phraseToMatch];
@@ -26,11 +26,6 @@ export class GiphyService {
       console.error(data);
       return CONFIG.get().gif.notFound;
     }
-    // The URL is changed here to match what the proxy expects
-    if (replaceURL) {
-      return `https://lichess.org/giphy/media/${data.data[0].id}/giphy.webp`;
-    } else {
-      return `https://i.giphy.com/media/${data.data[0].id}/giphy.webp`;
-    }
+    return `https://i.giphy.com/media/${data.data[0].id}/giphy.webp`;
   }
 }

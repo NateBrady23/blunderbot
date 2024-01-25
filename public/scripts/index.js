@@ -31,7 +31,7 @@ const MESSAGE_TYPE = {
 let socket;
 
 // Changing to the current host for possible other support
-socket = io(`https://${window.location.host}/twitch-socket`, {
+socket = io(`https://localhost/twitch-socket`, {
   transports: ['polling'],
   timeout: 200000000
 });
@@ -108,7 +108,7 @@ async function load() {
   void setCursorStyle();
   drawBoughtSquares();
 
-  fetch('https://lichess.org/blunderbot/twitch/titles')
+  fetch('https://localhost/twitch/titles')
     .then((response) => response.json())
     .then((data) =>
       localStorage.setItem(
@@ -116,7 +116,7 @@ async function load() {
         JSON.stringify(data)
       )
     );
-  fetch('https://lichess.org/blunderbot/twitch/themeconfig')
+  fetch('https://localhost/twitch/themeconfig')
     .then((response) => response.json())
     .then((data) =>
       localStorage.setItem(
@@ -124,7 +124,7 @@ async function load() {
         JSON.stringify(data)
       )
     );
-  fetch('https://lichess.org/blunderbot/twitch/soundboard')
+  fetch('https://localhost/twitch/soundboard')
     .then((response) => response.json())
     .then((data) =>
       localStorage.setItem(LOCAL_STORAGE_KEYS.SOUNDBOARD, JSON.stringify(data))

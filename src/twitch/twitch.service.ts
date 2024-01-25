@@ -9,7 +9,7 @@ import { getRandomElement } from '../utils/utils';
 import tmi = require('tmi.js');
 import { Client } from 'tmi.js';
 
-let shoutoutUsers = CONFIG.get().autoShoutouts;
+let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters = [];
 
 // Twitch user map is for determining followers and first time chatters
@@ -101,10 +101,10 @@ export class TwitchService {
       // Welcome in new chatters (non-followers)
       if (!context.tags.follower) {
         if (
-          CONFIG.get().welcome.enabled &&
-          !CONFIG.get().welcome.ignoreUsers.includes(displayName)
+          CONFIG.get().twitch.welcome?.enabled &&
+          !CONFIG.get().twitch.welcome.ignoreUsers.includes(displayName)
         ) {
-          const message = CONFIG.get().welcome.message.replace(
+          const message = CONFIG.get().twitch.welcome.message.replace(
             /{user}/gi,
             `@${displayName}`
           );

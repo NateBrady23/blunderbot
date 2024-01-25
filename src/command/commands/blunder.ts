@@ -15,8 +15,8 @@ const command: Command = {
       if (
         Object.keys(CONFIG.get().messageCommands).includes(commandName) ||
         CONFIG.get().hiddenCommands.includes(commandName) ||
-        CONFIG.get().killedCommands.includes(commandName) ||
-        commandState.killedCommands.includes(commandName)
+        CONFIG.get().killedCommands?.includes(commandName) ||
+        commandState.killedCommands?.includes(commandName)
       ) {
         return;
       }

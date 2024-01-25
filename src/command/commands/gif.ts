@@ -32,7 +32,7 @@ const command: Command = {
           });
           await sleep(milliseconds + 1000);
         } else {
-          const giphyUrl = await services.giphyService.fetchGif(msg, false);
+          const giphyUrl = await services.giphyService.fetchGif(msg);
           ctx.botSpeak(giphyUrl);
         }
       } catch (e) {

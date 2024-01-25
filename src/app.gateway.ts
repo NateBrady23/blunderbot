@@ -7,8 +7,13 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { CONFIG } from './config/config.service';
 
-@WebSocketGateway({ namespace: 'app-socket', transports: ['polling'] })
+@WebSocketGateway(CONFIG.get().wsPort, {
+  namespace: 'app-socket',
+  transports: ['polling'],
+  cors: { origin: '*', methods: '*' }
+})
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

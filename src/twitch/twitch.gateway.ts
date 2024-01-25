@@ -10,7 +10,14 @@ import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { TwitchService } from './twitch.service';
 
-@WebSocketGateway({ namespace: 'twitch-socket', transports: ['polling'] })
+@WebSocketGateway({
+  namespace: 'twitch-socket',
+  transports: ['polling'],
+  cors: {
+    origin: '*',
+    methods: '*'
+  }
+})
 export class TwitchGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

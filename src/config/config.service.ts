@@ -1,7 +1,12 @@
-import { readdirSync, readFileSync } from 'fs';
-import * as yaml from 'js-yaml';
-import { getRandomElement, removeSymbols } from '../utils/utils';
+import { readdirSync } from 'fs';
+// import * as yaml from 'js-yaml';
+import {
+  getRandomElement,
+  removeSymbols,
+  requireUncached
+} from '../utils/utils';
 import { Platform } from '../enums';
+import * as path from 'path';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
   return {
@@ -39,30 +44,45 @@ class ConfigService {
     this.loadConfig();
   }
 
-  loadConfig() {
-    // Load the YAML config file
+  loadFromFile(configKey, filePath) {
     try {
-      const fileContents = readFileSync('./config.yml', 'utf8');
-      this.loadedConfig = yaml.load(fileContents);
-
-      // Edits to the config here to prevent breaking changes. To be removed in future versions.
-      this.loadedConfig.twitch.ownerId =
-        this.loadedConfig.twitch.ownerId.toString();
-      this.loadedConfig.twitch.botId =
-        this.loadedConfig.twitch.botId.toString();
-      if (!this.loadedConfig.twitch.eventWebsocketUrl) {
-        this.loadedConfig.twitch.eventWebsocketUrl =
-          'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=600';
-      }
-      if (!this.loadedConfig.twitch.eventSubscriptionUrl) {
-        this.loadedConfig.twitch.eventSubscriptionUrl =
-          'https://api.twitch.tv/helix/eventsub/subscriptions';
-      }
-      //
+      this.loadedConfig[configKey] = requireUncached(
+        path.join(__dirname, filePath)
+      ).default;
     } catch (e) {
-      console.error('Error loading config.yml');
-      console.error(e);
+      console.log(`No config file: ${filePath} [skipping]`);
     }
+  }
+
+  loadConfig() {
+    this.loadedConfig = requireUncached(
+      path.join(__dirname, './config')
+    ).default;
+
+    // If either of these fail, that's fatal
+    this.loadedConfig.twitch = requireUncached(
+      path.join(__dirname, './config.twitch')
+    ).default;
+    this.loadedConfig.lichess = requireUncached(
+      path.join(__dirname, './config.lichess')
+    ).default;
+
+    // These are optional and can fail to load
+    this.loadFromFile('autoCommands', './config.auto-commands');
+    this.loadFromFile('autoResponder', './config.auto-responder');
+    this.loadFromFile('autoShoutouts', './config.auto-shoutouts');
+    this.loadFromFile('bits', './config.bits');
+    this.loadFromFile('discord', './config.discord');
+    this.loadFromFile('messageCommands', './config.message-commands');
+    this.loadFromFile('openai', './config.openai');
+    this.loadFromFile('raids', './config.raids');
+    this.loadFromFile('titledPlayers', './config.titled-players');
+    this.loadFromFile('trivia', './config.trivia');
+    this.loadFromFile('twitter', './config.twitter');
+
+    console.log(
+      requireUncached(path.join(__dirname, './config.titled-players')).default
+    );
 
     // Load the public files
     this.loadedConfig.kings = [];

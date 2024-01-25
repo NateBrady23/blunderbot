@@ -11,7 +11,7 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
       let body: any = ctx.body;
-      // To test bits like: !bits 420
+      // To test bits like: !onbits 420
       if (body.match(/^\d{1,4}$/g)) {
         body = '{ "bits": ' + body + ' }';
       }

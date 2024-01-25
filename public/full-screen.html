@@ -21,8 +21,9 @@
     CONFETTI: 'CONFETTI',
     SERVER_MESSAGE: 'serverMessage'
   };
-  const socket = io(`http://localhost:3000/app-socket`, {
+  const socket = io(`http://localhost:3001/app-socket`, {
     transports: ['polling'],
+    upgrade: true,
     timeout: 200000000
   });
   socket.on('connect', () => console.log('Connected!'));

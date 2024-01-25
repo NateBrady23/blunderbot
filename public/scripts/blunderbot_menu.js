@@ -1,9 +1,7 @@
 async function blunderBotMenu() {
-  const kings = await fetchJson('https://lichess.org/blunderbot/twitch/kings');
-  const opps = await fetchJson('https://lichess.org/blunderbot/twitch/opps');
-  const crowns = await fetchJson(
-    'https://lichess.org/blunderbot/twitch/crowns'
-  );
+  const kings = await fetchJson('https://localhost/twitch/kings');
+  const opps = await fetchJson('https://localhost/twitch/opps');
+  const crowns = await fetchJson('https://localhost/twitch/crowns');
 
   let section = document.createElement('section');
   section.innerHTML = `
@@ -39,7 +37,7 @@ async function blunderBotMenu() {
       ${kings
         .map((king) => {
           return `
-           <img class="king-face send-command" data-command="!king ${king}" src="https://lichess.org/blunderbot/images/kings/${king}.png" />
+           <img class="king-face send-command" data-command="!king ${king}" src="https://localhost/images/kings/${king}.png" />
            `;
         })
         .join('')}
@@ -50,7 +48,7 @@ async function blunderBotMenu() {
       ${opps
         .map((opp) => {
           return `
-           <img class="opp-face send-command" data-command="!opp ${opp}" src="https://lichess.org/blunderbot/images/opponents/${opp}.png" />
+           <img class="opp-face send-command" data-command="!opp ${opp}" src="https://localhost/images/opponents/${opp}.png" />
            `;
         })
         .join('')}
@@ -58,11 +56,11 @@ async function blunderBotMenu() {
       ${crowns
         .map((crown) => {
           return `
-           <img class="crown-select send-command" data-command="!crown ${crown}" src="https://lichess.org/blunderbot/images/crowns/${crown}.png" />
+           <img class="crown-select send-command" data-command="!crown ${crown}" src="https://localhost/images/crowns/${crown}.png" />
            `;
         })
         .join('')}
-       <img class="send-command" style="width: 20px; margin-bottom: 25px;" data-command="!crown reset" src="https://lichess.org/blunderbot/images/other/No_sign.svg" />
+       <img class="send-command" style="width: 20px; margin-bottom: 25px;" data-command="!crown reset" src="https://localhost/images/other/No_sign.svg" />
       <hr style="margin: 0;"/>
       <a href="#" class="send-command" data-command="!live">
          Start Stream
