@@ -106,8 +106,8 @@ async function setCustomStyle() {
     .brown .is2d cg-board::before {
       background-image: ${
         themeConfig[theme]?.boardExists
-          ? `url('https://localhost/images/themes/${theme}/board.png')`
-          : `url('https://lichess1.org/assets/_1FzRvx/images/board/svg/brown.svg')`
+          ? `url('https://localhost/images/themes/${theme}/board.png') !important`
+          : `url('https://lichess1.org/assets/_1FzRvx/images/board/svg/brown.svg') !important`
       };
     }
   `;

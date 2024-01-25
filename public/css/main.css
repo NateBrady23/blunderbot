@@ -4,7 +4,7 @@ body {
 
 #board,
 .brown .is2d cg-board::before {
-    opacity: 40%;
+    opacity: 40% !important;
     background-size: cover;
     content: "";
     position: absolute;
@@ -64,7 +64,7 @@ body {
 }
 
 .brown .is2d cg-board {
-    background-image: none;
+    background-image: none !important;
 }
 
 #main-wrap > main > aside > div > section:nth-child(1) > div.game__meta__players {
@@ -96,13 +96,13 @@ body {
 }
 
 .podium .first .trophy {
-    background-image: url(https://lichess1.org/blunderbot/images/trophies/1stplace.png);
+    background-image: url(https://localhost/images/trophies/1stplace.png) !important;
 }
 .podium .second .trophy {
-    background-image: url(https://lichess1.org/blunderbot/images/trophies/2ndplace.png);
+    background-image: url(https://localhost/images/trophies/2ndplace.png) !important;
 }
 .podium .third .trophy {
-    background-image: url(https://lichess1.org/blunderbot/images/trophies/3rdplace.png);
+    background-image: url(https://localhost/images/trophies/3rdplace.png) !important;
 }
 .tour__standing .player .name {
     max-width: 269px;
