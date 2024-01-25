@@ -6,6 +6,7 @@
 
 - Major configuration change. See README.md for more details.
 - REMOVING THE NEED FOR A PROXY!!!!! See README.md for more details. HUGE shoutout to @dannovikov for resolving issue #2!
+- `!reload` command currently not working because of how nestjs is caching files (even node's delete require.cache isn't working). Will fix in a future release.
 
 #### Bug Fixes
 

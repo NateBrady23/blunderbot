@@ -1,7 +1,12 @@
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync } from 'fs';
 // import * as yaml from 'js-yaml';
-import { getRandomElement, removeSymbols } from '../utils/utils';
+import {
+  getRandomElement,
+  removeSymbols,
+  requireUncached
+} from '../utils/utils';
 import { Platform } from '../enums';
+import * as path from 'path';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
   return {
@@ -41,18 +46,26 @@ class ConfigService {
 
   loadFromFile(configKey, filePath) {
     try {
-      this.loadedConfig[configKey] = require(filePath).default;
+      this.loadedConfig[configKey] = requireUncached(
+        path.join(__dirname, filePath)
+      ).default;
     } catch (e) {
       console.log(`No config file: ${filePath} [skipping]`);
     }
   }
 
   loadConfig() {
-    this.loadedConfig = require('./config').default;
+    this.loadedConfig = requireUncached(
+      path.join(__dirname, './config')
+    ).default;
 
     // If either of these fail, that's fatal
-    this.loadedConfig.twitch = require('./config.twitch').default;
-    this.loadedConfig.lichess = require('./config.lichess').default;
+    this.loadedConfig.twitch = requireUncached(
+      path.join(__dirname, './config.twitch')
+    ).default;
+    this.loadedConfig.lichess = requireUncached(
+      path.join(__dirname, './config.lichess')
+    ).default;
 
     // These are optional and can fail to load
     this.loadFromFile('autoCommands', './config.auto-commands');
@@ -66,6 +79,10 @@ class ConfigService {
     this.loadFromFile('titledPlayers', './config.titled-players');
     this.loadFromFile('trivia', './config.trivia');
     this.loadFromFile('twitter', './config.twitter');
+
+    console.log(
+      requireUncached(path.join(__dirname, './config.titled-players')).default
+    );
 
     // Load the public files
     this.loadedConfig.kings = [];
