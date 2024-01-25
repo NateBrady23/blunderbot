@@ -2,13 +2,11 @@
 
 #### NOTE: Channel redemptions and Bits may change depending on the streamer using BlunderBot. The following currently apply to [NateBrady23](https://twitch.tv/natebrady23)'s stream.
 
-
 :people_hugging: - Follower only
 
 :gem: - Subscriber only
 
 :one: - Shows the number of times the command is allowed per live stream
-
 
 ### Commands
 

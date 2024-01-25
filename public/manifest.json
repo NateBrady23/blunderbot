@@ -3,11 +3,13 @@
   "name": "BlunderBot-Extension",
   "version": "1.0",
   "description": "A Chrome extension to enhance your experience on lichess.org.",
-  "host_permissions": [
-    "https://lichess.org/*",
-    "https://localhost/*"
+  "host_permissions": ["https://lichess.org/*", "https://localhost/*"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
   ],
-  "permissions": ["activeTab", "storage", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
   "action": {
     "default_icon": {
       "48": "images/icon.png"
