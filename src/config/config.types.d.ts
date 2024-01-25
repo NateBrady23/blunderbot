@@ -175,6 +175,7 @@ type UserTriviaConfig = {
 
 interface UserConfig {
   port: number;
+  wsPort: number;
   nickname: string;
   commandsListUrl: string;
 

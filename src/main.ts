@@ -24,6 +24,8 @@ async function bootstrap() {
       server
     )
     .listen(443);
+
+  // app.useWebSocketAdapter(new IoAdapter(httpServer));
   app.useWebSocketAdapter(new IoAdapter(httpsServer));
   await app.init();
 }

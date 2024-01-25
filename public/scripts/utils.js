@@ -376,7 +376,7 @@ function drawAlert(message, milliseconds) {
   const dialogDiv = document.createElement('div');
   dialogDiv.id = 'dialog';
   dialogDiv.innerHTML =
-    '<img src="https://localhost/images/other/blunderbot-dialogue.png" />';
+    '<img src="http://localhost:3000/images/other/blunderbot-dialogue.png" />';
   document.querySelector('body')?.prepend(dialogDiv);
   let accented = false;
   for (let i = 0; i < message.length; i++) {

@@ -7,8 +7,9 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { CONFIG } from './config/config.service';
 
-@WebSocketGateway({
+@WebSocketGateway(CONFIG.get().wsPort, {
   namespace: 'app-socket',
   transports: ['polling'],
   cors: { origin: '*', methods: '*' }

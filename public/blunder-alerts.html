@@ -1,9 +1,9 @@
 <!- This is a separate html file to be used as a browser source in streamlabs obs. -->
 <html lang="en">
 <head>
-  <script src="https://localhost/scripts/socket.io.min.js" ></script>
-  <script src="https://localhost/scripts/utils.js" ></script>
-  <link rel="stylesheet" href="https://localhost/css/blunder-alerts.css" ></link>
+  <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
+  <script src="http://localhost:3000/scripts/utils.js" ></script>
+  <link rel="stylesheet" href="http://localhost:3000/css/blunder-alerts.css" ></link>
   <title></title>
 </head>
 <body>
@@ -13,7 +13,7 @@
     ALERT: 'ALERT',
     SERVER_MESSAGE: 'serverMessage'
   };
-  const socket = io(`https://localhost/app-socket`, {
+  const socket = io(`http://localhost:3001/app-socket`, {
     transports: ['polling'],
     timeout: 200000000
   });

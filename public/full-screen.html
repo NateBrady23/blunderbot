@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <script src="https://localhost/scripts/socket.io.min.js" ></script>
-  <script src="https://localhost/scripts/utils.js" ></script>
+  <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
+  <script src="http://localhost:3000/scripts/utils.js" ></script>
   <title></title>
 </head>
 <body>
@@ -21,8 +21,9 @@
     CONFETTI: 'CONFETTI',
     SERVER_MESSAGE: 'serverMessage'
   };
-  const socket = io(`https://localhost/app-socket`, {
+  const socket = io(`http://localhost:3001/app-socket`, {
     transports: ['polling'],
+    upgrade: true,
     timeout: 200000000
   });
   socket.on('connect', () => console.log('Connected!'));
