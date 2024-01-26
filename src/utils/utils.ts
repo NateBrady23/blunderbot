@@ -59,7 +59,10 @@ export async function playAudioFile(filePath) {
   });
 }
 
-export function isNHoursLater(hours: number, previousTimestamp): boolean {
+export function isNHoursLater(
+  hours: number,
+  previousTimestamp: number
+): boolean {
   // Convert hours to milliseconds (hours * 60 * 60 * 1000)
   const hoursInMilliseconds = hours * 60 * 60 * 1000;
   const difference = Date.now() - previousTimestamp;

@@ -5,8 +5,8 @@ import { isNHoursLater } from '../../utils/utils';
 import { Platform } from '../../enums';
 const ndjsonParser = require('ndjson-parse');
 
-let cached = [];
-let cachedAt;
+let cached: string[] = [];
+let cachedAt: number;
 
 const cacheBBB = async () => {
   try {
