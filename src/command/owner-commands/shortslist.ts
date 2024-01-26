@@ -1,4 +1,4 @@
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
@@ -21,7 +21,7 @@ async function getLastVideosByPlaylist(
     while (!tried || nextPageToken) {
       tried = true;
       const nextPageResponse = await youtube.playlistItems.list({
-        part: 'snippet',
+        part: ['snippet'],
         playlistId,
         maxResults: 50,
         pageToken: nextPageToken

@@ -44,7 +44,7 @@ class ConfigService {
     this.loadConfig();
   }
 
-  loadFromFile(configKey, filePath) {
+  loadFromFile(configKey: string, filePath: string) {
     try {
       this.loadedConfig[configKey] = requireUncached(
         path.join(__dirname, filePath)

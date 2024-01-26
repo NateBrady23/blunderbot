@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import path from 'path';
+
 export async function writeLog(
-  filename,
-  message,
+  filename: string,
+  message: string,
   opts?: { excludeDate?: boolean }
 ) {
   if (typeof message !== 'string') {
@@ -17,13 +18,13 @@ export async function writeLog(
     console.log(`${filename}: ${message}`);
     const logPath = path.join(__dirname, '../../logs');
     const logFile = path.join(logPath, filename);
-    if (!fs.existsSync(logPath)) {
-      fs.mkdirSync(logPath);
+    if (!existsSync(logPath)) {
+      mkdirSync(logPath);
     }
-    if (!fs.existsSync(logFile)) {
-      fs.writeFileSync(logFile, '');
+    if (!existsSync(logFile)) {
+      writeFileSync(logFile, '');
     }
-    fs.appendFileSync(logFile, `${message}\n`);
+    appendFileSync(logFile, `${message}\n`);
   } catch (e) {
     console.error(e);
     console.error('Error writing to log file:', filename, message);

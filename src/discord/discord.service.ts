@@ -2,8 +2,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CommandService } from '../command/command.service';
 import { Platform } from '../enums';
 import { CONFIG } from '../config/config.service';
-
-const { AttachmentBuilder, Client, GatewayIntentBits } = require('discord.js');
+import { AttachmentBuilder, Client, GatewayIntentBits } from 'discord.js';
 
 @Injectable()
 export class DiscordService {
@@ -68,7 +67,9 @@ export class DiscordService {
       const channel = this.client.channels.cache.get(
         CONFIG.get().discord.galleryChannelId
       );
-      const attachment = new AttachmentBuilder(buffer, 'image.png');
+      const attachment = new AttachmentBuilder(buffer, {
+        name: 'image.png'
+      });
       channel.send({ content, files: [attachment] });
     } catch (error) {
       this.logger.error(error);

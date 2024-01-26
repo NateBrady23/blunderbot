@@ -46,7 +46,7 @@ export class LichessService {
   }
 
   async apiCall(
-    url,
+    url: string,
     options: { method?: string; json?: boolean; body?: any } = {
       method: 'GET',
       json: true
@@ -54,8 +54,7 @@ export class LichessService {
   ): Promise<any> {
     const token = CONFIG.get().lichess.oauthToken;
 
-    const request = {
-      url,
+    const request: RequestInit = {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -63,7 +62,7 @@ export class LichessService {
     };
 
     if (options?.json === undefined || options.json) {
-      request['headers']['Content-type'] = 'application/json';
+      request['headers']['Content-Type'] = 'application/json';
     }
 
     if (options?.body) {
