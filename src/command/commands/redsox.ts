@@ -40,7 +40,7 @@ async function getRedSoxGame(ctx: Context) {
   const games = json.dates[0].games;
 
   // TODO: This won't work well for double headers
-  let redSoxGame = games.find(
+  const redSoxGame = games.find(
     (game) =>
       game.teams.away.team.name === 'Boston Red Sox' ||
       game.teams.home.team.name === 'Boston Red Sox'
