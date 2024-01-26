@@ -40,3 +40,6 @@ config.*.ts
 temp/
 private/
 priv/
+
+tools/blunder-report/stockfish
+tools/blunder-report/results.json
