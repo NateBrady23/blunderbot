@@ -3,7 +3,7 @@ const userOpenAIConfig: UserOpenAiConfig = {
   apiKey: 'sk-your-key',
   ttsModel: 'tts-1',
   imageModel: 'dall-e-3',
-  chatModel: 'gpt-4-1106-preview',
+  chatModel: 'gpt-4-turbo-preview',
   textModerationModel: 'text-moderation-stable',
   // BlunderBot's instructions to the OpenAI chat model
   baseSystemMessage:
