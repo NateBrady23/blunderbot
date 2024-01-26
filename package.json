@@ -34,7 +34,6 @@
     "gtts": "^0.2.1",
     "js-yaml": "^4.1.0",
     "ndjson-parse": "^1.0.4",
-    "node-fetch": "^3.3.2",
     "openai": "^4.26.0",
     "play-sound": "^1.1.5",
     "puppeteer": "^21.9.0",

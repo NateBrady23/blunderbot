@@ -1,5 +1,5 @@
 import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
-import path from 'path';
+import * as path from 'path';
 
 export async function writeLog(
   filename: string,

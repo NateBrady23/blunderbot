@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 

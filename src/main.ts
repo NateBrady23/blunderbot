@@ -5,6 +5,8 @@ import express = require('express');
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { readFileSync } from 'fs';
 import { createServer } from 'https';
+import * as http from 'http';
+import { CONFIG } from './config/config.service';
 
 async function bootstrap() {
   const server = express();
@@ -12,7 +14,7 @@ async function bootstrap() {
 
   app.enableCors({ origin: '*', methods: '*' });
   // await app.listen(CONFIG.get().port);
-  // const httpServer = http.createServer(server).listen(CONFIG.get().port);
+  http.createServer(server).listen(CONFIG.get().port);
   const httpsServer = createServer(
     {
       key: readFileSync('./src/utils/dev-certs/localhost.key'),

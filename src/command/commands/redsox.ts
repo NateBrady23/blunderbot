@@ -1,7 +1,5 @@
 import { Platform } from '../../enums';
 
-import fetch from 'node-fetch';
-
 interface MlbGames {
   dates: MlbDate[];
 }

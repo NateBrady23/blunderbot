@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from '../config/config.service';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
+import * as WebSocket from 'ws';
 
 @Injectable()
 export class TwitchPubSub {
