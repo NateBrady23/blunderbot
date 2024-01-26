@@ -163,7 +163,7 @@ export class TwitchService {
       userstate
     };
     void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
-    void writeLog('events', JSON.stringify(toLog));
+    void writeLog('events', toLog);
   }
 
   async tellAllConnectedClientsToRefresh() {

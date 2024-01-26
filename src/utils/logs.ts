@@ -3,7 +3,7 @@ import path from 'path';
 
 export async function writeLog(
   filename: string,
-  message: string,
+  message: any,
   opts?: { excludeDate?: boolean }
 ) {
   if (typeof message !== 'string') {
