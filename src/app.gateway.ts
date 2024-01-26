@@ -22,6 +22,7 @@ export class AppGateway
   private logger: Logger = new Logger(AppGateway.name);
 
   private sockets: Socket[] = [];
+
   afterInit(_server: unknown): undefined {
     this.logger.log('Initialized!');
   }
