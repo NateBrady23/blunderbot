@@ -1,4 +1,16 @@
-export default [
+interface Birthday {
+  Name: string;
+  'FIDE ID': number;
+  Born: string;
+  Birthplace: string;
+  Died: string;
+  TitleYear: number;
+  Federation: string;
+  Sex: string;
+  Notes: string;
+}
+
+export const birthdayList: Birthday[] = [
   {
     Name: 'Aagaard, Jacob',
     'FIDE ID': 1401815,
