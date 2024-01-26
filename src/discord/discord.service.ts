@@ -15,7 +15,7 @@ export class DiscordService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService
   ) {
-    if (!CONFIG.get().discord.enabled) {
+    if (!CONFIG.get().discord?.enabled) {
       this.logger.log('Discord disabled');
       return;
     }
