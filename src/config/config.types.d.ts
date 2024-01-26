@@ -71,12 +71,6 @@ interface UserDiscordConfig {
   inviteLink: string;
 }
 
-interface UserSlackConfig {
-  enabled: boolean;
-  appToken: string;
-  botToken: string;
-}
-
 interface UserDecapiConfig {
   enabled: boolean;
   token: string;
@@ -184,7 +178,6 @@ interface UserConfig {
   openai: UserOpenAiConfig;
   twitter: UserTwitterConfig;
   discord: UserDiscordConfig;
-  slack: UserSlackConfig;
   decapi: UserDecapiConfig;
   heartRate: UserHeartRateConfig;
   giphy: UserGiphyConfig;

@@ -2,7 +2,6 @@
  * TODO: Contribute to the Lichess API to add a quote endpoint.
  */
 import { Platform } from '../../enums';
-import fetch from 'node-fetch';
 import { getRandomElement } from '../../utils/utils';
 
 const url =

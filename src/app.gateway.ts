@@ -21,7 +21,7 @@ export class AppGateway
 
   private logger: Logger = new Logger(AppGateway.name);
 
-  private sockets = [];
+  private sockets: Socket[] = [];
 
   afterInit(_server: unknown): undefined {
     this.logger.log('Initialized!');
@@ -38,7 +38,7 @@ export class AppGateway
 
   public sendDataToSockets(event: string, data: unknown) {
     this.logger.log(`Sending ${event} event to sockets.`);
-    this.sockets.forEach((socket: Socket) => {
+    this.sockets.forEach((socket) => {
       if (socket.connected) {
         this.logger.log('found a connected socket');
         socket.emit(event, data);

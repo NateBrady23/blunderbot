@@ -44,7 +44,7 @@ class ConfigService {
     this.loadConfig();
   }
 
-  loadFromFile(configKey, filePath) {
+  loadFromFile(configKey: string, filePath: string) {
     try {
       this.loadedConfig[configKey] = requireUncached(
         path.join(__dirname, filePath)
@@ -79,10 +79,6 @@ class ConfigService {
     this.loadFromFile('titledPlayers', './config.titled-players');
     this.loadFromFile('trivia', './config.trivia');
     this.loadFromFile('twitter', './config.twitter');
-
-    console.log(
-      requireUncached(path.join(__dirname, './config.titled-players')).default
-    );
 
     // Load the public files
     this.loadedConfig.kings = [];

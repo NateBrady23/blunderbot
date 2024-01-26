@@ -1,48 +1,50 @@
 <!- This is a separate html file to be used as a browser source in streamlabs obs. -->
 <html lang="en">
-<head>
-  <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
-  <script src="http://localhost:3000/scripts/utils.js" ></script>
-  <title></title>
-</head>
-<body>
-  <div class="image-wrapper"></div>
-</body>
-<script>
-  const imageWrapper = document.querySelector('.image-wrapper');
-  const MESSAGE_TYPE = {
-    IMAGE: 'IMAGE',
-    SERVER_MESSAGE: 'serverMessage'
-  };
-  const queue = [];
-  let queueInterval;
-  const socket = io(`http://localhost:3001/app-socket`, {
-    transports: ['polling'],
-    timeout: 200000000
-  });
-  socket.on('connect', () => console.log('Connected!'));
-  socket.on('connect_error', (err) => console.log(`connect_error due to ${err.message}`));
-  socket.on('disconnect', () => console.log('Disconnected!'));
+  <head>
+    <script src="http://localhost:3000/scripts/socket.io.min.js"></script>
+    <script src="http://localhost:3000/scripts/utils.js"></script>
+    <title></title>
+  </head>
+  <body>
+    <div class="image-wrapper"></div>
+  </body>
+  <script>
+    const imageWrapper = document.querySelector('.image-wrapper');
+    const MESSAGE_TYPE = {
+      IMAGE: 'IMAGE',
+      SERVER_MESSAGE: 'serverMessage'
+    };
+    const queue = [];
+    let queueInterval;
+    const socket = io(`http://localhost:3001/app-socket`, {
+      transports: ['polling'],
+      timeout: 200000000
+    });
+    socket.on('connect', () => console.log('Connected!'));
+    socket.on('connect_error', (err) =>
+      console.log(`connect_error due to ${err.message}`)
+    );
+    socket.on('disconnect', () => console.log('Disconnected!'));
 
-  socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
-    if (data.type === MESSAGE_TYPE.IMAGE) {
+    socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
+      if (data.type === MESSAGE_TYPE.IMAGE) {
         queue.push(data.url);
         if (!queueInterval) {
-            displayImage();
-        }
-    }
-  });
-
-  function displayImage() {
-    imageWrapper.innerHTML = '';
-    clearInterval(queueInterval);
-    queueInterval = null;
-    if (queue.length) {
-      imageWrapper.innerHTML = `<img src="${queue.shift()}" />`;
-      queueInterval = setInterval(() => {
           displayImage();
-      }, 60000);
+        }
+      }
+    });
+
+    function displayImage() {
+      imageWrapper.innerHTML = '';
+      clearInterval(queueInterval);
+      queueInterval = null;
+      if (queue.length) {
+        imageWrapper.innerHTML = `<img src="${queue.shift()}" />`;
+        queueInterval = setInterval(() => {
+          displayImage();
+        }, 60000);
+      }
     }
-  }
-</script>
+  </script>
 </html>

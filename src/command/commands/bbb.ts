@@ -1,7 +1,6 @@
 /**
  * TODO: Type the expected response from the Lichess API. Use the LichessService for this.
  */
-import fetch from 'node-fetch';
 import { isNHoursLater } from '../../utils/utils';
 import { Platform } from '../../enums';
 const ndjsonParser = require('ndjson-parse');

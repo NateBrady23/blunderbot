@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.7.0 (2024-02-01)
+
+#### Breaking Changes
+
+- Major code cleanup and package updates thanks to @fitztrev!
+
 ### 1.6.0 (2024-01-23)
 
 #### Breaking Changes
@@ -55,9 +61,9 @@
 #### Bug Fixes
 
 - Fixed a bug where the `!kill` and `!toggle` commands weren't working properly with command abbreviations.
-- Fixed a bug where just a `!` message was killing the bot. RIP. 
+- Fixed a bug where just a `!` message was killing the bot. RIP.
 - Fixed a bug where the `!image` command wasn't sending the image to discord when it should.
-- Fixed a bug where `!opp-rating` wasn't working properly. 
+- Fixed a bug where `!opp-rating` wasn't working properly.
 
 #### Features
 
@@ -164,7 +170,6 @@
 
 - Added a `!image <description>` command to generate images using the OpenAI API
 - First time chatters that are followers will now get a random square on the board
-
 
 ### 1.0.0 (2023-12-27)
 

@@ -5,7 +5,6 @@ import { TwitchModule } from './twitch/twitch.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DiscordModule } from './discord/discord.module';
-import { SlackModule } from './slack/slack.module';
 import { OpenaiModule } from './openai/openai.module';
 import { AppGateway } from './app.gateway';
 import { BrowserModule } from './browser/browser.module';
@@ -16,7 +15,6 @@ import { TwitterModule } from './twitter/twitter.module';
     BrowserModule,
     DiscordModule,
     OpenaiModule,
-    SlackModule,
     TwitchModule,
     TwitterModule,
     ServeStaticModule.forRoot({

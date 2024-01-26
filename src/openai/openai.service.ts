@@ -2,8 +2,8 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from '../config/config.service';
 import OpenAI from 'openai';
 import { CommandService } from '../command/command.service';
-const fs = require('fs');
 import { generateUUID, playAudioFile } from '../utils/utils';
+import { createReadStream, writeFileSync } from 'fs';
 
 export const baseMessages: OpenAiChatMessage[] = [
   {
@@ -44,7 +44,7 @@ export class OpenaiService {
 
   async editImage(maskImg: string, prompt: string): Promise<string> {
     const response = await this.openai.images.edit({
-      image: fs.createReadStream(maskImg),
+      image: createReadStream(maskImg),
       // TODO: Currently does not accept model parameter
       // model: CONFIG.get().openai?.imageModel || 'dall-e-3',
       prompt,
@@ -62,7 +62,7 @@ export class OpenaiService {
       });
       const buffer = Buffer.from(await response.arrayBuffer());
       const uuid = generateUUID();
-      await fs.writeFileSync(`./temp/${uuid}.mp3`, buffer);
+      writeFileSync(`./temp/${uuid}.mp3`, buffer);
       await playAudioFile(`./temp/${uuid}.mp3`);
       this.logger.log(`Audio content written to file: /temp/${uuid}.mp3`);
     } catch (error) {
