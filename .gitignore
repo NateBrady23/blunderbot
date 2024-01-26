@@ -36,6 +36,8 @@ lerna-debug.log*
 src/config/config.ts
 config.*.ts
 !config.*.sample.ts
+!config.sample.ts
+
 # other
 temp/
 private/
