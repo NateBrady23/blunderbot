@@ -2,6 +2,18 @@ import fetch from 'node-fetch';
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
+interface LichessUser {
+  id: string;
+  username: string;
+  createdAt: number;
+  perfs: {
+    [key: string]: {
+      games: number;
+      rating: number;
+    };
+  };
+}
+
 const command: Command = {
   name: 'rating',
   aliases: ['elo'],
@@ -14,7 +26,7 @@ const command: Command = {
     }
     try {
       const res = await fetch(`https://lichess.org/api/user/${user}`);
-      const json = await res.json();
+      const json = (await res.json()) as LichessUser;
 
       let dt: Date | string = new Date(json.createdAt);
       dt = dt.getMonth() + 1 + '/' + dt.getDate() + '/' + dt.getFullYear();

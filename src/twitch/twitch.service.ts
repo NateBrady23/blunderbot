@@ -6,8 +6,7 @@ import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 import { chessSquares } from '../utils/constants';
 import { getRandomElement } from '../utils/utils';
-import tmi = require('tmi.js');
-import { Client } from 'tmi.js';
+import { Client, client } from 'tmi.js';
 
 let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters = [];
@@ -45,7 +44,7 @@ export class TwitchService {
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway
   ) {
-    this.client = new tmi.client(this.opts);
+    this.client = new client(this.opts);
 
     void this.client.connect();
 

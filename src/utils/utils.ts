@@ -1,16 +1,16 @@
 import { FunctionQueue } from './FunctionQueue';
 import { CONFIG } from '../config/config.service';
-import * as fs from 'fs';
+import { execSync } from 'child_process';
+import { readFileSync, writeFileSync } from 'fs';
 
 const player = require('play-sound')();
 const ffmpeg = require('fluent-ffmpeg');
-const { execSync } = require('child_process');
 
 export function removeSymbols(text: string): string {
   return text.replace(/[^a-z0-9]/gi, '');
 }
 
-export function sleep(ms): Promise<void> {
+export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -35,7 +35,7 @@ export async function muteOrUnmuteDesktopApps(mute: boolean) {
   const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
     for (const command of CONFIG.get().sounds[muteOrUnmute].programs) {
-      await execSync(command);
+      execSync(command);
     }
   } catch (error) {
     console.log(`Error muting or unmuting desktop apps.`);
@@ -139,7 +139,7 @@ export function addStrToFileAfterStr(
   afterStr: string
 ) {
   try {
-    const data = fs.readFileSync(filePath, 'utf8');
+    const data = readFileSync(filePath, 'utf8');
     // Split the file content by lines
     const lines = data.split('\n');
     let found = false;
@@ -161,7 +161,7 @@ export function addStrToFileAfterStr(
     const updatedData = lines.join('\n');
 
     // Write the modified content back to the file
-    fs.writeFileSync(filePath, updatedData, 'utf8');
+    writeFileSync(filePath, updatedData, 'utf8');
   } catch (e) {
     console.error(e);
   }

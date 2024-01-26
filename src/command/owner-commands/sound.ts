@@ -1,7 +1,7 @@
 import { playAudioFile } from '../../utils/utils';
 import { FunctionQueue } from '../../utils/FunctionQueue';
-import * as fs from 'fs';
 import { Platform } from '../../enums';
+import { existsSync } from 'fs';
 
 const queue = new FunctionQueue();
 
@@ -22,7 +22,7 @@ const command: Command = {
         const extensions = ['.m4a', '.mp3', '.wav'];
         for (const extension of extensions) {
           if (
-            fs.existsSync(`./public/sounds/soundboard/${filename}${extension}`)
+            existsSync(`./public/sounds/soundboard/${filename}${extension}`)
           ) {
             file = `./public/sounds/soundboard/${filename}${extension}`;
             break;
