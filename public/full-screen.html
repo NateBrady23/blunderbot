@@ -1,212 +1,222 @@
 <!- This is a separate html file to be used as a browser source in streamlabs obs. -->
 <html lang="en">
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <script src="http://localhost:3000/scripts/socket.io.min.js" ></script>
-  <script src="http://localhost:3000/scripts/utils.js" ></script>
-  <title></title>
-</head>
-<body>
-  <div class="wrapper"></div>
-</body>
-<script>
-  const CONFETTI_TYPE = {
-    CONFETTI: 'CONFETTI',
-    MATRIX: 'MATRIX',
-    SNOW: 'SNOW',
-    RAIN: 'RAIN'
-  };
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="http://localhost:3000/scripts/socket.io.min.js"></script>
+    <script src="http://localhost:3000/scripts/utils.js"></script>
+    <title></title>
+  </head>
+  <body>
+    <div class="wrapper"></div>
+  </body>
+  <script>
+    const CONFETTI_TYPE = {
+      CONFETTI: 'CONFETTI',
+      MATRIX: 'MATRIX',
+      SNOW: 'SNOW',
+      RAIN: 'RAIN'
+    };
 
-  const MESSAGE_TYPE = {
-    CONFETTI: 'CONFETTI',
-    SERVER_MESSAGE: 'serverMessage'
-  };
-  const socket = io(`http://localhost:3001/app-socket`, {
-    transports: ['polling'],
-    upgrade: true,
-    timeout: 200000000
-  });
-  socket.on('connect', () => console.log('Connected!'));
-  socket.on('connect_error', (err) => console.log(`connect_error due to ${err.message}`));
-  socket.on('disconnect', () => console.log('Disconnected!'));
+    const MESSAGE_TYPE = {
+      CONFETTI: 'CONFETTI',
+      SERVER_MESSAGE: 'serverMessage'
+    };
+    const socket = io(`http://localhost:3001/app-socket`, {
+      transports: ['polling'],
+      upgrade: true,
+      timeout: 200000000
+    });
+    socket.on('connect', () => console.log('Connected!'));
+    socket.on('connect_error', (err) =>
+      console.log(`connect_error due to ${err.message}`)
+    );
+    socket.on('disconnect', () => console.log('Disconnected!'));
 
-  socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
-    if (data.type === MESSAGE_TYPE.CONFETTI) {
-      if (data.confettiType === CONFETTI_TYPE.CONFETTI) {
-        void showConfetti();
+    socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
+      if (data.type === MESSAGE_TYPE.CONFETTI) {
+        if (data.confettiType === CONFETTI_TYPE.CONFETTI) {
+          void showConfetti();
+        }
+        if (data.confettiType === CONFETTI_TYPE.SNOW) {
+          void showSnow();
+        }
+        if (data.confettiType === CONFETTI_TYPE.RAIN) {
+          void showRain();
+        }
+        if (data.confettiType === CONFETTI_TYPE.MATRIX) {
+          void enterTheMatrix();
+        }
       }
-      if (data.confettiType === CONFETTI_TYPE.SNOW) {
-        void showSnow();
-      }
-      if (data.confettiType === CONFETTI_TYPE.RAIN) {
-        void showRain();
-      }
-      if (data.confettiType === CONFETTI_TYPE.MATRIX) {
-        void enterTheMatrix();
+    });
+
+    async function showConfetti() {
+      for (let i = 0; i < 7; i++) {
+        confetti({
+          angle: randomInRange(55, 125),
+          spread: randomInRange(50, 70),
+          particleCount: randomInRange(50, 100),
+          origin: { y: 0.6 }
+        });
+        await sleep(500);
       }
     }
-  });
 
-  async function showConfetti() {
-      for (let i = 0; i < 7; i++) {
-          confetti({
-              angle: randomInRange(55, 125),
-              spread: randomInRange(50, 70),
-              particleCount: randomInRange(50, 100),
-              origin: { y: 0.6 }
-          });
-          await sleep(500);
-      }
-  }
-
-  async function showSnow() {
+    async function showSnow() {
       let duration = 15 * 1000;
       let animationEnd = Date.now() + duration;
       let skew = 1;
 
       (function frame() {
-          let timeLeft = animationEnd - Date.now();
-          let ticks = Math.max(200, 500 * (timeLeft / duration));
-          skew = Math.max(0.8, skew - 0.001);
+        let timeLeft = animationEnd - Date.now();
+        let ticks = Math.max(200, 500 * (timeLeft / duration));
+        skew = Math.max(0.8, skew - 0.001);
 
-          confetti({
-              particleCount: 1,
-              startVelocity: 0,
-              ticks: ticks,
-              origin: {
-                  x: Math.random(),
-                  // since particles fall down, skew start toward the top
-                  y: (Math.random() * skew) - 0.2
-              },
-              colors: ['#ffffff'],
-              shapes: ['circle'],
-              gravity: randomInRange(0.4, 0.6),
-              scalar: randomInRange(0.4, 1),
-              drift: randomInRange(-0.4, 0.4)
-          });
+        confetti({
+          particleCount: 1,
+          startVelocity: 0,
+          ticks: ticks,
+          origin: {
+            x: Math.random(),
+            // since particles fall down, skew start toward the top
+            y: Math.random() * skew - 0.2
+          },
+          colors: ['#ffffff'],
+          shapes: ['circle'],
+          gravity: randomInRange(0.4, 0.6),
+          scalar: randomInRange(0.4, 1),
+          drift: randomInRange(-0.4, 0.4)
+        });
 
-          if (timeLeft > 0) {
-              requestAnimationFrame(frame);
-          }
-      }());
-  }
+        if (timeLeft > 0) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
 
-  async function showRain() {
+    async function showRain() {
       const id = Math.floor(randomInRange(1, 10000));
-      document.querySelector('body').insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
+      document
+        .querySelector('body')
+        .insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
       const canvas = document.querySelector(`#canvas-${id}`);
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      if(canvas.getContext) {
-          let ctx = canvas.getContext('2d');
-          let w = canvas.width;
-          let h = canvas.height;
-          ctx.strokeStyle = 'rgba(174,194,224,0.5)';
-          ctx.lineWidth = 1;
-          ctx.lineCap = 'round';
+      if (canvas.getContext) {
+        let ctx = canvas.getContext('2d');
+        let w = canvas.width;
+        let h = canvas.height;
+        ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+        ctx.lineWidth = 1;
+        ctx.lineCap = 'round';
 
-
-          let init = [];
-          let maxParts = 1000;
-          for(let a = 0; a < maxParts; a++) {
-              init.push({
-                  x: Math.random() * w,
-                  y: Math.random() * h,
-                  l: Math.random() * 1,
-                  xs: -4 + Math.random() * 4 + 2,
-                  ys: Math.random() * 10 + 10
-              })
-          }
-
-          let particles = [];
-          for(let b = 0; b < maxParts; b++) {
-              particles[b] = init[b];
-          }
-
-          function draw() {
-              ctx.clearRect(0, 0, w, h);
-              for(let c = 0; c < particles.length; c++) {
-                  let p = particles[c];
-                  ctx.beginPath();
-                  ctx.moveTo(p.x, p.y);
-                  ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
-                  ctx.stroke();
-              }
-              move();
-          }
-
-          function move() {
-              for(let b = 0; b < particles.length; b++) {
-                  let p = particles[b];
-                  p.x += p.xs;
-                  p.y += p.ys;
-                  if(p.x > w || p.y > h) {
-                      p.x = Math.random() * w;
-                      p.y = -20;
-                  }
-              }
-          }
-
-          const myInterval = setInterval(draw, 30);
-          setTimeout(()  => {
-              clearInterval(myInterval);
-              canvas.remove();
-          }, 15000);
-      }
-  }
-
-  function enterTheMatrix() {
-    const id = Math.floor(randomInRange(1, 10000));
-    document.querySelector('body').insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
-    const canvas = document.querySelector(`#canvas-${id}`);
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const context = canvas.getContext('2d');
-
-    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const nums = '0123456789';
-
-    const alphabet = katakana + latin + nums;
-
-    const fontSize = 16;
-    const columns = canvas.width/fontSize;
-
-    const rainDrops = [];
-
-    for( let x = 0; x < columns; x++ ) {
-      rainDrops[x] = 1;
-    }
-
-    let matrixDrawCount = -1;
-    const fullMatrixDrawCount = Math.round(canvas.height / fontSize);
-    function drawMatrix() {
-      matrixDrawCount++;
-      context.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      if (matrixDrawCount === fullMatrixDrawCount) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-      }
-      context.fillStyle = 'rgba(0,255,0,0.18)';
-      context.font = fontSize + 'px monospace';
-
-      for(let i = 0; i < rainDrops.length; i++)
-      {
-        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-        context.fillText(text, i*fontSize, rainDrops[i]*fontSize);
-
-        if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975){
-          rainDrops[i] = 0;
+        let init = [];
+        let maxParts = 1000;
+        for (let a = 0; a < maxParts; a++) {
+          init.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            l: Math.random() * 1,
+            xs: -4 + Math.random() * 4 + 2,
+            ys: Math.random() * 10 + 10
+          });
         }
-        rainDrops[i]++;
+
+        let particles = [];
+        for (let b = 0; b < maxParts; b++) {
+          particles[b] = init[b];
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          for (let c = 0; c < particles.length; c++) {
+            let p = particles[c];
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
+            ctx.stroke();
+          }
+          move();
+        }
+
+        function move() {
+          for (let b = 0; b < particles.length; b++) {
+            let p = particles[b];
+            p.x += p.xs;
+            p.y += p.ys;
+            if (p.x > w || p.y > h) {
+              p.x = Math.random() * w;
+              p.y = -20;
+            }
+          }
+        }
+
+        const myInterval = setInterval(draw, 30);
+        setTimeout(() => {
+          clearInterval(myInterval);
+          canvas.remove();
+        }, 15000);
       }
     }
 
-    const myInterval = setInterval(drawMatrix, 30);
-    setTimeout(()  => {
-      clearInterval(myInterval);
-      canvas.remove();
-    }, 15000);
-  }
-</script>
+    function enterTheMatrix() {
+      const id = Math.floor(randomInRange(1, 10000));
+      document
+        .querySelector('body')
+        .insertAdjacentHTML('beforeend', `<canvas id="canvas-${id}"></canvas>`);
+      const canvas = document.querySelector(`#canvas-${id}`);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const context = canvas.getContext('2d');
+
+      const katakana =
+        'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+      const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const nums = '0123456789';
+
+      const alphabet = katakana + latin + nums;
+
+      const fontSize = 16;
+      const columns = canvas.width / fontSize;
+
+      const rainDrops = [];
+
+      for (let x = 0; x < columns; x++) {
+        rainDrops[x] = 1;
+      }
+
+      let matrixDrawCount = -1;
+      const fullMatrixDrawCount = Math.round(canvas.height / fontSize);
+      function drawMatrix() {
+        matrixDrawCount++;
+        context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        if (matrixDrawCount === fullMatrixDrawCount) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        context.fillStyle = 'rgba(0,255,0,0.18)';
+        context.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < rainDrops.length; i++) {
+          const text = alphabet.charAt(
+            Math.floor(Math.random() * alphabet.length)
+          );
+          context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+          if (
+            rainDrops[i] * fontSize > canvas.height &&
+            Math.random() > 0.975
+          ) {
+            rainDrops[i] = 0;
+          }
+          rainDrops[i]++;
+        }
+      }
+
+      const myInterval = setInterval(drawMatrix, 30);
+      setTimeout(() => {
+        clearInterval(myInterval);
+        canvas.remove();
+      }, 15000);
+    }
+  </script>
 </html>

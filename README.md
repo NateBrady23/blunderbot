@@ -14,7 +14,7 @@ You may see some references to chess.com, but currently BlunderBot only supports
 The setup is much easier in v1.6.0. Here are the steps. You'll find more details about each step below.
 
 1. Install Chrome Extension
-2. Edit config files 
+2. Edit config files
 3. Run server for the first time (`npm install`, `npm run start`)
 4. Visit https://localhost in your browser and accept the risk of the self-signed certificate
 5. Visit https://lichess.org and enjoy!
@@ -39,7 +39,7 @@ The config may look daunting, but there's only a few files you have to touch to 
 
 This will get blunderbot working with twitch and lichess. For the best BlunderBot experience, I'd do the same for `config.openai.sample.ts` next!
 
-*IMPORTANT*: A lot of files (especially sounds) listed in the config files may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
+_IMPORTANT_: A lot of files (especially sounds) listed in the config files may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
 
 ### Some other settings
 

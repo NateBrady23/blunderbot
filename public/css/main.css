@@ -1,498 +1,537 @@
 body {
-    background: black !important;
+  background: black !important;
 }
 
 #board,
 .brown .is2d cg-board::before {
-    opacity: 40% !important;
-    background-size: cover;
-    content: "";
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
+  opacity: 40% !important;
+  background-size: cover;
+  content: '';
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
 }
 
 .user-rating {
-    position: absolute;
-    top: 118px;
-    bottom: 0;
-    width: 300px;
-    height: 100px;
-    right: 38px;
+  position: absolute;
+  top: 118px;
+  bottom: 0;
+  width: 300px;
+  height: 100px;
+  right: 38px;
 }
 
 .rotate {
-    animation: rotation 8s infinite linear;
+  animation: rotation 8s infinite linear;
 }
 
 @keyframes rotation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(359deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
-.hidden { display: none; }
+.hidden {
+  display: none;
+}
 .sound-square-container {
-    display: flex;
+  display: flex;
 }
 .sound-square {
-    padding: 5px;
-    font-size: 2em;
-    box-shadow: 0 0 10px #000000;
-    width: fit-content;
-    background: #282525;
-    margin: 5px;
-    cursor: pointer;
+  padding: 5px;
+  font-size: 2em;
+  box-shadow: 0 0 10px #000000;
+  width: fit-content;
+  background: #282525;
+  margin: 5px;
+  cursor: pointer;
 }
 .king-face,
 .opp-face {
-    width: 30px;
-    cursor: pointer;
+  width: 30px;
+  cursor: pointer;
 }
 
 .crown-select {
-    width: 50px;
-    cursor: pointer;
+  width: 50px;
+  cursor: pointer;
 }
 #topnav div.blunderbot-group a {
-    display: inline-block;
+  display: inline-block;
 }
 
 .brown .is2d cg-board {
-    background-image: none !important;
+  background-image: none !important;
 }
 
-#main-wrap > main > aside > div > section:nth-child(1) > div.game__meta__players {
-    display: none;
+#main-wrap
+  > main
+  > aside
+  > div
+  > section:nth-child(1)
+  > div.game__meta__players {
+  display: none;
 }
 
 .blunder-alert {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #222121;
-    position: fixed;
-    top: 275px;
-    left: 10px;
-    border: 8px solid #222121;
-    width: 301px;
-    height: 369px;
-    text-align: center;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    z-index: 100;
-    font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #222121;
+  position: fixed;
+  top: 275px;
+  left: 10px;
+  border: 8px solid #222121;
+  width: 301px;
+  height: 369px;
+  text-align: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  z-index: 100;
+  font-size: 1.1rem;
 }
 
 .blunder-alert img {
-    display: block;
-    width: 150px;
-    padding-bottom: 5px;
+  display: block;
+  width: 150px;
+  padding-bottom: 5px;
 }
 
 .podium .first .trophy {
-    background-image: url(https://localhost/images/trophies/1stplace.png) !important;
+  background-image: url(https://localhost/images/trophies/1stplace.png) !important;
 }
 .podium .second .trophy {
-    background-image: url(https://localhost/images/trophies/2ndplace.png) !important;
+  background-image: url(https://localhost/images/trophies/2ndplace.png) !important;
 }
 .podium .third .trophy {
-    background-image: url(https://localhost/images/trophies/3rdplace.png) !important;
+  background-image: url(https://localhost/images/trophies/3rdplace.png) !important;
 }
 .tour__standing .player .name {
-    max-width: 269px;
+  max-width: 269px;
 }
 
 @keyframes shake {
-    0% { top: -3px; left: -1px }
-    2% { top: 1px; left: 1px; }
-    4% { bottom: -2px; right: -1px; }
-    6% { top: -2px; left: -3px }
-    8% { top: 1px; left: 2px; }
-    10% { bottom: -2px; right: -1px; }
-    12% { top: -4px; left: -4px }
-    14% { top: 0; left: 0; }
-    16% { bottom: -4px; right: -1px; }
-    18% { top: -4px; left: -1px }
-    20% { top: 0; left: 0; }
+  0% {
+    top: -3px;
+    left: -1px;
+  }
+  2% {
+    top: 1px;
+    left: 1px;
+  }
+  4% {
+    bottom: -2px;
+    right: -1px;
+  }
+  6% {
+    top: -2px;
+    left: -3px;
+  }
+  8% {
+    top: 1px;
+    left: 2px;
+  }
+  10% {
+    bottom: -2px;
+    right: -1px;
+  }
+  12% {
+    top: -4px;
+    left: -4px;
+  }
+  14% {
+    top: 0;
+    left: 0;
+  }
+  16% {
+    bottom: -4px;
+    right: -1px;
+  }
+  18% {
+    top: -4px;
+    left: -1px;
+  }
+  20% {
+    top: 0;
+    left: 0;
+  }
 }
 
 .command-input-wrapper {
-    position: fixed;
-    bottom: 0;
-    z-index: 100;
-    background: #222121;
-    display: flex;
+  position: fixed;
+  bottom: 0;
+  z-index: 100;
+  background: #222121;
+  display: flex;
 }
 .command-input-wrapper button {
-    margin-left: 5px;
-    padding: 0 2px;
+  margin-left: 5px;
+  padding: 0 2px;
 }
 
 .gif-above-board {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .gif-above-all {
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 85%;
-    z-index: 100;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 85%;
+  z-index: 100;
 }
 
-
 .above-board {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 12.5%;
-    height: 12.5%;
-    background-size: cover;
-    word-wrap: break-word;
-    box-sizing: border-box;
-    line-height: 1;
-    white-space: pre-wrap;
-    transform: rotate(-45deg);
-    color: navajowhite;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12.5%;
+  height: 12.5%;
+  background-size: cover;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  line-height: 1;
+  white-space: pre-wrap;
+  transform: rotate(-45deg);
+  color: navajowhite;
 }
 
 .orientation-black .above-board.h1,
 .orientation-white .above-board.a8 {
-    top: 0;
-    left: 0;
+  top: 0;
+  left: 0;
 }
 .orientation-black .above-board.g1,
 .orientation-white .above-board.b8 {
-    top: 0;
-    left: 12.5%;
+  top: 0;
+  left: 12.5%;
 }
 .orientation-black .above-board.f1,
 .orientation-white .above-board.c8 {
-    top: 0;
-    left: 25%;
+  top: 0;
+  left: 25%;
 }
 .orientation-black .above-board.e1,
 .orientation-white .above-board.d8 {
-    top: 0;
-    left: 37.5%;
+  top: 0;
+  left: 37.5%;
 }
 .orientation-black .above-board.d1,
 .orientation-white .above-board.e8 {
-    top: 0;
-    left: 50%;
+  top: 0;
+  left: 50%;
 }
 .orientation-black .above-board.c1,
 .orientation-white .above-board.f8 {
-    top: 0;
-    left: 62.5%;
+  top: 0;
+  left: 62.5%;
 }
 .orientation-black .above-board.b1,
 .orientation-white .above-board.g8 {
-    top: 0;
-    left: 75%;
+  top: 0;
+  left: 75%;
 }
 .orientation-black .above-board.a1,
 .orientation-white .above-board.h8 {
-    top: 0;
-    left: 87.5%;
+  top: 0;
+  left: 87.5%;
 }
 .orientation-black .above-board.h2,
 .orientation-white .above-board.a7 {
-    top: 12.5%;
-    left: 0;
+  top: 12.5%;
+  left: 0;
 }
 .orientation-black .above-board.g2,
 .orientation-white .above-board.b7 {
-    top: 12.5%;
-    left: 12.5%;
+  top: 12.5%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f2,
 .orientation-white .above-board.c7 {
-    top: 12.5%;
-    left: 25%;
+  top: 12.5%;
+  left: 25%;
 }
 .orientation-black .above-board.e2,
 .orientation-white .above-board.d7 {
-    top: 12.5%;
-    left: 37.5%;
+  top: 12.5%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d2,
 .orientation-white .above-board.e7 {
-    top: 12.5%;
-    left: 50%;
+  top: 12.5%;
+  left: 50%;
 }
 .orientation-black .above-board.c2,
 .orientation-white .above-board.f7 {
-    top: 12.5%;
-    left: 62.5%;
+  top: 12.5%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b2,
 .orientation-white .above-board.g7 {
-    top: 12.5%;
-    left: 75%;
+  top: 12.5%;
+  left: 75%;
 }
 .orientation-black .above-board.a2,
 .orientation-white .above-board.h7 {
-    top: 12.5%;
-    left: 87.5%;
+  top: 12.5%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h3,
 .orientation-white .above-board.a6 {
-    top: 25%;
-    left: 0;
+  top: 25%;
+  left: 0;
 }
 .orientation-black .above-board.g3,
 .orientation-white .above-board.b6 {
-    top: 25%;
-    left: 12.5%;
+  top: 25%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f3,
 .orientation-white .above-board.c6 {
-    top: 25%;
-    left: 25%;
+  top: 25%;
+  left: 25%;
 }
 .orientation-black .above-board.e3,
 .orientation-white .above-board.d6 {
-    top: 25%;
-    left: 37.5%;
+  top: 25%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d3,
 .orientation-white .above-board.e6 {
-    top: 25%;
-    left: 50%;
+  top: 25%;
+  left: 50%;
 }
 .orientation-black .above-board.c3,
 .orientation-white .above-board.f6 {
-    top: 25%;
-    left: 62.5%;
+  top: 25%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b3,
 .orientation-white .above-board.g6 {
-    top: 25%;
-    left: 75%;
+  top: 25%;
+  left: 75%;
 }
 .orientation-black .above-board.a3,
 .orientation-white .above-board.h6 {
-    top: 25%;
-    left: 87.5%;
+  top: 25%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h4,
 .orientation-white .above-board.a5 {
-    top: 37.5%;
-    left: 0;
+  top: 37.5%;
+  left: 0;
 }
 .orientation-black .above-board.g4,
 .orientation-white .above-board.b5 {
-    top: 37.5%;
-    left: 12.5%;
+  top: 37.5%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f4,
 .orientation-white .above-board.c5 {
-    top: 37.5%;
-    left: 25%;
+  top: 37.5%;
+  left: 25%;
 }
 .orientation-black .above-board.e4,
 .orientation-white .above-board.d5 {
-    top: 37.5%;
-    left: 37.5%;
+  top: 37.5%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d4,
 .orientation-white .above-board.e5 {
-    top: 37.5%;
-    left: 50%;
+  top: 37.5%;
+  left: 50%;
 }
 .orientation-black .above-board.c4,
 .orientation-white .above-board.f5 {
-    top: 37.5%;
-    left: 62.5%;
+  top: 37.5%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b4,
 .orientation-white .above-board.g5 {
-    top: 37.5%;
-    left: 75%;
+  top: 37.5%;
+  left: 75%;
 }
 .orientation-black .above-board.a4,
 .orientation-white .above-board.h5 {
-    top: 37.5%;
-    left: 87.5%;
+  top: 37.5%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h5,
 .orientation-white .above-board.a4 {
-    top: 50%;
-    left: 0;
+  top: 50%;
+  left: 0;
 }
 .orientation-black .above-board.g5,
 .orientation-white .above-board.b4 {
-    top: 50%;
-    left: 12.5%;
+  top: 50%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f5,
 .orientation-white .above-board.c4 {
-    top: 50%;
-    left: 25%;
+  top: 50%;
+  left: 25%;
 }
 .orientation-black .above-board.e5,
 .orientation-white .above-board.d4 {
-    top: 50%;
-    left: 37.5%;
+  top: 50%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d5,
 .orientation-white .above-board.e4 {
-    top: 50%;
-    left: 50%;
+  top: 50%;
+  left: 50%;
 }
 .orientation-black .above-board.c5,
 .orientation-white .above-board.f4 {
-    top: 50%;
-    left: 62.5%;
+  top: 50%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b5,
 .orientation-white .above-board.g4 {
-    top: 50%;
-    left: 75%;
+  top: 50%;
+  left: 75%;
 }
 .orientation-black .above-board.a5,
 .orientation-white .above-board.h4 {
-    top: 50%;
-    left: 87.5%;
+  top: 50%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h6,
 .orientation-white .above-board.a3 {
-    top: 62.5%;
-    left: 0;
+  top: 62.5%;
+  left: 0;
 }
 .orientation-black .above-board.g6,
 .orientation-white .above-board.b3 {
-    top: 62.5%;
-    left: 12.5%;
+  top: 62.5%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f6,
 .orientation-white .above-board.c3 {
-    top: 62.5%;
-    left: 25%;
+  top: 62.5%;
+  left: 25%;
 }
 .orientation-black .above-board.e6,
 .orientation-white .above-board.d3 {
-    top: 62.5%;
-    left: 37.5%;
+  top: 62.5%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d6,
 .orientation-white .above-board.e3 {
-    top: 62.5%;
-    left: 50%;
+  top: 62.5%;
+  left: 50%;
 }
 .orientation-black .above-board.c6,
 .orientation-white .above-board.f3 {
-    top: 62.5%;
-    left: 62.5%;
+  top: 62.5%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b6,
 .orientation-white .above-board.g3 {
-    top: 62.5%;
-    left: 75%;
+  top: 62.5%;
+  left: 75%;
 }
 .orientation-black .above-board.a6,
 .orientation-white .above-board.h3 {
-    top: 62.5%;
-    left: 87.5%;
+  top: 62.5%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h7,
 .orientation-white .above-board.a2 {
-    top: 75%;
-    left: 0;
+  top: 75%;
+  left: 0;
 }
 .orientation-black .above-board.g7,
 .orientation-white .above-board.b2 {
-    top: 75%;
-    left: 12.5%;
+  top: 75%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f7,
 .orientation-white .above-board.c2 {
-    top: 75%;
-    left: 25%;
+  top: 75%;
+  left: 25%;
 }
 .orientation-black .above-board.e7,
 .orientation-white .above-board.d2 {
-    top: 75%;
-    left: 37.5%;
+  top: 75%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d7,
 .orientation-white .above-board.e2 {
-    top: 75%;
-    left: 50%;
+  top: 75%;
+  left: 50%;
 }
 .orientation-black .above-board.c7,
 .orientation-white .above-board.f2 {
-    top: 75%;
-    left: 62.5%;
+  top: 75%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b7,
 .orientation-white .above-board.g2 {
-    top: 75%;
-    left: 75%;
+  top: 75%;
+  left: 75%;
 }
 .orientation-black .above-board.a7,
 .orientation-white .above-board.h2 {
-    top: 75%;
-    left: 87.5%;
+  top: 75%;
+  left: 87.5%;
 }
 .orientation-black .above-board.h8,
 .orientation-white .above-board.a1 {
-    top: 87.5%;
-    left: 0;
+  top: 87.5%;
+  left: 0;
 }
 .orientation-black .above-board.g8,
 .orientation-white .above-board.b1 {
-    top: 87.5%;
-    left: 12.5%;
+  top: 87.5%;
+  left: 12.5%;
 }
 .orientation-black .above-board.f8,
 .orientation-white .above-board.c1 {
-    top: 87.5%;
-    left: 25%;
+  top: 87.5%;
+  left: 25%;
 }
 .orientation-black .above-board.e8,
 .orientation-white .above-board.d1 {
-    top: 87.5%;
-    left: 37.5%;
+  top: 87.5%;
+  left: 37.5%;
 }
 .orientation-black .above-board.d8,
 .orientation-white .above-board.e1 {
-    top: 87.5%;
-    left: 50%;
+  top: 87.5%;
+  left: 50%;
 }
 .orientation-black .above-board.c8,
 .orientation-white .above-board.f1 {
-    top: 87.5%;
-    left: 62.5%;
+  top: 87.5%;
+  left: 62.5%;
 }
 .orientation-black .above-board.b8,
 .orientation-white .above-board.g1 {
-    top: 87.5%;
-    left: 75%;
+  top: 87.5%;
+  left: 75%;
 }
 .orientation-black .above-board.a8,
 .orientation-white .above-board.h1 {
-    top: 87.5%;
-    left: 87.5%;
+  top: 87.5%;
+  left: 87.5%;
 }

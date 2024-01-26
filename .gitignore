@@ -33,7 +33,6 @@ lerna-debug.log*
 
 # secrets
 .env
-*.yml
 src/config/config.ts
 config.*.ts
 !config.*.sample.ts
@@ -41,3 +40,6 @@ config.*.ts
 temp/
 private/
 priv/
+
+tools/blunder-report/stockfish
+tools/blunder-report/results.json
