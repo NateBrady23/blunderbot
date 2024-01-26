@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.7.0 (2024-02-01)
+
+#### Breaking Changes
+
+- Major code cleanup and package updates thanks to @fitztrev!
+
 ### 1.6.0 (2024-01-23)
 
 #### Breaking Changes
