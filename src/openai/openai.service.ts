@@ -8,7 +8,7 @@ import { createReadStream, writeFileSync } from 'fs';
 export const baseMessages: OpenAiChatMessage[] = [
   {
     role: 'system',
-    content: CONFIG.get()?.openai.baseSystemMessage
+    content: CONFIG.get().openai?.baseSystemMessage
   }
 ];
 
