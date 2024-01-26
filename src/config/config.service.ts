@@ -80,10 +80,6 @@ class ConfigService {
     this.loadFromFile('trivia', './config.trivia');
     this.loadFromFile('twitter', './config.twitter');
 
-    console.log(
-      requireUncached(path.join(__dirname, './config.titled-players')).default
-    );
-
     // Load the public files
     this.loadedConfig.kings = [];
     this.loadedConfig.crowns = [];
