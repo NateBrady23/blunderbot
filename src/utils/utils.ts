@@ -14,7 +14,7 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getAudioDurationInSeconds(filePath): Promise<number> {
+function getAudioDurationInSeconds(filePath: string): Promise<number> {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(filePath, function (err, metadata) {
       if (err) {
@@ -44,7 +44,7 @@ export async function muteOrUnmuteDesktopApps(mute: boolean) {
 }
 
 const audioFileQueue = new FunctionQueue();
-export async function playAudioFile(filePath) {
+export async function playAudioFile(filePath: string) {
   await audioFileQueue.enqueue(async function () {
     try {
       await muteOrUnmuteDesktopApps(true);
@@ -92,7 +92,7 @@ export function getItemsBetweenDelimiters(
   return matches;
 }
 
-export function timeSince(date) {
+export function timeSince(date: Date) {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;
 
@@ -126,7 +126,7 @@ export function getRandomIntBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function getRandomElement(arr) {
+export function getRandomElement<T>(arr: T[]) {
   if (!arr || arr.length === 0) {
     return;
   }
