@@ -7,13 +7,13 @@ export class FunctionQueue {
     this.isRunning = false;
   }
 
-  async enqueue(fn) {
+  async enqueue(fn: () => Promise<void>): Promise<boolean> {
     this.queue.push(fn);
     await this.run();
-    return fn;
+    return true;
   }
 
-  async run() {
+  async run(): Promise<void> {
     if (this.isRunning || this.queue.length === 0) return;
     this.isRunning = true;
     const fn = this.queue.shift();

@@ -12,13 +12,12 @@ const command: Command = {
     return queue.enqueue(async function () {
       if (!CONFIG.get().openai?.enabled) {
         console.log(`OpenAI is not enabled in !tts command.`);
-        return false;
+        return;
       }
       if (!ctx.body) return;
       let text = ctx.body;
       text = fixPronunciations(text);
       await services.openaiService.tts(text, commandState.blunderbotVoice);
-      return true;
     });
   }
 };
