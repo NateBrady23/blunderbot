@@ -69,7 +69,9 @@ function selectRoundWinner(
   }
   // If it's not the first acceptable answer, put it in parens. For instance, if we accept
   // "franklin", but the first answer is "benjamin franklin", we'll put "franklin" in parens.
-  let finalAnswer = CONFIG.get().trivia[commandState.trivia.round].answers[0];
+  let finalAnswer =
+    CONFIG.get().trivia[commandState.trivia.round].answers[0] ??
+    CONFIG.get().trivia[commandState.trivia.round].answers;
   if (answer !== finalAnswer) {
     finalAnswer = `${finalAnswer} (${answer})`;
   }
