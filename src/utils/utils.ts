@@ -3,7 +3,9 @@ import { CONFIG } from '../config/config.service';
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
-const player = require('play-sound')();
+import playerImport = require('play-sound');
+const player = playerImport({});
+
 const ffmpeg = require('fluent-ffmpeg');
 
 export function removeSymbols(text: string): string {
@@ -49,7 +51,7 @@ export async function playAudioFile(filePath: string) {
     try {
       await muteOrUnmuteDesktopApps(true);
       const duration = await getAudioDurationInSeconds(filePath);
-      await player.play(filePath);
+      player.play(filePath);
       await sleep(duration * 1000 + 300);
       await muteOrUnmuteDesktopApps(false);
     } catch (error) {
