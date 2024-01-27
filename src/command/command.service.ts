@@ -80,7 +80,7 @@ export class CommandService {
         started: false,
         round: 0,
         leaderboard: {},
-        incorrectUsers: []
+        answeredUsers: []
       }
     };
   }

@@ -1,11 +1,19 @@
 /**
- * Not required
+ * Not a required config file unless you want to use the !trivia command.
+ *
+ * A list of question/answers for the !trivia command.
+ * Make sure all answers are in lowercase as they are matched to lowercased answers.
+ * A user gets it correct if they match any of the answers.
+ * Don't use keywords: "start", "question", "end", "next", "round", "leaderboard" as answers.
+ *
+ * Optional properties for each question:
+ * - timeLimit: number - The number of seconds before the round ends, even if there's no answer.
+ * - closestTo: boolean - If true, the user who is closest to the correct answer wins.
+ *
+ * NOTE: if you use closestTo, use only 1 numerical answer (still an array), like - answers: [1000]
+ *       Use timeLimit with closestTo, otherwise you must end the round yourself.
  */
 const userTriviaConfig: UserTriviaConfig = [
-  // A list of question/answers for the !trivia command.
-  // Make sure all answers are in lowercase as they are matched to lowercased answers.
-  // A user gets it correct if they match any of the answers.
-  // Don't use keywords: "start", "question", "next", "round", "leaderboard" as answers.
   {
     question:
       "If BM Nate Brady is playing white, you'll almost always see a pawn on this square in the opening.",
