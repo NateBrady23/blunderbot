@@ -73,6 +73,7 @@ class ConfigService {
     this.loadFromFile('autoShoutouts', './config.auto-shoutouts');
     this.loadFromFile('bits', './config.bits');
     this.loadFromFile('discord', './config.discord');
+    this.loadFromFile('gif', './config.gif');
     this.loadFromFile('messageCommands', './config.message-commands');
     this.loadFromFile('openai', './config.openai');
     this.loadFromFile('raids', './config.raids');
