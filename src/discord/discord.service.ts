@@ -7,7 +7,8 @@ import {
   Client,
   GatewayIntentBits,
   Guild,
-  Message
+  Message,
+  TextChannel
 } from 'discord.js';
 
 @Injectable()
@@ -64,7 +65,7 @@ export class DiscordService {
   makeAnnouncement(content: string) {
     const channel = this.client.channels.cache.get(
       CONFIG.get().discord.announcementChannelId
-    );
+    ) as TextChannel;
     channel.send(content);
   }
 
@@ -72,7 +73,7 @@ export class DiscordService {
     try {
       const channel = this.client.channels.cache.get(
         CONFIG.get().discord.galleryChannelId
-      );
+      ) as TextChannel;
       const attachment = new AttachmentBuilder(buffer, {
         name: 'image.png'
       });
@@ -86,7 +87,9 @@ export class DiscordService {
     discordMessage: DiscordMessage | { channelId: string },
     message: string
   ) {
-    const channel = this.client.channels.cache.get(discordMessage.channelId);
+    const channel = this.client.channels.cache.get(
+      discordMessage.channelId
+    ) as TextChannel;
     channel.send(message);
   }
 
