@@ -2,14 +2,20 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CommandService } from '../command/command.service';
 import { Platform } from '../enums';
 import { CONFIG } from '../config/config.service';
-import { AttachmentBuilder, Client, GatewayIntentBits } from 'discord.js';
+import {
+  AttachmentBuilder,
+  Client,
+  GatewayIntentBits,
+  Guild,
+  Message
+} from 'discord.js';
 
 @Injectable()
 export class DiscordService {
   private logger: Logger = new Logger(DiscordService.name);
 
-  public client;
-  public guild;
+  public client: Client;
+  public guild: Guild;
 
   constructor(
     @Inject(forwardRef(() => CommandService))
@@ -33,7 +39,7 @@ export class DiscordService {
     this.client.on('ready', async () => {
       this.logger.log('Discord bot ready');
 
-      this.guild = this.client.guilds.cache.map((guild) => guild)[0];
+      this.guild = this.client.guilds.cache.first();
       this.guild.members
         .fetch({ withPresences: true })
 
@@ -55,7 +61,7 @@ export class DiscordService {
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
-  makeAnnouncement(content) {
+  makeAnnouncement(content: string) {
     const channel = this.client.channels.cache.get(
       CONFIG.get().discord.announcementChannelId
     );
@@ -76,13 +82,16 @@ export class DiscordService {
     }
   }
 
-  botSpeak(discordMessage: DiscordMessage | { channelId }, message: string) {
+  botSpeak(
+    discordMessage: DiscordMessage | { channelId: string },
+    message: string
+  ) {
     const channel = this.client.channels.cache.get(discordMessage.channelId);
     channel.send(message);
   }
 
   // TODO: There's a bug sometimes where there's no message or context?
-  onMessageHandler(discordMessage) {
+  onMessageHandler(discordMessage: Message) {
     const botAuthorId = CONFIG.get().discord.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
