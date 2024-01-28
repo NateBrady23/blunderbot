@@ -54,16 +54,17 @@ export class LichessService {
   ): Promise<any> {
     const token = CONFIG.get().lichess.oauthToken;
 
-    const request: RequestInit = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      method: options?.method || 'GET'
-    };
+    const headers = new Headers();
+    headers.set('Authorization', `Bearer ${token}`);
 
     if (options?.json === undefined || options.json) {
-      request['headers']['Content-Type'] = 'application/json';
+      headers.set('Content-Type', 'application/json');
     }
+
+    const request: RequestInit = {
+      headers,
+      method: options?.method || 'GET'
+    };
 
     if (options?.body) {
       request['body'] = JSON.stringify(options.body);

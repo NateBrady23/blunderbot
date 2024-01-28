@@ -9,7 +9,7 @@ import { getRandomElement } from '../utils/utils';
 import { Client, client } from 'tmi.js';
 
 let shoutoutUsers = CONFIG.get().autoShoutouts || [];
-const newChatters = [];
+const newChatters: string[] = [];
 
 // Twitch user map is for determining followers and first time chatters
 const twitchUserMap: Record<string, { id: string; isFollower: boolean }> = {};
@@ -276,26 +276,26 @@ export class TwitchService {
   async helixApiCall(
     url: string,
     method = 'GET',
-    body = undefined,
+    body: any = undefined,
     asOwner = true
   ): Promise<any> {
     const token = asOwner
       ? CONFIG.get().twitch.apiOwnerOauthToken
       : CONFIG.get().twitch.apiBotOauthToken;
 
-    const request = {
-      url,
-      headers: {
-        'Client-ID': CONFIG.get().twitch.apiClientId,
-        Authorization: `Bearer ${token}`
-      },
-      method
-    };
+    const headers = new Headers();
+    headers.set('Client-ID', CONFIG.get().twitch.apiClientId);
+    headers.set('Authorization', `Bearer ${token}`);
 
     if (body) {
-      request['headers']['Content-type'] = 'application/json';
-      request['body'] = JSON.stringify(body);
+      headers.set('Content-type', 'application/json');
     }
+
+    const request: RequestInit = {
+      headers,
+      method,
+      body: body ? JSON.stringify(body) : undefined
+    };
 
     try {
       const res = await fetch(url, request);
