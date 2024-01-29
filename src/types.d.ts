@@ -45,3 +45,11 @@ type Platforms = 'twitch' | 'discord';
 interface CreateContextOptions {
   onBehalfOf?: string;
 }
+
+interface CommandRequest {
+  command: DiscordMessage;
+}
+
+interface TranslationRequest {
+  message: string;
+}

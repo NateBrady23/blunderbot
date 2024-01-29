@@ -115,6 +115,14 @@ const userTriviaConfig: UserTriviaConfig = [
       "This International Master and prolific chess author was consulted for the chess scene in Harry Potter and the Sorcerer's Stone.",
     answers: ['jeremy silman', 'silman'],
     points: 10
+  },
+  {
+    question:
+      "Should BM's be allowed into the US chess hall of fame? If BM Nate Brady drives from his garage studio to make his case about how many miles would he drive? Closest wins the round!",
+    answers: 1750,
+    closestTo: true,
+    timeLimit: 60,
+    points: 10
   }
 ];
 

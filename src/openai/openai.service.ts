@@ -175,7 +175,7 @@ export class OpenaiService {
     }
   }
 
-  async getReplyFromContext(ctx: Context, { services }) {
+  async getReplyFromContext(ctx: Context, services: CommandServices) {
     let temp = 0.9;
     if (ctx.args[0]?.match(/!t.../i)) {
       temp = +ctx.args[0].replace('!t', '');
