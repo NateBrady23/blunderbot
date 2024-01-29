@@ -118,7 +118,7 @@ class ConfigService {
   }
 
   private loadCommands() {
-    const messageCommands = {};
+    const messageCommands: Record<string, Command> = {};
     const messageCommandsConfig = this.loadedConfig.messageCommands || {};
     Object.keys(messageCommandsConfig).forEach((key) => {
       messageCommands[key] = getCommandProperties(

@@ -5,7 +5,7 @@ import { DiscordService } from './discord.service';
 export class DiscordController {
   constructor(private readonly discordService: DiscordService) {}
   @Post('/command')
-  postOwnerRunCommand(@Body() body) {
+  postOwnerRunCommand(@Body() body: CommandRequest) {
     void this.discordService.ownerRunCommand(body.command);
   }
 }

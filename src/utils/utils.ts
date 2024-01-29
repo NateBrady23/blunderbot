@@ -18,13 +18,19 @@ export function sleep(ms: number): Promise<void> {
 
 function getAudioDurationInSeconds(filePath: string): Promise<number> {
   return new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(filePath, function (err, metadata) {
-      if (err) {
-        reject(err);
-        return;
+    ffmpeg.ffprobe(
+      filePath,
+      function (
+        err: any,
+        metadata: { format: { duration: number | PromiseLike<number> } }
+      ) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(metadata.format.duration);
       }
-      resolve(metadata.format.duration);
-    });
+    );
   });
 }
 

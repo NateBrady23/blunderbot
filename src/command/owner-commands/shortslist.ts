@@ -1,8 +1,9 @@
-import { google } from 'googleapis';
+import { google, youtube_v3 } from 'googleapis';
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
+import { GaxiosResponse } from 'googleapis-common';
 
-let cachedLatestShort = [];
+let cachedLatestShort: youtube_v3.Schema$PlaylistItem[] = [];
 
 async function getLastVideosByPlaylist(
   playlistId = CONFIG.get().youtube.shortsPlaylistId
@@ -12,7 +13,7 @@ async function getLastVideosByPlaylist(
     auth: CONFIG.get().youtube.apiKey
   });
 
-  let itemsToReturn = [];
+  let itemsToReturn: youtube_v3.Schema$PlaylistItem[] = [];
 
   try {
     // If the playlist has more than one page of videos, retrieve the last video from subsequent pages
@@ -20,12 +21,13 @@ async function getLastVideosByPlaylist(
     let tried = false;
     while (!tried || nextPageToken) {
       tried = true;
-      const nextPageResponse = await youtube.playlistItems.list({
-        part: ['snippet'],
-        playlistId,
-        maxResults: 50,
-        pageToken: nextPageToken
-      });
+      const nextPageResponse: GaxiosResponse<youtube_v3.Schema$PlaylistItemListResponse> =
+        await youtube.playlistItems.list({
+          part: ['snippet'],
+          playlistId,
+          maxResults: 50,
+          pageToken: nextPageToken
+        });
       itemsToReturn = itemsToReturn.concat(nextPageResponse.data.items);
       nextPageToken = nextPageResponse.data.nextPageToken;
     }

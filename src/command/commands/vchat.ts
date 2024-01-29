@@ -9,9 +9,10 @@ const command: Command = {
       console.log(`OpenAI is not enabled in !vchat command.`);
       return false;
     }
-    const reply = await services.openaiService.getReplyFromContext(ctx, {
+    const reply = await services.openaiService.getReplyFromContext(
+      ctx,
       services
-    });
+    );
     await services.twitchService.ownerRunCommand(`!tts ${reply}`);
     return true;
   }
