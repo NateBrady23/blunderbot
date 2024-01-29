@@ -179,11 +179,3 @@ export function fixPronunciations(text: string): string {
 
   return text;
 }
-
-/**
- * Required for the !reload command to work
- */
-export function requireUncached(module) {
-  delete require.cache[require.resolve(module)];
-  return require(module);
-}

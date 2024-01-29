@@ -1,10 +1,6 @@
 import { readdirSync } from 'fs';
 // import * as yaml from 'js-yaml';
-import {
-  getRandomElement,
-  removeSymbols,
-  requireUncached
-} from '../utils/utils';
+import { getRandomElement, removeSymbols } from '../utils/utils';
 import { Platform } from '../enums';
 import * as path from 'path';
 
@@ -46,7 +42,7 @@ class ConfigService {
 
   loadFromFile(configKey: string, filePath: string) {
     try {
-      this.loadedConfig[configKey] = requireUncached(
+      this.loadedConfig[configKey] = require(
         path.join(__dirname, filePath)
       ).default;
     } catch (e) {
@@ -55,15 +51,13 @@ class ConfigService {
   }
 
   loadConfig() {
-    this.loadedConfig = requireUncached(
-      path.join(__dirname, './config')
-    ).default;
+    this.loadedConfig = require(path.join(__dirname, './config')).default;
 
     // If either of these fail, that's fatal
-    this.loadedConfig.twitch = requireUncached(
+    this.loadedConfig.twitch = require(
       path.join(__dirname, './config.twitch')
     ).default;
-    this.loadedConfig.lichess = requireUncached(
+    this.loadedConfig.lichess = require(
       path.join(__dirname, './config.lichess')
     ).default;
 

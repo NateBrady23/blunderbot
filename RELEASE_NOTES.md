@@ -1,6 +1,25 @@
 # Release Notes
 
-### 1.7.0 (2024-02-01)
+### 1.8.0 (2024-01-29)
+
+#### Breaking Changes
+
+- Package updates, type fixes and lots of code cleanup. Thanks @fitztrev!
+- `!reload` command removed and related `requireCache` util. Will find another way in the future.
+
+#### Features
+
+- Blunder Report added to the repo in `toos/`. Thanks @fitztrev!
+- CI added to the repo. Thanks @fitztrev!
+
+#### Bug Fixes
+
+- Added `config.sample.ts`.
+- Added the missing `config.gif.sample.ts`.
+- Fixed some issues with non-required config crashing the bot when missing.
+- OpenAI models not responding well to system messages. Attached some information, like personality, to user messages to help with this.
+
+### 1.7.0 (2024-01-26)
 
 #### Breaking Changes
 
