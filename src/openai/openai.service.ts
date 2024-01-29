@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { CommandService } from '../command/command.service';
 import { generateUUID, playAudioFile } from '../utils/utils';
 import { createReadStream, writeFileSync } from 'fs';
+import { Platform } from '../enums';
 
 export const baseMessages: OpenAiChatMessage[] = [
   {
@@ -103,9 +104,6 @@ export class OpenaiService {
       user?: string;
     }
   ): Promise<string> {
-    let messages: OpenAiChatMessage[] = [
-      { role: 'user', content: userMessage }
-    ];
     let systemMessages: OpenAiChatMessage[] = [];
     try {
       if (opts?.moderate) {
@@ -120,24 +118,24 @@ export class OpenaiService {
           return "I'm sorry, I'm feeling a little dizzy right now.";
         }
       }
-      if (opts?.includeBlunderBotContext) {
-        systemMessages = [...baseMessages];
-      }
+
       if (opts?.usePersonality) {
         const personality = (await this.commandService.getCommandState())
           .blunderBotPersonality;
         if (personality) {
-          systemMessages.push({
-            role: 'system',
-            content: personality
-          });
+          userMessage += ' ' + personality;
         }
       }
-      if (opts?.platform === 'twitch') {
-        systemMessages.push({
-          role: 'system',
-          content: `Limit your reply to the following prompt to 100 words or less.`
-        });
+
+      if (opts?.platform === Platform.Twitch) {
+        userMessage += ' Only reply with 50 words or less.';
+      }
+
+      let messages: OpenAiChatMessage[] = [
+        { role: 'user', content: userMessage }
+      ];
+      if (opts?.includeBlunderBotContext) {
+        systemMessages = [...baseMessages];
       }
 
       if (opts?.user) {
@@ -149,6 +147,7 @@ export class OpenaiService {
 
       this.savedMessages = [...this.savedMessages, ...messages];
       messages = [...systemMessages, ...this.savedMessages];
+      console.log(messages);
       const completion = await this.openai.chat.completions.create({
         model: CONFIG.get().openai.chatModel,
         messages,
