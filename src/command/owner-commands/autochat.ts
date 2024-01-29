@@ -1,7 +1,7 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
 
-let currentInterval = null;
+let currentInterval: undefined | ReturnType<typeof setTimeout>;
 
 const command: Command = {
   name: 'autochat',

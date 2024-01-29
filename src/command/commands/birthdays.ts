@@ -2,8 +2,7 @@
  * TODO: This is a static list so new GMs won't be added.
  */
 import { Platform } from '../../enums';
-import birthdayList from '../../data/gm-birthdays';
-const birthdays = {};
+import { birthdayList } from 'src/data/gm-birthdays';
 
 const command: Command = {
   name: 'birthdays',
@@ -14,22 +13,19 @@ const command: Command = {
     const month = date.toLocaleString('default', { month: '2-digit' });
     const day = date.toLocaleString('default', { day: '2-digit' });
     const today = `${month}-${day}`;
-    if (!birthdays[today]) {
-      birthdays[today] = birthdayList.filter((obj) => obj.Born.endsWith(today));
-    }
 
-    if (!birthdays[today].length) {
+    const birthdays = birthdayList.filter((obj) => obj.Born.endsWith(today));
+
+    if (!birthdays.length) {
       ctx.botSpeak('No GMs were born on this day.');
       return true;
     }
 
     let toSay = 'GMs born today include: ';
-    for (let i = 0; i < birthdays[today].length; i++) {
-      toSay += `${birthdays[today][i].Name}: ${birthdays[today][i].Born}`;
-      if (i != birthdays[today].length - 1) {
-        toSay += ' -- ';
-      }
-    }
+    toSay += birthdays
+      .map((obj) => `${obj.Name} (${obj.Born.substring(0, 4)})`)
+      .join(', ');
+
     ctx.botSpeak(toSay);
 
     return true;

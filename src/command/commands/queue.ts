@@ -34,11 +34,12 @@ const command: Command = {
       return false;
     }
 
-    const toSay = [];
-    commandState.challengeQueue.forEach((item) => {
-      toSay.push(`${item.twitchUser}->${item.lichessUser}`);
-    });
-    ctx.botSpeak('The queue is: ' + toSay.join(', '));
+    ctx.botSpeak(
+      'The queue is: ' +
+        commandState.challengeQueue
+          .map((c) => `${c.twitchUser}->${c.lichessUser}`)
+          .join(', ')
+    );
 
     return true;
   }

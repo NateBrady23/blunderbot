@@ -7,10 +7,14 @@ import { getRandomElement } from '../../utils/utils';
 const url =
   'https://raw.githubusercontent.com/lichess-org/lila/master/modules/gathering/src/main/Quote.scala';
 
-let quotes = [];
-async function fetchAndParseQuotes(
-  url: string
-): Promise<{ quote: string; author: string }[]> {
+interface Quote {
+  quote: string;
+  author: string;
+}
+
+let quotes: Quote[] = [];
+
+async function fetchAndParseQuotes(url: string): Promise<Quote[]> {
   const response = await fetch(url);
   const text = await response.text();
 
