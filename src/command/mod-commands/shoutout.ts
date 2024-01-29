@@ -12,7 +12,7 @@ const command: Command = {
       const user = ctx.args[0];
       if (!user) {
         ctx.botSpeak('Please provide a twitch username to shoutout');
-        return false;
+        return;
       }
 
       const url = `https://decapi.me/twitch/game/${user}`;
@@ -31,8 +31,6 @@ const command: Command = {
         );
         void services.twitchService.helixShoutout(user);
       }
-
-      return true;
     });
   }
 };

@@ -3,7 +3,9 @@ import { CONFIG } from '../config/config.service';
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
-const player = require('play-sound')();
+import playerImport = require('play-sound');
+const player = playerImport({});
+
 const ffmpeg = require('fluent-ffmpeg');
 
 export function removeSymbols(text: string): string {
@@ -14,7 +16,7 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getAudioDurationInSeconds(filePath): Promise<number> {
+function getAudioDurationInSeconds(filePath: string): Promise<number> {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(filePath, function (err, metadata) {
       if (err) {
@@ -44,12 +46,12 @@ export async function muteOrUnmuteDesktopApps(mute: boolean) {
 }
 
 const audioFileQueue = new FunctionQueue();
-export async function playAudioFile(filePath) {
+export async function playAudioFile(filePath: string) {
   await audioFileQueue.enqueue(async function () {
     try {
       await muteOrUnmuteDesktopApps(true);
       const duration = await getAudioDurationInSeconds(filePath);
-      await player.play(filePath);
+      player.play(filePath);
       await sleep(duration * 1000 + 300);
       await muteOrUnmuteDesktopApps(false);
     } catch (error) {
@@ -59,7 +61,10 @@ export async function playAudioFile(filePath) {
   });
 }
 
-export function isNHoursLater(hours: number, previousTimestamp): boolean {
+export function isNHoursLater(
+  hours: number,
+  previousTimestamp: number
+): boolean {
   // Convert hours to milliseconds (hours * 60 * 60 * 1000)
   const hoursInMilliseconds = hours * 60 * 60 * 1000;
   const difference = Date.now() - previousTimestamp;
@@ -89,7 +94,7 @@ export function getItemsBetweenDelimiters(
   return matches;
 }
 
-export function timeSince(date) {
+export function timeSince(date: Date) {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;
 
@@ -123,7 +128,7 @@ export function getRandomIntBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function getRandomElement(arr) {
+export function getRandomElement<T>(arr: T[]) {
   if (!arr || arr.length === 0) {
     return;
   }

@@ -1,7 +1,7 @@
 import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
 
-const availableCommands = [];
+const availableCommands: string[] = [];
 
 const command: Command = {
   name: 'blunder',

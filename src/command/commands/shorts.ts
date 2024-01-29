@@ -1,9 +1,10 @@
 import { isNHoursLater } from '../../utils/utils';
-import { google } from 'googleapis';
+import { google, youtube_v3 } from 'googleapis';
 import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
+import { GaxiosResponse } from 'googleapis-common';
 
-let cachedLatestShort;
+let cachedLatestShort: youtube_v3.Schema$PlaylistItem;
 const cachedLatestShortAt = Date.now();
 
 async function getLastVideoByPlaylist(
@@ -16,19 +17,19 @@ async function getLastVideoByPlaylist(
 
   try {
     // If the playlist has more than one page of videos, retrieve the last video from subsequent pages
-    let lastVideo;
-    let nextPageToken;
+    let lastVideo: youtube_v3.Schema$PlaylistItem;
+    let nextPageToken: string | null;
     let tried = false;
     while (!tried || nextPageToken) {
       tried = true;
-      const nextPageResponse = await youtube.playlistItems.list({
-        part: ['snippet'],
-        playlistId,
-        maxResults: 50,
-        pageToken: nextPageToken
-      });
-      lastVideo =
-        nextPageResponse.data.items[nextPageResponse.data.items.length - 1];
+      const nextPageResponse: GaxiosResponse<youtube_v3.Schema$PlaylistItemListResponse> =
+        await youtube.playlistItems.list({
+          part: ['snippet'],
+          playlistId,
+          maxResults: 50,
+          pageToken: nextPageToken
+        });
+      lastVideo = nextPageResponse.data.items.pop();
       nextPageToken = nextPageResponse.data.nextPageToken;
     }
 
