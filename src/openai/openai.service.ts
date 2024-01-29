@@ -129,6 +129,8 @@ export class OpenaiService {
 
       if (opts?.platform === Platform.Twitch) {
         userMessage += ' Only reply with 50 words or less.';
+      } else {
+        userMessage += ' Only reply with 200 words or less.';
       }
 
       let messages: OpenAiChatMessage[] = [
