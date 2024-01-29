@@ -32,6 +32,9 @@ interface MlbGame {
   };
 }
 
+let currentInterval: undefined | ReturnType<typeof setTimeout>;
+let lastGameStatus: string = '';
+
 async function getRedSoxGame(ctx: Context) {
   const res = await fetch(
     `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1`
@@ -40,7 +43,7 @@ async function getRedSoxGame(ctx: Context) {
   const games = json.dates[0].games;
 
   // TODO: This won't work well for double headers
-  let redSoxGame = games.find(
+  const redSoxGame = games.find(
     (game) =>
       game.teams.away.team.name === 'Boston Red Sox' ||
       game.teams.home.team.name === 'Boston Red Sox'
@@ -62,9 +65,6 @@ async function getRedSoxGame(ctx: Context) {
     clearInterval(currentInterval);
   }
 }
-
-let currentInterval = null;
-let lastGameStatus: string = '';
 
 const command: Command = {
   name: 'redsox',

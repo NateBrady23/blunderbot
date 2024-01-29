@@ -82,12 +82,19 @@ declare global {
         user: string;
         seconds: number;
       };
+      closestAnswer?: {
+        user: string;
+        difference: number;
+        answer: string;
+      };
       started: boolean;
       roundStartTime?: number;
       round: number;
       leaderboard: { [key: string]: number };
-      incorrectUsers: string[];
+      answeredUsers: string[];
       roundAnswered?: boolean;
+      roundEnded?: boolean;
+      triviaTimeout?: NodeJS.Timeout;
     };
   }
 }

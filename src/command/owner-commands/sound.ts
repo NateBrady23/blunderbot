@@ -11,7 +11,7 @@ const command: Command = {
   run: async (ctx) => {
     return queue.enqueue(async function () {
       if (!ctx.body) {
-        return false;
+        return;
       }
       let file;
 
@@ -31,11 +31,10 @@ const command: Command = {
       }
 
       if (!file) {
-        return false;
+        return;
       }
 
       await playAudioFile(file);
-      return true;
     });
   }
 };

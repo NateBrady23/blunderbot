@@ -67,7 +67,7 @@ export class CommandService {
       killedCommands: CONFIG.get().killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai.voices[0],
+      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai?.voices[0],
       ephemeralCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
@@ -80,7 +80,7 @@ export class CommandService {
         started: false,
         round: 0,
         leaderboard: {},
-        incorrectUsers: []
+        answeredUsers: []
       }
     };
   }

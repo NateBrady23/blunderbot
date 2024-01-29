@@ -163,8 +163,10 @@ type UserAutoResponderConfig = {
 
 type UserTriviaConfig = {
   question: string;
-  answers: string[];
+  answers: number | string[];
   points: number;
+  closestTo?: boolean;
+  timeLimit?: number;
 }[];
 
 interface UserConfig {

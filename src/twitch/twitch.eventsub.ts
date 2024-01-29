@@ -134,6 +134,9 @@ export class TwitchEventSub {
     const existingSubs = await this.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/eventsub/subscriptions'
     );
+    if (!existingSubs?.data) {
+      return;
+    }
     for (const sub of existingSubs?.data) {
       await this.twitchService.helixApiCall(
         `https://api.twitch.tv/helix/eventsub/subscriptions?id=${sub.id}`,

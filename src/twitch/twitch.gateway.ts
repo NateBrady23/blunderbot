@@ -25,7 +25,7 @@ export class TwitchGateway
 
   private logger: Logger = new Logger(TwitchGateway.name);
 
-  private sockets = [];
+  private sockets: Socket[] = [];
 
   constructor(
     @Inject(forwardRef(() => TwitchService))
