@@ -130,6 +130,8 @@ export class DiscordService {
       guild: this.guild,
       message,
       discordMessage,
+      reply: (ctx, message) =>
+        this.botSpeak(discordMessage, `<@${ctx.tags.userId}> ${message}`),
       botSpeak: (message: string) => this.botSpeak(discordMessage, message),
       platform: Platform.Discord
     };

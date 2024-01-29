@@ -190,6 +190,8 @@ export class TwitchService {
       client: this.client,
       channel: CONFIG.get().twitch.channel,
       message,
+      reply: (ctx: Context, message) =>
+        this.botSpeak(`@${ctx.tags['display-name']} ${message}`),
       botSpeak: this.botSpeak,
       platform: Platform.Twitch
     };
