@@ -1,5 +1,16 @@
 # Release Notes
 
+### 1....
+
+#### Features
+
+- New !wordle command to play wordle with the chat.
+
+#### Bug Fixes
+
+- Fixed Context.reply methods for twitch and discord.
+- Capped discord replies from openai as discord will fail on large messages.
+
 ### 1.8.0 (2024-01-29)
 
 #### Breaking Changes
