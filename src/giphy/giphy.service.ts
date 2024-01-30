@@ -23,7 +23,7 @@ export class GiphyService {
     const data = await response.json();
     // Sometimes giphy doesn't return a gif for a phrase, so we return a default gif
     if (!data?.data[0] && CONFIG.get().gif?.notFound) {
-      console.error(data);
+      this.logger.error(data);
       return CONFIG.get().gif.notFound;
     }
     return `https://i.giphy.com/media/${data.data[0].id}/giphy.webp`;

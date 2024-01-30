@@ -16,16 +16,6 @@ export class TwitchEventSub {
 
   private currentHypeTrainLevel = 1;
 
-  private opts = {
-    identity: {
-      username: CONFIG.get().twitch.botUsername,
-      password: CONFIG.get().twitch.botPassword
-    },
-    channels: [CONFIG.get().twitch.channel]
-  };
-
-  public client;
-
   constructor(
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
@@ -54,70 +44,70 @@ export class TwitchEventSub {
     this.eventSubConnection.onmessage = this.eventSubMessageHandler.bind(this);
   }
 
-  async eventSubMessageHandler(data) {
-    data = JSON.parse(data.data);
-    const messageId = data.metadata.message_id;
+  async eventSubMessageHandler(data: { data: string }) {
+    const parsedData = JSON.parse(data.data);
+    const messageId = parsedData.metadata.message_id;
     if (this.eventSubMessageIds.includes(messageId)) {
       return;
     } else {
       this.eventSubMessageIds.push(messageId);
     }
 
-    const messageType = data.metadata.message_type;
+    const messageType = parsedData.metadata.message_type;
 
     if (messageType === 'session_welcome') {
       await this.deleteExistingSubscriptions();
-      await this.subscribeToEvents(data.payload.session.id);
+      await this.subscribeToEvents(parsedData.payload.session.id);
     }
 
     if (messageType === 'session_reconnect') {
-      this.eventSubCreateConnection(data.payload.session.reconnect_url);
+      this.eventSubCreateConnection(parsedData.payload.session.reconnect_url);
       return;
     }
 
     if (messageType === 'revocation') {
       this.eventSubConnection.close();
-      this.eventSubCreateConnection(data.payload.session.reconnect_url);
+      this.eventSubCreateConnection(parsedData.payload.session.reconnect_url);
     }
 
     if (messageType === 'notification') {
-      void writeLog('events', JSON.stringify(data));
-      const subType = data.payload.subscription.type;
+      void writeLog('events', JSON.stringify(parsedData));
+      const subType = parsedData.payload.subscription.type;
       this.logger.log('EventSub notification received: ' + subType);
 
       try {
         switch (subType) {
           case 'channel.follow':
-            await this.onFollow(data);
+            await this.onFollow(parsedData);
             break;
 
           case 'stream.online':
-            await this.onStreamOnline(data);
+            await this.onStreamOnline(parsedData);
             break;
 
           case 'channel.hype_train.begin':
-            await this.onTrain(data);
+            await this.onTrain(parsedData);
             break;
 
           case 'channel.hype_train.progress':
-            await this.onTrainProgress(data);
+            await this.onTrainProgress(parsedData);
             break;
 
           case 'channel.raid':
-            await this.onRaid(data);
+            await this.onRaid(parsedData);
             break;
 
           case 'channel.cheer':
-            await this.onCheer(data);
+            await this.onCheer(parsedData);
             break;
 
           case 'channel.subscribe':
             // NOTE: This doesn't include resubscribes
-            await this.onSubscribe(data);
+            await this.onSubscribe(parsedData);
             break;
 
           case 'channel.subscription.gift':
-            await this.onSubscriptionGift(data);
+            await this.onSubscriptionGift(parsedData);
             break;
 
           default:
@@ -158,7 +148,11 @@ export class TwitchEventSub {
       { eventType: 'channel.subscription.gift', version: '1' }
     ];
     for (const event of events) {
-      const condition = {
+      const condition: {
+        broadcaster_user_id: string;
+        moderator_user_id?: string;
+        to_broadcaster_user_id?: string;
+      } = {
         broadcaster_user_id: CONFIG.get().twitch.ownerId
       };
       if (event.version === '2') {
@@ -188,7 +182,16 @@ export class TwitchEventSub {
     }
   }
 
-  async onCheer(data) {
+  async onCheer(data: {
+    payload: {
+      event: {
+        message: string;
+        bits: string;
+        user_name: string;
+        is_anonymous: boolean;
+      };
+    };
+  }) {
     const obj = {
       message: data.payload.event.message,
       bits: parseInt(data.payload.event.bits) || 0,
@@ -200,14 +203,16 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
   }
 
-  async onFollow(data) {
+  async onFollow(data: { payload: { event: { user_login: string } } }) {
     void this.twitchService.helixGetTwitchUserInfo(
       data.payload.event.user_login,
       true
     );
   }
 
-  async onSubscribe(data) {
+  async onSubscribe(data: {
+    payload: { event: { user_name: string; is_gift?: string } };
+  }) {
     if (data.payload.event.is_gift) {
       // This will be handled by the gift sub event
       return;
@@ -218,7 +223,9 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onSubscriptionGift(data) {
+  async onSubscriptionGift(data: {
+    payload: { event: { user_name: string; is_anonymous: string } };
+  }) {
     const obj = {
       username: data.payload.event.is_anonymous
         ? 'Anonymous'
@@ -228,7 +235,9 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onRaid(data) {
+  async onRaid(data: {
+    payload: { event: { from_broadcaster_user_login: string } };
+  }) {
     void this.twitchService.ownerRunCommand(
       `!onraids ${data.payload.event.from_broadcaster_user_login}`
     );
@@ -237,7 +246,7 @@ export class TwitchEventSub {
     );
   }
 
-  async onTrain(_data) {
+  async onTrain(_data: unknown) {
     this.currentHypeTrainLevel = 1;
     this.twitchService.botSpeak(
       `Hype train level 1! Come on the train, choo choo ride it!!`
@@ -245,7 +254,7 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand('!train');
   }
 
-  async onTrainProgress(data) {
+  async onTrainProgress(data: { payload: { event: { level: number } } }) {
     const level = data.payload.event.level;
     if (level > this.currentHypeTrainLevel) {
       this.currentHypeTrainLevel = level;
@@ -254,7 +263,7 @@ export class TwitchEventSub {
     }
   }
 
-  async onStreamOnline(_data) {
+  async onStreamOnline(_data: unknown) {
     this.logger.log('Stream is online!');
   }
 }

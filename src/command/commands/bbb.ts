@@ -52,9 +52,6 @@ const speak = (ctx: Context): void => {
   }
 };
 
-// Cache the BBB when we start the server
-void cacheBBB();
-
 const command: Command = {
   name: 'bbb',
   aliases: [

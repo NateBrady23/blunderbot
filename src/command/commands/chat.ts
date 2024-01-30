@@ -14,9 +14,7 @@ const command: Command = {
     if (!ctx.body) {
       reply = `You need to say something for me to respond to.`;
     } else {
-      reply = await services.openaiService.getReplyFromContext(ctx, {
-        services
-      });
+      reply = await services.openaiService.getReplyFromContext(ctx, services);
     }
 
     // Make any necessary changes based on the platform

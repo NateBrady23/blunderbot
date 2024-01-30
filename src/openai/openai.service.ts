@@ -129,6 +129,8 @@ export class OpenaiService {
 
       if (opts?.platform === Platform.Twitch) {
         userMessage += ' Only reply with 50 words or less.';
+      } else {
+        userMessage += ' Only reply with 200 words or less.';
       }
 
       let messages: OpenAiChatMessage[] = [
@@ -173,7 +175,7 @@ export class OpenaiService {
     }
   }
 
-  async getReplyFromContext(ctx: Context, { services }) {
+  async getReplyFromContext(ctx: Context, services: CommandServices) {
     let temp = 0.9;
     if (ctx.args[0]?.match(/!t.../i)) {
       temp = +ctx.args[0].replace('!t', '');
