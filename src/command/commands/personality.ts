@@ -4,7 +4,7 @@ const command: Command = {
   name: 'personality',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState }) => {
-    if (ctx.tags.owner && ctx.body) {
+    if (ctx.isOwner && ctx.body) {
       commandState.blunderBotPersonality = ctx.body.trim();
     }
     if (commandState.blunderBotPersonality) {

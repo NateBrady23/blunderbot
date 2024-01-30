@@ -18,7 +18,7 @@ const command: Command = {
   run: async (ctx) => {
     const guess = ctx.body?.toLowerCase().trim();
 
-    if (guess === 'new' && ctx.tags.owner) {
+    if (guess === 'new' && ctx.isOwner) {
       if (chosenWord) {
         ctx.botSpeak('A round of wordle has already been started.');
         return false;
@@ -61,8 +61,8 @@ const command: Command = {
     }
 
     // Make sure the user hasn't guessed in the last 60 seconds
-    if (users[ctx.tags['display-name']]) {
-      const lastGuess = users[ctx.tags['display-name']];
+    if (users[ctx.displayName]) {
+      const lastGuess = users[ctx.displayName];
       const currentTime = Date.now();
       if (currentTime - lastGuess < 60000) {
         ctx.reply(ctx, 'You must wait 60 seconds between guesses.');
@@ -72,7 +72,7 @@ const command: Command = {
 
     if (guess === chosenWord) {
       ctx.botSpeak(
-        `@${ctx.tags['display-name']} got it! The word was ${chosenWord.toUpperCase()}!`
+        `@${ctx.displayName} got it! The word was ${chosenWord.toUpperCase()}!`
       );
       chosenWord = undefined;
       users = {};
@@ -92,7 +92,7 @@ const command: Command = {
 
     ctx.reply(ctx, buildReply);
 
-    users[ctx.tags['display-name']] = Date.now();
+    users[ctx.displayName] = Date.now();
     return true;
   }
 };

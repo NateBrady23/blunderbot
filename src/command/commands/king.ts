@@ -18,12 +18,12 @@ const command: Command = {
       );
       return false;
     }
-    const user = ctx.tags['display-name'];
+    const user = ctx.displayName;
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'KING',
       king
     });
-    if (!ctx.tags.owner && !king.startsWith('secret_')) {
+    if (!ctx.isOwner && !king.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
         `!alert {${user}} changed the king to {${king}}`
       );

@@ -125,13 +125,13 @@ export class DiscordService {
 
   createContext(discordMessage: DiscordMessage) {
     const message = discordMessage.content;
-    const context: Context = {
+    const context: Partial<Context> = {
       client: this.client,
       guild: this.guild,
       message,
       discordMessage,
       reply: (ctx, message) =>
-        this.botSpeak(discordMessage, `<@${ctx.tags.userId}> ${message}`),
+        this.botSpeak(discordMessage, `<@${ctx.userId}> ${message}`),
       botSpeak: (message: string) => this.botSpeak(discordMessage, message),
       platform: Platform.Discord
     };
@@ -151,20 +151,17 @@ export class DiscordService {
       context.command = command.toLowerCase();
     }
 
-    context.tags = {
-      username: discordMessage.author.username,
-      'display-name': discordMessage.author.username,
-      userId: discordMessage.author.id,
-      owner: discordMessage.author.id === CONFIG.get().discord.ownerAuthorId,
-      // We determine a mod by seeing if they're in the mod channel
-      mod:
-        discordMessage.author.id === CONFIG.get().discord.ownerAuthorId ||
-        discordMessage.channelId === CONFIG.get().discord.modChannelId,
-      // Unused atm - Just the owner is marked as a subscriber
-      subscriber:
-        discordMessage.author.id === CONFIG.get().discord.ownerAuthorId
-    };
-
-    return context;
+    context.username = discordMessage.author.username.toLowerCase();
+    context.displayName = discordMessage.author.username;
+    context.userId = discordMessage.author.id;
+    context.isOwner =
+      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId;
+    // We determine a mod by seeing if they're in the mod channel
+    context.isMod =
+      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId ||
+      discordMessage.channelId === CONFIG.get().discord.modChannelId;
+    context.isSubscriber =
+      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId;
+    return <Context>context;
   }
 }

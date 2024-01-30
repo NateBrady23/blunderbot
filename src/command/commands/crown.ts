@@ -11,11 +11,11 @@ const command: Command = {
       services.twitchGateway.sendDataToOneSocket('serverMessage', {
         type: 'CROWN',
         crown: '',
-        user: ctx.tags['display-name']
+        user: ctx.displayName
       });
-      if (!ctx.tags.owner) {
+      if (!ctx.isOwner) {
         void services.twitchService.ownerRunCommand(
-          `!alert {${ctx.tags['display-name']}} reset my crown`
+          `!alert {${ctx.displayName}} reset my crown`
         );
       }
       return true;
@@ -33,11 +33,11 @@ const command: Command = {
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'CROWN',
       crown,
-      user: ctx.tags['display-name']
+      user: ctx.displayName
     });
-    if (!ctx.tags.owner && !crown.startsWith('secret_')) {
+    if (!ctx.isOwner && !crown.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
-        `!alert {${ctx.tags['display-name']}} changed my crown to {${crown}}`
+        `!alert {${ctx.displayName}} changed my crown to {${crown}}`
       );
     }
 

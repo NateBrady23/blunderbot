@@ -6,7 +6,7 @@ const command: Command = {
   help: 'Displays information on how and when to challenge me.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!ctx.tags.owner || !ctx.args[0]) {
+    if (!ctx.isOwner || !ctx.args[0]) {
       ctx.botSpeak(
         'Challenge me using the challenge channel point redemption during Viewer Challenge streams (Sunday/Tuesday) to get in the queue. (Must be a follower to challenge.) You can also play me during the BBB (Wednesdays) !bbb'
       );

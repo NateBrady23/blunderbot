@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.9.0
+
+#### Breaking Changes
+
+- Using the brand new twitch API for chat messages and removed tmi.js
+
 ### 1.8.1 (2024-01-30)
 
 #### Features

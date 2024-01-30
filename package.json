@@ -1,6 +1,6 @@
 {
   "name": "blunderot",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "BlunderBot came here to drink milk and blunder and he's all out of milk.",
   "author": "Nate Brady <https://twitch.tv/NateBrady23>",
   "license": "MIT",
@@ -38,7 +38,6 @@
     "play-sound": "^1.1.5",
     "puppeteer": "^21.9.0",
     "save": "^2.9.0",
-    "tmi.js": "^1.8.3",
     "twitter-api-v2": "^1.15.2"
   },
   "devDependencies": {
@@ -51,7 +50,6 @@
     "@types/play-sound": "^1.1.2",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^6.0.2",
-    "@types/tmi.js": "^1.8.6",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "eslint": "^8.54.0",

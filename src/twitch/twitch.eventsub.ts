@@ -71,9 +71,13 @@ export class TwitchEventSub {
     }
 
     if (messageType === 'notification') {
-      void writeLog('events', JSON.stringify(parsedData));
       const subType = parsedData.payload.subscription.type;
-      this.logger.log('EventSub notification received: ' + subType);
+
+      if (subType === 'channel.chat.message') {
+        // Log all events except chat messages. They're logged separately.
+        void writeLog('events', JSON.stringify(parsedData));
+        this.logger.log('EventSub notification received: ' + subType);
+      }
 
       try {
         switch (subType) {
@@ -108,6 +112,10 @@ export class TwitchEventSub {
 
           case 'channel.subscription.gift':
             await this.onSubscriptionGift(parsedData);
+            break;
+
+          case 'channel.chat.message':
+            await this.onChatMessage(parsedData);
             break;
 
           default:
@@ -145,13 +153,15 @@ export class TwitchEventSub {
       { eventType: 'channel.raid', version: '1' },
       { eventType: 'channel.cheer', version: '1' },
       { eventType: 'channel.subscribe', version: '1' },
-      { eventType: 'channel.subscription.gift', version: '1' }
+      { eventType: 'channel.subscription.gift', version: '1' },
+      { eventType: 'channel.chat.message', version: '1' }
     ];
     for (const event of events) {
       const condition: {
         broadcaster_user_id: string;
         moderator_user_id?: string;
         to_broadcaster_user_id?: string;
+        user_id?: string;
       } = {
         broadcaster_user_id: CONFIG.get().twitch.ownerId
       };
@@ -160,6 +170,9 @@ export class TwitchEventSub {
       }
       if (event.eventType === 'channel.raid') {
         condition['to_broadcaster_user_id'] = CONFIG.get().twitch.ownerId;
+      }
+      if (event.eventType === 'channel.chat.message') {
+        condition['user_id'] = CONFIG.get().twitch.ownerId;
       }
       const res = await this.twitchService.helixApiCall(
         CONFIG.get().twitch.eventSubscriptionUrl,
@@ -180,6 +193,40 @@ export class TwitchEventSub {
         this.logger.log(`Subscribed to ${event.eventType}`);
       }
     }
+  }
+
+  async onChatMessage(data: {
+    payload: {
+      event: {
+        chatter_user_name: string;
+        chatter_user_login: string;
+        message: {
+          text: string;
+        };
+        badges: { set_id: string }[];
+        message_type: string;
+        channel_points_custom_reward_id: string | null;
+      };
+    };
+  }) {
+    const obj: OnMessageHandlerInput = {
+      message: data.payload.event.message.text,
+      userLogin: data.payload.event.chatter_user_login,
+      displayName: data.payload.event.chatter_user_name,
+      isMod: data.payload.event.badges.some(
+        (badge) => badge.set_id === 'moderator'
+      ),
+      isSub: data.payload.event.badges.some(
+        (badge) => badge.set_id === 'subscriber'
+      ),
+      isOwner:
+        data.payload.event.chatter_user_login ===
+        CONFIG.get().twitch.ownerUsername,
+      channelPointsCustomRewardId:
+        data.payload.event.channel_points_custom_reward_id
+    };
+
+    void this.twitchService.onMessageHandler(obj);
   }
 
   async onCheer(data: {

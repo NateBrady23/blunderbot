@@ -148,7 +148,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
     const answer = ctx.body?.toLowerCase().trim();
-    if (answer === 'start' && ctx.tags.owner) {
+    if (answer === 'start' && ctx.isOwner) {
       commandState.trivia.started = true;
       commandState.trivia.round = -1;
       commandState.trivia.leaderboard = {};
@@ -168,12 +168,12 @@ const command: Command = {
       return false;
     }
 
-    if (answer === 'next' && ctx.tags.owner) {
+    if (answer === 'next' && ctx.isOwner) {
       nextQuestion(ctx, commandState, services);
       return true;
     }
 
-    if (answer === 'end' && ctx.tags.owner) {
+    if (answer === 'end' && ctx.isOwner) {
       endRound(ctx, commandState, services);
     }
 
@@ -212,14 +212,14 @@ const command: Command = {
     if (
       commandState.trivia.roundEnded ||
       commandState.trivia.roundAnswered ||
-      commandState.trivia.answeredUsers.includes(ctx.tags['display-name'])
+      commandState.trivia.answeredUsers.includes(ctx.displayName)
     ) {
       return true;
     }
 
     if (CONFIG.get().trivia[commandState.trivia.round].closestTo) {
       // Always track that the user has already answered.
-      commandState.trivia.answeredUsers.push(ctx.tags['display-name']);
+      commandState.trivia.answeredUsers.push(ctx.displayName);
       try {
         const answerNum = +answer;
         const correctNum =
@@ -235,7 +235,7 @@ const command: Command = {
             commandState,
             services,
             answer,
-            ctx.tags['display-name']
+            ctx.displayName
           );
           endRound(ctx, commandState, services);
         } else if (
@@ -243,7 +243,7 @@ const command: Command = {
           difference < commandState.trivia.closestAnswer.difference
         ) {
           commandState.trivia.closestAnswer = {
-            user: ctx.tags['display-name'],
+            user: ctx.displayName,
             difference,
             answer
           };
@@ -258,15 +258,9 @@ const command: Command = {
         CONFIG.get().trivia[commandState.trivia.round].answers as string[]
       ).includes(answer)
     ) {
-      selectRoundWinner(
-        ctx,
-        commandState,
-        services,
-        answer,
-        ctx.tags['display-name']
-      );
+      selectRoundWinner(ctx, commandState, services, answer, ctx.displayName);
     } else {
-      commandState.trivia.answeredUsers.push(ctx.tags['display-name']);
+      commandState.trivia.answeredUsers.push(ctx.displayName);
     }
     return true;
   }

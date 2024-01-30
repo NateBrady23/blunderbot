@@ -1,28 +1,10 @@
-interface ContextTags {
-  // always lowercase display name
-  username: string;
-  // added by me
-  owner: boolean;
-  mod: boolean;
-  // Cased however the user entered their display name
-  'display-name': string;
-  // This property will only exist if a twitch reward was redeemed
-  'custom-reward-id'?: string;
-  // Currently being used to mention players in discord
-  userId?: string;
-  subscriber: boolean;
-  follower?: boolean;
-}
-
 interface Context {
   // Twitch or Discord client
-  client: unknown;
+  client?: unknown;
   // Discord guild
   guild?: unknown;
   // twitch channel
   channel?: string;
-  // tags coming from tmi
-  tags?: ContextTags;
   // the entire message including any commands
   message: string;
   // the discord message object
@@ -38,6 +20,20 @@ interface Context {
   platform: Platforms;
   isOwnerRun?: boolean;
   onBehalfOf?: string;
+
+  // always lowercase display name
+  username: string;
+  // added by me
+  isOwner: boolean;
+  isMod: boolean;
+  // Cased however the user entered their display name
+  displayName: string;
+  // This property will only exist if a twitch reward was redeemed
+  customRewardId: string;
+  // Currently being used to mention players in discord
+  userId?: string;
+  isSubscriber: boolean;
+  isFollower?: boolean;
 }
 
 type Platforms = 'twitch' | 'discord';

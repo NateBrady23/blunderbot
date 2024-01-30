@@ -8,7 +8,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState }) => {
     if (!commandState.first) {
-      commandState.first = ctx.tags['display-name'];
+      commandState.first = ctx.displayName;
     }
     ctx.botSpeak(`@${commandState.first} is the first!`);
     return true;

@@ -22,12 +22,12 @@ const command: Command = {
       // This helps with ownerSendCommandDirectly so it doesn't look like
       // blunderBot is responding to itself or the owner
       reply = `${
-        !ctx.tags.owner ? `@${ctx.tags.username}: ` : ''
+        !ctx.isOwner ? `@${ctx.username}: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
       ctx.botSpeak(reply);
     } else {
       reply = `${
-        !ctx.tags.owner ? `<@${ctx.tags.userId}>: ` : ''
+        !ctx.isOwner ? `<@${ctx.userId}>: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
       ctx.botSpeak(reply);
     }

@@ -12,7 +12,7 @@ const command: Command = {
       services.twitchGateway.sendDataToOneSocket('serverMessage', {
         type: 'CURSOR',
         cursor: '',
-        user: ctx.tags['display-name']
+        user: ctx.displayName
       });
       return true;
     }
@@ -29,12 +29,12 @@ const command: Command = {
       );
       return false;
     }
-    const user = ctx.tags['display-name'];
+    const user = ctx.displayName;
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'CURSOR',
       cursor
     });
-    if (!ctx.tags.owner && !cursor.startsWith('secret_')) {
+    if (!ctx.isOwner && !cursor.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
         `!alert {${user}} changed the cursor to {${cursor}}`
       );

@@ -26,7 +26,7 @@ const command: Command = {
           const giphyUrl = await services.giphyService.fetchGif(msg);
           services.twitchGateway.sendDataToSockets('serverMessage', {
             type: 'GIPHY',
-            user: ctx.tags['display-name'],
+            user: ctx.displayName,
             giphyUrl,
             milliseconds
           });

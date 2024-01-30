@@ -6,7 +6,6 @@ import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 import { chessSquares } from '../utils/constants';
 import { getRandomElement } from '../utils/utils';
-import { Client, client } from 'tmi.js';
 
 let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters: string[] = [];
@@ -28,35 +27,28 @@ let boughtSquares = {};
 export class TwitchService {
   private logger: Logger = new Logger(TwitchService.name);
 
-  private opts = {
-    identity: {
-      username: CONFIG.get().twitch.botUsername,
-      password: CONFIG.get().twitch.botPassword
-    },
-    channels: [CONFIG.get().twitch.channel]
-  };
-
-  public client: Client;
-
   constructor(
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway
   ) {
-    this.client = new client(this.opts);
-
-    void this.client.connect();
-
-    this.client.on('connected', this.onConnectedHandler.bind(this));
-
-    // Actions
-    this.client.on('message', this.onMessageHandler.bind(this));
-    this.client.on('resub', this.onResubHandler.bind(this));
+    // TODO: Remove this in favor of proper static methods
+    this.botSpeak = this.botSpeak.bind(this);
   }
 
   botSpeak(message: string) {
-    void this.client.say(CONFIG.get().twitch.channel, message);
+    // void this.client.say(CONFIG.get().twitch.channel, message);
+    void this.helixApiCall(
+      'https://api.twitch.tv/helix/chat/messages',
+      'POST',
+      {
+        broadcaster_id: CONFIG.get().twitch.ownerId,
+        sender_id: CONFIG.get().twitch.botId,
+        message
+      },
+      false
+    );
   }
 
   checkForShoutout(user: string) {
@@ -67,18 +59,13 @@ export class TwitchService {
     }
   }
 
-  onConnectedHandler(address: string, port: number) {
-    this.logger.log(`* Connected to ${address}:${port}`);
-  }
-
   updateBoughtSquares(data: unknown) {
     boughtSquares = data;
   }
 
-  async onMessageHandler(_channel: string, tags: ContextTags, message: string) {
-    if (message) {
-      void writeLog('chat', `${tags['display-name']}: ${message}`);
-    }
+  async onMessageHandler(data: OnMessageHandlerInput) {
+    let message = data.message;
+    void writeLog('chat', `${data.displayName}: ${message}`);
     const regex = new RegExp(
       `^@${CONFIG.get().twitch.botUsername}|@${
         CONFIG.get().twitch.botUsername
@@ -92,13 +79,13 @@ export class TwitchService {
       );
       message = '!chat ' + message.replace(replaceRegex, '');
     }
-    const context: Context = await this.createContext(message, tags);
+    const context: Context = await this.createContext(message, data);
 
-    const displayName = context.tags['display-name'];
+    const displayName = context.displayName;
     if (!newChatters.includes(displayName)) {
       newChatters.push(displayName);
       // Welcome in new chatters (non-followers)
-      if (!context.tags.follower) {
+      if (!context.isFollower) {
         if (
           CONFIG.get().twitch.welcome?.enabled &&
           !CONFIG.get().twitch.welcome.ignoreUsers.includes(displayName)
@@ -109,7 +96,7 @@ export class TwitchService {
           );
           this.botSpeak(message);
         }
-      } else if (!context.tags.owner) {
+      } else if (!context.isOwner) {
         const squares = Object.keys(boughtSquares || {});
         const remainingSquares = chessSquares.filter(
           (sq) => !squares.includes(sq)
@@ -124,15 +111,15 @@ export class TwitchService {
     // If the message isn't a !so command, check to see if this user needs
     // to be shouted out!
     if (!context.message.startsWith('!so ')) {
-      this.checkForShoutout(context.tags.username);
+      this.checkForShoutout(context.username);
     }
 
     // The message isn't a command or custom reward, so see if it's something we
     // should auto-respond to and then return. Don't auto respond to the bot.
     if (
       !context.message.startsWith('!') &&
-      !tags['custom-reward-id'] &&
-      !tags['display-name']
+      !data.channelPointsCustomRewardId &&
+      !data.userLogin
         .toLowerCase()
         .includes(CONFIG.get().twitch.botUsername.toLowerCase())
     ) {
@@ -140,30 +127,9 @@ export class TwitchService {
       return;
     }
 
-    if (!tags['custom-reward-id']) {
+    if (!data.channelPointsCustomRewardId) {
       await this.commandService.run(context);
     }
-  }
-
-  async onResubHandler(
-    channel: string,
-    username: string,
-    months: string,
-    message: string,
-    userstate: unknown,
-    methods: unknown
-  ) {
-    const toLog = {
-      event: 'onResubHandler',
-      channel,
-      username,
-      months,
-      methods,
-      message,
-      userstate
-    };
-    void this.ownerRunCommand(`!onsubs ${JSON.stringify(toLog)}`);
-    void writeLog('events', toLog);
   }
 
   async tellAllConnectedClientsToRefresh() {
@@ -183,40 +149,39 @@ export class TwitchService {
 
   async createContext(
     message: string,
-    tags?: ContextTags,
+    data?: OnMessageHandlerInput,
     opts?: CreateContextOptions
   ): Promise<Context> {
-    const context: Context = {
-      client: this.client,
+    const context: Partial<Context> = {
       channel: CONFIG.get().twitch.channel,
       message,
       reply: (ctx: Context, message) =>
-        this.botSpeak(`@${ctx.tags['display-name']} ${message}`),
+        this.botSpeak(`@${ctx.displayName} ${message}`),
       botSpeak: this.botSpeak,
       platform: Platform.Twitch
     };
 
-    if (tags) {
-      context.tags = tags;
+    if (data) {
+      context.isOwner = data.isOwner;
+      context.isMod = data.isMod;
+      context.isSubscriber = data.isSub;
+      context.username = data.userLogin;
+      context.displayName = data.displayName;
     } else {
-      // If no tags, then it's a command being run directly by the owner
+      // If no data, then it's a command being run directly by the owner
       context.isOwnerRun = true;
       context.onBehalfOf = opts?.onBehalfOf;
-      context.tags = {
-        username: CONFIG.get().twitch.ownerUsername,
-        owner: true,
-        mod: true,
-        subscriber: true,
-        ['display-name']: CONFIG.get().twitch.ownerUsername
-      };
+      context.username = CONFIG.get().twitch.ownerUsername.toLowerCase();
+      context.displayName = CONFIG.get().twitch.ownerUsername;
+      context.isOwner = true;
+      context.isMod = true;
+      context.isSubscriber = true;
     }
 
-    const user = await this.helixGetTwitchUserInfo(
-      context.tags['display-name']
-    );
+    const user = await this.helixGetTwitchUserInfo(context.displayName);
 
     if (user) {
-      context.tags.follower = user.isFollower;
+      context.isFollower = user.isFollower;
     }
 
     if (context.message?.startsWith('!')) {
@@ -233,19 +198,7 @@ export class TwitchService {
       }
     }
 
-    if (
-      [
-        CONFIG.get().twitch.ownerUsername.toLowerCase(),
-        CONFIG.get().twitch.botUsername.toLowerCase()
-      ].includes(context.tags.username)
-    ) {
-      // Just make sure the owner gets everything
-      context.tags.owner = true;
-      context.tags.mod = true;
-      context.tags.subscriber = true;
-    }
-
-    return context;
+    return <Context>context;
   }
 
   async autoRespond(message: string) {

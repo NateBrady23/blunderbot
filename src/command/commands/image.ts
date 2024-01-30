@@ -19,7 +19,7 @@ const command: Command = {
     let sendToTwitter =
       CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
 
-    const user = ctx.onBehalfOf || ctx.tags['display-name'];
+    const user = ctx.onBehalfOf || ctx.displayName;
     if (!prompt) {
       ctx.botSpeak(`You need to provide a prompt.`);
       return false;

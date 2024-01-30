@@ -24,9 +24,9 @@ const command: Command = {
       king
     });
 
-    if (!ctx.tags.owner && !king.startsWith('secret_')) {
+    if (!ctx.isOwner && !king.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(
-        `!alert {${ctx.tags['display-name']}} changed my opponent's king to {${king}}`
+        `!alert {${ctx.displayName}} changed my opponent's king to {${king}}`
       );
     }
   }

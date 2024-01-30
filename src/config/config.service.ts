@@ -17,10 +17,10 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
           if (ctx.platform === Platform.Twitch) {
             command = command.replace(
               /{username}/g,
-              removeSymbols(ctx.tags['display-name'])
+              removeSymbols(ctx.displayName)
             );
             void services.twitchService.ownerRunCommand(command, {
-              onBehalfOf: ctx.tags['display-name']
+              onBehalfOf: ctx.displayName
             });
           }
         });
