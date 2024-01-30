@@ -14,17 +14,19 @@ const command: Command = {
       console.log(`OpenAI is not enabled in !poll command.`);
       return false;
     }
-    let question = ctx.body;
+    const question = ctx.body;
     if (!question) {
       return false;
     }
 
-    let prompt = 'Create a poll around the topic of ' + question + '.';
-    prompt +=
+    const prompt =
+      'Create a poll around the topic of ' +
+      question +
+      '.' +
       ' Create three choices to choose from. Question is limited to 60 characters. Choices are limited to 25 characters each. Format your answer as a json string like {"title": "", choices: [{ "title": ""},{"title": "", {"title": ""]}. ';
 
     const poll = JSON.parse(
-      (await services.openaiService.sendPrompt(question))
+      (await services.openaiService.sendPrompt(prompt))
         .replace('```json', '')
         .replace('```', '')
         .trim()
