@@ -1,6 +1,6 @@
 # Release Notes
 
-### 1....
+### 1.8.1 (2024-01-30)
 
 #### Features
 
@@ -10,6 +10,8 @@
 
 - Fixed Context.reply methods for twitch and discord.
 - Capped discord replies from openai as discord will fail on large messages.
+- Fixed `!poll` not sending the entire prompt.
+- More code cleanup.
 
 ### 1.8.0 (2024-01-29)
 

@@ -70,10 +70,10 @@ function selectRoundWinner(
   // If it's not the first acceptable answer, put it in parens. For instance, if we accept
   // "franklin", but the first answer is "benjamin franklin", we'll put "franklin" in parens.
   let finalAnswer =
-    CONFIG.get().trivia[commandState.trivia.round].answers[0] ??
+    (CONFIG.get().trivia[commandState.trivia.round].answers as string[])[0] ??
     CONFIG.get().trivia[commandState.trivia.round].answers;
-  if (answer !== finalAnswer) {
-    finalAnswer = `${finalAnswer} (${answer})`;
+  if (answer !== finalAnswer.toString()) {
+    finalAnswer = `${answer} (${finalAnswer})`;
   }
   ctx.botSpeak(
     `"${finalAnswer}" is correct! @${user} got it right in ${seconds} seconds and earned ${roundPoints} points! They now have ${points} point(s).`
@@ -106,10 +106,18 @@ function endRound(
 
   if (commandState.trivia.round !== -1 && !commandState.trivia.roundAnswered) {
     ctx.botSpeak(
-      `Nobody answered correctly! The correct answer was "${
-        CONFIG.get().trivia[commandState.trivia.round].answers[0]
-      }"`
+      `Nobody answered correctly! The correct answer was "${getCorrectAnswer(
+        commandState.trivia.round
+      )}"`
     );
+  }
+}
+
+function getCorrectAnswer(round: number): number | string {
+  if (Array.isArray(CONFIG.get().trivia[round].answers)) {
+    return (CONFIG.get().trivia[round].answers as string[])[0];
+  } else {
+    return CONFIG.get().trivia[round].answers as number;
   }
 }
 

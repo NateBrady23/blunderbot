@@ -11,16 +11,6 @@ export class TwitchPubSub {
   private pubSubConnection: WebSocket;
   private pubSubPingInterval: NodeJS.Timeout;
 
-  private opts = {
-    identity: {
-      username: CONFIG.get().twitch.botUsername,
-      password: CONFIG.get().twitch.botPassword
-    },
-    channels: [CONFIG.get().twitch.channel]
-  };
-
-  public client;
-
   constructor(
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
@@ -59,7 +49,7 @@ export class TwitchPubSub {
     this.pubSubConnection.onmessage = this.pubSubMessageHandler.bind(this);
   }
 
-  async pubSubMessageHandler(data) {
+  async pubSubMessageHandler(data: { data: string }) {
     const event = JSON.parse(data.data);
 
     if (event.type === 'AUTH_REVOKED' || event.type === 'RECONNECT') {

@@ -42,6 +42,7 @@ class ConfigService {
 
   loadFromFile(configKey: string, filePath: string) {
     try {
+      // @ts-expect-error: Dynamically load the config file
       this.loadedConfig[configKey] = require(
         path.join(__dirname, filePath)
       ).default;
