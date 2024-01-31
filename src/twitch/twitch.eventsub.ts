@@ -221,7 +221,7 @@ export class TwitchEventSub {
       ),
       isOwner:
         data.payload.event.chatter_user_login ===
-        CONFIG.get().twitch.ownerUsername,
+        CONFIG.get().twitch.ownerUsername.toLowerCase(),
       channelPointsCustomRewardId:
         data.payload.event.channel_points_custom_reward_id
     };
