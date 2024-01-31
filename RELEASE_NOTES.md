@@ -6,6 +6,12 @@
 
 - Using the brand new twitch API for chat messages and removed tmi.js
 
+#### Features
+
+- Spotify integration added!
+- `!songrequest` (`!sr`) command added to add a song to the queue.
+- `!song` command added to show the current song.
+
 ### 1.8.1 (2024-01-30)
 
 #### Features

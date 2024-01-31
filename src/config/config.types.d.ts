@@ -48,6 +48,15 @@ interface UserOpenAiConfig {
   memoryCount: number;
 }
 
+interface UserSpotifyConfig {
+  enabled: boolean;
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+  maxAllowedSongLengthMs: number;
+  allowExplicit: boolean;
+}
+
 interface UserTwitterConfig {
   enabled: boolean;
   apiKey: string;
@@ -186,6 +195,7 @@ interface UserConfig {
   rapidApi: UserRapidApiConfig;
   youtube: UserYoutubeConfig;
   sounds: UserSoundsConfig;
+  spotify: UserSpotifyConfig;
   autoShoutouts: UserAutoShoutoutsConfig;
   titledPlayers: UserTitledPlayersConfig;
   autoCommands: UserAutoCommandsConfig;

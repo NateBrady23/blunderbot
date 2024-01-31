@@ -9,6 +9,7 @@ import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
 import { TwitterService } from '../twitter/twitter.service';
+import { SpotifyService } from '../spotify/spotify.service';
 
 @Injectable()
 export class CommandService {
@@ -33,6 +34,8 @@ export class CommandService {
     private readonly giphyService: GiphyService,
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService,
+    @Inject(forwardRef(() => SpotifyService))
+    private readonly spotifyService: SpotifyService,
     @Inject(forwardRef(() => LichessService))
     private readonly lichessService: LichessService
   ) {
@@ -45,6 +48,7 @@ export class CommandService {
       twitchService: this.twitchService,
       twitterService: this.twitterService,
       openaiService: this.openaiService,
+      spotifyService: this.spotifyService,
       lichessService: this.lichessService,
       giphyService: this.giphyService
     };

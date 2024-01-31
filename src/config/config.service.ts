@@ -72,6 +72,7 @@ class ConfigService {
     this.loadFromFile('messageCommands', './config.message-commands');
     this.loadFromFile('openai', './config.openai');
     this.loadFromFile('raids', './config.raids');
+    this.loadFromFile('spotify', './config.spotify');
     this.loadFromFile('titledPlayers', './config.titled-players');
     this.loadFromFile('trivia', './config.trivia');
     this.loadFromFile('twitter', './config.twitter');
