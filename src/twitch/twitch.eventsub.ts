@@ -73,7 +73,7 @@ export class TwitchEventSub {
     if (messageType === 'notification') {
       const subType = parsedData.payload.subscription.type;
 
-      if (subType === 'channel.chat.message') {
+      if (subType !== 'channel.chat.message') {
         // Log all events except chat messages. They're logged separately.
         void writeLog('events', JSON.stringify(parsedData));
         this.logger.log('EventSub notification received: ' + subType);
