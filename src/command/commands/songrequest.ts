@@ -3,6 +3,7 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'songrequest',
+  help: 'Request a song to be played on stream.',
   aliases: ['sr'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {

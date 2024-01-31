@@ -68,6 +68,10 @@
 
 `!skipsong`: BlunderBot announces that a user would like to skip the current song.
 
+`!song`: Displays the current song playing on the stream. Also: `!music`
+
+`!songrequest`:gem:: Adds a song to the queue. Also: `!sr`
+
 `!subsribers`: Displays the number of subscribers NateBrady23 has on Twitch. Also: `!subs`
 
 `!title`: Displays the title of the current or last stream.

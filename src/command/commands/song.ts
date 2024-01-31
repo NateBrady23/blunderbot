@@ -3,7 +3,7 @@ import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'song',
-  help: 'Information about the song being played if it part of a queue.',
+  help: "Information about the song being played if it's part of a queue.",
   aliases: ['music'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
