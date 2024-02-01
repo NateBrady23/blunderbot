@@ -17,6 +17,7 @@
 - Much better typing for twitch events and other code cleanup.
 - Added `vipCommands`, `hypeTrainConductorCommands`, and `founderCommands` as optional arrays to the twitch config for more granular control over who can run commands.
 - Added an `!8ball` command to ask the magic 8 ball a question.
+- Added the src/command-overrides directory to the .gitignore file so people can add their own private commands or copy/paste/edit existing BlunderBot commands without tracking them in git.
 
 #### Bug Fixes
 

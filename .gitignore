@@ -45,3 +45,9 @@ priv/
 
 tools/blunder-report/stockfish
 tools/blunder-report/results.json
+
+# command overrides
+src/command-overrides/commands/
+src/command-overrides/mod-commands/
+src/command-overrides/owner-commands/
+!.gitkeep

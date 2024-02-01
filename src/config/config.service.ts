@@ -133,26 +133,33 @@ class ConfigService {
       ...messageCommands
     };
 
-    const MOD_DIR = './src/command/mod-commands';
-    const OWNER_DIR = './src/command/owner-commands';
-
     const dirImports = [
       ['./src/command/commands', '../command/commands/'],
-      [MOD_DIR, '../command/mod-commands/'],
-      [OWNER_DIR, '../command/owner-commands/']
+      ['./src/command/mod-commands', '../command/mod-commands/'],
+      ['./src/command/owner-commands', '../command/owner-commands/'],
+      // Include any overrides commands
+      ['./src/command-overrides/commands', '../command-overrides/commands/'],
+      [
+        './src/command-overrides/mod-commands',
+        '../command-overrides/mod-commands/'
+      ],
+      [
+        './src/command-overrides/owner-commands',
+        '../command-overrides/owner-commands/'
+      ]
     ];
 
     //
     dirImports.forEach((dir) => {
       readdirSync(dir[0]).forEach((file) => {
         const fileName = file.split('.')[0];
-        if (fileName !== 'index') {
+        if (!file.startsWith('.')) {
           this.loadedConfig.commands[fileName] = require(
             `${dir[1]}${fileName}`
           ).default;
-          if (dir[0] === MOD_DIR) {
+          if (dir[0].includes('mod-commands')) {
             this.loadedConfig.commands[fileName].modOnly = true;
-          } else if (dir[0] === OWNER_DIR) {
+          } else if (dir[0].includes('owner-commands')) {
             this.loadedConfig.commands[fileName].ownerOnly = true;
           }
         }
