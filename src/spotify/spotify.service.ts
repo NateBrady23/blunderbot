@@ -63,7 +63,6 @@ export class SpotifyService {
       };
       try {
         const res = await fetch(url, requestOptions);
-        console.log(res);
         const data: {
           access_token: string;
           expires_in: number;

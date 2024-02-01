@@ -336,7 +336,7 @@ export class CommandService {
 
     // If we're here, we didn't find a command, so let's see if we can use the AI to find one
     // unless this is a non-follower.
-    if (!ctx.isOwner && ctx.platform === 'twitch' && ctx.isFollower) {
+    if (!ctx.isOwner && ctx.platform === Platform.Twitch && ctx.isFollower) {
       void this.twitchService.ownerRunCommand('!suggest ' + ctx.command);
     }
   }

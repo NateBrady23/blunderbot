@@ -37,7 +37,7 @@ const cacheBBB = async () => {
 };
 
 const speak = (ctx: Context): void => {
-  if (ctx.platform === 'twitch') {
+  if (ctx.platform === Platform.Twitch) {
     ctx.botSpeak(
       'natebr4Bbb The BBB is a weekly viewer arena where the winner gets the BBB title! natebr4Bbb To play, join the team: https://lichess.org/team/bradys-blunder-buddies ' +
         '--' +

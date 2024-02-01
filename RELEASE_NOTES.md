@@ -16,6 +16,7 @@
 - Owners can now add or replace points during trivia for a user with `!trivia add|replace <username> <points>`. Case insensitive.
 - Much better typing for twitch events and other code cleanup.
 - Added `vipCommands`, `hypeTrainConductorCommands`, and `founderCommands` as optional arrays to the twitch config for more granular control over who can run commands.
+- Added an `!8ball` command to ask the magic 8 ball a question.
 
 #### Bug Fixes
 

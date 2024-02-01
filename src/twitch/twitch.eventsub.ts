@@ -20,7 +20,7 @@ export class TwitchEventSub {
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
   ) {
-    this.eventSubCreateConnection();
+    void this.eventSubCreateConnection();
   }
 
   async eventSubCreateConnection(

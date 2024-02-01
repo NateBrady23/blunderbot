@@ -16,7 +16,7 @@ const command: Command = {
 
     let user = ctx.args[0];
     if (!user) {
-      if (ctx.platform === 'twitch') {
+      if (ctx.platform === Platform.Twitch) {
         user = ctx.displayName;
       } else {
         ctx.botSpeak('Please provide a twitch username to check followage for');
