@@ -13,7 +13,7 @@ const command: Command = {
     services.twitchGateway.sendDataToSockets('serverMessage', {
       type: 'OPP_RATING',
       rating,
-      user: ctx.tags['display-name']
+      user: ctx.displayName
     });
     return true;
   }

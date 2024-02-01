@@ -190,7 +190,7 @@ export class OpenaiService {
         usePersonality: true,
         includeBlunderBotContext: true,
         platform: ctx.platform,
-        user: ctx.onBehalfOf || ctx.tags.username
+        user: ctx.onBehalfOf || ctx.username
       });
     }
   }

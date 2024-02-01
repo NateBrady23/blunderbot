@@ -20,7 +20,7 @@ export class TwitchEventSub {
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
   ) {
-    this.eventSubCreateConnection();
+    void this.eventSubCreateConnection();
   }
 
   async eventSubCreateConnection(
@@ -61,53 +61,65 @@ export class TwitchEventSub {
     }
 
     if (messageType === 'session_reconnect') {
-      this.eventSubCreateConnection(parsedData.payload.session.reconnect_url);
+      void this.eventSubCreateConnection(
+        parsedData.payload.session.reconnect_url
+      );
       return;
     }
 
     if (messageType === 'revocation') {
       this.eventSubConnection.close();
-      this.eventSubCreateConnection(parsedData.payload.session.reconnect_url);
+      void this.eventSubCreateConnection(
+        parsedData.payload.session.reconnect_url
+      );
     }
 
     if (messageType === 'notification') {
-      void writeLog('events', JSON.stringify(parsedData));
       const subType = parsedData.payload.subscription.type;
-      this.logger.log('EventSub notification received: ' + subType);
+
+      if (subType !== 'channel.chat.message') {
+        // Log all events except chat messages. They're logged separately.
+        void writeLog('events', JSON.stringify(parsedData));
+        this.logger.log('EventSub notification received: ' + subType);
+      }
 
       try {
         switch (subType) {
           case 'channel.follow':
-            await this.onFollow(parsedData);
+            await this.onFollow(parsedData.payload.event);
             break;
 
           case 'stream.online':
-            await this.onStreamOnline(parsedData);
+            await this.onStreamOnline(parsedData.payload.event);
             break;
 
           case 'channel.hype_train.begin':
-            await this.onTrain(parsedData);
+            await this.onTrain(parsedData.payload.event);
             break;
 
           case 'channel.hype_train.progress':
-            await this.onTrainProgress(parsedData);
+            await this.onTrainProgress(parsedData.payload.event);
             break;
 
           case 'channel.raid':
-            await this.onRaid(parsedData);
+            await this.onRaid(parsedData.payload.event);
             break;
 
           case 'channel.cheer':
-            await this.onCheer(parsedData);
+            await this.onCheer(parsedData.payload.event);
             break;
 
           case 'channel.subscribe':
             // NOTE: This doesn't include resubscribes
-            await this.onSubscribe(parsedData);
+            await this.onSubscribe(parsedData.payload.event);
             break;
 
           case 'channel.subscription.gift':
-            await this.onSubscriptionGift(parsedData);
+            await this.onSubscriptionGift(parsedData.payload.event);
+            break;
+
+          case 'channel.chat.message':
+            await this.onChatMessage(parsedData.payload.event);
             break;
 
           default:
@@ -145,13 +157,15 @@ export class TwitchEventSub {
       { eventType: 'channel.raid', version: '1' },
       { eventType: 'channel.cheer', version: '1' },
       { eventType: 'channel.subscribe', version: '1' },
-      { eventType: 'channel.subscription.gift', version: '1' }
+      { eventType: 'channel.subscription.gift', version: '1' },
+      { eventType: 'channel.chat.message', version: '1' }
     ];
     for (const event of events) {
       const condition: {
         broadcaster_user_id: string;
         moderator_user_id?: string;
         to_broadcaster_user_id?: string;
+        user_id?: string;
       } = {
         broadcaster_user_id: CONFIG.get().twitch.ownerId
       };
@@ -160,6 +174,9 @@ export class TwitchEventSub {
       }
       if (event.eventType === 'channel.raid') {
         condition['to_broadcaster_user_id'] = CONFIG.get().twitch.ownerId;
+      }
+      if (event.eventType === 'channel.chat.message') {
+        condition['user_id'] = CONFIG.get().twitch.ownerId;
       }
       const res = await this.twitchService.helixApiCall(
         CONFIG.get().twitch.eventSubscriptionUrl,
@@ -182,71 +199,70 @@ export class TwitchEventSub {
     }
   }
 
-  async onCheer(data: {
-    payload: {
-      event: {
-        message: string;
-        bits: string;
-        user_name: string;
-        is_anonymous: boolean;
-      };
+  async onChatMessage(data: OnChatMessageEvent) {
+    const obj: OnMessageHandlerInput = {
+      message: data.message.text,
+      userLogin: data.chatter_user_login,
+      displayName: data.chatter_user_name,
+      isMod: data.badges.some((badge) => badge.set_id === 'moderator'),
+      isSub: data.badges.some((badge) => badge.set_id === 'subscriber'),
+      isVip: data.badges.some((badge) => badge.set_id === 'vip'),
+      isFounder: data.badges.some((badge) => badge.set_id === 'founder'),
+      isHypeTrainConductor: data.badges.some(
+        (badge) => badge.set_id === 'hype-train'
+      ),
+      isOwner:
+        data.chatter_user_login ===
+        CONFIG.get().twitch.ownerUsername.toLowerCase(),
+      channelPointsCustomRewardId: data.channel_points_custom_reward_id
     };
-  }) {
+
+    void this.twitchService.onMessageHandler(obj);
+  }
+
+  async onCheer(data: OnCheerEvent) {
     const obj = {
-      message: data.payload.event.message,
-      bits: parseInt(data.payload.event.bits) || 0,
-      user: data.payload.event.is_anonymous
-        ? 'Anonymous'
-        : data.payload.event.user_name
+      message: data.message,
+      bits: data.bits || 0,
+      user: data.is_anonymous ? 'Anonymous' : data.user_name
     };
 
     void this.twitchService.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
   }
 
-  async onFollow(data: { payload: { event: { user_login: string } } }) {
-    void this.twitchService.helixGetTwitchUserInfo(
-      data.payload.event.user_login,
-      true
-    );
+  async onFollow(data: OnFollowEvent) {
+    void this.twitchService.helixGetTwitchUserInfo(data.user_login, true);
   }
 
-  async onSubscribe(data: {
-    payload: { event: { user_name: string; is_gift?: string } };
-  }) {
-    if (data.payload.event.is_gift) {
+  async onSubscribe(data: OnSubscribeEvent) {
+    if (data.is_gift) {
       // This will be handled by the gift sub event
       return;
     }
     const obj = {
-      username: data.payload.event.user_name
+      username: data.user_name
     };
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onSubscriptionGift(data: {
-    payload: { event: { user_name: string; is_anonymous: string } };
-  }) {
+  async onSubscriptionGift(data: OnSubscriptionGiftEvent) {
     const obj = {
-      username: data.payload.event.is_anonymous
-        ? 'Anonymous'
-        : data.payload.event.user_name,
+      username: data.is_anonymous ? 'Anonymous' : data.user_name,
       isGifter: true
     };
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onRaid(data: {
-    payload: { event: { from_broadcaster_user_login: string } };
-  }) {
+  async onRaid(data: OnRaidEvent) {
     void this.twitchService.ownerRunCommand(
-      `!onraids ${data.payload.event.from_broadcaster_user_login}`
+      `!onraids ${data.from_broadcaster_user_login}`
     );
     void this.twitchService.ownerRunCommand(
-      `!so ${data.payload.event.from_broadcaster_user_login}`
+      `!so ${data.from_broadcaster_user_login}`
     );
   }
 
-  async onTrain(_data: unknown) {
+  async onTrain(_data: OnHypeTrainBeginEvent) {
     this.currentHypeTrainLevel = 1;
     this.twitchService.botSpeak(
       `Hype train level 1! Come on the train, choo choo ride it!!`
@@ -254,8 +270,8 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand('!train');
   }
 
-  async onTrainProgress(data: { payload: { event: { level: number } } }) {
-    const level = data.payload.event.level;
+  async onTrainProgress(data: OnHypeTrainProgressEvent) {
+    const level = data.level;
     if (level > this.currentHypeTrainLevel) {
       this.currentHypeTrainLevel = level;
       this.twitchService.botSpeak(`Hype train level ${level}! LET'S GOOOOOOO!`);
@@ -263,7 +279,7 @@ export class TwitchEventSub {
     }
   }
 
-  async onStreamOnline(_data: unknown) {
+  async onStreamOnline(_data: OnStreamOnlineEvent) {
     this.logger.log('Stream is online!');
   }
 }

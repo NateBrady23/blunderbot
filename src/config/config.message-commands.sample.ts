@@ -4,6 +4,7 @@
  * Message commands can either be simple messages or a list of owner run commands.
  * User {username} to insert the user's name that used the command. Commands list will only run on twitch.
  */
+import { Platform } from '../enums';
 
 const userMessageCommandsConfig: UserMessageCommandsConfig = {
   afm: {
@@ -113,9 +114,6 @@ const userMessageCommandsConfig: UserMessageCommandsConfig = {
     aliases: ['eric', 'ericrosen', 'imrosen'],
     message: 'www.youtube.com/watch?v=tX8eW5JfZyE'
   },
-  skipsong: {
-    commands: ['!tts {username} has requested that you skip this song.']
-  },
   streamlabs: {
     message:
       "If you're thinking about signing up for StreamLabs, please use my affiliate link: https://streamlabs.com/refer/natebrady23-cc34-10?t=2"
@@ -136,7 +134,7 @@ const userMessageCommandsConfig: UserMessageCommandsConfig = {
     message: 'Give me just the tip at https://streamlabs.com/natebrady23/tip'
   },
   train: {
-    ownerOnly: true,
+    platforms: [Platform.Twitch],
     commands: [
       '!gif !s29 Sunglasses Racing GIF By Burger Records',
       '!king secret_train',

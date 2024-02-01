@@ -8,6 +8,7 @@ import { LichessModule } from '../lichess/lichess.module';
 import { AppModule } from '../app.module';
 import { BrowserModule } from '../browser/browser.module';
 import { TwitterModule } from '../twitter/twitter.module';
+import { SpotifyModule } from '../spotify/spotify.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { TwitterModule } from '../twitter/twitter.module';
     forwardRef(() => TwitterModule),
     GiphyModule,
     LichessModule,
-    OpenaiModule
+    OpenaiModule,
+    SpotifyModule
   ],
   controllers: [],
   providers: [CommandService],

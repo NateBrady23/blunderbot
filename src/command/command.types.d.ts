@@ -8,6 +8,7 @@ import { BrowserService } from '../browser/browser.service';
 import { AppGateway } from '../app.gateway';
 import { TwitterService } from '../twitter/twitter.service';
 import { CommandService } from './command.service';
+import { SpotifyService } from '../spotify/spotify.service';
 
 declare global {
   interface CommandRunFuncOptions {
@@ -50,6 +51,7 @@ declare global {
     giphyService: GiphyService;
     lichessService: LichessService;
     openaiService: OpenaiService;
+    spotifyService: SpotifyService;
     twitchGateway: TwitchGateway;
     twitchService: TwitchService;
     twitterService: TwitterService;
@@ -95,6 +97,9 @@ declare global {
       roundAnswered?: boolean;
       roundEnded?: boolean;
       triviaTimeout?: NodeJS.Timeout;
+    };
+    spotify: {
+      requests: { [key: string]: string };
     };
   }
 }

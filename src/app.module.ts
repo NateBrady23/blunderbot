@@ -9,12 +9,14 @@ import { OpenaiModule } from './openai/openai.module';
 import { AppGateway } from './app.gateway';
 import { BrowserModule } from './browser/browser.module';
 import { TwitterModule } from './twitter/twitter.module';
+import { SpotifyModule } from './spotify/spotify.module';
 
 @Module({
   imports: [
     BrowserModule,
     DiscordModule,
     OpenaiModule,
+    SpotifyModule,
     TwitchModule,
     TwitterModule,
     ServeStaticModule.forRoot({

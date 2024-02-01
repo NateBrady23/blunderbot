@@ -11,10 +11,13 @@ interface UserTwitchConfig {
   apiClientSecret: string;
   onSubscribe: string[];
   customRewardCommands: { [key: string]: string[] };
-  followerCommands: string[];
-  subCommands: string[];
-  limitedCommands: { [key: string]: number };
-  userRestrictedCommands: {
+  followerCommands?: string[];
+  subCommands?: string[];
+  vipCommands?: string[];
+  hypeTrainConductorCommands?: string[];
+  founderCommands?: string[];
+  limitedCommands?: { [key: string]: number };
+  userRestrictedCommands?: {
     [key: string]: string[];
   };
   welcome: {
@@ -46,6 +49,15 @@ interface UserOpenAiConfig {
   voices: string[];
   pronunciations: [[string, string]];
   memoryCount: number;
+}
+
+interface UserSpotifyConfig {
+  enabled: boolean;
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+  maxAllowedSongLengthMs: number;
+  allowExplicit: boolean;
 }
 
 interface UserTwitterConfig {
@@ -186,6 +198,7 @@ interface UserConfig {
   rapidApi: UserRapidApiConfig;
   youtube: UserYoutubeConfig;
   sounds: UserSoundsConfig;
+  spotify: UserSpotifyConfig;
   autoShoutouts: UserAutoShoutoutsConfig;
   titledPlayers: UserTitledPlayersConfig;
   autoCommands: UserAutoCommandsConfig;

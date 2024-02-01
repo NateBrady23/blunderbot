@@ -24,6 +24,12 @@ async function showQuestion(
   commandState: CommandState,
   services: CommandServices
 ) {
+  if (commandState.trivia.round >= CONFIG.get().trivia.length) {
+    ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
+    showLeaderboard(ctx, commandState);
+    commandState.trivia.started = false;
+    return;
+  }
   ctx.botSpeak('Next question in 3...');
   await sleep(2000);
   ctx.botSpeak('2...');
@@ -55,9 +61,10 @@ function selectRoundWinner(
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
   const roundPoints =
     CONFIG.get().trivia[commandState.trivia.round].points || 1;
-  const points = (commandState.trivia.leaderboard[user] || 0) + roundPoints;
+  const points =
+    (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
   commandState.trivia.roundAnswered = true;
-  commandState.trivia.leaderboard[user] = points;
+  commandState.trivia.leaderboard[user.toLowerCase()] = points;
   if (
     !commandState.trivia.fastestAnswer ||
     seconds < commandState.trivia.fastestAnswer.seconds
@@ -148,7 +155,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
     const answer = ctx.body?.toLowerCase().trim();
-    if (answer === 'start' && ctx.tags.owner) {
+    if (answer === 'start' && ctx.isOwner) {
       commandState.trivia.started = true;
       commandState.trivia.round = -1;
       commandState.trivia.leaderboard = {};
@@ -168,13 +175,30 @@ const command: Command = {
       return false;
     }
 
-    if (answer === 'next' && ctx.tags.owner) {
+    if (answer === 'next' && ctx.isOwner) {
       nextQuestion(ctx, commandState, services);
       return true;
     }
 
-    if (answer === 'end' && ctx.tags.owner) {
+    if (answer === 'end' && ctx.isOwner) {
       endRound(ctx, commandState, services);
+      return true;
+    }
+
+    if (answer.startsWith('add ') && ctx.isOwner) {
+      // !trivia add <name> <points>
+      const [user, points] = answer.split(' ').slice(1);
+      console.log('add', user, ctx.args[2]);
+      commandState.trivia.leaderboard[user] =
+        (commandState.trivia.leaderboard[user] || 0) + +points;
+      return true;
+    }
+
+    if (answer.startsWith('replace ') && ctx.isOwner) {
+      // !trivia replace <name> <points>
+      const [user, points] = answer.split(' ').slice(1);
+      commandState.trivia.leaderboard[user] = +points;
+      return true;
     }
 
     if (!answer) {
@@ -212,14 +236,14 @@ const command: Command = {
     if (
       commandState.trivia.roundEnded ||
       commandState.trivia.roundAnswered ||
-      commandState.trivia.answeredUsers.includes(ctx.tags['display-name'])
+      commandState.trivia.answeredUsers.includes(ctx.displayName)
     ) {
       return true;
     }
 
     if (CONFIG.get().trivia[commandState.trivia.round].closestTo) {
       // Always track that the user has already answered.
-      commandState.trivia.answeredUsers.push(ctx.tags['display-name']);
+      commandState.trivia.answeredUsers.push(ctx.displayName);
       try {
         const answerNum = +answer;
         const correctNum =
@@ -235,7 +259,7 @@ const command: Command = {
             commandState,
             services,
             answer,
-            ctx.tags['display-name']
+            ctx.displayName
           );
           endRound(ctx, commandState, services);
         } else if (
@@ -243,7 +267,7 @@ const command: Command = {
           difference < commandState.trivia.closestAnswer.difference
         ) {
           commandState.trivia.closestAnswer = {
-            user: ctx.tags['display-name'],
+            user: ctx.displayName,
             difference,
             answer
           };
@@ -258,15 +282,9 @@ const command: Command = {
         CONFIG.get().trivia[commandState.trivia.round].answers as string[]
       ).includes(answer)
     ) {
-      selectRoundWinner(
-        ctx,
-        commandState,
-        services,
-        answer,
-        ctx.tags['display-name']
-      );
+      selectRoundWinner(ctx, commandState, services, answer, ctx.displayName);
     } else {
-      commandState.trivia.answeredUsers.push(ctx.tags['display-name']);
+      commandState.trivia.answeredUsers.push(ctx.displayName);
     }
     return true;
   }

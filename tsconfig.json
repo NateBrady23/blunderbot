@@ -10,9 +10,11 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "allowUnreachableCode": false,
     "incremental": true,
-    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "skipLibCheck": true
   }
 }

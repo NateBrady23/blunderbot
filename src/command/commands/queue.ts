@@ -10,7 +10,7 @@ const command: Command = {
     if (
       commandState.challengeQueue.length &&
       queueCommand === 'pop' &&
-      ctx.tags.owner
+      ctx.isOwner
     ) {
       const next = commandState.challengeQueue.shift();
       ctx.botSpeak(
@@ -18,7 +18,7 @@ const command: Command = {
       );
     }
 
-    if (queueCommand === 'add' && ctx.tags.owner) {
+    if (queueCommand === 'add' && ctx.isOwner) {
       commandState.challengeQueue.push({
         twitchUser: ctx.args[1],
         lichessUser: ctx.args.slice(2).join(' ')

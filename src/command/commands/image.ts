@@ -19,15 +19,14 @@ const command: Command = {
     let sendToTwitter =
       CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
 
-    const user = ctx.onBehalfOf || ctx.tags['display-name'];
+    const user = ctx.onBehalfOf || ctx.displayName;
+
     if (!prompt) {
-      ctx.botSpeak(`You need to provide a prompt.`);
+      ctx.reply(ctx, `You need to provide a prompt.`);
       return false;
     }
 
-    ctx.botSpeak(
-      `@${user} Please give me a few moments while I draw your image.`
-    );
+    ctx.reply(ctx, `Please give me a few moments while I draw your image.`);
 
     if (prompt.toLowerCase().includes('nodiscord')) {
       sendToDiscord = false;
@@ -77,7 +76,7 @@ const command: Command = {
 
     if (sendToTwitter) {
       const hashtags = CONFIG.get().twitter.tweetHashtags || '';
-      services.twitterService.postImage(
+      void services.twitterService.postImage(
         buffer,
         `${user} on Twitch used "!image ${prompt}" ${hashtags}`
       );

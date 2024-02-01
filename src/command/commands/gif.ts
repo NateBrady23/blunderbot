@@ -22,11 +22,11 @@ const command: Command = {
           msg = ctx.body.replace(ctx.args[0], '').trim();
           milliseconds = parseInt(ctx.args[0].replace('!s', '')) * 1000;
         }
-        if (ctx.platform === 'twitch') {
+        if (ctx.platform === Platform.Twitch) {
           const giphyUrl = await services.giphyService.fetchGif(msg);
           services.twitchGateway.sendDataToSockets('serverMessage', {
             type: 'GIPHY',
-            user: ctx.tags['display-name'],
+            user: ctx.displayName,
             giphyUrl,
             milliseconds
           });

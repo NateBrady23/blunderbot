@@ -16,7 +16,7 @@ const command: Command = {
         row,
         col,
         color: ctx.args[1] || 'purple',
-        user: ctx.tags['display-name']
+        user: ctx.displayName
       });
     }
 

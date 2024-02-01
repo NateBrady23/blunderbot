@@ -17,17 +17,17 @@ const command: Command = {
     let reply = JSON.parse(await services.openaiService.translate(ctx.body));
 
     // Make any necessary changes based on the platform
-    if (ctx.platform === 'twitch') {
+    if (ctx.platform === Platform.Twitch) {
       // Doesn't respond with the owners name if the owner is the one who sent the message
       // This helps with ownerSendCommandDirectly so it doesn't look like
       // blunderBot is responding to itself or the owner
       reply = `${
-        !ctx.tags.owner ? `@${ctx.tags.username}: ` : ''
+        !ctx.isOwner ? `@${ctx.username}: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
       ctx.botSpeak(reply);
     } else {
       reply = `${
-        !ctx.tags.owner ? `<@${ctx.tags.userId}>: ` : ''
+        !ctx.isOwner ? `<@${ctx.userId}>: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
       ctx.botSpeak(reply);
     }

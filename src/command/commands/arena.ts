@@ -7,7 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState }) => {
     let msg: string;
-    if (ctx.args.length && (ctx.tags.owner || ctx.tags.mod)) {
+    if (ctx.args.length && (ctx.isOwner || ctx.isMod)) {
       const arg = ctx.body;
       if (arg === 'clear') {
         msg = 'Arena link has been reset.';

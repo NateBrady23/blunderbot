@@ -9,6 +9,8 @@ import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
 import { TwitterService } from '../twitter/twitter.service';
+import { SpotifyService } from '../spotify/spotify.service';
+import { Platform } from '../enums';
 
 @Injectable()
 export class CommandService {
@@ -33,6 +35,8 @@ export class CommandService {
     private readonly giphyService: GiphyService,
     @Inject(forwardRef(() => OpenaiService))
     private readonly openaiService: OpenaiService,
+    @Inject(forwardRef(() => SpotifyService))
+    private readonly spotifyService: SpotifyService,
     @Inject(forwardRef(() => LichessService))
     private readonly lichessService: LichessService
   ) {
@@ -45,6 +49,7 @@ export class CommandService {
       twitchService: this.twitchService,
       twitterService: this.twitterService,
       openaiService: this.openaiService,
+      spotifyService: this.spotifyService,
       lichessService: this.lichessService,
       giphyService: this.giphyService
     };
@@ -81,6 +86,9 @@ export class CommandService {
         round: 0,
         leaderboard: {},
         answeredUsers: []
+      },
+      spotify: {
+        requests: {}
       }
     };
   }
@@ -121,12 +129,8 @@ export class CommandService {
       return;
     }
 
-    if (
-      this.commandState.cbanUsers.includes(
-        ctx.tags['display-name'].toLowerCase()
-      )
-    ) {
-      this.logger.log(`User ${ctx.tags['display-name']} is cban'd`);
+    if (this.commandState.cbanUsers.includes(ctx.displayName.toLowerCase())) {
+      this.logger.log(`User ${ctx.displayName} is cban'd`);
       return false;
     }
 
@@ -144,7 +148,7 @@ export class CommandService {
     }
 
     // The owner/bot can always run commands despite cooldown, etc
-    if (ctx.tags.owner) {
+    if (ctx.isOwner) {
       return true;
     } else if (cmd.ownerOnly) {
       // If the command is ownerOnly and the user is not the owner, don't run
@@ -157,37 +161,58 @@ export class CommandService {
       return false;
     }
 
-    if (
-      ctx.platform === 'twitch' &&
-      CONFIG.get().twitch.subCommands.includes(cmd.name) &&
-      !ctx.tags.subscriber
-    ) {
-      ctx.botSpeak(
-        `@${ctx.tags['display-name']} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
-      );
-      return false;
-    }
+    if (ctx.platform === Platform.Twitch) {
+      if (
+        CONFIG.get().twitch.subCommands?.includes(cmd.name) &&
+        !ctx.isSubscriber
+      ) {
+        ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
+        );
+        return false;
+      }
 
-    if (
-      ctx.platform === 'twitch' &&
-      CONFIG.get().twitch.followerCommands.includes(cmd.name) &&
-      !ctx.tags.follower
-    ) {
-      ctx.botSpeak(
-        `@${ctx.tags['display-name']} !${cmd.name} is for followers only.`
-      );
-      return false;
+      if (
+        CONFIG.get().twitch.followerCommands?.includes(cmd.name) &&
+        !ctx.isFollower
+      ) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
+        return false;
+      }
+
+      if (CONFIG.get().twitch.vipCommands?.includes(cmd.name) && !ctx.isVip) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
+        return false;
+      }
+
+      if (
+        CONFIG.get().twitch.founderCommands?.includes(cmd.name) &&
+        !ctx.isFounder
+      ) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for founders only.`);
+        return false;
+      }
+
+      if (
+        CONFIG.get().twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
+        !ctx.isHypeTrainConductor
+      ) {
+        ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for Hype Train Conductors only.`
+        );
+        return false;
+      }
     }
 
     // Returns if the command is modOnly and the user is not at least a mod
-    if (cmd.modOnly && !ctx.tags.mod) {
+    if (cmd.modOnly && !ctx.isMod) {
       return false;
     }
 
     // Don't run if there's still some cooling down to do.
     if (cmd.lastRun + (cmd.coolDown || 0) > Date.now()) {
       this.logger.log(
-        `${ctx.command} by ${ctx.tags['display-name']} needed to cool down.`
+        `${ctx.command} by ${ctx.displayName} needed to cool down.`
       );
       return false;
     }
@@ -198,30 +223,27 @@ export class CommandService {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
       }
-      if (
-        !this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']]
-      ) {
+      if (!this.commandState.limitedCommands[cmd.name][ctx.displayName]) {
         // If the user hasn't used the command yet, set it to 0
-        this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']] =
-          0;
+        this.commandState.limitedCommands[cmd.name][ctx.displayName] = 0;
       }
       if (
-        this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']] >=
+        this.commandState.limitedCommands[cmd.name][ctx.displayName] >=
         limitedTo
       ) {
         // If the user has used the command too many times, don't run
         ctx.botSpeak(
-          `@${ctx.tags['display-name']} !${cmd.name} is limited to ${limitedTo} time(s) per stream.`
+          `@${ctx.displayName} !${cmd.name} is limited to ${limitedTo} time(s) per stream.`
         );
         return false;
       }
-      this.commandState.limitedCommands[cmd.name][ctx.tags['display-name']]++;
+      this.commandState.limitedCommands[cmd.name][ctx.displayName]++;
     }
 
     const userRestricted = CONFIG.get().twitch.userRestrictedCommands[cmd.name];
     if (userRestricted) {
       const found = userRestricted.some((user) => {
-        return user.toLowerCase() === ctx.tags['display-name'].toLowerCase();
+        return user.toLowerCase() === ctx.displayName.toLowerCase();
       });
       if (!found) {
         ctx.botSpeak(
@@ -283,7 +305,7 @@ export class CommandService {
         if (cmd.ownerRunCommands) {
           for (const ownerRunCommand of cmd.ownerRunCommands) {
             void this.twitchService.ownerRunCommand(ownerRunCommand, {
-              onBehalfOf: ctx.tags['display-name']
+              onBehalfOf: ctx.displayName
             });
           }
           cmd.lastRun = Date.now();
@@ -314,7 +336,7 @@ export class CommandService {
 
     // If we're here, we didn't find a command, so let's see if we can use the AI to find one
     // unless this is a non-follower.
-    if (!ctx.tags.owner && ctx.platform === 'twitch' && ctx.tags.follower) {
+    if (!ctx.isOwner && ctx.platform === Platform.Twitch && ctx.isFollower) {
       void this.twitchService.ownerRunCommand('!suggest ' + ctx.command);
     }
   }
