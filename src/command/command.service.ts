@@ -10,6 +10,7 @@ import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
 import { TwitterService } from '../twitter/twitter.service';
 import { SpotifyService } from '../spotify/spotify.service';
+import { Platform } from '../enums';
 
 @Injectable()
 export class CommandService {
@@ -85,6 +86,9 @@ export class CommandService {
         round: 0,
         leaderboard: {},
         answeredUsers: []
+      },
+      spotify: {
+        requests: {}
       }
     };
   }
@@ -157,24 +161,47 @@ export class CommandService {
       return false;
     }
 
-    if (
-      ctx.platform === 'twitch' &&
-      CONFIG.get().twitch.subCommands.includes(cmd.name) &&
-      !ctx.isSubscriber
-    ) {
-      ctx.botSpeak(
-        `@${ctx.displayName} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
-      );
-      return false;
-    }
+    if (ctx.platform === Platform.Twitch) {
+      if (
+        CONFIG.get().twitch.subCommands?.includes(cmd.name) &&
+        !ctx.isSubscriber
+      ) {
+        ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
+        );
+        return false;
+      }
 
-    if (
-      ctx.platform === 'twitch' &&
-      CONFIG.get().twitch.followerCommands.includes(cmd.name) &&
-      !ctx.isFollower
-    ) {
-      ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
-      return false;
+      if (
+        CONFIG.get().twitch.followerCommands?.includes(cmd.name) &&
+        !ctx.isFollower
+      ) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
+        return false;
+      }
+
+      if (CONFIG.get().twitch.vipCommands?.includes(cmd.name) && !ctx.isVip) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
+        return false;
+      }
+
+      if (
+        CONFIG.get().twitch.founderCommands?.includes(cmd.name) &&
+        !ctx.isFounder
+      ) {
+        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for founders only.`);
+        return false;
+      }
+
+      if (
+        CONFIG.get().twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
+        !ctx.isHypeTrainConductor
+      ) {
+        ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for Hype Train Conductors only.`
+        );
+        return false;
+      }
     }
 
     // Returns if the command is modOnly and the user is not at least a mod

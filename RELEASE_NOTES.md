@@ -5,12 +5,22 @@
 #### Breaking Changes
 
 - Using the brand new twitch API for chat messages and removed tmi.js
+- `!skipsong` removed from the sample config as an addon command and added as a real mod command that skips the song in the queue.
 
 #### Features
 
 - Spotify integration added!
 - `!songrequest` (`!sr`) command added to add a song to the queue.
+  - Songs can be added with a search query like `!sr never gonna give you up` or a spotify link like `!sr https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=d47e660f9ba84ce6`.
 - `!song` command added to show the current song.
+- Owners can now add or replace points during trivia for a user with `!trivia add|replace <username> <points>`. Case insensitive.
+- Much better typing for twitch events and other code cleanup.
+- Added `vipCommands`, `hypeTrainConductorCommands`, and `founderCommands` as optional arrays to the twitch config for more granular control over who can run commands.
+
+#### Bug Fixes
+
+- When using the twitch reply method, the bot should respond to the user that triggered the command via `onBehalfOf` if it's set.
+- Fixed `!help` when no command is provided.
 
 ### 1.8.1 (2024-01-30)
 

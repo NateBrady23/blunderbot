@@ -23,17 +23,22 @@ interface Context {
 
   // always lowercase display name
   username: string;
-  // added by me
-  isOwner: boolean;
-  isMod: boolean;
   // Cased however the user entered their display name
   displayName: string;
   // This property will only exist if a twitch reward was redeemed
   customRewardId: string;
   // Currently being used to mention players in discord
   userId?: string;
-  isSubscriber: boolean;
+
+  isOwner: boolean;
+  isMod: boolean;
+
+  // Twitch only
+  isSubscriber?: boolean;
   isFollower?: boolean;
+  isVip?: boolean;
+  isHypeTrainConductor?: boolean;
+  isFounder?: boolean;
 }
 
 type Platforms = 'twitch' | 'discord';

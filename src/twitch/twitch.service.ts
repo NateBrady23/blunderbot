@@ -156,7 +156,7 @@ export class TwitchService {
       channel: CONFIG.get().twitch.channel,
       message,
       reply: (ctx: Context, message) =>
-        this.botSpeak(`@${ctx.displayName} ${message}`),
+        this.botSpeak(`@${ctx.onBehalfOf || ctx.displayName} ${message}`),
       botSpeak: this.botSpeak,
       platform: Platform.Twitch
     };

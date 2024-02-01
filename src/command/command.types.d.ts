@@ -98,5 +98,8 @@ declare global {
       roundEnded?: boolean;
       triviaTimeout?: NodeJS.Timeout;
     };
+    spotify: {
+      requests: { [key: string]: string };
+    };
   }
 }

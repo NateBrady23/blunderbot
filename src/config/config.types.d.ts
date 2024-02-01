@@ -11,10 +11,13 @@ interface UserTwitchConfig {
   apiClientSecret: string;
   onSubscribe: string[];
   customRewardCommands: { [key: string]: string[] };
-  followerCommands: string[];
-  subCommands: string[];
-  limitedCommands: { [key: string]: number };
-  userRestrictedCommands: {
+  followerCommands?: string[];
+  subCommands?: string[];
+  vipCommands?: string[];
+  hypeTrainConductorCommands?: string[];
+  founderCommands?: string[];
+  limitedCommands?: { [key: string]: number };
+  userRestrictedCommands?: {
     [key: string]: string[];
   };
   welcome: {

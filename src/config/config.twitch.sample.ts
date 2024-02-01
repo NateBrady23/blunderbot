@@ -44,7 +44,7 @@ const userTwitchConfig: UserTwitchConfig = {
     skipsong: ['loldayzo'],
     trophy: ['trevlar_']
   },
-  // These commands are limited to followers only
+  // These commands are limited to followers only (optional)
   followerCommands: [
     'queue',
     'king',
@@ -54,8 +54,14 @@ const userTwitchConfig: UserTwitchConfig = {
     'translate',
     'trivia'
   ],
-  // These commands are limited to subscribers only
+  // These commands are limited to subscribers only (optional)
   subCommands: ['gif', 'image', 'vchat', 'tts'],
+  // VIPs can run these commands (optional)
+  vipCommands: ['command1'],
+  // Hype train conductors can run these commands (optional)
+  hypeTrainConductorCommands: ['command2'],
+  // Founders can run these commands (optional)
+  founderCommands: ['command3'],
   // These commands can only be run {n} times per user per stream
   limitedCommands: {
     highlight: 5,

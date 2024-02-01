@@ -12,16 +12,7 @@ export class SpotifyService {
   private accessToken: string = '';
   private accessTokenExpires: number;
 
-  constructor() {
-    //
-    this.logger.log('SpotifyService initialized');
-    // const test = async () => {
-    //   const track = await this.getTrackFromSearch('Dave matthews two step');
-    //   console.log(await this.addTrackToQueue(track));
-    // };
-    //
-    // test();
-  }
+  constructor() {}
 
   getAuthUrl(): string {
     return (
@@ -43,9 +34,6 @@ export class SpotifyService {
 
   async getAccessToken(): Promise<string> {
     if (!this.accessToken || Date.now() > this.accessTokenExpires) {
-      this.logger.log(
-        'Getting new Spotify access token with code: ' + this.authCode
-      );
       const url = 'https://accounts.spotify.com/api/token';
       const params = !this.accessToken
         ? new URLSearchParams({
@@ -75,6 +63,7 @@ export class SpotifyService {
       };
       try {
         const res = await fetch(url, requestOptions);
+        console.log(res);
         const data: {
           access_token: string;
           expires_in: number;
@@ -84,6 +73,7 @@ export class SpotifyService {
         this.refreshToken = data.refresh_token;
         this.accessTokenExpires = Date.now() + data.expires_in * 1000;
       } catch (e) {
+        this.logger.error(e);
         this.logger.error('Error getting Spotify access token');
         this.accessToken = '';
       }
@@ -91,6 +81,25 @@ export class SpotifyService {
     return this.accessToken;
   }
 
+  async getTrackById(id: string): Promise<TrackItem> {
+    const token = await this.getAccessToken();
+    if (!token) {
+      this.logger.error('No Spotify token available for track');
+      return;
+    }
+    try {
+      const res = await fetch(`https://api.spotify.com/v1/tracks/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data: TrackItem = await res.json();
+      return data;
+    } catch (e) {
+      this.logger.error('Error getting Spotify track by id');
+      return;
+    }
+  }
   async getTrackFromSearch(query: string): Promise<TrackItem> {
     const token = await this.getAccessToken();
 
@@ -178,7 +187,33 @@ export class SpotifyService {
     } catch (e) {
       this.logger.error(e);
       this.logger.error('Error adding Spotify track to queue');
+    }
+    return false;
+  }
+
+  async skipTrack(): Promise<boolean> {
+    const token = await this.getAccessToken();
+    if (!token) {
+      this.logger.error('No Spotify token available for skip');
       return false;
     }
+    try {
+      const res = await fetch(`https://api.spotify.com/v1/me/player/next`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (res.status === 204) {
+        this.logger.log('Track skipped');
+        return true;
+      } else {
+        this.logger.error(await res.json());
+      }
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error('Error skipping Spotify track');
+    }
+    return false;
   }
 }

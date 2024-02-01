@@ -113,9 +113,6 @@ const userMessageCommandsConfig: UserMessageCommandsConfig = {
     aliases: ['eric', 'ericrosen', 'imrosen'],
     message: 'www.youtube.com/watch?v=tX8eW5JfZyE'
   },
-  skipsong: {
-    commands: ['!tts {username} has requested that you skip this song.']
-  },
   streamlabs: {
     message:
       "If you're thinking about signing up for StreamLabs, please use my affiliate link: https://streamlabs.com/refer/natebrady23-cc34-10?t=2"

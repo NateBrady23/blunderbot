@@ -55,9 +55,10 @@ function selectRoundWinner(
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
   const roundPoints =
     CONFIG.get().trivia[commandState.trivia.round].points || 1;
-  const points = (commandState.trivia.leaderboard[user] || 0) + roundPoints;
+  const points =
+    (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
   commandState.trivia.roundAnswered = true;
-  commandState.trivia.leaderboard[user] = points;
+  commandState.trivia.leaderboard[user.toLowerCase()] = points;
   if (
     !commandState.trivia.fastestAnswer ||
     seconds < commandState.trivia.fastestAnswer.seconds
@@ -175,6 +176,20 @@ const command: Command = {
 
     if (answer === 'end' && ctx.isOwner) {
       endRound(ctx, commandState, services);
+      return true;
+    }
+
+    if (answer === 'add' && ctx.isOwner) {
+      // !trivia add <name> <points>
+      commandState.trivia.leaderboard[ctx.args[1].toLowerCase()] +=
+        +ctx.args[2];
+      return true;
+    }
+
+    if (answer === 'replace' && ctx.isOwner) {
+      // !trivia replace <name> <points>
+      commandState.trivia.leaderboard[ctx.args[1].toLowerCase()] = +ctx.args[2];
+      return true;
     }
 
     if (!answer) {
