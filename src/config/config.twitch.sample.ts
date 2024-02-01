@@ -33,7 +33,12 @@ const userTwitchConfig: UserTwitchConfig = {
     'My own !command': [
       '!tts {username} has redeemed their own command. They chose: {message}'
     ],
-    'Make me VIP': ['!tts {username} has redeemed VIP status.']
+    'Make me VIP': ['!tts {username} has redeemed VIP status.'],
+    'Announce my arrival': [
+      '!vchat Announce the arrival of {username} to the stream in a fun way. Come up with something original.'
+    ],
+    'Request a Song': ['!sr {message}'],
+    "Sound: I don't need a queen": ['!sound naka-i-dont-need-a-queen']
   },
   // I like to make commands for specific people, like trevlar_ is the only one
   // who can use the !trophy command. Note that the owner and bot can run all commands.
@@ -59,7 +64,8 @@ const userTwitchConfig: UserTwitchConfig = {
   // VIPs can run these commands (optional)
   vipCommands: ['command1'],
   // Hype train conductors can run these commands (optional)
-  hypeTrainConductorCommands: ['command2'],
+  // Note: Even though the train command is in the message-commands config, you can still limit it here.
+  hypeTrainConductorCommands: ['train'],
   // Founders can run these commands (optional)
   founderCommands: ['command3'],
   // These commands can only be run {n} times per user per stream
@@ -67,7 +73,8 @@ const userTwitchConfig: UserTwitchConfig = {
     highlight: 5,
     image: 6,
     tts: 5,
-    vchat: 3
+    vchat: 3,
+    train: 1
   },
   welcome: {
     enabled: true,

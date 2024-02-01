@@ -4,6 +4,7 @@
  * Message commands can either be simple messages or a list of owner run commands.
  * User {username} to insert the user's name that used the command. Commands list will only run on twitch.
  */
+import { Platform } from '../enums';
 
 const userMessageCommandsConfig: UserMessageCommandsConfig = {
   afm: {
@@ -133,7 +134,7 @@ const userMessageCommandsConfig: UserMessageCommandsConfig = {
     message: 'Give me just the tip at https://streamlabs.com/natebrady23/tip'
   },
   train: {
-    ownerOnly: true,
+    platforms: [Platform.Twitch],
     commands: [
       '!gif !s29 Sunglasses Racing GIF By Burger Records',
       '!king secret_train',
