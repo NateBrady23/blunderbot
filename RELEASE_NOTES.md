@@ -21,6 +21,7 @@
 
 - When using the twitch reply method, the bot should respond to the user that triggered the command via `onBehalfOf` if it's set.
 - Fixed `!help` when no command is provided.
+- Fixed `!trivia next` breaking on the last question.
 
 ### 1.8.1 (2024-01-30)
 

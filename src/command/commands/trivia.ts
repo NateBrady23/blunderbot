@@ -24,6 +24,12 @@ async function showQuestion(
   commandState: CommandState,
   services: CommandServices
 ) {
+  if (commandState.trivia.round >= CONFIG.get().trivia.length) {
+    ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
+    showLeaderboard(ctx, commandState);
+    commandState.trivia.started = false;
+    return;
+  }
   ctx.botSpeak('Next question in 3...');
   await sleep(2000);
   ctx.botSpeak('2...');
@@ -179,16 +185,19 @@ const command: Command = {
       return true;
     }
 
-    if (answer === 'add' && ctx.isOwner) {
+    if (answer.startsWith('add ') && ctx.isOwner) {
       // !trivia add <name> <points>
-      commandState.trivia.leaderboard[ctx.args[1].toLowerCase()] +=
-        +ctx.args[2];
+      const [user, points] = answer.split(' ').slice(1);
+      console.log('add', user, ctx.args[2]);
+      commandState.trivia.leaderboard[user] =
+        (commandState.trivia.leaderboard[user] || 0) + +points;
       return true;
     }
 
-    if (answer === 'replace' && ctx.isOwner) {
+    if (answer.startsWith('replace ') && ctx.isOwner) {
       // !trivia replace <name> <points>
-      commandState.trivia.leaderboard[ctx.args[1].toLowerCase()] = +ctx.args[2];
+      const [user, points] = answer.split(' ').slice(1);
+      commandState.trivia.leaderboard[user] = +points;
       return true;
     }
 
