@@ -9,6 +9,7 @@ import { AppGateway } from '../app.gateway';
 import { TwitterService } from '../twitter/twitter.service';
 import { CommandService } from './command.service';
 import { SpotifyService } from '../spotify/spotify.service';
+import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 
 declare global {
   interface CommandRunFuncOptions {
@@ -55,6 +56,7 @@ declare global {
     twitchGateway: TwitchGateway;
     twitchService: TwitchService;
     twitterService: TwitterService;
+    storedCommandEntityService: StoredCommandEntityService;
   }
 
   interface CommandState {
@@ -70,7 +72,7 @@ declare global {
     killedCommands: string[];
     blunderBotPersonality: string;
     blunderbotVoice: OpenAiVoiceOptions;
-    ephemeralCommands: { [key: string]: string };
+    storedCommands?: { [key: string]: string };
     cbanUsers: string[];
     wouldBeCommands: { [key: string]: string };
     contributions: {

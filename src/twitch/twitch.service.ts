@@ -82,6 +82,7 @@ export class TwitchService {
     const context: Context = await this.createContext(message, data);
 
     const displayName = context.displayName;
+
     if (!newChatters.includes(displayName)) {
       newChatters.push(displayName);
       // Welcome in new chatters (non-followers)

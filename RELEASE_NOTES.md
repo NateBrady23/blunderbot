@@ -1,6 +1,17 @@
 # Release Notes
 
-### 1.9.0
+### 1.10.0
+
+#### Breaking Changes
+
+- Optional database support has been added. See `src/config/db.config.sample.ts`. The database is necessary for running some commands, like `!addcom`.
+  - Though database is optional, it's highly recommended. Version 2.0 of blunderbot will require database support for configuration and other things.
+
+#### Bug Fixes
+
+- Fixed a bug where the bot could have gotten stuck talking to itself in a loop.
+
+### 1.9.0 (2024-02-01)
 
 #### Breaking Changes
 

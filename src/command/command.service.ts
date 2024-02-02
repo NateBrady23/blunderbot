@@ -11,6 +11,7 @@ import { CONFIG } from '../config/config.service';
 import { TwitterService } from '../twitter/twitter.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
+import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 
 @Injectable()
 export class CommandService {
@@ -38,7 +39,9 @@ export class CommandService {
     @Inject(forwardRef(() => SpotifyService))
     private readonly spotifyService: SpotifyService,
     @Inject(forwardRef(() => LichessService))
-    private readonly lichessService: LichessService
+    private readonly lichessService: LichessService,
+    @Inject(forwardRef(() => StoredCommandEntityService))
+    private readonly storedCommandEntityService: StoredCommandEntityService
   ) {
     this.services = {
       appGateway: this.appGateway,
@@ -51,7 +54,9 @@ export class CommandService {
       openaiService: this.openaiService,
       spotifyService: this.spotifyService,
       lichessService: this.lichessService,
-      giphyService: this.giphyService
+      giphyService: this.giphyService,
+      // Entity services
+      storedCommandEntityService: this.storedCommandEntityService
     };
 
     this.setInitialCommandState();
@@ -59,6 +64,8 @@ export class CommandService {
     if (CONFIG.get().heartRate?.enabled) {
       void this.heartRateCheck();
     }
+
+    void this.setStoredCommands();
   }
 
   setInitialCommandState() {
@@ -73,7 +80,7 @@ export class CommandService {
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai?.voices[0],
-      ephemeralCommands: {},
+      storedCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
       contributions: {
@@ -329,8 +336,8 @@ export class CommandService {
     }
 
     // Run any commands created during the stream with !add
-    if (this.commandState.ephemeralCommands[ctx.command]) {
-      ctx.botSpeak(this.commandState.ephemeralCommands[ctx.command]);
+    if (this.commandState.storedCommands[ctx.command]) {
+      ctx.botSpeak(this.commandState.storedCommands[ctx.command]);
       return;
     }
 
@@ -343,5 +350,16 @@ export class CommandService {
 
   async getCommandState() {
     return this.commandState;
+  }
+
+  async setStoredCommands() {
+    if (!CONFIG.get().db?.enabled) {
+      return {};
+    }
+    const storedCommandsArr = await this.storedCommandEntityService.findAll();
+    this.commandState.storedCommands = {};
+    for (const sc of storedCommandsArr) {
+      this.commandState.storedCommands[sc.name] = sc.message;
+    }
   }
 }

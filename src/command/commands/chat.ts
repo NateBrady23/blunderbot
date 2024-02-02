@@ -10,6 +10,16 @@ const command: Command = {
       console.log('OpenAI disabled in !chat command');
       return false;
     }
+
+    if (
+      (ctx.platform === Platform.Twitch &&
+        ctx.username === CONFIG.get().twitch.botUsername) ||
+      (ctx.platform === Platform.Discord &&
+        ctx.userId === CONFIG.get().discord.botAuthorId)
+    ) {
+      return false;
+    }
+
     let reply: string;
     if (!ctx.body) {
       reply = `You need to say something for me to respond to.`;

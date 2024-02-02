@@ -71,6 +71,22 @@ interface UserTwitterConfig {
   announceLive: boolean;
 }
 
+interface UserDbConfig {
+  enabled: boolean;
+  type: 'postgres' | 'mysql' | 'sqlite';
+  host: string;
+  port?: number;
+  username: string;
+  password: string;
+  database: string;
+  migrationsRun: boolean;
+  extra?: {
+    ssl?: {
+      rejectUnauthorized: boolean;
+    };
+  };
+}
+
 interface UserDiscordConfig {
   enabled: boolean;
   botToken: string;
@@ -191,6 +207,7 @@ interface UserConfig {
   lichess: UserLichessConfig;
   openai: UserOpenAiConfig;
   twitter: UserTwitterConfig;
+  db: UserDbConfig;
   discord: UserDiscordConfig;
   decapi: UserDecapiConfig;
   heartRate: UserHeartRateConfig;

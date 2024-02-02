@@ -83,3 +83,11 @@ convert-svg-to-png blunder.svg
 ## png to cur
 icotool --create --cursor --output=blunder.cur blunder.png
 ```
+
+### Database Support
+
+Optional database support was added in version 1.10.0. You can enable it and set up the config in `src/config/config.database.sample.ts`. 
+
+Though the database is optional for a couple of commands to work, it's highly recommended to set it up. Version 2.0 of BlunderBot will require database support.
+
+Note: I am using https://planetscale.com for a free MySQL database. It has a very generous free tier plan for projects like this. 
