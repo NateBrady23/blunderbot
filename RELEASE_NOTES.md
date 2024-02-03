@@ -7,6 +7,10 @@
 - Optional database support has been added. See `src/config/db.config.sample.ts`. The database is necessary for running some commands, like `!addcom`.
   - Though database is optional, it's highly recommended. Version 2.0 of blunderbot will require database support for configuration and other things.
 
+#### Features
+
+- Added optional `discord.musicChannelId` to the config. If set and discord is enabled, song requests will be shared here with links to the track.
+
 #### Bug Fixes
 
 - Fixed a bug where the bot could have gotten stuck talking to itself in a loop.

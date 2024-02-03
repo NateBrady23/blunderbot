@@ -92,6 +92,7 @@ interface UserDiscordConfig {
   botToken: string;
   announcementChannelId: string;
   galleryChannelId: string;
+  musicChannelId?: string;
   generalChannelId: string;
   modChannelId: string;
   ownerAuthorId: string;

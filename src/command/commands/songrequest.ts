@@ -48,6 +48,12 @@ const command: Command = {
       const trackDetails = services.spotifyService.getTrackInfoFromTrack(track);
       commandState.spotify.requests[trackDetails] = user;
       ctx.reply(ctx, `${trackDetails} added to queue.`);
+      if (CONFIG.get().discord.enabled && CONFIG.get().discord.musicChannelId) {
+        services.discordService.botSpeak(
+          { channelId: CONFIG.get().discord.musicChannelId },
+          `Song request added to queue by @${user} on Twitch: ${trackDetails}. Link: ${track.external_urls.spotify}`
+        );
+      }
       return true;
     } else {
       ctx.reply(ctx, "I couldn't add that song to the queue.");
