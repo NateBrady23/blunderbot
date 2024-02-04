@@ -90,7 +90,11 @@ export class DiscordService {
     const channel = this.client.channels.cache.get(
       discordMessage.channelId
     ) as TextChannel;
-    channel.send(message);
+    if (channel) {
+      void channel.send(message);
+    } else {
+      this.logger.error(`Channel not found: ${discordMessage.channelId}`);
+    }
   }
 
   // TODO: There's a bug sometimes where there's no message or context?
