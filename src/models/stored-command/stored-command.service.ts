@@ -37,7 +37,7 @@ export class StoredCommandEntityService extends TransactionFor<StoredCommandEnti
   }
 
   async findByName(
-    code: string,
+    name: string,
     failIfNotFound?: boolean
   ): Promise<StoredCommand> {
     return this.find(
