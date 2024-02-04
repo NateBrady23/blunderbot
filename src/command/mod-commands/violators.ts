@@ -13,7 +13,7 @@ const command: Command = {
         const violators: string[] = [];
 
         const members = data.split('\n').filter(Boolean);
-        members.map((member) => {
+        members.forEach((member) => {
           const parsed = JSON.parse(member);
 
           if (parsed.disabled || parsed.tosViolation || parsed.closed) {

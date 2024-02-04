@@ -6,6 +6,6 @@ export class DiscordController {
   constructor(private readonly discordService: DiscordService) {}
   @Post('/command')
   postOwnerRunCommand(@Body() body: CommandRequest) {
-    void this.discordService.ownerRunCommand(body.command);
+    this.discordService.ownerRunCommand(body.command);
   }
 }

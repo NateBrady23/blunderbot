@@ -66,11 +66,10 @@ export class TwitchGateway
 
   public sendDataToOneSocket(event: string, data: unknown) {
     this.logger.log(`Sending ${event} event to a single socket.`);
-    for (let i = 0; i < this.sockets.length; i++) {
-      if (this.sockets[i].connected) {
-        this.sockets[i].emit(event, data);
-        break;
-      }
+
+    const firstSocket = this.sockets.find((socket) => socket.connected);
+    if (firstSocket) {
+      firstSocket.emit(event, data);
     }
   }
 }
