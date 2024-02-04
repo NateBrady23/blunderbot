@@ -139,7 +139,7 @@ export class TwitchEventSub {
     if (!existingSubs?.data) {
       return;
     }
-    for (const sub of existingSubs?.data) {
+    for (const sub of existingSubs?.data || []) {
       await this.twitchService.helixApiCall(
         `https://api.twitch.tv/helix/eventsub/subscriptions?id=${sub.id}`,
         'DELETE'
