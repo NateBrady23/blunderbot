@@ -36,7 +36,6 @@ declare global {
     lastRun?: number;
     aliases?: string[];
     platforms: Platforms[];
-    ownerRunCommands?: string[];
   }
 
   interface MessageCommand extends Command {

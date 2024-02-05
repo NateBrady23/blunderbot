@@ -230,12 +230,8 @@ export class CommandService {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
       }
-      if (!this.commandState.limitedCommands[cmd.name][ctx.displayName]) {
-        // If the user hasn't used the command yet, set it to 0
-        this.commandState.limitedCommands[cmd.name][ctx.displayName] = 0;
-      }
       if (
-        this.commandState.limitedCommands[cmd.name][ctx.displayName] >=
+        (this.commandState.limitedCommands[cmd.name][ctx.displayName] || 0) >=
         limitedTo
       ) {
         // If the user has used the command too many times, don't run
@@ -244,7 +240,6 @@ export class CommandService {
         );
         return false;
       }
-      this.commandState.limitedCommands[cmd.name][ctx.displayName]++;
     }
 
     const userRestricted = CONFIG.get().twitch.userRestrictedCommands[cmd.name];
@@ -308,17 +303,6 @@ export class CommandService {
       if (!(await this.canRun(ctx, cmd))) return;
       // Run the command. If it returns true, it ran successfully, so update the lastRun time
       try {
-        // If there's a list of ownerRunCommands (from a groupCommand) run those
-        if (cmd.ownerRunCommands) {
-          for (const ownerRunCommand of cmd.ownerRunCommands) {
-            void this.twitchService.ownerRunCommand(ownerRunCommand, {
-              onBehalfOf: ctx.displayName
-            });
-          }
-          cmd.lastRun = Date.now();
-          return;
-        }
-
         // Otherwise, use the command's run function
         if (
           await cmd.run(ctx, {
@@ -327,6 +311,9 @@ export class CommandService {
           })
         ) {
           cmd.lastRun = Date.now();
+          this.commandState.limitedCommands[cmd.name][ctx.displayName] =
+            (this.commandState.limitedCommands[cmd.name][ctx.displayName] ||
+              0) + 1;
         }
       } catch (e) {
         this.logger.error(e);
