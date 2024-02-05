@@ -35,11 +35,15 @@ const command: Command = {
         }
       );
       const json = await res.json();
-      if (json.challenge.url) {
+      if (json.challenge?.url) {
         console.log(`Challenge URL: ${json.challenge.url}`);
+      } else {
+        console.error(`Error creating challenge: ${user}`);
+        return false;
       }
     } catch (e) {
       console.error(e);
+      return false;
     }
     return true;
   }

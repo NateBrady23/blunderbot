@@ -25,6 +25,7 @@ interface UserTwitchConfig {
     message: string;
     ignoreUsers: string[];
   };
+  maxMessageLength?: number;
   eventWebsocketUrl: string;
   eventSubscriptionUrl: string;
 }

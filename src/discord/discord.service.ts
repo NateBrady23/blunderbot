@@ -83,7 +83,7 @@ export class DiscordService {
     }
   }
 
-  botSpeak(
+  async botSpeak(
     discordMessage: DiscordMessage | { channelId: string },
     message: string
   ) {
@@ -91,7 +91,7 @@ export class DiscordService {
       discordMessage.channelId
     ) as TextChannel;
     if (channel) {
-      void channel.send(message);
+      await channel.send(message);
     } else {
       this.logger.error(`Channel not found: ${discordMessage.channelId}`);
     }
@@ -160,6 +160,8 @@ export class DiscordService {
     context.userId = discordMessage.author.id;
     context.isOwner =
       discordMessage.author.id === CONFIG.get().discord.ownerAuthorId;
+    context.isBot =
+      discordMessage.author.id === CONFIG.get().discord.botAuthorId;
     // We determine a mod by seeing if they're in the mod channel
     context.isMod =
       discordMessage.author.id === CONFIG.get().discord.ownerAuthorId ||

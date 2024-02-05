@@ -204,6 +204,9 @@ export class TwitchEventSub {
       message: data.message.text,
       userLogin: data.chatter_user_login,
       displayName: data.chatter_user_name,
+      isBot:
+        data.chatter_user_login ===
+        CONFIG.get().twitch.botUsername.toLowerCase(),
       isMod: data.badges.some((badge) => badge.set_id === 'moderator'),
       isSub: data.badges.some((badge) => badge.set_id === 'subscriber'),
       isVip: data.badges.some((badge) => badge.set_id === 'vip'),

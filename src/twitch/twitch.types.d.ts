@@ -3,6 +3,7 @@ interface OnMessageHandlerInput {
   userLogin: string;
   displayName: string;
   isOwner: boolean;
+  isBot: boolean;
   isMod: boolean;
   isSub: boolean;
   isVip: boolean;

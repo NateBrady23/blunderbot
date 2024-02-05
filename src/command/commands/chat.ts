@@ -11,12 +11,8 @@ const command: Command = {
       return false;
     }
 
-    if (
-      (ctx.platform === Platform.Twitch &&
-        ctx.username === CONFIG.get().twitch.botUsername) ||
-      (ctx.platform === Platform.Discord &&
-        ctx.userId === CONFIG.get().discord.botAuthorId)
-    ) {
+    if (ctx.isBot) {
+      console.log('Disabled: Bot attempting to use !chat command.');
       return false;
     }
 
