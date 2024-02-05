@@ -311,9 +311,11 @@ export class CommandService {
           })
         ) {
           cmd.lastRun = Date.now();
-          this.commandState.limitedCommands[cmd.name][ctx.displayName] =
-            (this.commandState.limitedCommands[cmd.name][ctx.displayName] ||
-              0) + 1;
+          if (this.commandState.limitedCommands[cmd.name]) {
+            this.commandState.limitedCommands[cmd.name][ctx.displayName] =
+              (this.commandState.limitedCommands[cmd.name][ctx.displayName] ||
+                0) + 1;
+          }
         }
       } catch (e) {
         this.logger.error(e);
