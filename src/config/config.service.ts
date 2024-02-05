@@ -10,7 +10,6 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
     ownerOnly: obj.ownerOnly,
     aliases: obj.aliases,
     platforms: obj.platforms || [Platform.Twitch, Platform.Discord],
-    ownerRunCommands: obj.ownerRunCommands,
     run: (ctx: Context, { services }) => {
       if (obj.commands) {
         obj.commands.forEach((command: string) => {
