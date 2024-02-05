@@ -1,6 +1,17 @@
 # Release Notes
 
-### 1.10.0
+### 1.10.1
+
+#### Features
+
+- Added "random" as a square for `!buy` command. This will give a random available square on the board.
+
+#### Bug Fixes
+
+- Hardened !buy command. Moved logic out of twitch service and into the command file.
+- vip, hypeTrainConductor, and founder badges weren't being added to the twitch context.
+
+### 1.10.0 (2024-02-05)
 
 #### Breaking Changes
 

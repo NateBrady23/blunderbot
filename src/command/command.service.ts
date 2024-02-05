@@ -71,6 +71,7 @@ export class CommandService {
   setInitialCommandState() {
     this.commandState = {
       arena: '',
+      boughtSquares: {},
       first: '',
       challengeQueue: [],
       isLive: false,
@@ -350,5 +351,9 @@ export class CommandService {
     for (const sc of storedCommandsArr) {
       this.commandState.storedCommands[sc.name] = sc.message;
     }
+  }
+
+  updateBoughtSquares(data: { [key: string]: string }) {
+    this.commandState.boughtSquares = data;
   }
 }
