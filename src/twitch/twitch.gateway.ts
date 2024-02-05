@@ -9,6 +9,7 @@ import {
 import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { TwitchService } from './twitch.service';
+import { CommandService } from '../command/command.service';
 
 @WebSocketGateway({
   namespace: 'twitch-socket',
@@ -28,18 +29,23 @@ export class TwitchGateway
   private sockets: Socket[] = [];
 
   constructor(
+    @Inject(forwardRef(() => CommandService))
+    private readonly commandService: CommandService,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
   ) {}
 
   @SubscribeMessage('botSpeak')
   handleMessage(_client: Socket, payload: string) {
-    this.twitchService.botSpeak(payload);
+    void this.twitchService.botSpeak(payload);
   }
 
   @SubscribeMessage('updateBoughtSquares')
-  handleUpdateBoughtSquares(_client: Socket, payload: unknown) {
-    this.twitchService.updateBoughtSquares(payload);
+  handleUpdateBoughtSquares(
+    _client: Socket,
+    payload: { [key: string]: string }
+  ) {
+    this.commandService.updateBoughtSquares(payload);
   }
 
   afterInit(_server: unknown) {

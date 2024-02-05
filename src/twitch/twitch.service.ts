@@ -4,8 +4,6 @@ import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
-import { chessSquares } from '../utils/constants';
-import { getRandomElement } from '../utils/utils';
 
 let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters: string[] = [];
@@ -20,8 +18,6 @@ twitchUserMap[CONFIG.get().twitch.botUsername.toLowerCase()] = {
   id: CONFIG.get().twitch.botId,
   isFollower: true
 };
-
-let boughtSquares = {};
 
 @Injectable()
 export class TwitchService {
@@ -73,10 +69,6 @@ export class TwitchService {
     }
   }
 
-  updateBoughtSquares(data: unknown) {
-    boughtSquares = data;
-  }
-
   async onMessageHandler(data: OnMessageHandlerInput) {
     let message = data.message;
     void writeLog('chat', `${data.displayName}: ${message}`);
@@ -109,17 +101,10 @@ export class TwitchService {
             /{user}/gi,
             `@${displayName}`
           );
-          this.botSpeak(message);
+          void this.botSpeak(message);
         }
-      } else if (!context.isOwner) {
-        const squares = Object.keys(boughtSquares || {});
-        const remainingSquares = chessSquares.filter(
-          (sq) => !squares.includes(sq)
-        );
-        if (remainingSquares.length) {
-          const square = getRandomElement(remainingSquares);
-          void this.ownerRunCommand(`!buy ${square} ${displayName}`);
-        }
+      } else if (!context.isOwner && !context.isBot) {
+        void this.ownerRunCommand(`!buy random ${displayName}`);
       }
     }
 
@@ -181,6 +166,9 @@ export class TwitchService {
       context.isMod = data.isMod;
       context.isBot = data.isBot;
       context.isSubscriber = data.isSub;
+      context.isHypeTrainConductor = data.isHypeTrainConductor;
+      context.isFounder = data.isFounder;
+      context.isVip = data.isVip;
       context.username = data.userLogin;
       context.displayName = data.displayName;
     } else {
@@ -230,7 +218,7 @@ export class TwitchService {
             if (response.startsWith('!')) {
               await this.ownerRunCommand(response);
             } else {
-              this.botSpeak(response);
+              void this.botSpeak(response);
             }
           }
           found = true;
@@ -247,7 +235,7 @@ export class TwitchService {
   async helixApiCall(
     url: string,
     method = 'GET',
-    body: any = undefined,
+    body: object = undefined,
     asOwner = true
   ): Promise<any> {
     const token = asOwner
@@ -321,7 +309,7 @@ export class TwitchService {
           CONFIG.get().twitch.botId
         }`,
         'POST',
-        false,
+        undefined,
         false
       );
     } catch (e) {
