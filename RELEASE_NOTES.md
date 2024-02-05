@@ -11,10 +11,12 @@
 #### Features
 
 - Added optional `discord.musicChannelId` to the config. If set and discord is enabled, song requests will be shared here with links to the track.
+- Added optional `twitch.maxMessageLength` to the config. If set, messages over this length will fail instead of being split into multiple messages. Defaults to 1500 (3 twitch messages).
 
 #### Bug Fixes
 
 - Fixed a bug where the bot could have gotten stuck talking to itself in a loop.
+- Fixed an issue where twitch bot messages over 500 characters were silently failing.
 
 ### 1.9.0 (2024-02-01)
 
