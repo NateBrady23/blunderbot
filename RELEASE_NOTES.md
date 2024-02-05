@@ -6,6 +6,7 @@
 
 - Optional database support has been added. See `src/config/db.config.sample.ts`. The database is necessary for running some commands, like `!addcom`.
   - Though database is optional, it's highly recommended. Version 2.0 of blunderbot will require database support for configuration and other things.
+- `!add (!addcom_)` and `!delete (!delcom)` commands added for persistent commands. These commands require database support to work properly.
 
 #### Features
 
