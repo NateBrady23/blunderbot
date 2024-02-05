@@ -27,7 +27,7 @@ const command: Command = {
             alert = raidersConfig[username].alert;
           }
         } else {
-          for (const cmd of CONFIG.get().raids?.defaultCommands) {
+          for (const cmd of CONFIG.get().raids?.defaultCommands || []) {
             void services.twitchService.ownerRunCommand(cmd);
           }
         }

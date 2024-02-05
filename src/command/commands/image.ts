@@ -15,7 +15,7 @@ const command: Command = {
     let sendToDiscord =
       CONFIG.get().discord?.enabled &&
       !!CONFIG.get().discord?.galleryChannelId &&
-      !(ctx.platform === Platform.Discord);
+      ctx.platform !== Platform.Discord;
     let sendToTwitter =
       CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
 

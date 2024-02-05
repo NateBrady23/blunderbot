@@ -11,6 +11,7 @@ import { CONFIG } from '../config/config.service';
 import { TwitterService } from '../twitter/twitter.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
+import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 
 @Injectable()
 export class CommandService {
@@ -38,7 +39,9 @@ export class CommandService {
     @Inject(forwardRef(() => SpotifyService))
     private readonly spotifyService: SpotifyService,
     @Inject(forwardRef(() => LichessService))
-    private readonly lichessService: LichessService
+    private readonly lichessService: LichessService,
+    @Inject(forwardRef(() => StoredCommandEntityService))
+    private readonly storedCommandEntityService: StoredCommandEntityService
   ) {
     this.services = {
       appGateway: this.appGateway,
@@ -51,7 +54,9 @@ export class CommandService {
       openaiService: this.openaiService,
       spotifyService: this.spotifyService,
       lichessService: this.lichessService,
-      giphyService: this.giphyService
+      giphyService: this.giphyService,
+      // Entity services
+      storedCommandEntityService: this.storedCommandEntityService
     };
 
     this.setInitialCommandState();
@@ -59,6 +64,8 @@ export class CommandService {
     if (CONFIG.get().heartRate?.enabled) {
       void this.heartRateCheck();
     }
+
+    void this.setStoredCommands();
   }
 
   setInitialCommandState() {
@@ -73,7 +80,7 @@ export class CommandService {
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai?.voices[0],
-      ephemeralCommands: {},
+      storedCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
       contributions: {
@@ -223,12 +230,8 @@ export class CommandService {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
       }
-      if (!this.commandState.limitedCommands[cmd.name][ctx.displayName]) {
-        // If the user hasn't used the command yet, set it to 0
-        this.commandState.limitedCommands[cmd.name][ctx.displayName] = 0;
-      }
       if (
-        this.commandState.limitedCommands[cmd.name][ctx.displayName] >=
+        (this.commandState.limitedCommands[cmd.name][ctx.displayName] || 0) >=
         limitedTo
       ) {
         // If the user has used the command too many times, don't run
@@ -237,7 +240,6 @@ export class CommandService {
         );
         return false;
       }
-      this.commandState.limitedCommands[cmd.name][ctx.displayName]++;
     }
 
     const userRestricted = CONFIG.get().twitch.userRestrictedCommands[cmd.name];
@@ -301,17 +303,6 @@ export class CommandService {
       if (!(await this.canRun(ctx, cmd))) return;
       // Run the command. If it returns true, it ran successfully, so update the lastRun time
       try {
-        // If there's a list of ownerRunCommands (from a groupCommand) run those
-        if (cmd.ownerRunCommands) {
-          for (const ownerRunCommand of cmd.ownerRunCommands) {
-            void this.twitchService.ownerRunCommand(ownerRunCommand, {
-              onBehalfOf: ctx.displayName
-            });
-          }
-          cmd.lastRun = Date.now();
-          return;
-        }
-
         // Otherwise, use the command's run function
         if (
           await cmd.run(ctx, {
@@ -320,6 +311,11 @@ export class CommandService {
           })
         ) {
           cmd.lastRun = Date.now();
+          if (this.commandState.limitedCommands[cmd.name]) {
+            this.commandState.limitedCommands[cmd.name][ctx.displayName] =
+              (this.commandState.limitedCommands[cmd.name][ctx.displayName] ||
+                0) + 1;
+          }
         }
       } catch (e) {
         this.logger.error(e);
@@ -329,8 +325,8 @@ export class CommandService {
     }
 
     // Run any commands created during the stream with !add
-    if (this.commandState.ephemeralCommands[ctx.command]) {
-      ctx.botSpeak(this.commandState.ephemeralCommands[ctx.command]);
+    if (this.commandState.storedCommands[ctx.command]) {
+      ctx.botSpeak(this.commandState.storedCommands[ctx.command]);
       return;
     }
 
@@ -343,5 +339,16 @@ export class CommandService {
 
   async getCommandState() {
     return this.commandState;
+  }
+
+  async setStoredCommands() {
+    if (!CONFIG.get().db?.enabled) {
+      return {};
+    }
+    const storedCommandsArr = await this.storedCommandEntityService.findAll();
+    this.commandState.storedCommands = {};
+    for (const sc of storedCommandsArr) {
+      this.commandState.storedCommands[sc.name] = sc.message;
+    }
   }
 }

@@ -1,6 +1,24 @@
 # Release Notes
 
-### 1.9.0
+### 1.10.0
+
+#### Breaking Changes
+
+- Optional database support has been added. See `src/config/db.config.sample.ts`. The database is necessary for running some commands, like `!addcom`.
+  - Though database is optional, it's highly recommended. Version 2.0 of blunderbot will require database support for configuration and other things.
+- `!add (!addcom_)` and `!delete (!delcom)` commands added for persistent commands. These commands require database support to work properly.
+
+#### Features
+
+- Added optional `discord.musicChannelId` to the config. If set and discord is enabled, song requests will be shared here with links to the track.
+- Added optional `twitch.maxMessageLength` to the config. If set, messages over this length will fail instead of being split into multiple messages. Defaults to 1500 (3 twitch messages).
+
+#### Bug Fixes
+
+- Fixed a bug where the bot could have gotten stuck talking to itself in a loop.
+- Fixed an issue where twitch bot messages over 500 characters were silently failing.
+
+### 1.9.0 (2024-02-01)
 
 #### Breaking Changes
 

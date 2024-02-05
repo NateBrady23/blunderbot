@@ -9,6 +9,7 @@ import { AppModule } from '../app.module';
 import { BrowserModule } from '../browser/browser.module';
 import { TwitterModule } from '../twitter/twitter.module';
 import { SpotifyModule } from '../spotify/spotify.module';
+import { EntityModule } from '../models/entity.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SpotifyModule } from '../spotify/spotify.module';
     forwardRef(() => DiscordModule),
     forwardRef(() => TwitchModule),
     forwardRef(() => TwitterModule),
+    EntityModule,
     GiphyModule,
     LichessModule,
     OpenaiModule,

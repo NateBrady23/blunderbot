@@ -8,6 +8,8 @@ const userDiscordConfig: UserDiscordConfig = {
   generalChannelId: '11111111111111111',
   // The channel where BlunderBot will upload images from the !image command
   galleryChannelId: '1111111111111',
+  // If you have song requests on from spotify, the links to the songs being played will be posted in this channel
+  musicChannelId: '11111111111111111',
   modChannelId: '11111111111111111',
   ownerAuthorId: '1111111111111',
   botAuthorId: '111111111111111111',

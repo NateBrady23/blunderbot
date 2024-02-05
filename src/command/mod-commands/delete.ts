@@ -2,38 +2,30 @@ import { Platform } from '../../enums';
 import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
-  name: 'add',
-  aliases: ['addcom'],
+  name: 'delete',
+  aliases: ['delcom'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (!CONFIG.get().db?.enabled) {
-      console.error('Database is not enabled for !add command');
+      console.error('Database is not enabled for !delete command');
       return false;
     }
     const name = ctx.args[0]?.replace('!', '')?.toLowerCase();
     if (!name) {
       return false;
     }
-    const regex = new RegExp(`^${name} `);
-    const message = ctx.body.replace(regex, '');
     try {
       const existingCommand =
         await services.storedCommandEntityService.findByName(name);
       if (existingCommand) {
-        // Update the command instead of adding a new one
-        existingCommand.message = message;
-        await services.storedCommandEntityService.save(existingCommand);
-        ctx.reply(ctx, 'Command updated');
+        await services.storedCommandEntityService.remove(existingCommand);
+        ctx.reply(ctx, 'Command deleted');
       } else {
-        await services.storedCommandEntityService.create({
-          name,
-          message
-        });
-        ctx.reply(ctx, 'Command added');
+        ctx.reply(ctx, 'Command does not exist');
       }
       await services.commandService.setStoredCommands();
     } catch (e) {
-      ctx.reply(ctx, 'Error adding command');
+      ctx.reply(ctx, 'Error deleting command');
       return false;
     }
     return true;

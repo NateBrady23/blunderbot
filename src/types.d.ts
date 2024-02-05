@@ -32,6 +32,7 @@ interface Context {
 
   isOwner: boolean;
   isMod: boolean;
+  isBot: boolean;
 
   // Twitch only
   isSubscriber?: boolean;

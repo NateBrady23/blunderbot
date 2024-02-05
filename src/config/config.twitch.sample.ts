@@ -81,6 +81,9 @@ const userTwitchConfig: UserTwitchConfig = {
     message: 'Welcome in, {user}, Hope you stick around awhile.',
     ignoreUsers: ['PretzelRocks']
   },
+  // Maximum message length for the bot to speak. If the message is longer than this, it will be rejected completely to
+  // avoid spamming. 500 characters fills one twitch message.
+  maxMessageLength: 1500,
   // You don't need to edit this unless you're doing local testing using the twitch cli
   // https://dev.twitch.tv/docs/cli/websocket-event-command/
   eventWebsocketUrl:

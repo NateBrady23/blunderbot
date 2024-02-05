@@ -10,6 +10,12 @@ const command: Command = {
       console.log('OpenAI disabled in !chat command');
       return false;
     }
+
+    if (ctx.isBot) {
+      console.log('Disabled: Bot attempting to use !chat command.');
+      return false;
+    }
+
     let reply: string;
     if (!ctx.body) {
       reply = `You need to say something for me to respond to.`;
@@ -22,11 +28,11 @@ const command: Command = {
       // Doesn't respond with the owners name if the owner is the one who sent the message
       // This helps with ownerSendCommandDirectly for things like !ask so it doesn't look like
       // blunderBot is responding to itself or the owner
-      reply = `${!ctx.isOwner ? `@${ctx.username}: ` : ''}${reply}`;
-      ctx.botSpeak(reply);
+      const mention = ctx.isOwner ? '' : `@${ctx.username}: `;
+      ctx.botSpeak(`${mention}${reply}`);
     } else {
-      reply = `${!ctx.isOwner ? `<@${ctx.userId}>: ` : ''}${reply}`;
-      ctx.botSpeak(reply);
+      const mention = ctx.isOwner ? '' : `<@${ctx.userId}>: `;
+      ctx.botSpeak(`${mention}${reply}`);
     }
 
     return true;

@@ -11,6 +11,12 @@ const command: Command = {
       const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
       king = filteredKings[Math.floor(Math.random() * filteredKings.length)];
     } else if (!king || !kings.includes(king)) {
+      console.log('should be speaking');
+      console.log(
+        `The following opponent kings are available: ${CONFIG.get()
+          .oppKings.filter((k) => !k.startsWith('secret_'))
+          .join(', ')}`
+      );
       ctx.botSpeak(
         `The following opponent kings are available: ${CONFIG.get()
           .oppKings.filter((k) => !k.startsWith('secret_'))

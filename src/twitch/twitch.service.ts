@@ -37,9 +37,23 @@ export class TwitchService {
     this.botSpeak = this.botSpeak.bind(this);
   }
 
-  botSpeak(message: string) {
-    // void this.client.say(CONFIG.get().twitch.channel, message);
-    void this.helixApiCall(
+  async botSpeak(message: string) {
+    if (message.length > (CONFIG.get().twitch?.maxMessageLength || 1500)) {
+      this.logger.error(message);
+      this.logger.error('Message is too long to send. Failing...');
+      return;
+    }
+    // https://github.com/twitchdev/issues/issues/904
+    if (message.length > 500) {
+      const messages = message.match(/.{1,500}/g);
+      if (messages) {
+        for (const msg of messages) {
+          await this.botSpeak(msg);
+        }
+      }
+      return;
+    }
+    await this.helixApiCall(
       'https://api.twitch.tv/helix/chat/messages',
       'POST',
       {
@@ -82,6 +96,7 @@ export class TwitchService {
     const context: Context = await this.createContext(message, data);
 
     const displayName = context.displayName;
+
     if (!newChatters.includes(displayName)) {
       newChatters.push(displayName);
       // Welcome in new chatters (non-followers)
@@ -164,6 +179,7 @@ export class TwitchService {
     if (data) {
       context.isOwner = data.isOwner;
       context.isMod = data.isMod;
+      context.isBot = data.isBot;
       context.isSubscriber = data.isSub;
       context.username = data.userLogin;
       context.displayName = data.displayName;
@@ -254,7 +270,11 @@ export class TwitchService {
 
     try {
       const res = await fetch(url, request);
-      return await res.json();
+      const json = await res.json();
+      if (json?.error) {
+        this.logger.error(json);
+      }
+      return json;
     } catch (e) {
       // no json to parse which is fine
       this.logger.log(`No JSON to parse for ${url}`);

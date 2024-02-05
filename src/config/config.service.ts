@@ -10,7 +10,6 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
     ownerOnly: obj.ownerOnly,
     aliases: obj.aliases,
     platforms: obj.platforms || [Platform.Twitch, Platform.Discord],
-    ownerRunCommands: obj.ownerRunCommands,
     run: (ctx: Context, { services }) => {
       if (obj.commands) {
         obj.commands.forEach((command: string) => {
@@ -67,6 +66,7 @@ class ConfigService {
     this.loadFromFile('autoResponder', './config.auto-responder');
     this.loadFromFile('autoShoutouts', './config.auto-shoutouts');
     this.loadFromFile('bits', './config.bits');
+    this.loadFromFile('db', './config.db');
     this.loadFromFile('discord', './config.discord');
     this.loadFromFile('gif', './config.gif');
     this.loadFromFile('messageCommands', './config.message-commands');

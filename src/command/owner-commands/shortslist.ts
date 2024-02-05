@@ -57,7 +57,7 @@ const command: Command = {
         .reverse();
       let toSay = '';
       last7.forEach((short) => {
-        const title = short.snippet.title.replace(/#[a-zA-Z]+( )?/gi, '');
+        const title = short.snippet.title.replace(/#[a-z]+( )?/gi, '');
         toSay += `${title} https://www.youtube.com/shorts/${short.snippet.resourceId.videoId}\n`;
       });
       ctx.botSpeak(toSay);
