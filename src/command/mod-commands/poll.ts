@@ -36,7 +36,7 @@ const command: Command = {
       poll.title = poll.title.substring(0, 58) + '..';
     }
     // Twitch API has a limit of 25 characters for each choice
-    poll.choices.map((choice) => {
+    const choices = poll.choices.map((choice) => {
       if (choice.title.length > 25) {
         choice.title = choice.title.substring(0, 23) + '..';
       }
@@ -46,7 +46,7 @@ const command: Command = {
     if (ctx.platform === Platform.Discord) {
       let reply = `If this were twitch, I would create this poll:\n`;
       reply += `Question: ${poll.title}\n`;
-      reply += `Choices: \n${poll.choices
+      reply += `Choices: \n${choices
         .map((c, i) => i + '. ' + c.title)
         .join('\n')}`;
       ctx.botSpeak(reply);
@@ -58,7 +58,7 @@ const command: Command = {
       {
         broadcaster_id: CONFIG.get().twitch.ownerId,
         title: poll.title,
-        choices: poll.choices,
+        choices: choices,
         duration: 180
       }
     );

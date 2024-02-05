@@ -112,14 +112,12 @@ const command: Command = {
       req.status = 'CANCELED';
     } else if (outcome === 'lock') {
       req.status = 'LOCKED';
-    } else {
-      if (outcome === 'win' || outcome === '1') {
-        req.winning_outcome_id = lastPrediction.outcomes[0].id;
-      } else if (outcome === 'loss' || outcome === '2') {
-        req.winning_outcome_id = lastPrediction.outcomes[1].id;
-      } else if (outcome === 'draw' || outcome === '3') {
-        req.winning_outcome_id = lastPrediction.outcomes[2].id;
-      }
+    } else if (outcome === 'win' || outcome === '1') {
+      req.winning_outcome_id = lastPrediction.outcomes[0].id;
+    } else if (outcome === 'loss' || outcome === '2') {
+      req.winning_outcome_id = lastPrediction.outcomes[1].id;
+    } else if (outcome === 'draw' || outcome === '3') {
+      req.winning_outcome_id = lastPrediction.outcomes[2].id;
     }
 
     await services.twitchService.helixApiCall(

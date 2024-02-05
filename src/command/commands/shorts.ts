@@ -59,7 +59,7 @@ const command: Command = {
       ctx.botSpeak("I can't find this right now. Try again later.");
     } else {
       const title = cachedLatestShort.snippet.title.replace(
-        /#[a-zA-Z]+( )?/gi,
+        /#[a-z]+( )?/gi,
         ''
       );
       ctx.botSpeak(
