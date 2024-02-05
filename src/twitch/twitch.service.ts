@@ -291,7 +291,6 @@ export class TwitchService {
           'GET'
         )
       );
-      console.log(res2);
       const isFollower = !!res2?.data[0];
 
       twitchUserMap[login] = { id, isFollower };
