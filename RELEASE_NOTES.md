@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.10.2
+
+#### Bug Fixes
+
+- Fixed a bug in `!opp` and `!king` where a user could change to a secret king.
+
 ### 1.10.1 (2024-02-05)
 
 #### Features
