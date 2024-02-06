@@ -161,3 +161,60 @@ interface OnSubscriptionGiftEvent {
   cumulative_total: number | null;
   is_anonymous: boolean;
 }
+
+interface ChatSettings {
+  broadcaster_id: string;
+  slow_mode: boolean;
+  slow_mode_wait_time: number | null;
+  follower_mode: boolean;
+  follower_mode_duration: number;
+  subscriber_mode: boolean;
+  emote_mode: boolean;
+  unique_chat_mode: boolean;
+  non_moderator_chat_delay: boolean;
+  non_moderator_chat_delay_duration: number;
+}
+
+interface UpdateChatSettings {
+  slow_mode?: boolean;
+  slow_mode_wait_time?: number | null;
+  follower_mode?: boolean;
+  follower_mode_duration?: number | null;
+  subscriber_mode?: boolean;
+  emote_mode?: boolean;
+  unique_chat_mode?: boolean;
+  non_moderator_chat_delay?: boolean;
+  non_moderator_chat_delay_duration?: number | null;
+}
+
+interface PollData {
+  id: string;
+  broadcaster_id: string;
+  broadcaster_name: string;
+  broadcaster_login: string;
+  title: string;
+  choices: Array<{
+    id: string;
+    title: string;
+    votes: number;
+    channel_points_votes: number;
+    bits_votes: number;
+  }>;
+  bits_voting_enabled: boolean;
+  bits_per_vote: number;
+  channel_points_voting_enabled: boolean;
+  channel_points_per_vote: number;
+  status: string;
+  duration: number;
+  started_at: string;
+}
+
+interface CreatePoll {
+  title: string;
+  choices: Array<{
+    title: string;
+  }>;
+  channel_points_voting_enabled?: boolean;
+  channel_points_per_vote?: number;
+  duration: number;
+}

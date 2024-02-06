@@ -7,6 +7,8 @@
 - Added a `POST /api/twitch/custom-reward` endpoint to add a custom reward using the same client ID as the bot. This is necessary to allow the bot to edit custom rewards (like enabling/disabling).
 - Added an optional `twitch.challengeRewardId` to the config. If set, owner will now be able to run `!queue open` and `!queue close` to enable/disable the queue using the challenge reward.
 - Added `!queue clear` to clear the entire challenge queue.
+- Added `!emote` to easily toggle between emote only and not emote only chat. This will also allow for easy integration into the extension with an emote only button.
+- Removed the `!cancel` command as it was too ambiguous. Replaced by `!poll cancel`.
 
 #### Bug Fixes
 

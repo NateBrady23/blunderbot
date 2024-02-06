@@ -10,6 +10,11 @@ const command: Command = {
   name: 'poll',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
+    if (ctx.isMod && ctx.args[0] === 'cancel') {
+      const currPoll = await services.twitchService.getPoll();
+      await services.twitchService.endPoll(currPoll.id);
+    }
+
     if (!CONFIG.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !poll command.`);
       return false;
@@ -52,16 +57,11 @@ const command: Command = {
       ctx.botSpeak(reply);
       return true;
     }
-    await services.twitchService.helixApiCall(
-      'https://api.twitch.tv/helix/polls',
-      'POST',
-      {
-        broadcaster_id: CONFIG.get().twitch.ownerId,
-        title: poll.title,
-        choices: choices,
-        duration: 180
-      }
-    );
+    await services.twitchService.createPoll({
+      title: poll.title,
+      choices: choices,
+      duration: 180
+    });
     return true;
   }
 };

@@ -331,4 +331,45 @@ export class TwitchService {
     const res = await this.helixApiCall(url, 'POST', body, true);
     this.logger.log(`Custom reward ID for ${body.title}: ${res.data[0].id}`);
   }
+
+  async getChatSettings(): Promise<ChatSettings> {
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const res = await this.helixApiCall(url, 'GET', undefined, true);
+    return res.data[0];
+  }
+
+  async updateChatSettings(body: UpdateChatSettings) {
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}&moderator_id=${CONFIG.get().twitch.ownerId}`;
+    return this.helixApiCall(url, 'PATCH', body, true);
+  }
+
+  async getPoll(): Promise<PollData> {
+    const res = await this.helixApiCall(
+      'https://api.twitch.tv/helix/polls?broadcaster_id=' +
+        CONFIG.get().twitch.ownerId,
+      'GET'
+    );
+
+    return res.data[0];
+  }
+
+  async createPoll(poll: CreatePoll) {
+    await this.helixApiCall('https://api.twitch.tv/helix/polls', 'POST', {
+      broadcaster_id: CONFIG.get().twitch.ownerId,
+      title: poll.title,
+      choices: poll.choices,
+      duration: poll.duration
+    });
+  }
+
+  async endPoll(pollId: string) {
+    await this.helixApiCall(
+      'https://api.twitch.tv/helix/polls?broadcaster_id=' +
+        CONFIG.get().twitch.ownerId +
+        '&status=TERMINATED' +
+        '&id=' +
+        pollId,
+      'PATCH'
+    );
+  }
 }
