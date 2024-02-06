@@ -1,5 +1,6 @@
 import { Platform } from '../../enums';
 import { removeSymbols } from '../../utils/utils';
+import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'queue',
@@ -27,6 +28,31 @@ const command: Command = {
       void services.twitchService.ownerRunCommand(
         `!tts ${removeSymbols(ctx.args[1])} has joined the queue!`
       );
+    }
+
+    if (queueCommand === 'clear' && ctx.isOwner) {
+      commandState.challengeQueue = [];
+      ctx.botSpeak('The queue has been cleared');
+    }
+
+    if (CONFIG.get().twitch.challengeRewardId) {
+      if (queueCommand === 'open' && ctx.isOwner) {
+        void services.twitchService.updateCustomReward(
+          CONFIG.get().twitch.challengeRewardId,
+          { is_enabled: true }
+        );
+        ctx.botSpeak('The queue is now open');
+        return true;
+      }
+
+      if (queueCommand === 'close' && ctx.isOwner) {
+        void services.twitchService.updateCustomReward(
+          CONFIG.get().twitch.challengeRewardId,
+          { is_enabled: false }
+        );
+        ctx.botSpeak('The queue is now closed');
+        return false;
+      }
     }
 
     if (!commandState.challengeQueue.length) {

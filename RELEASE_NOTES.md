@@ -2,6 +2,12 @@
 
 ### 1.10.2
 
+#### Features
+
+- Added a `POST /api/twitch/custom-reward` endpoint to add a custom reward using the same client ID as the bot. This is necessary to allow the bot to edit custom rewards (like enabling/disabling).
+- Added an optional `twitch.challengeRewardId` to the config. If set, owner will now be able to run `!queue open` and `!queue close` to enable/disable the queue using the challenge reward.
+- Added `!queue clear` to clear the entire challenge queue.
+
 #### Bug Fixes
 
 - Fixed a bug in `!opp` and `!king` where a user could change to a secret king.

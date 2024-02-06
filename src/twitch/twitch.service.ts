@@ -317,4 +317,18 @@ export class TwitchService {
       this.logger.error('Error sending shoutout');
     }
   }
+
+  async updateCustomReward(
+    id: string,
+    body: { is_enabled?: boolean; cost?: number; prompt?: string }
+  ) {
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}&id=${id}`;
+    return this.helixApiCall(url, 'PATCH', body, true);
+  }
+
+  async createCustomReward(body: { title: string; cost: number }) {
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const res = await this.helixApiCall(url, 'POST', body, true);
+    this.logger.log(`Custom reward ID for ${body.title}: ${res.data[0].id}`);
+  }
 }

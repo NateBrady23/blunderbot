@@ -10,6 +10,7 @@ interface UserTwitchConfig {
   apiClientId: string;
   apiClientSecret: string;
   onSubscribe: string[];
+  challengeRewardId?: string;
   customRewardCommands: { [key: string]: string[] };
   followerCommands?: string[];
   subCommands?: string[];
