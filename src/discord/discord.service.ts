@@ -141,7 +141,7 @@ export class DiscordService {
     };
 
     // The message isn't a command, so we're done.
-    if (!message.startsWith('!')) return;
+    if (!CommandService.isCommandFormat(message)) return;
 
     const args = message
       .slice(1)

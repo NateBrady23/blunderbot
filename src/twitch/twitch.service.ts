@@ -108,7 +108,7 @@ export class TwitchService {
     // The message isn't a command or custom reward, so see if it's something we
     // should auto-respond to and then return. Don't auto respond to the bot.
     if (
-      !context.message.startsWith('!') &&
+      !CommandService.isCommandFormat(message) &&
       !data.channelPointsCustomRewardId &&
       !data.userLogin
         .toLowerCase()
@@ -179,7 +179,7 @@ export class TwitchService {
       context.isFollower = user.isFollower;
     }
 
-    if (context.message?.startsWith('!')) {
+    if (CommandService.isCommandFormat(context.message)) {
       const args = context.message
         .slice(1)
         .split(' ')
