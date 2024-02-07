@@ -19,6 +19,7 @@
 - Make chat `!personality` clearer in the prompt.
 - Fixed a bug where `!!` and `! ` were being treated as commands. Now only `!` followed by at least 1 alphanumeric character is treated as a command. Thanks @dannovikov @fitztrev!
 - Type lichess response for `!bbb` command and limit tournaments returned to prevent lag in first use.
+- Include missing sample database config.
 
 ### 1.10.1 (2024-02-05)
 
