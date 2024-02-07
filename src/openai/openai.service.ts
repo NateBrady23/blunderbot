@@ -34,24 +34,34 @@ export class OpenaiService {
   }
 
   async createImage(prompt: string): Promise<string> {
-    const response = await this.openai.images.generate({
-      model: CONFIG.get().openai?.imageModel || 'dall-e-3',
-      prompt,
-      quality: 'standard',
-      n: 1
-    });
-    return response.data[0].url;
+    try {
+      const response = await this.openai.images.generate({
+        model: CONFIG.get().openai?.imageModel || 'dall-e-3',
+        prompt,
+        quality: 'standard',
+        n: 1
+      });
+      return response.data[0].url;
+    } catch (error) {
+      this.logger.error('Error creating image');
+      this.logger.error(error);
+    }
   }
 
   async editImage(maskImg: string, prompt: string): Promise<string> {
-    const response = await this.openai.images.edit({
-      image: createReadStream(maskImg),
-      // TODO: Currently does not accept model parameter
-      // model: CONFIG.get().openai?.imageModel || 'dall-e-3',
-      prompt,
-      n: 1
-    });
-    return response.data[0].url;
+    try {
+      const response = await this.openai.images.edit({
+        image: createReadStream(maskImg),
+        // TODO: Currently does not accept model parameter
+        // model: CONFIG.get().openai?.imageModel || 'dall-e-3',
+        prompt,
+        n: 1
+      });
+      return response.data[0].url;
+    } catch (error) {
+      this.logger.error('Error editing image');
+      this.logger.error(error);
+    }
   }
 
   async tts(message: string, voice: OpenAiVoiceOptions): Promise<void> {
@@ -119,18 +129,18 @@ export class OpenaiService {
         }
       }
 
-      if (opts?.usePersonality) {
-        const personality = (await this.commandService.getCommandState())
-          .blunderBotPersonality;
-        if (personality) {
-          userMessage += ' ' + personality;
-        }
-      }
-
       if (opts?.platform === Platform.Twitch) {
         userMessage += ' Only reply with 50 words or less.';
       } else {
         userMessage += ' Only reply with 200 words or less.';
+      }
+
+      if (opts?.usePersonality) {
+        const personality = (await this.commandService.getCommandState())
+          .blunderBotPersonality;
+        if (personality) {
+          userMessage += ' Respond in this style: ' + personality;
+        }
       }
 
       let messages: OpenAiChatMessage[] = [

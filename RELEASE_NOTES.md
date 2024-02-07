@@ -14,6 +14,8 @@
 #### Bug Fixes
 
 - Fixed a bug in `!opp` and `!king` where a user could change to a secret king.
+- Now catching errors in `!image` creation and letting the user know their request failed.
+- Make chat `!personality` clearer in the prompt.
 
 ### 1.10.1 (2024-02-05)
 
