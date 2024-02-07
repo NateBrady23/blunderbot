@@ -71,7 +71,7 @@ export class CommandService {
   setInitialCommandState() {
     this.commandState = {
       arena: '',
-      shoutoutUsers: CONFIG.get().autoShoutouts,
+      shoutoutUsers: CONFIG.get().autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
