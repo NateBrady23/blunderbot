@@ -9,6 +9,7 @@
 - Added `!queue clear` to clear the entire challenge queue.
 - Added `!emote` to easily toggle between emote only and not emote only chat. This will also allow for easy integration into the extension with an emote only button.
 - Removed the `!cancel` command as it was too ambiguous. Replaced by `!poll cancel`.
+- Added `!autoshoutout` command to clean up twitch service. This checks to see if the user is on the auto shoutout list and hasn't been auto shouted out yet, then does it.
 
 #### Bug Fixes
 

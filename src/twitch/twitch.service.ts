@@ -5,7 +5,6 @@ import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 
-let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters: string[] = [];
 
 // Twitch user map is for determining followers and first time chatters
@@ -61,14 +60,6 @@ export class TwitchService {
     );
   }
 
-  checkForShoutout(user: string) {
-    user = user.toLowerCase();
-    if (shoutoutUsers.includes(user)) {
-      void this.ownerRunCommand(`!so ${user}`);
-      shoutoutUsers = shoutoutUsers.filter((u) => u !== user);
-    }
-  }
-
   async onMessageHandler(data: OnMessageHandlerInput) {
     let message = data.message;
     void writeLog('chat', `${data.displayName}: ${message}`);
@@ -109,9 +100,9 @@ export class TwitchService {
     }
 
     // If the message isn't a !so command, check to see if this user needs
-    // to be shouted out!
+    // to be auto shouted out!
     if (!context.message.startsWith('!so ')) {
-      this.checkForShoutout(context.username);
+      void this.ownerRunCommand(`!autoshoutout ${context.username}`);
     }
 
     // The message isn't a command or custom reward, so see if it's something we
@@ -208,9 +199,7 @@ export class TwitchService {
   async autoRespond(message: string) {
     if (!CONFIG.get().autoResponder) return;
 
-    let found = false;
     for (const match of CONFIG.get().autoResponder) {
-      if (found) break;
       for (const phrase of match.phrases) {
         const regex = new RegExp(phrase, 'gi');
         if (message.match(regex)) {
@@ -221,8 +210,7 @@ export class TwitchService {
               void this.botSpeak(response);
             }
           }
-          found = true;
-          break;
+          return;
         }
       }
     }

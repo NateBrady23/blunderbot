@@ -60,6 +60,7 @@ declare global {
 
   interface CommandState {
     arena: string;
+    shoutoutUsers: string[];
     boughtSquares: { [key: string]: string };
     first: string;
     isLive: boolean;
