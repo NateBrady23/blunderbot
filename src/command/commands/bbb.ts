@@ -1,8 +1,6 @@
-/**
- * TODO: Type the expected response from the Lichess API. Use the LichessService for this.
- */
 import { isNHoursLater } from '../../utils/utils';
 import { Platform } from '../../enums';
+import { CONFIG } from '../../config/config.service';
 const ndjsonParser = require('ndjson-parse');
 
 let cached: string[] = [];
@@ -11,10 +9,10 @@ let cachedAt: number;
 const cacheBBB = async () => {
   try {
     const res = await fetch(
-      `https://lichess.org/api/user/natebrady23/tournament/created`
+      `https://lichess.org/api/team/${CONFIG.get().lichess.teamId}/arena?max=10`
     );
     const ndjson = await res.text();
-    const json = ndjsonParser(ndjson);
+    const json: LichessTournamentResponse[] = ndjsonParser(ndjson);
     const current = json[0];
     const last = json[1];
     cached = [];

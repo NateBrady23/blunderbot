@@ -84,6 +84,13 @@ const userTwitchConfig: UserTwitchConfig = {
   // Maximum message length for the bot to speak. If the message is longer than this, it will be rejected completely to
   // avoid spamming. 500 characters fills one twitch message.
   maxMessageLength: 1500,
+  // Optional - Set this if you want to be able to use !queue open or !queue close to automatically open and close
+  // a challenge reward queue. Related: Challenge me! custom reward example above. Unfortunately, the Twitch API
+  // only allows you to edit a reward that was created by the same client ID. So you'll have to create the reward
+  // using blunderbot and then set the id here. The easiest way to do that with blunderbot is to send a POST request
+  // to the <blunderbot>/api/twitch/custom-reward endpoint with the reward title and cost in the body. You can then edit the
+  // reward in the twitch dashboard to add a description and image.
+  challengeRewardId: '220961fa-a9bf-4038-a40d-cb13c0ddc889',
   // You don't need to edit this unless you're doing local testing using the twitch cli
   // https://dev.twitch.tv/docs/cli/websocket-event-command/
   eventWebsocketUrl:

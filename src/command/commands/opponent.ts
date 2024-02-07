@@ -7,20 +7,16 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const kings = CONFIG.get().oppKings;
     let king = (ctx.args[0] || '').toLowerCase();
+    const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     if (king === 'random') {
-      const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
       king = filteredKings[Math.floor(Math.random() * filteredKings.length)];
-    } else if (!king || !kings.includes(king)) {
-      console.log('should be speaking');
-      console.log(
-        `The following opponent kings are available: ${CONFIG.get()
-          .oppKings.filter((k) => !k.startsWith('secret_'))
-          .join(', ')}`
-      );
+    } else if (
+      !king ||
+      !kings.includes(king) ||
+      (!ctx.isOwner && king.startsWith('secret_'))
+    ) {
       ctx.botSpeak(
-        `The following opponent kings are available: ${CONFIG.get()
-          .oppKings.filter((k) => !k.startsWith('secret_'))
-          .join(', ')}`
+        `The following opponent kings are available: ${filteredKings.join(', ')}`
       );
       return false;
     }
@@ -35,6 +31,7 @@ const command: Command = {
         `!alert {${ctx.displayName}} changed my opponent's king to {${king}}`
       );
     }
+    return true;
   }
 };
 

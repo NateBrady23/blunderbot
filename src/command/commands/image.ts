@@ -51,6 +51,11 @@ const command: Command = {
       url = await services.openaiService.createImage(prompt);
     }
 
+    if (!url) {
+      ctx.reply(ctx, `I'm sorry, I couldn't create an image for that prompt.`);
+      return false;
+    }
+
     console.log(`Image URL: ${url}`);
 
     services.appGateway.sendDataToSockets('serverMessage', {
@@ -64,7 +69,7 @@ const command: Command = {
     // If this is a command run by the owner, don't send to Discord or Twitter
     // Unless it was onBehalf of a user (most common case: Channel Redemption)
     if (ctx.isOwnerRun && !ctx.onBehalfOf) {
-      return;
+      return true;
     }
 
     if (sendToDiscord) {
@@ -81,6 +86,8 @@ const command: Command = {
         `${user} on Twitch used "!image ${prompt}" ${hashtags}`
       );
     }
+
+    return true;
   }
 };
 

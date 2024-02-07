@@ -5,7 +5,6 @@ import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
 
-let shoutoutUsers = CONFIG.get().autoShoutouts || [];
 const newChatters: string[] = [];
 
 // Twitch user map is for determining followers and first time chatters
@@ -61,14 +60,6 @@ export class TwitchService {
     );
   }
 
-  checkForShoutout(user: string) {
-    user = user.toLowerCase();
-    if (shoutoutUsers.includes(user)) {
-      void this.ownerRunCommand(`!so ${user}`);
-      shoutoutUsers = shoutoutUsers.filter((u) => u !== user);
-    }
-  }
-
   async onMessageHandler(data: OnMessageHandlerInput) {
     let message = data.message;
     void writeLog('chat', `${data.displayName}: ${message}`);
@@ -109,15 +100,15 @@ export class TwitchService {
     }
 
     // If the message isn't a !so command, check to see if this user needs
-    // to be shouted out!
+    // to be auto shouted out!
     if (!context.message.startsWith('!so ')) {
-      this.checkForShoutout(context.username);
+      void this.ownerRunCommand(`!autoshoutout ${context.username}`);
     }
 
     // The message isn't a command or custom reward, so see if it's something we
     // should auto-respond to and then return. Don't auto respond to the bot.
     if (
-      !context.message.startsWith('!') &&
+      !CommandService.isCommandFormat(message) &&
       !data.channelPointsCustomRewardId &&
       !data.userLogin
         .toLowerCase()
@@ -188,7 +179,7 @@ export class TwitchService {
       context.isFollower = user.isFollower;
     }
 
-    if (context.message?.startsWith('!')) {
+    if (CommandService.isCommandFormat(context.message)) {
       const args = context.message
         .slice(1)
         .split(' ')
@@ -208,9 +199,7 @@ export class TwitchService {
   async autoRespond(message: string) {
     if (!CONFIG.get().autoResponder) return;
 
-    let found = false;
     for (const match of CONFIG.get().autoResponder) {
-      if (found) break;
       for (const phrase of match.phrases) {
         const regex = new RegExp(phrase, 'gi');
         if (message.match(regex)) {
@@ -221,8 +210,7 @@ export class TwitchService {
               void this.botSpeak(response);
             }
           }
-          found = true;
-          break;
+          return;
         }
       }
     }
@@ -316,5 +304,60 @@ export class TwitchService {
       this.logger.error(e);
       this.logger.error('Error sending shoutout');
     }
+  }
+
+  async updateCustomReward(
+    id: string,
+    body: { is_enabled?: boolean; cost?: number; prompt?: string }
+  ) {
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}&id=${id}`;
+    return this.helixApiCall(url, 'PATCH', body, true);
+  }
+
+  async createCustomReward(body: { title: string; cost: number }) {
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const res = await this.helixApiCall(url, 'POST', body, true);
+    this.logger.log(`Custom reward ID for ${body.title}: ${res.data[0].id}`);
+  }
+
+  async getChatSettings(): Promise<ChatSettings> {
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const res = await this.helixApiCall(url, 'GET', undefined, true);
+    return res.data[0];
+  }
+
+  async updateChatSettings(body: UpdateChatSettings) {
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}&moderator_id=${CONFIG.get().twitch.ownerId}`;
+    return this.helixApiCall(url, 'PATCH', body, true);
+  }
+
+  async getPoll(): Promise<PollData> {
+    const res = await this.helixApiCall(
+      'https://api.twitch.tv/helix/polls?broadcaster_id=' +
+        CONFIG.get().twitch.ownerId,
+      'GET'
+    );
+
+    return res.data[0];
+  }
+
+  async createPoll(poll: CreatePoll) {
+    await this.helixApiCall('https://api.twitch.tv/helix/polls', 'POST', {
+      broadcaster_id: CONFIG.get().twitch.ownerId,
+      title: poll.title,
+      choices: poll.choices,
+      duration: poll.duration
+    });
+  }
+
+  async endPoll(pollId: string) {
+    await this.helixApiCall(
+      'https://api.twitch.tv/helix/polls?broadcaster_id=' +
+        CONFIG.get().twitch.ownerId +
+        '&status=TERMINATED' +
+        '&id=' +
+        pollId,
+      'PATCH'
+    );
   }
 }

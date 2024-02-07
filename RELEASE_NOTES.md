@@ -1,5 +1,26 @@
 # Release Notes
 
+### 1.10.2
+
+#### Features
+
+- Added a `POST /api/twitch/custom-reward` endpoint to add a custom reward using the same client ID as the bot. This is necessary to allow the bot to edit custom rewards (like enabling/disabling).
+- Added an optional `twitch.challengeRewardId` to the config. If set, owner will now be able to run `!queue open` and `!queue close` to enable/disable the queue using the challenge reward.
+- Added `!queue clear` to clear the entire challenge queue.
+- Added `!emote` to easily toggle between emote only and not emote only chat. This will also allow for easy integration into the extension with an emote only button.
+- Removed the `!cancel` command as it was too ambiguous. Replaced by `!poll cancel`.
+- Added `!autoshoutout` command to clean up twitch service. This checks to see if the user is on the auto shoutout list and hasn't been auto shouted out yet, then does it.
+- Added `!define <word>` and auto `!define <word>` after a round of wordle.
+
+#### Bug Fixes
+
+- Fixed a bug in `!opp` and `!king` where a user could change to a secret king.
+- Now catching errors in `!image` creation and letting the user know their request failed.
+- Make chat `!personality` clearer in the prompt.
+- Fixed a bug where `!!` and `! ` were being treated as commands. Now only `!` followed by at least 1 alphanumeric character is treated as a command. Thanks @dannovikov @fitztrev!
+- Type lichess response for `!bbb` command and limit tournaments returned to prevent lag in first use.
+- Include missing sample database config.
+
 ### 1.10.1 (2024-02-05)
 
 #### Features

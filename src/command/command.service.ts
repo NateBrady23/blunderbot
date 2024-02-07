@@ -68,9 +68,14 @@ export class CommandService {
     void this.setStoredCommands();
   }
 
+  static isCommandFormat(message: string) {
+    return /^![a-z0-9]+/i.test(message);
+  }
+
   setInitialCommandState() {
     this.commandState = {
       arena: '',
+      shoutoutUsers: CONFIG.get().autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],

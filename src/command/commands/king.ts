@@ -6,15 +6,17 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const kings = CONFIG.get().kings;
+    const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     let king = (ctx.args[0] || '').toLowerCase();
     if (king === 'random') {
-      const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
       king = filteredKings[Math.floor(Math.random() * filteredKings.length)];
-    } else if (!king || !kings.includes(king)) {
+    } else if (
+      !king ||
+      !kings.includes(king) ||
+      (!ctx.isOwner && king.startsWith('secret_'))
+    ) {
       ctx.botSpeak(
-        `The following kings are available: ${CONFIG.get()
-          .kings.filter((k) => !k.startsWith('secret_'))
-          .join(', ')}`
+        `The following kings are available: ${filteredKings.join(', ')}`
       );
       return false;
     }
@@ -28,6 +30,7 @@ const command: Command = {
         `!alert {${user}} changed the king to {${king}}`
       );
     }
+    return true;
   }
 };
 

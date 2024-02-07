@@ -42,6 +42,11 @@ export class TwitchController {
     void this.twitchService.ownerRunCommand(body.command);
   }
 
+  @Post('/custom-reward')
+  postCustomReward(@Body() body: { title: string; cost: number }) {
+    void this.twitchService.createCustomReward(body);
+  }
+
   @Post('/force-clients-refresh')
   forceClientsRefresh() {
     void this.twitchService.tellAllConnectedClientsToRefresh();
