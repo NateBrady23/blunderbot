@@ -16,8 +16,6 @@ def player_report():
         row['Berserk %'] = round(data['players'][player]['berserks'] / data['players'][player]['games'] * 100)
         row['BPG'] = round(data['players'][player]['blunders'] / data['players'][player]['games'], 2)
         row['BPM'] = round(data['players'][player]['blunders'] / data['players'][player]['moves'], 3)
-        # row['SOB'] = ''
-        # row['aSOB'] = ''
 
         report.append(row)
 
