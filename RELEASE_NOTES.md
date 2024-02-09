@@ -6,6 +6,10 @@
 
 - Added a reason to the `!violators` command. Thanks @fitztrev!
 
+#### Bug Fixes
+
+- `twitch.botPassword` no longer needed in config after removing tmi.js.
+
 ### 1.10.2
 
 #### Features

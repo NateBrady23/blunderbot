@@ -4,7 +4,6 @@ interface UserTwitchConfig {
   ownerId: string;
   botId: string;
   botUsername: string;
-  botPassword: string;
   apiBotOauthToken: string;
   apiOwnerOauthToken: string;
   apiClientId: string;
