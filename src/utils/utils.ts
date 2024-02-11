@@ -60,6 +60,7 @@ export async function playAudioFile(filePath: string) {
       player.play(filePath);
       await sleep(duration * 1000 + 300);
       await muteOrUnmuteDesktopApps(false);
+      return true;
     } catch (error) {
       console.log(`Error playing audio file.`);
       console.log(error);

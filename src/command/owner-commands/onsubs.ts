@@ -18,6 +18,7 @@ const command: Command = {
       if (body?.username) {
         commandState.contributions.subs[body.username] = true;
       }
+      return true;
     });
   }
 };

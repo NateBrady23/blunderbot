@@ -9,8 +9,10 @@
 #### Bug Fixes
 
 - `twitch.botPassword` no longer needed in config after removing tmi.js.
-- Fix problem in `!define` when word only has one definition.
-
+- Fixed problem in `!define` when word only has one definition.
+- Fixed problem with `!poll cancel` command.
+- Fixed no moderation in `!tts` command.
+- Fixed problem with return type of queued commands.
 
 ### 1.10.2
 

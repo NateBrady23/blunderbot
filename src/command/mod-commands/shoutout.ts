@@ -30,6 +30,7 @@ const command: Command = {
           `!alert Blunder Buddies, please join me in following {@${user}}! Link in the chat!`
         );
         void services.twitchService.helixShoutout(user);
+        return true;
       }
     });
   }

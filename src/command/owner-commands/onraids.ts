@@ -45,6 +45,7 @@ const command: Command = {
           );
           void services.twitchService.ownerRunCommand(`!tts ${announcement}`);
         }
+        return true;
       } catch (e) {
         console.error('Error in raids command');
         console.error(e);

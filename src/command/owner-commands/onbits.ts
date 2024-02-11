@@ -53,6 +53,7 @@ const command: Command = {
         message &&
           (await services.twitchService.ownerRunCommand(`!tts ${message}`));
       }
+      return true;
     });
   }
 };
