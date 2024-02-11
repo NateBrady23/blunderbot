@@ -44,8 +44,9 @@ const command: Command = {
         return false;
       }
       let toSpeak = `${json.word} (${json.phonetic}): `;
-      for (let i = 0; i < json.meanings.length || i < 2; i++) {
+      for (let i = 0; i < json.meanings.length && i < 2; i++) {
         const meaning = json.meanings[i];
+        console.log(meaning);
         toSpeak += `${i + 1}. ${meaning.partOfSpeech}: ${meaning.definitions[0].definition} `;
       }
       ctx.botSpeak(toSpeak);

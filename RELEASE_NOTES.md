@@ -9,6 +9,8 @@
 #### Bug Fixes
 
 - `twitch.botPassword` no longer needed in config after removing tmi.js.
+- Fix problem in `!define` when word only has one definition.
+
 
 ### 1.10.2
 
