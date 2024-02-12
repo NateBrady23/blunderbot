@@ -11,7 +11,6 @@ const userTwitchConfig: UserTwitchConfig = {
   ownerId: '11111111',
   botId: '22222222',
   botUsername: 'BlunderBot23',
-  botPassword: 'oauth:yours',
   apiBotOauthToken: 'yourbottoken',
   apiOwnerOauthToken: 'yourownertoken',
   apiClientId: 'yourapiclientid',

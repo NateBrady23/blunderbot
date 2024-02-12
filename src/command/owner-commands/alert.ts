@@ -25,6 +25,7 @@ const command: Command = {
       });
       console.log(`Alert: ${message}`);
       await sleep(milliseconds);
+      return true;
     });
   }
 };

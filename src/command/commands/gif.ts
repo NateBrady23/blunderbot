@@ -35,6 +35,7 @@ const command: Command = {
           const giphyUrl = await services.giphyService.fetchGif(msg);
           ctx.botSpeak(giphyUrl);
         }
+        return true;
       } catch (e) {
         console.error(e);
       }

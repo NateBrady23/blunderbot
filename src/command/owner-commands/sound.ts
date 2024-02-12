@@ -31,10 +31,11 @@ const command: Command = {
       }
 
       if (!file) {
-        return;
+        return false;
       }
 
       await playAudioFile(file);
+      return true;
     });
   }
 };

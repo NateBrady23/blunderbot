@@ -13,6 +13,7 @@ const command: Command = {
     if (ctx.isMod && ctx.args[0] === 'cancel') {
       const currPoll = await services.twitchService.getPoll();
       await services.twitchService.endPoll(currPoll.id);
+      return true;
     }
 
     if (!CONFIG.get().openai?.enabled) {

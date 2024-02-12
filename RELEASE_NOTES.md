@@ -1,5 +1,19 @@
 # Release Notes
 
+### 1.10.3
+
+#### Features
+
+- Added a reason to the `!violators` command. Thanks @fitztrev!
+
+#### Bug Fixes
+
+- `twitch.botPassword` no longer needed in config after removing tmi.js.
+- Fixed problem in `!define` when word only has one definition.
+- Fixed problem with `!poll cancel` command.
+- Fixed no moderation in `!tts` command.
+- Fixed problem with return type of queued commands.
+
 ### 1.10.2
 
 #### Features

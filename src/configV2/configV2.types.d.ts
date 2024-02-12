@@ -1,16 +1,20 @@
-interface UserTwitchConfig {
+interface UserTwitchConfigV2 {
+  // Twitch API Config
   ownerUsername: string;
   channel: string;
   ownerId: string;
-  botId: string;
   botUsername: string;
-  apiBotOauthToken: string;
+  botId: string;
   apiOwnerOauthToken: string;
+  apiBotOauthToken: string;
   apiClientId: string;
   apiClientSecret: string;
-  onSubscribe: string[];
+
+  // Custom Rewards Commands
   challengeRewardId?: string;
   customRewardCommands: { [key: string]: string[] };
+
+  // Command Restrictions
   followerCommands?: string[];
   subCommands?: string[];
   vipCommands?: string[];
@@ -20,6 +24,49 @@ interface UserTwitchConfig {
   userRestrictedCommands?: {
     [key: string]: string[];
   };
+
+  // Auto Shoutouts
+  autoShoutouts: string[];
+
+  // Auto Responder
+  autoResponder: {
+    phrases: string[];
+    responses: string[];
+  }[];
+
+  // Raids Config
+  raids: {
+    alert: string;
+    announcement: string;
+    defaultCommands: string[];
+    matches: {
+      [key: string]: {
+        commands: string[];
+        alert?: string;
+      };
+    };
+  };
+
+  // Bits Config
+  bits: {
+    matches: {
+      [key: string]: {
+        commands: string[];
+        alert: string;
+      };
+    };
+    '100orMore': {
+      commands: string[];
+      alert: string;
+    };
+    '99orLess': {
+      commands: string[];
+      alert: string;
+    };
+  };
+
+  // Uncategorized
+  onSubscribe: string[];
   welcome: {
     enabled: boolean;
     message: string;
@@ -30,15 +77,19 @@ interface UserTwitchConfig {
   eventSubscriptionUrl: string;
 }
 
-interface UserLichessConfig {
+interface UserLichessConfigV2 {
   user: string;
   oauthToken: string;
   botOauthToken: string;
   teamId: string;
   teamName: string;
+
+  titledPlayers: [string, string][];
 }
 
-interface UserOpenAiConfig {
+interface UserCommandConfigV2 {}
+
+interface UserOpenAiConfigV2 {
   enabled: boolean;
   apiKey: string;
   chatModel: string;
@@ -52,7 +103,7 @@ interface UserOpenAiConfig {
   memoryCount: number;
 }
 
-interface UserSpotifyConfig {
+interface UserSpotifyConfigV2 {
   enabled: boolean;
   clientId: string;
   clientSecret: string;
@@ -61,7 +112,7 @@ interface UserSpotifyConfig {
   allowExplicit: boolean;
 }
 
-interface UserTwitterConfig {
+interface UserTwitterConfigV2 {
   enabled: boolean;
   apiKey: string;
   apiSecret: string;
@@ -72,7 +123,7 @@ interface UserTwitterConfig {
   announceLive: boolean;
 }
 
-interface UserDbConfig {
+interface UserDbConfigV2 {
   enabled: boolean;
   type: 'postgres' | 'mysql' | 'sqlite';
   host: string;
@@ -88,7 +139,7 @@ interface UserDbConfig {
   };
 }
 
-interface UserDiscordConfig {
+interface UserDiscordConfigV2 {
   enabled: boolean;
   botToken: string;
   announcementChannelId: string;
@@ -101,34 +152,34 @@ interface UserDiscordConfig {
   inviteLink: string;
 }
 
-interface UserDecapiConfig {
+interface UserDecapiConfigV2 {
   enabled: boolean;
   token: string;
 }
 
-interface UserHeartRateConfig {
+interface UserHeartRateConfigV2 {
   enabled: boolean;
   url: string;
   class: string;
 }
 
-interface UserGiphyConfig {
+interface UserGiphyConfigV2 {
   enabled: boolean;
   apiKey: string;
 }
 
-interface UserRapidApiConfig {
+interface UserRapidApiConfigV2 {
   enabled: boolean;
   keys: string[];
 }
 
-interface UserYoutubeConfig {
+interface UserYoutubeConfigV2 {
   enabled: boolean;
   apiKey: string;
   shortsPlaylistId: string;
 }
 
-interface UserSoundsConfig {
+interface UserSoundsConfigV2 {
   mute: {
     programs: string[];
   };
@@ -137,61 +188,24 @@ interface UserSoundsConfig {
   };
 }
 
-type UserAutoShoutoutsConfig = string[];
-type UserTitledPlayersConfig = [string, string][];
-
-type UserAutoCommandsConfig = {
+type UserAutoCommandsConfigV2 = {
   commands: string[];
 }[];
 
-type UserKilledCommandsConfig = string[];
-type UserHiddenCommandsConfig = string[];
-interface UserMessageCommandsConfig {
+type UserKilledCommandsConfigV2 = string[];
+type UserHiddenCommandsConfigV2 = string[];
+interface UserMessageCommandsConfigV2 {
   [command: string]: any;
 }
 
-interface UserRaidsConfig {
-  alert: string;
-  announcement: string;
-  defaultCommands: string[];
-  matches: {
-    [key: string]: {
-      commands: string[];
-      alert?: string;
-    };
-  };
-}
-
-interface UserBitsConfig {
-  matches: {
-    [key: string]: {
-      commands: string[];
-      alert: string;
-    };
-  };
-  '100orMore': {
-    commands: string[];
-    alert: string;
-  };
-  '99orLess': {
-    commands: string[];
-    alert: string;
-  };
-}
-
-interface UserGifConfig {
+interface UserGifConfigV2 {
   matches: {
     [key: string]: string;
   };
   notFound: string;
 }
 
-type UserAutoResponderConfig = {
-  phrases: string[];
-  responses: string[];
-}[];
-
-type UserTriviaConfig = {
+type UserTriviaConfigV2 = {
   question: string;
   answers: number | string[];
   points: number;
@@ -199,39 +213,40 @@ type UserTriviaConfig = {
   timeLimit?: number;
 }[];
 
-interface UserConfig {
+interface UserV2ConfigV2 {
+  // Needed for BlunderBot (server) to start properly
   port: number;
   wsPort: number;
   nickname: string;
-  commandsListUrl: string;
+  db: UserDbConfigV2;
 
-  twitch: UserTwitchConfig;
-  lichess: UserLichessConfig;
-  openai: UserOpenAiConfig;
-  twitter: UserTwitterConfig;
-  db: UserDbConfig;
-  discord: UserDiscordConfig;
-  decapi: UserDecapiConfig;
-  heartRate: UserHeartRateConfig;
-  giphy: UserGiphyConfig;
-  rapidApi: UserRapidApiConfig;
-  youtube: UserYoutubeConfig;
-  sounds: UserSoundsConfig;
-  spotify: UserSpotifyConfig;
-  autoShoutouts: UserAutoShoutoutsConfig;
-  titledPlayers: UserTitledPlayersConfig;
-  autoCommands: UserAutoCommandsConfig;
-  killedCommands: UserKilledCommandsConfig;
-  hiddenCommands: UserHiddenCommandsConfig;
-  messageCommands: UserMessageCommandsConfig;
-  raids: UserRaidsConfig;
-  bits: UserBitsConfig;
-  gif: UserGifConfig;
-  autoResponder: UserAutoResponderConfig;
-  trivia: UserTriviaConfig;
+  twitch: UserTwitchConfigV2;
+  lichess: UserLichessConfigV2;
+
+  // Commands section on BlunderBot-Admin (platform agnostic)
+  autoCommands: UserAutoCommandsConfigV2;
+  killedCommands: UserKilledCommandsConfigV2;
+  hiddenCommands: UserHiddenCommandsConfigV2;
+  messageCommands: UserMessageCommandsConfigV2;
+
+  discord: UserDiscordConfigV2;
+  openai: UserOpenAiConfigV2;
+  spotify: UserSpotifyConfigV2;
+  twitter: UserTwitterConfigV2;
+  youtube: UserYoutubeConfigV2;
+  trivia: UserTriviaConfigV2;
+
+  // Misc
+  decapi: UserDecapiConfigV2;
+  heartRate: UserHeartRateConfigV2;
+  giphy: UserGiphyConfigV2;
+  rapidApi: UserRapidApiConfigV2;
+  sounds: UserSoundsConfigV2;
+  commandsListUrl: string;
+  gif: UserGifConfigV2;
 }
 
-interface Config extends UserConfig {
+interface ConfigV2 extends UserConfigV2 {
   kings: string[];
   crowns: string[];
   oppKings: string[];

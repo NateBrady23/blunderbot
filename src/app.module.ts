@@ -14,9 +14,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, EntitySchema } from 'typeorm';
 import * as TypeOrmNamingStrategy from 'typeorm-naming-strategies';
 import { CONFIG } from './config/config.service';
+import { ConfigV2Module } from './configV2/configV2.module';
 
 const imports = [
   BrowserModule,
+  ConfigV2Module,
   DiscordModule,
   OpenaiModule,
   SpotifyModule,

@@ -64,7 +64,17 @@ export class OpenaiService {
     }
   }
 
-  async tts(message: string, voice: OpenAiVoiceOptions): Promise<void> {
+  async tts(message: string, voice: OpenAiVoiceOptions): Promise<boolean> {
+    try {
+      if (await this.isFlagged(message)) {
+        return false;
+      }
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error('Moderation service is unavailable.');
+      return false;
+    }
+
     try {
       const response = await this.openai.audio.speech.create({
         model: CONFIG.get().openai.ttsModel,
@@ -76,6 +86,7 @@ export class OpenaiService {
       writeFileSync(`./temp/${uuid}.mp3`, buffer);
       await playAudioFile(`./temp/${uuid}.mp3`);
       this.logger.log(`Audio content written to file: /temp/${uuid}.mp3`);
+      return true;
     } catch (error) {
       this.logger.error(error);
     }

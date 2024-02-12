@@ -7,7 +7,7 @@ export class FunctionQueue {
     this.isRunning = false;
   }
 
-  async enqueue(fn: () => Promise<void>): Promise<boolean> {
+  async enqueue(fn: () => Promise<boolean>): Promise<boolean> {
     this.queue.push(fn);
     await this.run();
     return true;
