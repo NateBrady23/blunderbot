@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { createIndexes } from '../utils/migration-utils';
 
-const table = 'stored_command';
+const table = 'config';
 const indexedColumns = [
   {
     column: 'id',
@@ -9,7 +9,7 @@ const indexedColumns = [
   }
 ];
 
-export class Config1707404925601 implements MigrationInterface {
+export class Config1707404925602 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
