@@ -1,12 +1,14 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'chat',
   help: 'Talk to BlunderBot! Also @BlunderBot in the beginning or end of a message to talk.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().openai?.enabled) {
+    if (
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.chatModel
+    ) {
       console.log('OpenAI disabled in !chat command');
       return false;
     }

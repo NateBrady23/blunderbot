@@ -30,28 +30,6 @@ interface UserTwitchConfig {
   eventSubscriptionUrl: string;
 }
 
-interface UserLichessConfig {
-  user: string;
-  oauthToken: string;
-  botOauthToken: string;
-  teamId: string;
-  teamName: string;
-}
-
-interface UserOpenAiConfig {
-  enabled: boolean;
-  apiKey: string;
-  chatModel: string;
-  imageModel: string;
-  ttsModel: string;
-  textModerationModel: string;
-  baseSystemMessage: string;
-  imageEdits: string[];
-  voices: string[];
-  pronunciations: [[string, string]];
-  memoryCount: number;
-}
-
 interface UserSpotifyConfig {
   enabled: boolean;
   clientId: string;
@@ -86,19 +64,6 @@ interface UserDbConfig {
       rejectUnauthorized: boolean;
     };
   };
-}
-
-interface UserDiscordConfig {
-  enabled: boolean;
-  botToken: string;
-  announcementChannelId: string;
-  galleryChannelId: string;
-  musicChannelId?: string;
-  generalChannelId: string;
-  modChannelId: string;
-  ownerAuthorId: string;
-  botAuthorId: string;
-  inviteLink: string;
 }
 
 interface UserDecapiConfig {
@@ -137,7 +102,6 @@ interface UserSoundsConfig {
   };
 }
 
-type UserAutoShoutoutsConfig = string[];
 type UserTitledPlayersConfig = [string, string][];
 
 type UserAutoCommandsConfig = {
@@ -206,11 +170,8 @@ interface UserConfig {
   commandsListUrl: string;
 
   twitch: UserTwitchConfig;
-  lichess: UserLichessConfig;
-  openai: UserOpenAiConfig;
   twitter: UserTwitterConfig;
   db: UserDbConfig;
-  discord: UserDiscordConfig;
   decapi: UserDecapiConfig;
   heartRate: UserHeartRateConfig;
   giphy: UserGiphyConfig;
@@ -218,7 +179,6 @@ interface UserConfig {
   youtube: UserYoutubeConfig;
   sounds: UserSoundsConfig;
   spotify: UserSpotifyConfig;
-  autoShoutouts: UserAutoShoutoutsConfig;
   titledPlayers: UserTitledPlayersConfig;
   autoCommands: UserAutoCommandsConfig;
   killedCommands: UserKilledCommandsConfig;

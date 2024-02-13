@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 interface Violator {
   username: string;
@@ -16,8 +15,8 @@ interface LichessUser {
 const command: Command = {
   name: 'violators',
   platforms: [Platform.Discord],
-  run: async (ctx) => {
-    const teamId = ctx.args[0] || CONFIG.get().lichess.teamId;
+  run: async (ctx, { services }) => {
+    const teamId = ctx.args[0] || services.configV2Service.get().lichess.teamId;
 
     fetch(`https://lichess.org/api/team/${teamId}/users`)
       .then((res) => res.text())

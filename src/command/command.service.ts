@@ -12,6 +12,7 @@ import { TwitterService } from '../twitter/twitter.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class CommandService {
@@ -24,6 +25,8 @@ export class CommandService {
     private readonly appGateway: AppGateway,
     @Inject(forwardRef(() => BrowserService))
     private readonly browserService: BrowserService,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway,
     @Inject(forwardRef(() => TwitchService))
@@ -46,6 +49,7 @@ export class CommandService {
     this.services = {
       appGateway: this.appGateway,
       browserService: this.browserService,
+      configV2Service: this.configV2Service,
       commandService: this,
       discordService: this.discordService,
       twitchGateway: this.twitchGateway,
@@ -58,7 +62,9 @@ export class CommandService {
       // Entity services
       storedCommandEntityService: this.storedCommandEntityService
     };
+  }
 
+  init() {
     this.setInitialCommandState();
 
     if (CONFIG.get().heartRate?.enabled) {
@@ -75,7 +81,7 @@ export class CommandService {
   setInitialCommandState() {
     this.commandState = {
       arena: '',
-      shoutoutUsers: CONFIG.get().autoShoutouts || [],
+      shoutoutUsers: this.configV2Service.get().twitch.autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
@@ -85,7 +91,9 @@ export class CommandService {
       killedCommands: CONFIG.get().killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai?.voices[0],
+      blunderbotVoice: <OpenAiVoiceOptions>(
+        this.configV2Service.get().openai?.voices[0]
+      ),
       storedCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},

@@ -80,7 +80,6 @@ interface UserTwitchConfigV2 {
 interface UserLichessConfigV2 {
   user: string;
   oauthToken: string;
-  botOauthToken: string;
   teamId: string;
   teamName: string;
 
@@ -213,7 +212,7 @@ type UserTriviaConfigV2 = {
   timeLimit?: number;
 }[];
 
-interface UserV2ConfigV2 {
+interface UserConfigV2 {
   // Needed for BlunderBot (server) to start properly
   port: number;
   wsPort: number;
@@ -255,3 +254,12 @@ interface ConfigV2 extends UserConfigV2 {
   cursors: string[];
   commands: { [key: string]: Command };
 }
+
+type ConfigV2Keys =
+  | 'twitch'
+  | 'lichess'
+  | 'openai'
+  | 'discord'
+  | 'spotify'
+  | 'twitter'
+  | 'trivia';

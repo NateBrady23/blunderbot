@@ -10,6 +10,7 @@ import { TwitterService } from '../twitter/twitter.service';
 import { CommandService } from './command.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 declare global {
   interface CommandRunFuncOptions {
@@ -46,6 +47,7 @@ declare global {
   interface CommandServices {
     appGateway: AppGateway;
     browserService: BrowserService;
+    configV2Service: ConfigV2Service;
     commandService: CommandService;
     discordService: DiscordService;
     giphyService: GiphyService;

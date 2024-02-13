@@ -1,18 +1,20 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'voice',
   platforms: [Platform.Twitch],
-  run: async (ctx, { commandState }) => {
-    if (!CONFIG.get().openai?.enabled) {
+  run: async (ctx, { commandState, services }) => {
+    if (!services.configV2Service.get().openai?.enabled) {
       ctx.botSpeak('OpenAI is disabled in !voice.');
       return false;
     }
     const voice: OpenAiVoiceOptions = <OpenAiVoiceOptions>(
       ctx.args[0]?.toLowerCase().trim()
     );
-    if (!voice || !CONFIG.get().openai.voices.includes(voice)) {
+    if (
+      !voice ||
+      !services.configV2Service.get().openai.voices.includes(voice)
+    ) {
       return false;
     }
     commandState.blunderbotVoice = voice;

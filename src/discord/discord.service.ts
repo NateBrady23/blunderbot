@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CommandService } from '../command/command.service';
 import { Platform } from '../enums';
-import { CONFIG } from '../config/config.service';
 import {
   AttachmentBuilder,
   Client,
@@ -10,6 +9,7 @@ import {
   Message,
   TextChannel
 } from 'discord.js';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class DiscordService {
@@ -20,9 +20,13 @@ export class DiscordService {
 
   constructor(
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService
-  ) {
-    if (!CONFIG.get().discord?.enabled) {
+    private readonly commandService: CommandService,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
+
+  init() {
+    if (!this.configV2Service.get().discord?.enabled) {
       this.logger.log('Discord disabled');
       return;
     }
@@ -58,26 +62,26 @@ export class DiscordService {
         });
     });
 
-    this.client.login(CONFIG.get().discord.botToken);
+    void this.client.login(this.configV2Service.get().discord.botToken);
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
   makeAnnouncement(content: string) {
     const channel = this.client.channels.cache.get(
-      CONFIG.get().discord.announcementChannelId
+      this.configV2Service.get().discord.announcementChannelId
     ) as TextChannel;
-    channel.send(content);
+    void channel.send(content);
   }
 
   postImageToGallery(content: string, buffer: Buffer) {
     try {
       const channel = this.client.channels.cache.get(
-        CONFIG.get().discord.galleryChannelId
+        this.configV2Service.get().discord.galleryChannelId
       ) as TextChannel;
       const attachment = new AttachmentBuilder(buffer, {
         name: 'image.png'
       });
-      channel.send({ content, files: [attachment] });
+      void channel.send({ content, files: [attachment] });
     } catch (error) {
       this.logger.error(error);
     }
@@ -99,7 +103,7 @@ export class DiscordService {
 
   // TODO: There's a bug sometimes where there's no message or context?
   onMessageHandler(discordMessage: Message) {
-    const botAuthorId = CONFIG.get().discord.botAuthorId;
+    const botAuthorId = this.configV2Service.get().discord.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
     // end of the message, so it can respond.
@@ -159,15 +163,20 @@ export class DiscordService {
     context.displayName = discordMessage.author.username;
     context.userId = discordMessage.author.id;
     context.isOwner =
-      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId;
+      discordMessage.author.id ===
+      this.configV2Service.get().discord.ownerAuthorId;
     context.isBot =
-      discordMessage.author.id === CONFIG.get().discord.botAuthorId;
+      discordMessage.author.id ===
+      this.configV2Service.get().discord.botAuthorId;
     // We determine a mod by seeing if they're in the mod channel
     context.isMod =
-      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId ||
-      discordMessage.channelId === CONFIG.get().discord.modChannelId;
+      discordMessage.author.id ===
+        this.configV2Service.get().discord.ownerAuthorId ||
+      discordMessage.channelId ===
+        this.configV2Service.get().discord.modChannelId;
     context.isSubscriber =
-      discordMessage.author.id === CONFIG.get().discord.ownerAuthorId;
+      discordMessage.author.id ===
+      this.configV2Service.get().discord.ownerAuthorId;
     return <Context>context;
   }
 }

@@ -15,8 +15,8 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      CONFIG.get().discord?.enabled &&
-      !!CONFIG.get().discord?.announcementChannelId;
+      services.configV2Service.get().discord?.enabled &&
+      !!services.configV2Service.get().discord?.announcementChannelId;
     let sendToTwitter =
       CONFIG.get().twitter?.enabled && CONFIG.get().twitter?.announceLive;
 

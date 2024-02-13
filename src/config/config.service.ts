@@ -57,20 +57,14 @@ class ConfigService {
     this.loadedConfig.twitch = require(
       path.join(__dirname, './config.twitch')
     ).default;
-    this.loadedConfig.lichess = require(
-      path.join(__dirname, './config.lichess')
-    ).default;
 
     // These are optional and can fail to load
     this.loadFromFile('autoCommands', './config.auto-commands');
     this.loadFromFile('autoResponder', './config.auto-responder');
-    this.loadFromFile('autoShoutouts', './config.auto-shoutouts');
     this.loadFromFile('bits', './config.bits');
     this.loadFromFile('db', './config.db');
-    this.loadFromFile('discord', './config.discord');
     this.loadFromFile('gif', './config.gif');
     this.loadFromFile('messageCommands', './config.message-commands');
-    this.loadFromFile('openai', './config.openai');
     this.loadFromFile('raids', './config.raids');
     this.loadFromFile('spotify', './config.spotify');
     this.loadFromFile('titledPlayers', './config.titled-players');

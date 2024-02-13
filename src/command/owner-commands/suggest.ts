@@ -1,11 +1,13 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'suggest',
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
-    if (!CONFIG.get().openai?.enabled) {
+    if (
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.chatModel
+    ) {
       ctx.botSpeak('OpenAI is disabled in !suggest.');
       return false;
     }

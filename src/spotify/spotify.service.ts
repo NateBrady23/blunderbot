@@ -118,7 +118,14 @@ export class SpotifyService {
         }
       );
       const data: SpotifySearchResponse = await res.json();
-      return data.tracks.items[0];
+      for (const track of data.tracks.items) {
+        if (
+          query.includes('karaoke') ||
+          !track.name.toLowerCase().includes('karaoke')
+        ) {
+          return track;
+        }
+      }
     } catch (e) {
       this.logger.error('Error getting Spotify track from search');
       return;

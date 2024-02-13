@@ -1,20 +1,22 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'discordspeak',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().discord?.enabled) {
+    if (
+      !services.configV2Service.get().discord?.enabled ||
+      !services.configV2Service.get().discord?.generalChannelId
+    ) {
       console.log(`Discord is not enabled in !discordspeak command.`);
       return false;
     }
     const msg = ctx.body;
     if (msg) {
       const channel = {
-        channelId: CONFIG.get().discord.generalChannelId
+        channelId: services.configV2Service.get().discord.generalChannelId
       };
-      services.discordService.botSpeak(channel, msg);
+      void services.discordService.botSpeak(channel, msg);
     }
     return true;
   }

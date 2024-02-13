@@ -1,5 +1,15 @@
 # Release Notes
 
+### 2.0.0
+
+#### Breaking Changes
+
+- Major configuration change. BlunderBot config now managed by BlunderBot-Admin
+
+#### Bug Fixes
+
+- `!sr` will not return karaoke tracks unless karaoke is in the search query.
+
 ### 1.10.3
 
 #### Features

@@ -7,14 +7,17 @@ const command: Command = {
   help: '!image <prompt> - Creates an image based on the prompt.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().openai?.enabled) {
+    if (
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.imageModel
+    ) {
       console.log(`OpenAI is not enabled in !image command.`);
       return false;
     }
     let prompt = ctx.body?.trim();
     let sendToDiscord =
-      CONFIG.get().discord?.enabled &&
-      !!CONFIG.get().discord?.galleryChannelId &&
+      services.configV2Service.get().discord?.enabled &&
+      !!services.configV2Service.get().discord?.galleryChannelId &&
       ctx.platform !== Platform.Discord;
     let sendToTwitter =
       CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
@@ -41,7 +44,7 @@ const command: Command = {
     let url = '';
     const firstWord = prompt.split(' ')[0].toLowerCase();
 
-    if (CONFIG.get().openai.imageEdits.includes(firstWord)) {
+    if (services.configV2Service.get().openai.imageEdits.includes(firstWord)) {
       const regex = new RegExp(`${firstWord} `, 'i');
       url = await services.openaiService.editImage(
         `./public/images/edits/${firstWord}.png`,

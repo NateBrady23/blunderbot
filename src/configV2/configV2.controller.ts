@@ -1,19 +1,24 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ConfigV2Service } from './configV2.service';
 
 @Controller('config')
 export class ConfigV2Controller {
   constructor(private readonly configV2Service: ConfigV2Service) {}
 
-  @Get('twitch')
-  async getTwitchConfig(): Promise<any> {
+  @Get(':path')
+  async getConfig(
+    @Param('path') path: ConfigV2Keys
+  ): Promise<Partial<UserConfigV2>> {
     const config = await this.configV2Service.getLatest();
-    return config?.twitch || {};
+    return (config?.[path] || {}) as Partial<UserConfigV2>;
   }
 
-  @Post('twitch')
-  async postTwitchConfig(@Body() body: UserTwitchConfigV2): Promise<any> {
-    const config = await this.configV2Service.update('twitch', body);
-    return config?.twitch || {};
+  @Post(':path')
+  async postConfig(
+    @Param('path') path: ConfigV2Keys,
+    @Body() body: Partial<UserConfigV2>
+  ): Promise<Partial<UserConfigV2>> {
+    const config = await this.configV2Service.update(path, body);
+    return (config?.[path] || {}) as Partial<UserConfigV2>;
   }
 }

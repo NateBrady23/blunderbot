@@ -19,13 +19,13 @@ const command: Command = {
     if (!ctx.args[0] && !items.length) {
       const currentGame =
         (await services.lichessService.getCurrentGame(
-          CONFIG.get().lichess.user,
+          services.configV2Service.get().lichess.user,
           {
             gameId: true
           }
         )) || '';
       items = [
-        `Game result for ${CONFIG.get().lichess.user}? ${currentGame}`,
+        `Game result for ${services.configV2Service.get().lichess.user}? ${currentGame}`,
         'Win',
         'Loss',
         'Draw'
@@ -56,7 +56,10 @@ const command: Command = {
         return false;
       }
 
-      if (CONFIG.get().openai?.enabled) {
+      if (
+        services.configV2Service.get().openai?.enabled &&
+        services.configV2Service.get().openai?.ttsModel
+      ) {
         const msg = await services.openaiService.sendPrompt(
           `
         Make an announcement that a prediction is now available.

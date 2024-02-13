@@ -4,6 +4,7 @@ import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 const newChatters: string[] = [];
 
@@ -26,7 +27,9 @@ export class TwitchService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService,
     @Inject(forwardRef(() => TwitchGateway))
-    private readonly twitchGateway: TwitchGateway
+    private readonly twitchGateway: TwitchGateway,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
   ) {
     // TODO: Remove this in favor of proper static methods
     this.botSpeak = this.botSpeak.bind(this);
@@ -52,8 +55,8 @@ export class TwitchService {
       'https://api.twitch.tv/helix/chat/messages',
       'POST',
       {
-        broadcaster_id: CONFIG.get().twitch.ownerId,
-        sender_id: CONFIG.get().twitch.botId,
+        broadcaster_id: this.configV2Service.get().twitch.ownerId,
+        sender_id: this.configV2Service.get().twitch.botId,
         message
       },
       false
@@ -64,14 +67,14 @@ export class TwitchService {
     let message = data.message;
     void writeLog('chat', `${data.displayName}: ${message}`);
     const regex = new RegExp(
-      `^@${CONFIG.get().twitch.botUsername}|@${
-        CONFIG.get().twitch.botUsername
+      `^@${this.configV2Service.get().twitch.botUsername}|@${
+        this.configV2Service.get().twitch.botUsername
       }$`,
       'i'
     );
     if (regex.test(message)) {
       const replaceRegex = new RegExp(
-        `@${CONFIG.get().twitch.botUsername} `,
+        `@${this.configV2Service.get().twitch.botUsername} `,
         'i'
       );
       message = '!chat ' + message.replace(replaceRegex, '');
