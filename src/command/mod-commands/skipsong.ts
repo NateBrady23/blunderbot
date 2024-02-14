@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'skipsong',
@@ -7,7 +6,7 @@ const command: Command = {
   aliases: ['music'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().spotify?.enabled) {
+    if (!services.configV2Service.get().spotify?.enabled) {
       console.log('Spotify is not enabled for !skipsong.');
       return false;
     }
