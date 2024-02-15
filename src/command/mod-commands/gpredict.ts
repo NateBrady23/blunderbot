@@ -5,7 +5,6 @@
  *   !gpredict win -- resolves the prediction as a win
  */
 
-import { CONFIG } from '../../config/config.service';
 import { getItemsBetweenDelimiters } from '../../utils/utils';
 import { Platform } from '../../enums';
 
@@ -38,7 +37,7 @@ const command: Command = {
         'https://api.twitch.tv/helix/predictions',
         'POST',
         {
-          broadcaster_id: CONFIG.get().twitch.ownerId,
+          broadcaster_id: services.configV2Service.get().twitch.ownerId,
           title: items[0],
           outcomes: [
             { title: items[1] },
@@ -77,7 +76,7 @@ const command: Command = {
 
     const res = await services.twitchService.helixApiCall(
       `https://api.twitch.tv/helix/predictions?broadcaster_id=${
-        CONFIG.get().twitch.ownerId
+        services.configV2Service.get().twitch.ownerId
       }`
     );
 
@@ -94,7 +93,7 @@ const command: Command = {
       status: string;
       winning_outcome_id?: string;
     } = {
-      broadcaster_id: CONFIG.get().twitch.ownerId,
+      broadcaster_id: services.configV2Service.get().twitch.ownerId,
       id: lastPrediction.id,
       status: 'RESOLVED'
     };

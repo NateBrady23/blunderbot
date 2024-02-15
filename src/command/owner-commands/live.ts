@@ -58,13 +58,13 @@ const command: Command = {
 
     if (sendToDiscord) {
       services.discordService.makeAnnouncement(
-        `@everyone ${msg} https://twitch.tv/${CONFIG.get().twitch.channel}`
+        `@everyone ${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }
 
     if (sendToTwitter) {
       void services.twitterService.postTweet(
-        `${msg} https://twitch.tv/${CONFIG.get().twitch.channel} ${
+        `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername} ${
           CONFIG.get().twitter.tweetHashtags
         }`
       );

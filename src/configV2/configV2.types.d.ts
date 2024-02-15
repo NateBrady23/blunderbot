@@ -1,7 +1,6 @@
 interface UserTwitchConfigV2 {
   // Twitch API Config
   ownerUsername: string;
-  channel: string;
   ownerId: string;
   botUsername: string;
   botId: string;

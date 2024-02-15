@@ -1,25 +1,6 @@
 interface UserTwitchConfig {
-  ownerUsername: string;
-  channel: string;
-  ownerId: string;
-  botId: string;
-  botUsername: string;
-  apiBotOauthToken: string;
-  apiOwnerOauthToken: string;
-  apiClientId: string;
-  apiClientSecret: string;
   onSubscribe: string[];
   challengeRewardId?: string;
-  customRewardCommands: { [key: string]: string[] };
-  followerCommands?: string[];
-  subCommands?: string[];
-  vipCommands?: string[];
-  hypeTrainConductorCommands?: string[];
-  founderCommands?: string[];
-  limitedCommands?: { [key: string]: number };
-  userRestrictedCommands?: {
-    [key: string]: string[];
-  };
   welcome: {
     enabled: boolean;
     message: string;

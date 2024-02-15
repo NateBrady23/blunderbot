@@ -7,6 +7,7 @@ import { CONFIG } from '../config/config.service';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
 import * as WebSocket from 'ws';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitchEventSub {
@@ -17,6 +18,8 @@ export class TwitchEventSub {
   private currentHypeTrainLevel = 1;
 
   constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService
   ) {}
@@ -169,16 +172,18 @@ export class TwitchEventSub {
         to_broadcaster_user_id?: string;
         user_id?: string;
       } = {
-        broadcaster_user_id: CONFIG.get().twitch.ownerId
+        broadcaster_user_id: this.configV2Service.get().twitch.ownerId
       };
       if (event.version === '2') {
-        condition['moderator_user_id'] = CONFIG.get().twitch.ownerId;
+        condition['moderator_user_id'] =
+          this.configV2Service.get().twitch.ownerId;
       }
       if (event.eventType === 'channel.raid') {
-        condition['to_broadcaster_user_id'] = CONFIG.get().twitch.ownerId;
+        condition['to_broadcaster_user_id'] =
+          this.configV2Service.get().twitch.ownerId;
       }
       if (event.eventType === 'channel.chat.message') {
-        condition['user_id'] = CONFIG.get().twitch.ownerId;
+        condition['user_id'] = this.configV2Service.get().twitch.ownerId;
       }
       const res = await this.twitchService.helixApiCall(
         CONFIG.get().twitch.eventSubscriptionUrl,
@@ -208,7 +213,7 @@ export class TwitchEventSub {
       displayName: data.chatter_user_name,
       isBot:
         data.chatter_user_login ===
-        CONFIG.get().twitch.botUsername.toLowerCase(),
+        this.configV2Service.get().twitch.botUsername.toLowerCase(),
       isMod: data.badges.some((badge) => badge.set_id === 'moderator'),
       isSub: data.badges.some((badge) => badge.set_id === 'subscriber'),
       isVip: data.badges.some((badge) => badge.set_id === 'vip'),
@@ -218,7 +223,7 @@ export class TwitchEventSub {
       ),
       isOwner:
         data.chatter_user_login ===
-        CONFIG.get().twitch.ownerUsername.toLowerCase(),
+        this.configV2Service.get().twitch.ownerUsername.toLowerCase(),
       channelPointsCustomRewardId: data.channel_points_custom_reward_id
     };
 

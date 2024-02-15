@@ -163,7 +163,7 @@ export class CommandService {
 
     if (cmd.requiresLive && !this.commandState.isLive) {
       ctx.botSpeak(
-        `${CONFIG.get().twitch.channel} is not live until I SAY HE'S LIVE!`
+        `${this.configV2Service.get().twitch.ownerUsername} is not live until I SAY HE'S LIVE!`
       );
       return false;
     }
@@ -184,7 +184,7 @@ export class CommandService {
 
     if (ctx.platform === Platform.Twitch) {
       if (
-        CONFIG.get().twitch.subCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.subCommands?.includes(cmd.name) &&
         !ctx.isSubscriber
       ) {
         ctx.botSpeak(
@@ -194,20 +194,25 @@ export class CommandService {
       }
 
       if (
-        CONFIG.get().twitch.followerCommands?.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch.followerCommands?.includes(cmd.name) &&
         !ctx.isFollower
       ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
         return false;
       }
 
-      if (CONFIG.get().twitch.vipCommands?.includes(cmd.name) && !ctx.isVip) {
+      if (
+        this.configV2Service.get().twitch.vipCommands?.includes(cmd.name) &&
+        !ctx.isVip
+      ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
         return false;
       }
 
       if (
-        CONFIG.get().twitch.founderCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.founderCommands?.includes(cmd.name) &&
         !ctx.isFounder
       ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for founders only.`);
@@ -215,7 +220,9 @@ export class CommandService {
       }
 
       if (
-        CONFIG.get().twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
         !ctx.isHypeTrainConductor
       ) {
         ctx.botSpeak(
@@ -239,7 +246,8 @@ export class CommandService {
     }
 
     // Checks to see if the command is limited
-    const limitedTo = CONFIG.get().twitch.limitedCommands[cmd.name];
+    const limitedTo =
+      this.configV2Service.get().twitch.limitedCommands[cmd.name];
     if (limitedTo && limitedTo > 0) {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
@@ -256,7 +264,8 @@ export class CommandService {
       }
     }
 
-    const userRestricted = CONFIG.get().twitch.userRestrictedCommands[cmd.name];
+    const userRestricted =
+      this.configV2Service.get().twitch.userRestrictedCommands[cmd.name];
     if (userRestricted) {
       const found = userRestricted.some((user) => {
         return user.toLowerCase() === ctx.displayName.toLowerCase();

@@ -4,20 +4,24 @@ import { CONFIG } from '../../config/config.service';
 const command: Command = {
   name: 'uptime',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
+  run: async (ctx, { services }) => {
     if (!CONFIG.get().decapi?.enabled) {
       console.log('DecAPI is not enabled for !uptime command.');
       return false;
     }
     const url = `https://decapi.me/twitch/uptime/${
-      CONFIG.get().twitch.channel
+      services.configV2Service.get().twitch.ownerUsername
     }`;
 
     const res = await (await fetch(url)).text();
     if (res.includes('offline')) {
-      ctx.botSpeak(`${CONFIG.get().twitch.channel} is offline.`);
+      ctx.botSpeak(
+        `${services.configV2Service.get().twitch.ownerUsername} is offline.`
+      );
     } else {
-      ctx.botSpeak(`${CONFIG.get().twitch.channel} has been live for ${res}.`);
+      ctx.botSpeak(
+        `${services.configV2Service.get().twitch.ownerUsername} has been live for ${res}.`
+      );
     }
     return true;
   }

@@ -1,4 +1,3 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -6,8 +5,8 @@ const command: Command = {
   help: `How many followers does the streamer have on Twitch?`,
   aliases: ['followers', 'followercount', 'followcount'],
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
-    const channel = CONFIG.get().twitch.channel;
+  run: async (ctx, { services }) => {
+    const channel = services.configV2Service.get().twitch.ownerUsername;
     const url = `https://decapi.me/twitch/followcount/${channel}`;
 
     const res = await (await fetch(url)).text();

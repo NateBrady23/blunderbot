@@ -6,6 +6,7 @@ import { TwitchEventSub } from '../twitch/twitch.eventsub';
 import { CommandService } from '../command/command.service';
 import { DiscordService } from '../discord/discord.service';
 import { OpenaiService } from '../openai/openai.service';
+import { TwitchService } from '../twitch/twitch.service';
 
 // Because of the circular dependencies and forwardRef, we need to use a variable to store the config
 // outside of the class.
@@ -27,7 +28,9 @@ export class ConfigV2Service {
     @Inject(forwardRef(() => TwitchEventSub))
     private readonly twitchEventSub: TwitchEventSub,
     @Inject(forwardRef(() => TwitchPubSub))
-    private readonly twitchPubSub: TwitchPubSub
+    private readonly twitchPubSub: TwitchPubSub,
+    @Inject(forwardRef(() => TwitchService))
+    private readonly twitchService: TwitchService
   ) {
     this.get = this.get.bind(this);
     void this.init();
@@ -38,6 +41,7 @@ export class ConfigV2Service {
     config = await this.getLatest();
 
     if (config.twitch) {
+      this.twitchService.init();
       this.twitchPubSub.init();
       this.twitchEventSub.init();
 
