@@ -7,10 +7,13 @@ import { CommandService } from '../command/command.service';
 import { DiscordService } from '../discord/discord.service';
 import { OpenaiService } from '../openai/openai.service';
 
+// Because of the circular dependencies and forwardRef, we need to use a variable to store the config
+// outside of the class.
+let config: Config;
+
 @Injectable()
 export class ConfigV2Service {
   private logger: Logger = new Logger(ConfigV2Service.name);
-  private config: Config;
 
   constructor(
     @Inject(forwardRef(() => CommandService))
@@ -32,9 +35,9 @@ export class ConfigV2Service {
 
   async init() {
     this.logger.log('ConfigV2Service instantiated');
-    this.config = await this.getLatest();
+    config = await this.getLatest();
 
-    if (this.config.twitch) {
+    if (config.twitch) {
       this.twitchPubSub.init();
       this.twitchEventSub.init();
 
@@ -46,32 +49,31 @@ export class ConfigV2Service {
       return;
     }
 
-    if (this.config.discord) {
+    if (config.discord) {
       this.discordService.init();
     }
 
-    if (this.config.openai) {
+    if (config.openai) {
       this.openaiService.init();
     }
   }
 
   async getLatest(): Promise<Config> {
-    this.config = ((await this.configEntityService.latest()) || {}) as Config;
-    return this.config;
+    config = ((await this.configEntityService.latest()) || {}) as Config;
+    return config;
   }
 
   async update(key: ConfigV2Keys, value: any): Promise<Partial<ConfigV2>> {
-    const config = await this.getLatest();
+    const newConfig = await this.getLatest();
     // Always create a new config object to avoid updating the same object in the database
     // allowing for possible config rollback
-    config.id = undefined;
-    config[key] = value;
-    return (await this.configEntityService.create(
-      config
-    )) as unknown as Partial<ConfigV2>;
+    newConfig.id = undefined;
+    newConfig[key] = value;
+    config = await this.configEntityService.create(newConfig);
+    return config as unknown as Partial<ConfigV2>;
   }
 
   get(): Partial<ConfigV2> {
-    return { ...this.config } as unknown as Partial<ConfigV2>;
+    return config as unknown as Partial<ConfigV2>;
   }
 }

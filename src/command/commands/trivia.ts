@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 import { sleep } from '../../utils/utils';
 
 function showLeaderboard(ctx: Context, commandState: CommandState) {
@@ -24,7 +23,9 @@ async function showQuestion(
   commandState: CommandState,
   services: CommandServices
 ) {
-  if (commandState.trivia.round >= CONFIG.get().trivia.length) {
+  if (
+    commandState.trivia.round >= services.configV2Service.get().trivia.length
+  ) {
     ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     showLeaderboard(ctx, commandState);
     commandState.trivia.started = false;
@@ -39,10 +40,11 @@ async function showQuestion(
   commandState.trivia.roundStartTime = Date.now();
   ctx.botSpeak(
     `Round ${commandState.trivia.round + 1}: ${
-      CONFIG.get().trivia[commandState.trivia.round].question
+      services.configV2Service.get().trivia[commandState.trivia.round].question
     }`
   );
-  const timeLimit = CONFIG.get().trivia[commandState.trivia.round].timeLimit;
+  const timeLimit =
+    services.configV2Service.get().trivia[commandState.trivia.round].timeLimit;
   if (timeLimit) {
     commandState.trivia.triviaTimeout = setTimeout(() => {
       ctx.botSpeak(`Time's up!`);
@@ -60,7 +62,8 @@ function selectRoundWinner(
 ) {
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
   const roundPoints =
-    CONFIG.get().trivia[commandState.trivia.round].points || 1;
+    services.configV2Service.get().trivia[commandState.trivia.round].points ||
+    1;
   const points =
     (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
   commandState.trivia.roundAnswered = true;
@@ -77,8 +80,11 @@ function selectRoundWinner(
   // If it's not the first acceptable answer, put it in parens. For instance, if we accept
   // "franklin", but the first answer is "benjamin franklin", we'll put "franklin" in parens.
   let finalAnswer =
-    (CONFIG.get().trivia[commandState.trivia.round].answers as string[])[0] ??
-    CONFIG.get().trivia[commandState.trivia.round].answers;
+    (
+      services.configV2Service.get().trivia[commandState.trivia.round]
+        .answers as string[]
+    )[0] ??
+    services.configV2Service.get().trivia[commandState.trivia.round].answers;
   if (answer !== finalAnswer.toString()) {
     finalAnswer = `${answer} (${finalAnswer})`;
   }
@@ -114,18 +120,15 @@ function endRound(
   if (commandState.trivia.round !== -1 && !commandState.trivia.roundAnswered) {
     ctx.botSpeak(
       `Nobody answered correctly! The correct answer was "${getCorrectAnswer(
-        commandState.trivia.round
+        commandState.trivia.round,
+        services
       )}"`
     );
   }
 }
 
-function getCorrectAnswer(round: number): number | string {
-  if (Array.isArray(CONFIG.get().trivia[round].answers)) {
-    return (CONFIG.get().trivia[round].answers as string[])[0];
-  } else {
-    return CONFIG.get().trivia[round].answers as number;
-  }
+function getCorrectAnswer(round: number, services: CommandServices): string {
+  return services.configV2Service.get().trivia[round].answers[0];
 }
 
 function nextQuestion(
@@ -136,7 +139,9 @@ function nextQuestion(
   if (!commandState.trivia.roundEnded) {
     endRound(ctx, commandState, services);
   }
-  if (commandState.trivia.round >= CONFIG.get().trivia.length) {
+  if (
+    commandState.trivia.round >= services.configV2Service.get().trivia.length
+  ) {
     ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     showLeaderboard(ctx, commandState);
     commandState.trivia.started = false;
@@ -211,7 +216,7 @@ const command: Command = {
     if (answer === 'round') {
       ctx.botSpeak(
         `It's currently Round ${commandState.trivia.round + 1}/${
-          CONFIG.get().trivia.length
+          services.configV2Service.get().trivia.length
         }`
       );
       return true;
@@ -241,13 +246,16 @@ const command: Command = {
       return true;
     }
 
-    if (CONFIG.get().trivia[commandState.trivia.round].closestTo) {
+    if (
+      services.configV2Service.get().trivia[commandState.trivia.round].closestTo
+    ) {
       // Always track that the user has already answered.
       commandState.trivia.answeredUsers.push(ctx.displayName);
       try {
         const answerNum = +answer;
         const correctNum =
-          +CONFIG.get().trivia[commandState.trivia.round].answers;
+          +services.configV2Service.get().trivia[commandState.trivia.round]
+            .answers;
         const difference = Math.abs(answerNum - correctNum);
         if (isNaN(answerNum)) {
           return true;
@@ -279,7 +287,8 @@ const command: Command = {
       return true;
     } else if (
       (
-        CONFIG.get().trivia[commandState.trivia.round].answers as string[]
+        services.configV2Service.get().trivia[commandState.trivia.round]
+          .answers as string[]
       ).includes(answer)
     ) {
       selectRoundWinner(ctx, commandState, services, answer, ctx.displayName);

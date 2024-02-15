@@ -206,7 +206,7 @@ interface UserGifConfigV2 {
 
 type UserTriviaConfigV2 = {
   question: string;
-  answers: number | string[];
+  answers: string[];
   points: number;
   closestTo?: boolean;
   timeLimit?: number;
@@ -236,13 +236,15 @@ interface UserConfigV2 {
   trivia: UserTriviaConfigV2;
 
   // Misc
-  decapi: UserDecapiConfigV2;
-  heartRate: UserHeartRateConfigV2;
-  giphy: UserGiphyConfigV2;
-  rapidApi: UserRapidApiConfigV2;
-  sounds: UserSoundsConfigV2;
-  commandsListUrl: string;
-  gif: UserGifConfigV2;
+  misc: {
+    decapi: UserDecapiConfigV2;
+    heartRate: UserHeartRateConfigV2;
+    giphy: UserGiphyConfigV2;
+    rapidApi: UserRapidApiConfigV2;
+    sounds: UserSoundsConfigV2;
+    commandsListUrl: string;
+    gif: UserGifConfigV2;
+  };
 }
 
 interface ConfigV2 extends UserConfigV2 {
