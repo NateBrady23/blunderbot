@@ -1,11 +1,10 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'king',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = CONFIG.get().kings;
+    const kings = services.configV2Service.get().kings;
     const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     let king = (ctx.args[0] || '').toLowerCase();
     if (king === 'random') {

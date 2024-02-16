@@ -1,12 +1,11 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'titles',
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['titties'],
-  run: async (ctx) => {
-    const titledPlayers = CONFIG.get().titledPlayers;
+  run: async (ctx, { services }) => {
+    const titledPlayers = services.configV2Service.get().lichess.titledPlayers;
     let say = '';
     for (let i = 0; i < titledPlayers.length; i++) {
       say += `${titledPlayers[i][1]} ${titledPlayers[i][0]}`;

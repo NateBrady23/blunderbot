@@ -8,8 +8,8 @@ const command: Command = {
   aliases: ['commands'],
   help: 'Displays a list of available commands.',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: (ctx, { commandState }) => {
-    const commands = CONFIG.get().commands;
+  run: (ctx, { commandState, services }) => {
+    const commands = services.configV2Service.get().commands;
     Object.keys(commands).forEach((commandName) => {
       // Hide all message commands and hidden and killed commands
       if (

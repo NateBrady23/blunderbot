@@ -74,8 +74,6 @@ interface UserSoundsConfig {
   };
 }
 
-type UserTitledPlayersConfig = [string, string][];
-
 type UserAutoCommandsConfig = {
   commands: string[];
 }[];
@@ -127,14 +125,6 @@ type UserAutoResponderConfig = {
   responses: string[];
 }[];
 
-type UserTriviaConfig = {
-  question: string;
-  answers: number | string[];
-  points: number;
-  closestTo?: boolean;
-  timeLimit?: number;
-}[];
-
 interface UserConfig {
   port: number;
   wsPort: number;
@@ -150,7 +140,6 @@ interface UserConfig {
   rapidApi: UserRapidApiConfig;
   youtube: UserYoutubeConfig;
   sounds: UserSoundsConfig;
-  titledPlayers: UserTitledPlayersConfig;
   autoCommands: UserAutoCommandsConfig;
   killedCommands: UserKilledCommandsConfig;
   hiddenCommands: UserHiddenCommandsConfig;
@@ -162,12 +151,4 @@ interface UserConfig {
   trivia: UserTriviaConfig;
 }
 
-interface Config extends UserConfig {
-  kings: string[];
-  crowns: string[];
-  oppKings: string[];
-  themeConfig: any;
-  soundboard: string[];
-  cursors: string[];
-  commands: { [key: string]: Command };
-}
+interface Config extends UserConfig {}

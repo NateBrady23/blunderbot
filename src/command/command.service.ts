@@ -283,7 +283,7 @@ export class CommandService {
   }
 
   findCommand(name: string): Command | undefined {
-    const commands = CONFIG.get().commands;
+    const commands = this.services.configV2Service.get().commands;
     name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
 
