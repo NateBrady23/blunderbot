@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'image',
@@ -20,7 +19,8 @@ const command: Command = {
       !!services.configV2Service.get().discord?.galleryChannelId &&
       ctx.platform !== Platform.Discord;
     let sendToTwitter =
-      CONFIG.get().twitter?.enabled && CONFIG.get().twitter.tweetImagesEnabled;
+      services.configV2Service.get().twitter?.enabled &&
+      services.configV2Service.get().twitter.tweetImagesEnabled;
 
     const user = ctx.onBehalfOf || ctx.displayName;
 
@@ -83,7 +83,8 @@ const command: Command = {
     }
 
     if (sendToTwitter) {
-      const hashtags = CONFIG.get().twitter.tweetHashtags || '';
+      const hashtags =
+        services.configV2Service.get().twitter.tweetHashtags || '';
       void services.twitterService.postImage(
         buffer,
         `${user} on Twitch used "!image ${prompt}" ${hashtags}`

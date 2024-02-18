@@ -11,17 +11,6 @@ interface UserTwitchConfig {
   eventSubscriptionUrl: string;
 }
 
-interface UserTwitterConfig {
-  enabled: boolean;
-  apiKey: string;
-  apiSecret: string;
-  accessToken: string;
-  accessSecret: string;
-  tweetImagesEnabled: boolean;
-  tweetHashtags: string;
-  announceLive: boolean;
-}
-
 interface UserDbConfig {
   enabled: boolean;
   type: 'postgres' | 'mysql' | 'sqlite';
@@ -59,12 +48,6 @@ interface UserRapidApiConfig {
   keys: string[];
 }
 
-interface UserYoutubeConfig {
-  enabled: boolean;
-  apiKey: string;
-  shortsPlaylistId: string;
-}
-
 interface UserSoundsConfig {
   mute: {
     programs: string[];
@@ -80,9 +63,6 @@ type UserAutoCommandsConfig = {
 
 type UserKilledCommandsConfig = string[];
 type UserHiddenCommandsConfig = string[];
-interface UserMessageCommandsConfig {
-  [command: string]: any;
-}
 
 interface UserRaidsConfig {
   alert: string;
@@ -132,18 +112,15 @@ interface UserConfig {
   commandsListUrl: string;
 
   twitch: UserTwitchConfig;
-  twitter: UserTwitterConfig;
   db: UserDbConfig;
   decapi: UserDecapiConfig;
   heartRate: UserHeartRateConfig;
   giphy: UserGiphyConfig;
   rapidApi: UserRapidApiConfig;
-  youtube: UserYoutubeConfig;
   sounds: UserSoundsConfig;
   autoCommands: UserAutoCommandsConfig;
   killedCommands: UserKilledCommandsConfig;
   hiddenCommands: UserHiddenCommandsConfig;
-  messageCommands: UserMessageCommandsConfig;
   raids: UserRaidsConfig;
   bits: UserBitsConfig;
   gif: UserGifConfig;

@@ -1,22 +1,25 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { EUploadMimeType, TwitterApi } from 'twitter-api-v2';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitterService {
   private logger: Logger = new Logger(TwitterService.name);
 
-  private client;
+  private client: TwitterApi;
 
-  constructor() {
-    if (CONFIG.get().twitter?.enabled) {
-      this.client = new TwitterApi({
-        appKey: CONFIG.get().twitter.apiKey,
-        appSecret: CONFIG.get().twitter.apiSecret,
-        accessToken: CONFIG.get().twitter.accessToken,
-        accessSecret: CONFIG.get().twitter.accessSecret
-      });
-    }
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
+
+  init() {
+    this.client = new TwitterApi({
+      appKey: this.configV2Service.get().twitter.apiKey,
+      appSecret: this.configV2Service.get().twitter.apiSecret,
+      accessToken: this.configV2Service.get().twitter.accessToken,
+      accessSecret: this.configV2Service.get().twitter.accessSecret
+    });
   }
 
   async postImage(imageBuffer: Buffer, text: string) {
@@ -34,6 +37,7 @@ export class TwitterService {
 
   async postTweet(text: string) {
     try {
+      text += ' ' + this.configV2Service.get().twitter.tweetHashtags || '';
       await this.client.v2.tweet(text);
       this.logger.log(`Posted tweet to Twitter: ${text}`);
     } catch (e) {

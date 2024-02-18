@@ -26,11 +26,6 @@ export class DiscordService {
   ) {}
 
   init() {
-    if (!this.configV2Service.get().discord?.enabled) {
-      this.logger.log('Discord disabled');
-      return;
-    }
-
     this.client = new Client({
       intents: [
         GatewayIntentBits.Guilds,

@@ -1,18 +1,15 @@
 import { isNHoursLater } from '../../utils/utils';
 import { google, youtube_v3 } from 'googleapis';
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 import { GaxiosResponse } from 'googleapis-common';
 
 let cachedLatestShort: youtube_v3.Schema$PlaylistItem;
 const cachedLatestShortAt = Date.now();
 
-async function getLastVideoByPlaylist(
-  playlistId = CONFIG.get().youtube.shortsPlaylistId
-) {
+async function getLastVideoByPlaylist(playlistId: string, apiKey: string) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: CONFIG.get().youtube.apiKey
+    auth: apiKey
   });
 
   try {
@@ -43,8 +40,8 @@ const command: Command = {
   name: 'shorts',
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['pants'],
-  run: async (ctx) => {
-    if (!CONFIG.get().youtube?.enabled) {
+  run: async (ctx, { services }) => {
+    if (!services.configV2Service.get().youtube?.enabled) {
       console.log('YouTube is not enabled for !shorts command.');
       return false;
     }
@@ -53,7 +50,10 @@ const command: Command = {
       !cachedLatestShort ||
       (cachedLatestShort && isNHoursLater(8, cachedLatestShortAt))
     ) {
-      cachedLatestShort = await getLastVideoByPlaylist();
+      cachedLatestShort = await getLastVideoByPlaylist(
+        services.configV2Service.get().youtube.shortsPlaylistId,
+        services.configV2Service.get().youtube.apiKey
+      );
     }
     if (!cachedLatestShort) {
       ctx.botSpeak("I can't find this right now. Try again later.");

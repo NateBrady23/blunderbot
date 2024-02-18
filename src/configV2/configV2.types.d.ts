@@ -85,7 +85,12 @@ interface UserLichessConfigV2 {
   titledPlayers: [string, string][];
 }
 
-interface UserCommandConfigV2 {}
+interface UserCommandConfigV2 {
+  autoCommands: UserAutoCommandsConfigV2;
+  killedCommands: UserKilledCommandsConfigV2;
+  hiddenCommands: UserHiddenCommandsConfigV2;
+  simpleCommands: UserSimpleCommandsConfigV2;
+}
 
 interface UserOpenAiConfigV2 {
   enabled: boolean;
@@ -192,7 +197,7 @@ type UserAutoCommandsConfigV2 = {
 
 type UserKilledCommandsConfigV2 = string[];
 type UserHiddenCommandsConfigV2 = string[];
-interface UserMessageCommandsConfigV2 {
+interface UserSimpleCommandsConfigV2 {
   [command: string]: any;
 }
 
@@ -222,10 +227,7 @@ interface UserConfigV2 {
   lichess: UserLichessConfigV2;
 
   // Commands section on BlunderBot-Admin (platform agnostic)
-  autoCommands: UserAutoCommandsConfigV2;
-  killedCommands: UserKilledCommandsConfigV2;
-  hiddenCommands: UserHiddenCommandsConfigV2;
-  messageCommands: UserMessageCommandsConfigV2;
+  commandConfig: UserCommandConfigV2;
 
   discord: UserDiscordConfigV2;
   openai: UserOpenAiConfigV2;
@@ -259,8 +261,10 @@ interface ConfigV2 extends UserConfigV2 {
 type ConfigV2Keys =
   | 'twitch'
   | 'lichess'
+  | 'commandConfig'
   | 'openai'
   | 'discord'
   | 'spotify'
   | 'twitter'
-  | 'trivia';
+  | 'trivia'
+  | 'youtube';

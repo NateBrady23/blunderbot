@@ -9,6 +9,7 @@ import { TwitchService } from '../twitch/twitch.service';
 import { readdirSync } from 'fs';
 import { Platform } from '../enums';
 import { removeSymbols } from '../utils/utils';
+import { TwitterService } from '../twitter/twitter.service';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
   return {
@@ -61,7 +62,9 @@ export class ConfigV2Service {
     @Inject(forwardRef(() => TwitchPubSub))
     private readonly twitchPubSub: TwitchPubSub,
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService
+    private readonly twitchService: TwitchService,
+    @Inject(forwardRef(() => TwitterService))
+    private readonly twitterService: TwitterService
   ) {
     this.get = this.get.bind(this);
     void this.init();
@@ -77,25 +80,24 @@ export class ConfigV2Service {
       this.twitchEventSub.init();
 
       this.commandService.init();
-    } else {
-      this.logger.error(
-        'Twitch config not found. Head over to BlunderBot Admin to set it up.'
-      );
-      return;
     }
 
-    if (config.discord) {
+    if (config.discord?.enabled) {
       this.discordService.init();
     }
 
-    if (config.openai) {
+    if (config.openai?.enabled) {
       this.openaiService.init();
+    }
+
+    if (config.twitter?.enabled) {
+      this.twitterService.init();
     }
   }
 
   private loadCommands() {
     const messageCommands: Record<string, Command> = {};
-    const messageCommandsConfig = config.messageCommands || {};
+    const messageCommandsConfig = config.commandConfig?.simpleCommands || {};
     Object.keys(messageCommandsConfig).forEach((key) => {
       messageCommands[key] = getCommandProperties(
         messageCommandsConfig[key],
@@ -192,7 +194,8 @@ export class ConfigV2Service {
     newConfig.id = undefined;
     newConfig[key] = value;
     await this.configEntityService.create(newConfig);
-    return await this.getLatest();
+    config = await this.getLatest();
+    return config;
   }
 
   get(): Partial<ConfigV2> {

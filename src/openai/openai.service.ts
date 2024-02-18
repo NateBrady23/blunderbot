@@ -21,14 +21,6 @@ export class OpenaiService {
   ) {}
 
   init() {
-    if (
-      !this.configV2Service.get().openai?.enabled ||
-      !this.configV2Service.get().openai?.apiKey
-    ) {
-      this.logger.log('OpenAI disabled');
-      return;
-    }
-
     this.openai = new OpenAI({
       apiKey: this.configV2Service.get().openai.apiKey
     });

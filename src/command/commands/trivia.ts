@@ -159,8 +159,13 @@ const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
+    console.log(services.configV2Service.get().trivia);
     const answer = ctx.body?.toLowerCase().trim();
     if (answer === 'start' && ctx.isOwner) {
+      if (commandState.trivia.started) {
+        ctx.botSpeak("Trivia has already started! I can't start it twice.");
+        return false;
+      }
       commandState.trivia.started = true;
       commandState.trivia.round = -1;
       commandState.trivia.leaderboard = {};

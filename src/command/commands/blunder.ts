@@ -11,10 +11,12 @@ const command: Command = {
   run: (ctx, { commandState, services }) => {
     const commands = services.configV2Service.get().commands;
     Object.keys(commands).forEach((commandName) => {
-      // Hide all message commands and hidden and killed commands
+      // Hide all simple commands and hidden and killed commands
       if (
-        Object.keys(CONFIG.get().messageCommands).includes(commandName) ||
-        CONFIG.get().hiddenCommands.includes(commandName) ||
+        Object.keys(
+          services.configV2Service.get().commandConfig?.simpleCommands
+        ).includes(commandName) ||
+        CONFIG.get().hiddenCommands?.includes(commandName) ||
         CONFIG.get().killedCommands?.includes(commandName) ||
         commandState.killedCommands?.includes(commandName)
       ) {

@@ -9,6 +9,7 @@
 #### Bug Fixes
 
 - `!sr` will not return karaoke tracks unless karaoke is in the search query.
+- Fixed a bug where `!trivia start` would reset the trivia state if it was already started.
 
 ### 1.10.3
 

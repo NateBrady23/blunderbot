@@ -68,13 +68,6 @@ const config: Partial<UserConfig> = {
     keys: ['your key']
   },
 
-  // You probably don't need this
-  youtube: {
-    enabled: false,
-    apiKey: 'your-key',
-    shortsPlaylistId: 'PLI3ZmOU7TLd_dTZGyzfUmi2-KfYHmOSDc'
-  },
-
   // Mutes or unmutes Firefox and Streamlabs OBS. I use one or both of these apps to play music
   // while streaming, and I want to mute them when I play a sound effect or BlunderBot talks.
   sounds: {

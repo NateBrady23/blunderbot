@@ -18,7 +18,8 @@ const command: Command = {
       services.configV2Service.get().discord?.enabled &&
       !!services.configV2Service.get().discord?.announcementChannelId;
     let sendToTwitter =
-      CONFIG.get().twitter?.enabled && CONFIG.get().twitter?.announceLive;
+      services.configV2Service.get().twitter?.enabled &&
+      services.configV2Service.get().twitter?.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -64,9 +65,7 @@ const command: Command = {
 
     if (sendToTwitter) {
       void services.twitterService.postTweet(
-        `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername} ${
-          CONFIG.get().twitter.tweetHashtags
-        }`
+        `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }
 
