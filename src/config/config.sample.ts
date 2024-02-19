@@ -24,6 +24,25 @@ const config: Partial<UserConfig> = {
   commandsListUrl:
     'https://github.com/NateBrady23/blunderbot/blob/main/COMMANDS.md',
 
+  db: {
+    enabled: true,
+    type: 'mysql',
+    host: 'aws.connect.psdb.cloud',
+    // port: 3000,
+    username: 'my_username',
+    password: 'my_password',
+    database: 'blunderdb',
+
+    // Always run migrations on startup unless you are doing migration development
+    migrationsRun: true,
+
+    extra: {
+      ssl: {
+        rejectUnauthorized: true
+      }
+    }
+  },
+
   // A list of commands you want disabled at the start of every stream
   killedCommands: ['somecommand', 'someothercommand'],
 

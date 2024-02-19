@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { GiphyService } from './giphy.service';
+import { ConfigV2Module } from '../configV2/configV2.module';
 
 @Module({
-  imports: [],
+  imports: [forwardRef(() => ConfigV2Module)],
   controllers: [],
   providers: [GiphyService],
   exports: [GiphyService]

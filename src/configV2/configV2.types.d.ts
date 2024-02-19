@@ -27,6 +27,8 @@ interface UserTwitchConfigV2 {
   // Auto Shoutouts
   autoShoutouts: string[];
 
+  autoCommands: UserAutoCommandsConfigV2;
+
   // Auto Responder
   autoResponder: {
     phrases: string[];
@@ -54,7 +56,6 @@ interface UserTwitchConfigV2 {
   // Uncategorized
   onSubscribe: string[];
   welcome: {
-    enabled: boolean;
     message: string;
     ignoreUsers: string[];
   };
@@ -73,7 +74,6 @@ interface UserLichessConfigV2 {
 }
 
 interface UserCommandConfigV2 {
-  autoCommands: UserAutoCommandsConfigV2;
   killedCommands: UserKilledCommandsConfigV2;
   hiddenCommands: UserHiddenCommandsConfigV2;
   simpleCommands: UserSimpleCommandsConfigV2;
@@ -89,7 +89,7 @@ interface UserOpenAiConfigV2 {
   baseSystemMessage: string;
   imageEdits: string[];
   voices: string[];
-  pronunciations: [[string, string]];
+  pronunciations: string[][];
   memoryCount: number;
 }
 
@@ -179,20 +179,14 @@ interface UserSoundsConfigV2 {
 }
 
 type UserAutoCommandsConfigV2 = {
-  commands: string[];
-}[];
+  timeBetweenSeconds: number;
+  commandSets: [string[]];
+};
 
 type UserKilledCommandsConfigV2 = string[];
 type UserHiddenCommandsConfigV2 = string[];
 interface UserSimpleCommandsConfigV2 {
   [command: string]: any;
-}
-
-interface UserGifConfigV2 {
-  matches: {
-    [key: string]: string;
-  };
-  notFound: string;
 }
 
 type UserTriviaConfigV2 = {
@@ -231,11 +225,11 @@ interface UserConfigV2 {
     rapidApi: UserRapidApiConfigV2;
     sounds: UserSoundsConfigV2;
     commandsListUrl: string;
-    gif: UserGifConfigV2;
   };
 }
 
 interface ConfigV2 extends UserConfigV2 {
+  gifs: string[];
   kings: string[];
   crowns: string[];
   oppKings: string[];

@@ -22,17 +22,7 @@ class ConfigService {
   loadConfig() {
     this.loadedConfig = require(path.join(__dirname, './config')).default;
 
-    // If either of these fail, that's fatal
-    this.loadedConfig.twitch = require(
-      path.join(__dirname, './config.twitch')
-    ).default;
-
-    // These are optional and can fail to load
-    this.loadFromFile('autoCommands', './config.auto-commands');
-    this.loadFromFile('autoResponder', './config.auto-responder');
-    this.loadFromFile('db', './config.db');
     this.loadFromFile('gif', './config.gif');
-    this.loadFromFile('raids', './config.raids');
 
     // Load the public files
     console.log('Config loaded');

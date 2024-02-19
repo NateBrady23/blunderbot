@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 let currentInterval: undefined | ReturnType<typeof setTimeout>;
 
@@ -7,15 +6,23 @@ const command: Command = {
   name: 'autochat',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    let commandsToCycle = CONFIG.get().autoCommands || [];
+    let commandsToCycle =
+      services.configV2Service.get().twitch?.autoCommands?.commandSets || [];
 
     // Always clearing the interval so multiple "on"s don't stack and anything else shuts it off
     clearInterval(currentInterval);
+
+    if (!commandsToCycle.length) {
+      return false;
+    }
+
     if (ctx.body === 'on') {
       currentInterval = setInterval(
         () => {
           if (!commandsToCycle.length) {
-            commandsToCycle = CONFIG.get().autoCommands || [];
+            commandsToCycle =
+              services.configV2Service.get().twitch.autoCommands.commandSets ||
+              [];
           }
 
           // If there are still no commands to cycle, don't run anything
@@ -23,12 +30,13 @@ const command: Command = {
             return;
           }
 
-          const commands = commandsToCycle.shift().commands;
+          const commands = commandsToCycle.shift();
           commands.forEach((c: string) => {
             void services.twitchService.ownerRunCommand(c);
           });
         },
-        60 * 1000 * 2.5
+        services.configV2Service.get().twitch.autoCommands.timeBetweenSeconds *
+          1000 || 250000
       );
     }
     return true;

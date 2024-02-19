@@ -3,7 +3,6 @@
  * Prefer to use this over pubsub if possible.
  */
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
 import * as WebSocket from 'ws';
@@ -29,7 +28,7 @@ export class TwitchEventSub {
   }
 
   async eventSubCreateConnection(
-    wssUrl = CONFIG.get().twitch.eventWebsocketUrl
+    wssUrl = this.configV2Service.get().twitch.eventWebsocketUrl
   ) {
     this.eventSubConnection = new WebSocket(wssUrl);
     this.eventSubConnection.onopen = () => {
@@ -186,7 +185,7 @@ export class TwitchEventSub {
         condition['user_id'] = this.configV2Service.get().twitch.ownerId;
       }
       const res = await this.twitchService.helixApiCall(
-        CONFIG.get().twitch.eventSubscriptionUrl,
+        this.configV2Service.get().twitch.eventSubscriptionUrl,
         'POST',
         {
           type: event.eventType,

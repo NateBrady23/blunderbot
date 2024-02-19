@@ -1,5 +1,4 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
@@ -42,7 +41,10 @@ export class TwitchService {
   }
 
   async botSpeak(message: string) {
-    if (message.length > (CONFIG.get().twitch?.maxMessageLength || 1500)) {
+    if (
+      message.length >
+      (this.configV2Service.get().twitch?.maxMessageLength || 1500)
+    ) {
       this.logger.error(message);
       this.logger.error('Message is too long to send. Failing...');
       return;
@@ -94,13 +96,14 @@ export class TwitchService {
       // Welcome in new chatters (non-followers)
       if (!context.isFollower) {
         if (
-          CONFIG.get().twitch.welcome?.enabled &&
-          !CONFIG.get().twitch.welcome.ignoreUsers.includes(displayName)
+          this.configV2Service.get().twitch.welcome?.message &&
+          !this.configV2Service
+            .get()
+            .twitch.welcome?.ignoreUsers?.includes(displayName.toLowerCase())
         ) {
-          const message = CONFIG.get().twitch.welcome.message.replace(
-            /{user}/gi,
-            `@${displayName}`
-          );
+          const message = this.configV2Service
+            .get()
+            .twitch.welcome.message.replace(/{user}/gi, `@${displayName}`);
           void this.botSpeak(message);
         }
       } else if (!context.isOwner && !context.isBot) {
@@ -208,9 +211,9 @@ export class TwitchService {
   }
 
   async autoRespond(message: string) {
-    if (!CONFIG.get().autoResponder) return;
+    if (!this.configV2Service.get().twitch?.autoResponder) return;
 
-    for (const match of CONFIG.get().autoResponder) {
+    for (const match of this.configV2Service.get().twitch.autoResponder) {
       for (const phrase of match.phrases) {
         const regex = new RegExp(phrase, 'gi');
         if (message.match(regex)) {

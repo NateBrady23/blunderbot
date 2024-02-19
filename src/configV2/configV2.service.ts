@@ -149,18 +149,24 @@ export class ConfigV2Service {
     config.oppKings = [];
     config.soundboard = [];
     config.cursors = [];
+    config.gifs = [];
     [
       ['./public/images/kings', config.kings],
       ['./public/images/crowns', config.crowns],
       ['./public/images/opponents', config.oppKings],
       ['./public/sounds/soundboard', config.soundboard],
-      ['./public/images/cursors', config.cursors]
+      ['./public/images/cursors', config.cursors],
+      ['./public/gifs', config.gifs]
     ].forEach((publicFiles: [string, string[]]) => {
       readdirSync(publicFiles[0]).forEach((file) => {
         const fileName = file.split('.')[0];
-        publicFiles[1].push(fileName);
+        if (fileName) {
+          publicFiles[1].push(fileName);
+        }
       });
     });
+
+    console.log(config.gifs);
 
     config.themeConfig = {};
     readdirSync('./public/images/themes').forEach((theme) => {
