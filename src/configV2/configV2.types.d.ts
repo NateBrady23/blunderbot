@@ -35,13 +35,9 @@ interface UserTwitchConfigV2 {
 
   // Raids Config
   raids: {
-    alert: string;
-    announcement: string;
-    defaultCommands: string[];
     matches: {
       [key: string]: {
         commands: string[];
-        alert?: string;
       };
     };
   };
@@ -51,16 +47,7 @@ interface UserTwitchConfigV2 {
     matches: {
       [key: string]: {
         commands: string[];
-        alert: string;
       };
-    };
-    '100orMore': {
-      commands: string[];
-      alert: string;
-    };
-    '99orLess': {
-      commands: string[];
-      alert: string;
     };
   };
 

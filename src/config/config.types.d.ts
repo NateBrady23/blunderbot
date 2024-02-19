@@ -64,35 +64,6 @@ type UserAutoCommandsConfig = {
 type UserKilledCommandsConfig = string[];
 type UserHiddenCommandsConfig = string[];
 
-interface UserRaidsConfig {
-  alert: string;
-  announcement: string;
-  defaultCommands: string[];
-  matches: {
-    [key: string]: {
-      commands: string[];
-      alert?: string;
-    };
-  };
-}
-
-interface UserBitsConfig {
-  matches: {
-    [key: string]: {
-      commands: string[];
-      alert: string;
-    };
-  };
-  '100orMore': {
-    commands: string[];
-    alert: string;
-  };
-  '99orLess': {
-    commands: string[];
-    alert: string;
-  };
-}
-
 interface UserGifConfig {
   matches: {
     [key: string]: string;
@@ -121,8 +92,6 @@ interface UserConfig {
   autoCommands: UserAutoCommandsConfig;
   killedCommands: UserKilledCommandsConfig;
   hiddenCommands: UserHiddenCommandsConfig;
-  raids: UserRaidsConfig;
-  bits: UserBitsConfig;
   gif: UserGifConfig;
   autoResponder: UserAutoResponderConfig;
   trivia: UserTriviaConfig;
