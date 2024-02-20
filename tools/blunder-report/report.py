@@ -43,11 +43,19 @@ def zerkers():
     zerkers = []
     for player in data['players']:
         if data['players'][player]['berserks'] == data['players'][player]['games']:
-            zerkers.append(player)
+            zerkers.append({
+                'name': player,
+                'games': data['players'][player]['games']
+            })
+
+    zerkers.sort(key=lambda x: x['games'], reverse=True)
+
+    # need at least 3 games to be considered a zerker
+    zerkers = list(filter(lambda x: x['games'] >= 3, zerkers))
 
     print(f"Special shoutout to the {len(zerkers)} players who berserked all of their games!")
     for zerker in zerkers:
-        print(f"- **{zerker}**")
+        print(f"- **{zerker['name']}** *(x{zerker['games']})*")
 
 def summary():
     # total players, total games, and total blunders
@@ -57,13 +65,13 @@ def summary():
     for player in data['players']:
         total_blunders += data['players'][player]['blunders']
 
-    print(f"There were {total_players} players who played {total_games} games and made {total_blunders} blunders!")
+    print(f"There were {total_players} players who played {total_games} games and made **{total_blunders} blunders**!")
 
-print("Blunder Report")
+print("## Blunder Report")
+summary()
 print('```')
 player_report()
 print('```')
-summary()
 
 print()
 most_blundered_game()
