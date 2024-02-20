@@ -10,6 +10,7 @@ import { readdirSync } from 'fs';
 import { Platform } from '../enums';
 import { removeSymbols } from '../utils/utils';
 import { TwitterService } from '../twitter/twitter.service';
+import { BrowserService } from '../browser/browser.service';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
   return {
@@ -49,6 +50,8 @@ export class ConfigV2Service {
   private logger: Logger = new Logger(ConfigV2Service.name);
 
   constructor(
+    @Inject(forwardRef(() => BrowserService))
+    private readonly browserService: BrowserService,
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService,
     @Inject(forwardRef(() => ConfigEntityService))
@@ -93,6 +96,8 @@ export class ConfigV2Service {
     if (config.twitter?.enabled) {
       this.twitterService.init();
     }
+
+    this.browserService.init();
   }
 
   private loadCommands() {
@@ -165,8 +170,6 @@ export class ConfigV2Service {
         }
       });
     });
-
-    console.log(config.gifs);
 
     config.themeConfig = {};
     readdirSync('./public/images/themes').forEach((theme) => {

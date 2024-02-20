@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 /**
  * The !live command without any arguments will announce that the streamer is live on discord if
@@ -42,18 +41,14 @@ const command: Command = {
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `${
-            CONFIG.get().nickname
-          } is about to go live on twitch. Say something to get people excited`,
+          `We're about to go live on twitch. Say something to get people excited`,
           {
             temp: 1.4,
             includeBlunderBotContext: true
           }
         );
       } catch (e) {
-        msg = `Are you ready? It's time. ${
-          CONFIG.get().nickname
-        } is here and he's ready to play some chess!`;
+        msg = `Are you ready? We're live!`;
       }
     }
 

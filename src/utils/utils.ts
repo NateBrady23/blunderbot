@@ -1,9 +1,9 @@
 import { FunctionQueue } from './FunctionQueue';
-import { CONFIG } from '../config/config.service';
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
 import playerImport = require('play-sound');
+import { ConfigV2Service } from '../configV2/configV2.service';
 const player = playerImport({});
 
 const ffmpeg = require('fluent-ffmpeg');
@@ -39,10 +39,14 @@ function getAudioDurationInSeconds(filePath: string): Promise<number> {
  * while streaming, and I want to mute them when I play a sound effect or BlunderBot talks.
  * @param mute
  */
-export async function muteOrUnmuteDesktopApps(mute: boolean) {
+export async function muteOrUnmuteDesktopApps(
+  mute: boolean,
+  configService: ConfigV2Service
+) {
   const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
-    for (const command of CONFIG.get().sounds[muteOrUnmute].programs) {
+    for (const command of configService.get().misc?.sounds[muteOrUnmute]
+      ?.programs) {
       execSync(command);
     }
   } catch (error) {
@@ -52,14 +56,17 @@ export async function muteOrUnmuteDesktopApps(mute: boolean) {
 }
 
 const audioFileQueue = new FunctionQueue();
-export async function playAudioFile(filePath: string) {
+export async function playAudioFile(
+  filePath: string,
+  configService: ConfigV2Service
+) {
   await audioFileQueue.enqueue(async function () {
     try {
-      await muteOrUnmuteDesktopApps(true);
+      await muteOrUnmuteDesktopApps(true, configService);
       const duration = await getAudioDurationInSeconds(filePath);
       player.play(filePath);
       await sleep(duration * 1000 + 300);
-      await muteOrUnmuteDesktopApps(false);
+      await muteOrUnmuteDesktopApps(false, configService);
       return true;
     } catch (error) {
       console.log(`Error playing audio file.`);

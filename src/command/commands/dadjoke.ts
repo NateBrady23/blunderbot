@@ -1,12 +1,11 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
-async function getJoke() {
+async function getJoke(apiKey: string) {
   try {
     const response = await fetch(
       'https://dad-jokes-by-api-ninjas.p.rapidapi.com/v1/dadjokes',
       {
         headers: {
-          'X-RapidAPI-Key': CONFIG.getRandomRapidApiKey(),
+          'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': 'dad-jokes-by-api-ninjas.p.rapidapi.com'
         }
       }
@@ -21,12 +20,13 @@ async function getJoke() {
 const command: Command = {
   name: 'dadjoke',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
-    if (!CONFIG.get().rapidApi?.enabled) {
+  run: async (ctx, { services }) => {
+    const apiKey = services.configV2Service.get().misc?.rapidApiKey;
+    if (!apiKey) {
       ctx.botSpeak('RapidAPI is disabled in !dadjoke.');
       return false;
     }
-    ctx.botSpeak(await getJoke());
+    ctx.botSpeak(await getJoke(apiKey));
     return true;
   }
 };

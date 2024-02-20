@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { sleep } from '../utils/utils';
-import { CONFIG } from '../config/config.service';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class BrowserService {
@@ -12,11 +12,16 @@ export class BrowserService {
 
   private heartRatePage: Page;
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
+
+  init() {
     // Preload some frequently used pages
     (async () => {
       this.logger.log('Preloading browser pages');
-      if (CONFIG.get().heartRate.enabled) {
+      if (this.configV2Service.get().misc?.hypeRateEnabled) {
         await this.getHeartRatePage();
       }
     })();
@@ -42,7 +47,9 @@ export class BrowserService {
     if (!this.heartRatePage) {
       const browser = await this.getBrowser();
       this.heartRatePage = await browser.newPage();
-      await this.heartRatePage.goto(CONFIG.get().heartRate.url);
+      await this.heartRatePage.goto(
+        this.configV2Service.get().misc?.hypeRateUrl
+      );
       // It takes this long for the heart rate to show up on the page
       await sleep(5000);
     }
@@ -54,12 +61,9 @@ export class BrowserService {
     const page = await this.getHeartRatePage();
 
     try {
-      const textSelector = await page.waitForSelector(
-        CONFIG.get().heartRate.class,
-        {
-          timeout: 5_000
-        }
-      );
+      const textSelector = await page.waitForSelector('.heartrate', {
+        timeout: 5_000
+      });
       return parseInt(
         (await textSelector?.evaluate((el) => el.textContent))?.trim()
       );

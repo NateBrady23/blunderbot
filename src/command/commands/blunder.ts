@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const availableCommands: string[] = [];
 
@@ -16,8 +15,12 @@ const command: Command = {
         Object.keys(
           services.configV2Service.get().commandConfig?.simpleCommands
         ).includes(commandName) ||
-        CONFIG.get().hiddenCommands?.includes(commandName) ||
-        CONFIG.get().killedCommands?.includes(commandName) ||
+        services.configV2Service
+          .get()
+          .commandConfig?.hiddenCommands?.includes(commandName) ||
+        services.configV2Service
+          .get()
+          .commandConfig?.killedCommands?.includes(commandName) ||
         commandState.killedCommands?.includes(commandName)
       ) {
         return;
@@ -38,9 +41,13 @@ const command: Command = {
     ctx.botSpeak(
       `The following commands are available: [${availableCommands.join(', ')}]`
     );
-    ctx.botSpeak(
-      `For a full list of commands, check out: ${CONFIG.get().commandsListUrl}`
-    );
+    const commandsListUrl =
+      services.configV2Service.get().misc?.commandsListUrl;
+    if (commandsListUrl) {
+      ctx.botSpeak(
+        `For a full list of commands, check out: ${commandsListUrl}`
+      );
+    }
     return true;
   }
 };

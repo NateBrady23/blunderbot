@@ -93,7 +93,7 @@ export class OpenaiService {
       const buffer = Buffer.from(await response.arrayBuffer());
       const uuid = generateUUID();
       writeFileSync(`./temp/${uuid}.mp3`, buffer);
-      await playAudioFile(`./temp/${uuid}.mp3`);
+      await playAudioFile(`./temp/${uuid}.mp3`, this.configV2Service);
       this.logger.log(`Audio content written to file: /temp/${uuid}.mp3`);
       return true;
     } catch (error) {

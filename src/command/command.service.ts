@@ -67,7 +67,7 @@ export class CommandService {
   init() {
     this.setInitialCommandState();
 
-    if (CONFIG.get().heartRate?.enabled) {
+    if (this.configV2Service.get().misc?.hypeRateEnabled) {
       void this.heartRateCheck();
     }
 
@@ -81,14 +81,14 @@ export class CommandService {
   setInitialCommandState() {
     this.commandState = {
       arena: '',
-      shoutoutUsers: this.configV2Service.get().twitch.autoShoutouts || [],
+      shoutoutUsers: this.configV2Service.get().twitch?.autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: CONFIG.get().killedCommands,
+      killedCommands: this.configV2Service.get().commandConfig?.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: <OpenAiVoiceOptions>(
@@ -130,9 +130,7 @@ export class CommandService {
           ) {
             this.commandState.heartRateHigh = heartRate;
             void this.twitchService.ownerRunCommand(
-              `!tts ${
-                CONFIG.get().nickname
-              }'s heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
+              `!tts your heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
             );
             if (threshold === 140) clearInterval(heartRateInterval);
             break;

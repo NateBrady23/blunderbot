@@ -1,5 +1,4 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
@@ -18,10 +17,15 @@ export class GiphyService {
     if (this.configV2Service.get().gifs?.includes(phraseToMatch)) {
       return `https://localhost/gifs/${phraseToMatch}.gif`;
     }
+
+    if (!this.configV2Service.get().misc?.giphyApiKey) {
+      this.logger.error('No giphy api key found and no local gif found');
+    }
+
     const encodedPhrase = encodeURIComponent(phrase);
     const response = await fetch(
       `https://api.giphy.com/v1/gifs/search?api_key=${
-        CONFIG.get().giphy.apiKey
+        this.configV2Service.get().misc?.giphyApiKey
       }&q=${encodedPhrase}&limit=1`
     );
     const data = await response.json();

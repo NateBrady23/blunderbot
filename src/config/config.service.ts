@@ -1,5 +1,3 @@
-// import * as yaml from 'js-yaml';
-import { getRandomElement } from '../utils/utils';
 import * as path from 'path';
 
 class ConfigService {
@@ -30,10 +28,6 @@ class ConfigService {
 
   public get() {
     return this.loadedConfig;
-  }
-
-  public getRandomRapidApiKey() {
-    return getRandomElement(CONFIG.get().rapidApi?.keys);
   }
 }
 

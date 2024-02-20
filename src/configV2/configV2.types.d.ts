@@ -142,27 +142,6 @@ interface UserDiscordConfigV2 {
   inviteLink: string;
 }
 
-interface UserDecapiConfigV2 {
-  enabled: boolean;
-  token: string;
-}
-
-interface UserHeartRateConfigV2 {
-  enabled: boolean;
-  url: string;
-  class: string;
-}
-
-interface UserGiphyConfigV2 {
-  enabled: boolean;
-  apiKey: string;
-}
-
-interface UserRapidApiConfigV2 {
-  enabled: boolean;
-  keys: string[];
-}
-
 interface UserYoutubeConfigV2 {
   enabled: boolean;
   apiKey: string;
@@ -197,6 +176,16 @@ type UserTriviaConfigV2 = {
   timeLimit?: number;
 }[];
 
+interface UserMiscConfigV2 {
+  decapiToken: string;
+  hypeRateEnabled: boolean;
+  hypeRateUrl: string;
+  giphyApiKey: string;
+  rapidApiKey: string;
+  sounds: UserSoundsConfigV2;
+  commandsListUrl: string;
+}
+
 interface UserConfigV2 {
   // Needed for BlunderBot (server) to start properly
   port: number;
@@ -216,16 +205,7 @@ interface UserConfigV2 {
   twitter: UserTwitterConfigV2;
   youtube: UserYoutubeConfigV2;
   trivia: UserTriviaConfigV2;
-
-  // Misc
-  misc: {
-    decapi: UserDecapiConfigV2;
-    heartRate: UserHeartRateConfigV2;
-    giphy: UserGiphyConfigV2;
-    rapidApi: UserRapidApiConfigV2;
-    sounds: UserSoundsConfigV2;
-    commandsListUrl: string;
-  };
+  misc: UserMiscConfigV2;
 }
 
 interface ConfigV2 extends UserConfigV2 {

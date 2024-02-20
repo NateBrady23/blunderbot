@@ -8,7 +8,7 @@ const queue = new FunctionQueue();
 const command: Command = {
   name: 'sound',
   platforms: [Platform.Twitch],
-  run: async (ctx) => {
+  run: async (ctx, { services }) => {
     return queue.enqueue(async function () {
       if (!ctx.body) {
         return;
@@ -34,7 +34,7 @@ const command: Command = {
         return false;
       }
 
-      await playAudioFile(file);
+      await playAudioFile(file, services.configV2Service);
       return true;
     });
   }
