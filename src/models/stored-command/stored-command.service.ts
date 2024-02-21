@@ -1,20 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TransactionFor } from 'nest-transact';
-import { ModuleRef } from '@nestjs/core';
 import { StoredCommand } from './stored-command.entity';
 import { StoredCommandCreateInput } from './stored-command.types';
 
 @Injectable()
-export class StoredCommandEntityService extends TransactionFor<StoredCommandEntityService> {
+export class StoredCommandEntityService {
   constructor(
     @InjectRepository(StoredCommand)
-    private StoredCommandRepository: Repository<StoredCommand>,
-    moduleRef: ModuleRef
-  ) {
-    super(moduleRef);
-  }
+    private StoredCommandRepository: Repository<StoredCommand>
+  ) {}
 
   async create(input: StoredCommandCreateInput): Promise<StoredCommand> {
     const StoredCommand: StoredCommand =
