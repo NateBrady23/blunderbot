@@ -12,7 +12,9 @@ const command: Command = {
       ctx,
       services
     );
-    await services.twitchService.ownerRunCommand(`!tts ${reply}`);
+    await services.twitchService.ownerRunCommand(`!tts ${reply}`, {
+      onBehalfOf: ctx.displayName
+    });
     return true;
   }
 };
