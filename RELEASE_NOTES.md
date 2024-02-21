@@ -1,11 +1,16 @@
 # Release Notes
 
-### 2.0.1
+### 2.1.0 (2024-02-21)
+
+#### Features
+
+- New `!restart <service>` command to restart certain services like `!restart twitch` which will reestablish pubsub/eventsub connections. Especially helpful on the rare occasion that the pubsub connection drops so you don't need to restart the bot.
 
 #### Bug Fixes
 
 - Fixed a bug in `!title` where the bot was sending one title per message. The new chat endpoint was taking `\n` as a newline where it was ignored before.
 - Fixed a bug where `!vchat` was sending replies to the owner.
+- Fixed vulnerable dependencies.
 
 ### 2.0.0 (2024-02-20)
 
