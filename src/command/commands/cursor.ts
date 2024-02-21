@@ -1,11 +1,10 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'cursor',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const cursors = CONFIG.get().cursors;
+    const cursors = services.configV2Service.get().cursors;
     let cursor = (ctx.args[0] || '').toLowerCase();
 
     if (cursor === 'reset') {
@@ -23,7 +22,8 @@ const command: Command = {
         filteredCursors[Math.floor(Math.random() * filteredCursors.length)];
     } else if (!cursor || !cursors.includes(cursor)) {
       ctx.botSpeak(
-        `The following cursors are available: ${CONFIG.get()
+        `The following cursors are available: ${services.configV2Service
+          .get()
           .cursors.filter((k) => !k.startsWith('secret_'))
           .join(', ')}`
       );

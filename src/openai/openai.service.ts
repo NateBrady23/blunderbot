@@ -1,42 +1,51 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import OpenAI from 'openai';
 import { CommandService } from '../command/command.service';
 import { generateUUID, playAudioFile } from '../utils/utils';
 import { createReadStream, writeFileSync } from 'fs';
 import { Platform } from '../enums';
-
-export const baseMessages: OpenAiChatMessage[] = [
-  {
-    role: 'system',
-    content: CONFIG.get().openai?.baseSystemMessage
-  }
-];
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class OpenaiService {
   private logger: Logger = new Logger(OpenaiService.name);
   private savedMessages: OpenAiChatMessage[] = [];
   private openai: OpenAI;
+  private baseMessages: OpenAiChatMessage[];
 
   constructor(
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService
-  ) {
-    if (!CONFIG.get().openai?.enabled || !CONFIG.get().openai?.apiKey) {
-      this.logger.log('OpenAI disabled');
-      return;
+    private readonly commandService: CommandService,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
+
+  init() {
+    this.openai = new OpenAI({
+      apiKey: this.configV2Service.get().openai.apiKey
+    });
+
+    this.baseMessages = [
+      {
+        role: 'system',
+        content: this.configV2Service.get().openai?.baseSystemMessage
+      }
+    ];
+  }
+
+  fixPronunciations(text: string): string {
+    for (const [key, value] of this.configV2Service.get().openai
+      .pronunciations) {
+      text = text.replace(new RegExp(key, 'gi'), value);
     }
 
-    this.openai = new OpenAI({
-      apiKey: CONFIG.get().openai.apiKey
-    });
+    return text;
   }
 
   async createImage(prompt: string): Promise<string> {
     try {
       const response = await this.openai.images.generate({
-        model: CONFIG.get().openai?.imageModel || 'dall-e-3',
+        model: this.configV2Service.get().openai?.imageModel || 'dall-e-3',
         prompt,
         quality: 'standard',
         n: 1
@@ -77,14 +86,14 @@ export class OpenaiService {
 
     try {
       const response = await this.openai.audio.speech.create({
-        model: CONFIG.get().openai.ttsModel,
+        model: this.configV2Service.get().openai.ttsModel,
         voice,
         input: message
       });
       const buffer = Buffer.from(await response.arrayBuffer());
       const uuid = generateUUID();
       writeFileSync(`./temp/${uuid}.mp3`, buffer);
-      await playAudioFile(`./temp/${uuid}.mp3`);
+      await playAudioFile(`./temp/${uuid}.mp3`, this.configV2Service);
       this.logger.log(`Audio content written to file: /temp/${uuid}.mp3`);
       return true;
     } catch (error) {
@@ -104,7 +113,7 @@ export class OpenaiService {
       ];
 
       const completion = await this.openai.chat.completions.create({
-        model: CONFIG.get().openai.chatModel,
+        model: this.configV2Service.get().openai.chatModel,
         messages
       });
       return completion.choices[0].message.content;
@@ -158,7 +167,7 @@ export class OpenaiService {
         { role: 'user', content: userMessage }
       ];
       if (opts?.includeBlunderBotContext) {
-        systemMessages = [...baseMessages];
+        systemMessages = [...this.baseMessages];
       }
 
       if (opts?.user) {
@@ -172,7 +181,7 @@ export class OpenaiService {
       messages = [...systemMessages, ...this.savedMessages];
       console.log(messages);
       const completion = await this.openai.chat.completions.create({
-        model: CONFIG.get().openai.chatModel,
+        model: this.configV2Service.get().openai.chatModel,
         messages,
         temperature: opts?.temp || 0.9
       });
@@ -186,7 +195,11 @@ export class OpenaiService {
 
       this.savedMessages.push({ role: 'assistant', content: reply });
 
-      while (this.savedMessages.length > CONFIG.get().openai.memoryCount || 0) {
+      while (
+        this.savedMessages.length >
+          this.configV2Service.get().openai.memoryCount ||
+        0
+      ) {
         this.savedMessages.shift();
       }
       return reply;
@@ -237,7 +250,7 @@ export class OpenaiService {
 
   async isFlagged(message: string): Promise<boolean> {
     const moderation = await this.openai.moderations.create({
-      model: CONFIG.get().openai.textModerationModel,
+      model: this.configV2Service.get().openai.textModerationModel,
       input: message
     });
     return moderation.results[0].flagged;

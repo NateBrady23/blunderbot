@@ -1,6 +1,5 @@
 import { FunctionQueue } from '../../utils/FunctionQueue';
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
 
@@ -10,8 +9,9 @@ const command: Command = {
   run: async (ctx, { commandState, services }) => {
     return queue.enqueue(async function () {
       const body = JSON.parse(ctx.body);
-      if (CONFIG.get().twitch.onSubscribe?.length) {
-        for (const command of CONFIG.get().twitch.onSubscribe) {
+      if (services.configV2Service.get().twitch?.onSubscribe?.length) {
+        for (const command of services.configV2Service.get().twitch
+          ?.onSubscribe) {
           void services.twitchService.ownerRunCommand(command);
         }
       }

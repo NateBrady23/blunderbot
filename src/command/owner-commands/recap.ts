@@ -1,11 +1,13 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'recap',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().openai?.enabled) {
+    if (
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.ttsModel
+    ) {
       console.log(`OpenAI is not enabled in !recap command.`);
       return false;
     }

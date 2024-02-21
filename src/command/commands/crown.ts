@@ -1,4 +1,3 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -21,11 +20,11 @@ const command: Command = {
       return true;
     }
 
-    if (!crown || !CONFIG.get().crowns.includes(crown)) {
+    if (!crown || !services.configV2Service.get().crowns.includes(crown)) {
       ctx.botSpeak(
-        `The following crowns are available: ${CONFIG.get().crowns.join(
-          ', '
-        )}. "!crown reset" to return to normal.`
+        `The following crowns are available: ${services.configV2Service
+          .get()
+          .crowns.join(', ')}. "!crown reset" to return to normal.`
       );
       return false;
     }

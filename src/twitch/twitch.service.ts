@@ -1,22 +1,14 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import { TwitchGateway } from './twitch.gateway';
 import { CommandService } from '../command/command.service';
 import { writeLog } from '../utils/logs';
 import { Platform } from '../enums';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 const newChatters: string[] = [];
 
 // Twitch user map is for determining followers and first time chatters
 const twitchUserMap: Record<string, { id: string; isFollower: boolean }> = {};
-twitchUserMap[CONFIG.get().twitch.ownerUsername.toLowerCase()] = {
-  id: CONFIG.get().twitch.ownerId,
-  isFollower: true
-};
-twitchUserMap[CONFIG.get().twitch.botUsername.toLowerCase()] = {
-  id: CONFIG.get().twitch.botId,
-  isFollower: true
-};
 
 @Injectable()
 export class TwitchService {
@@ -26,14 +18,33 @@ export class TwitchService {
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: CommandService,
     @Inject(forwardRef(() => TwitchGateway))
-    private readonly twitchGateway: TwitchGateway
+    private readonly twitchGateway: TwitchGateway,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
   ) {
     // TODO: Remove this in favor of proper static methods
     this.botSpeak = this.botSpeak.bind(this);
   }
 
+  init() {
+    twitchUserMap[
+      this.configV2Service.get().twitch.ownerUsername.toLowerCase()
+    ] = {
+      id: this.configV2Service.get().twitch.ownerId,
+      isFollower: true
+    };
+    twitchUserMap[this.configV2Service.get().twitch.botUsername.toLowerCase()] =
+      {
+        id: this.configV2Service.get().twitch.botId,
+        isFollower: true
+      };
+  }
+
   async botSpeak(message: string) {
-    if (message.length > (CONFIG.get().twitch?.maxMessageLength || 1500)) {
+    if (
+      message.length >
+      (this.configV2Service.get().twitch?.maxMessageLength || 1500)
+    ) {
       this.logger.error(message);
       this.logger.error('Message is too long to send. Failing...');
       return;
@@ -52,8 +63,8 @@ export class TwitchService {
       'https://api.twitch.tv/helix/chat/messages',
       'POST',
       {
-        broadcaster_id: CONFIG.get().twitch.ownerId,
-        sender_id: CONFIG.get().twitch.botId,
+        broadcaster_id: this.configV2Service.get().twitch.ownerId,
+        sender_id: this.configV2Service.get().twitch.botId,
         message
       },
       false
@@ -64,14 +75,14 @@ export class TwitchService {
     let message = data.message;
     void writeLog('chat', `${data.displayName}: ${message}`);
     const regex = new RegExp(
-      `^@${CONFIG.get().twitch.botUsername}|@${
-        CONFIG.get().twitch.botUsername
+      `^@${this.configV2Service.get().twitch.botUsername}|@${
+        this.configV2Service.get().twitch.botUsername
       }$`,
       'i'
     );
     if (regex.test(message)) {
       const replaceRegex = new RegExp(
-        `@${CONFIG.get().twitch.botUsername} `,
+        `@${this.configV2Service.get().twitch.botUsername} `,
         'i'
       );
       message = '!chat ' + message.replace(replaceRegex, '');
@@ -85,13 +96,14 @@ export class TwitchService {
       // Welcome in new chatters (non-followers)
       if (!context.isFollower) {
         if (
-          CONFIG.get().twitch.welcome?.enabled &&
-          !CONFIG.get().twitch.welcome.ignoreUsers.includes(displayName)
+          this.configV2Service.get().twitch.welcome?.message &&
+          !this.configV2Service
+            .get()
+            .twitch.welcome?.ignoreUsers?.includes(displayName.toLowerCase())
         ) {
-          const message = CONFIG.get().twitch.welcome.message.replace(
-            /{user}/gi,
-            `@${displayName}`
-          );
+          const message = this.configV2Service
+            .get()
+            .twitch.welcome.message.replace(/{user}/gi, `@${displayName}`);
           void this.botSpeak(message);
         }
       } else if (!context.isOwner && !context.isBot) {
@@ -112,7 +124,7 @@ export class TwitchService {
       !data.channelPointsCustomRewardId &&
       !data.userLogin
         .toLowerCase()
-        .includes(CONFIG.get().twitch.botUsername.toLowerCase())
+        .includes(this.configV2Service.get().twitch.botUsername.toLowerCase())
     ) {
       void this.autoRespond(message);
       return;
@@ -144,7 +156,7 @@ export class TwitchService {
     opts?: CreateContextOptions
   ): Promise<Context> {
     const context: Partial<Context> = {
-      channel: CONFIG.get().twitch.channel,
+      channel: this.configV2Service.get().twitch.ownerUsername,
       message,
       reply: (ctx: Context, message) =>
         this.botSpeak(`@${ctx.onBehalfOf || ctx.displayName} ${message}`),
@@ -166,8 +178,10 @@ export class TwitchService {
       // If no data, then it's a command being run directly by the owner
       context.isOwnerRun = true;
       context.onBehalfOf = opts?.onBehalfOf;
-      context.username = CONFIG.get().twitch.ownerUsername.toLowerCase();
-      context.displayName = CONFIG.get().twitch.ownerUsername;
+      context.username = this.configV2Service
+        .get()
+        .twitch.ownerUsername.toLowerCase();
+      context.displayName = this.configV2Service.get().twitch.ownerUsername;
       context.isOwner = true;
       context.isMod = true;
       context.isSubscriber = true;
@@ -197,9 +211,9 @@ export class TwitchService {
   }
 
   async autoRespond(message: string) {
-    if (!CONFIG.get().autoResponder) return;
+    if (!this.configV2Service.get().twitch?.autoResponder) return;
 
-    for (const match of CONFIG.get().autoResponder) {
+    for (const match of this.configV2Service.get().twitch.autoResponder) {
       for (const phrase of match.phrases) {
         const regex = new RegExp(phrase, 'gi');
         if (message.match(regex)) {
@@ -227,11 +241,11 @@ export class TwitchService {
     asOwner = true
   ): Promise<any> {
     const token = asOwner
-      ? CONFIG.get().twitch.apiOwnerOauthToken
-      : CONFIG.get().twitch.apiBotOauthToken;
+      ? this.configV2Service.get().twitch.apiOwnerOauthToken
+      : this.configV2Service.get().twitch.apiBotOauthToken;
 
     const headers = new Headers();
-    headers.set('Client-ID', CONFIG.get().twitch.apiClientId);
+    headers.set('Client-ID', this.configV2Service.get().twitch.apiClientId);
     headers.set('Authorization', `Bearer ${token}`);
 
     if (body) {
@@ -274,7 +288,7 @@ export class TwitchService {
       const res2: { data: unknown[] } = <{ data: unknown[] }>(
         await this.helixApiCall(
           `https://api.twitch.tv/helix/channels/followers?user_id=${id}&broadcaster_id=${
-            CONFIG.get().twitch.ownerId
+            this.configV2Service.get().twitch.ownerId
           }`,
           'GET'
         )
@@ -292,9 +306,9 @@ export class TwitchService {
       if (!user) return;
       await this.helixApiCall(
         `https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id=${
-          CONFIG.get().twitch.ownerId
+          this.configV2Service.get().twitch.ownerId
         }&to_broadcaster_id=${user.id}&moderator_id=${
-          CONFIG.get().twitch.botId
+          this.configV2Service.get().twitch.botId
         }`,
         'POST',
         undefined,
@@ -310,31 +324,31 @@ export class TwitchService {
     id: string,
     body: { is_enabled?: boolean; cost?: number; prompt?: string }
   ) {
-    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}&id=${id}`;
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this.configV2Service.get().twitch.ownerId}&id=${id}`;
     return this.helixApiCall(url, 'PATCH', body, true);
   }
 
   async createCustomReward(body: { title: string; cost: number }) {
-    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const url = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this.configV2Service.get().twitch.ownerId}`;
     const res = await this.helixApiCall(url, 'POST', body, true);
     this.logger.log(`Custom reward ID for ${body.title}: ${res.data[0].id}`);
   }
 
   async getChatSettings(): Promise<ChatSettings> {
-    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}`;
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${this.configV2Service.get().twitch.ownerId}`;
     const res = await this.helixApiCall(url, 'GET', undefined, true);
     return res.data[0];
   }
 
   async updateChatSettings(body: UpdateChatSettings) {
-    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${CONFIG.get().twitch.ownerId}&moderator_id=${CONFIG.get().twitch.ownerId}`;
+    const url = `https://api.twitch.tv/helix/chat/settings?broadcaster_id=${this.configV2Service.get().twitch.ownerId}&moderator_id=${this.configV2Service.get().twitch.ownerId}`;
     return this.helixApiCall(url, 'PATCH', body, true);
   }
 
   async getPoll(): Promise<PollData> {
     const res = await this.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
-        CONFIG.get().twitch.ownerId,
+        this.configV2Service.get().twitch.ownerId,
       'GET'
     );
 
@@ -343,7 +357,7 @@ export class TwitchService {
 
   async createPoll(poll: CreatePoll) {
     await this.helixApiCall('https://api.twitch.tv/helix/polls', 'POST', {
-      broadcaster_id: CONFIG.get().twitch.ownerId,
+      broadcaster_id: this.configV2Service.get().twitch.ownerId,
       title: poll.title,
       choices: poll.choices,
       duration: poll.duration
@@ -353,7 +367,7 @@ export class TwitchService {
   async endPoll(pollId: string) {
     await this.helixApiCall(
       'https://api.twitch.tv/helix/polls?broadcaster_id=' +
-        CONFIG.get().twitch.ownerId +
+        this.configV2Service.get().twitch.ownerId +
         '&status=TERMINATED' +
         '&id=' +
         pollId,

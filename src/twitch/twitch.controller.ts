@@ -1,40 +1,51 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  forwardRef,
+  Get,
+  Inject,
+  Post
+} from '@nestjs/common';
 import { TwitchService } from './twitch.service';
-import { CONFIG } from '../config/config.service';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Controller('twitch')
 export class TwitchController {
-  constructor(private readonly twitchService: TwitchService) {}
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service,
+    private readonly twitchService: TwitchService
+  ) {}
 
   @Get('kings')
   getTwitchKings(): string[] {
-    return CONFIG.get().kings;
+    return this.configV2Service.get().kings;
   }
 
   @Get('opps')
   getOpponentKings(): string[] {
-    return CONFIG.get().oppKings;
+    return this.configV2Service.get().oppKings;
   }
 
   @Get('crowns')
   getTwitchCrowns(): string[] {
-    return CONFIG.get().crowns;
+    return this.configV2Service.get().crowns;
   }
 
   @Get('themeconfig')
   getThemeConfig(): unknown {
-    return CONFIG.get().themeConfig;
+    return this.configV2Service.get().themeConfig;
   }
 
   // Load sounds for the soundboard menu
   @Get('soundboard')
   getSoundboard(): string[] {
-    return CONFIG.get().soundboard;
+    return this.configV2Service.get().soundboard;
   }
 
   @Get('titles')
   getTitles(): string[][] {
-    return CONFIG.get().titledPlayers;
+    return this.configV2Service.get().lichess.titledPlayers;
   }
 
   @Post('/command')

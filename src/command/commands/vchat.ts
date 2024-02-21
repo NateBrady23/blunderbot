@@ -1,11 +1,10 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'vchat',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().openai?.enabled) {
+    if (!services.configV2Service.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !vchat command.`);
       return false;
     }

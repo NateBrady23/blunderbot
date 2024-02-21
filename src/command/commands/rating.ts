@@ -1,4 +1,3 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 interface LichessUser {
@@ -18,10 +17,10 @@ const command: Command = {
   aliases: ['elo'],
   help: "!rating <username> - Get a user's lichess rating",
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
+  run: async (ctx, { services }) => {
     let user = ctx.args[0];
     if (!user) {
-      user = CONFIG.get().lichess.user;
+      user = services.configV2Service.get().lichess.user;
     }
     try {
       const res = await fetch(`https://lichess.org/api/user/${user}`);

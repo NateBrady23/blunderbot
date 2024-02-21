@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import * as querystring from 'querystring';
+import { ConfigV2Service } from '../configV2/configV2.service';
 // import * as querystring from 'querystring';
 
 @Injectable()
@@ -12,17 +12,20 @@ export class SpotifyService {
   private accessToken: string = '';
   private accessTokenExpires: number;
 
-  constructor() {}
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
 
   getAuthUrl(): string {
     return (
       'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: CONFIG.get().spotify.clientId,
+        client_id: this.configV2Service.get().spotify.clientId,
         scope:
           'user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-modify-public playlist-modify-private playlist-read-collaborative playlist-read-private user-library-modify user-library-read',
-        redirect_uri: CONFIG.get().spotify.redirectUri,
+        redirect_uri: this.configV2Service.get().spotify.redirectUri,
         state: '123456'
       })
     );
@@ -38,7 +41,7 @@ export class SpotifyService {
       const params = !this.accessToken
         ? new URLSearchParams({
             grant_type: 'authorization_code',
-            redirect_uri: CONFIG.get().spotify.redirectUri,
+            redirect_uri: this.configV2Service.get().spotify.redirectUri,
             code: this.authCode
           })
         : new URLSearchParams({
@@ -53,9 +56,9 @@ export class SpotifyService {
           Authorization:
             'Basic ' +
             Buffer.from(
-              CONFIG.get().spotify.clientId +
+              this.configV2Service.get().spotify.clientId +
                 ':' +
-                CONFIG.get().spotify.clientSecret
+                this.configV2Service.get().spotify.clientSecret
             ).toString('base64')
         },
         body: params,
@@ -118,7 +121,14 @@ export class SpotifyService {
         }
       );
       const data: SpotifySearchResponse = await res.json();
-      return data.tracks.items[0];
+      for (const track of data.tracks.items) {
+        if (
+          query.includes('karaoke') ||
+          !track.name.toLowerCase().includes('karaoke')
+        ) {
+          return track;
+        }
+      }
     } catch (e) {
       this.logger.error('Error getting Spotify track from search');
       return;

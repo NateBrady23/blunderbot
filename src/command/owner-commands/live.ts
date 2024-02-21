@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 /**
  * The !live command without any arguments will announce that the streamer is live on discord if
@@ -15,10 +14,11 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      CONFIG.get().discord?.enabled &&
-      !!CONFIG.get().discord?.announcementChannelId;
+      services.configV2Service.get().discord?.enabled &&
+      !!services.configV2Service.get().discord?.announcementChannelId;
     let sendToTwitter =
-      CONFIG.get().twitter?.enabled && CONFIG.get().twitter?.announceLive;
+      services.configV2Service.get().twitter?.enabled &&
+      services.configV2Service.get().twitter?.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -41,32 +41,26 @@ const command: Command = {
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `${
-            CONFIG.get().nickname
-          } is about to go live on twitch. Say something to get people excited`,
+          `We're about to go live on twitch. Say something to get people excited`,
           {
             temp: 1.4,
             includeBlunderBotContext: true
           }
         );
       } catch (e) {
-        msg = `Are you ready? It's time. ${
-          CONFIG.get().nickname
-        } is here and he's ready to play some chess!`;
+        msg = `Are you ready? We're live!`;
       }
     }
 
     if (sendToDiscord) {
       services.discordService.makeAnnouncement(
-        `@everyone ${msg} https://twitch.tv/${CONFIG.get().twitch.channel}`
+        `@everyone ${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }
 
     if (sendToTwitter) {
       void services.twitterService.postTweet(
-        `${msg} https://twitch.tv/${CONFIG.get().twitch.channel} ${
-          CONFIG.get().twitter.tweetHashtags
-        }`
+        `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }
 

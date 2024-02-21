@@ -1,6 +1,5 @@
 import { Platform } from '../../enums';
 import { removeSymbols } from '../../utils/utils';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'queue',
@@ -35,10 +34,10 @@ const command: Command = {
       ctx.botSpeak('The queue has been cleared');
     }
 
-    if (CONFIG.get().twitch.challengeRewardId) {
+    if (services.configV2Service.get().twitch?.challengeRewardId) {
       if (queueCommand === 'open' && ctx.isOwner) {
         void services.twitchService.updateCustomReward(
-          CONFIG.get().twitch.challengeRewardId,
+          services.configV2Service.get().twitch.challengeRewardId,
           { is_enabled: true }
         );
         ctx.botSpeak('The queue is now open');
@@ -47,7 +46,7 @@ const command: Command = {
 
       if (queueCommand === 'close' && ctx.isOwner) {
         void services.twitchService.updateCustomReward(
-          CONFIG.get().twitch.challengeRewardId,
+          services.configV2Service.get().twitch.challengeRewardId,
           { is_enabled: false }
         );
         ctx.botSpeak('The queue is now closed');

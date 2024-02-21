@@ -1,16 +1,13 @@
 import { google, youtube_v3 } from 'googleapis';
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 import { GaxiosResponse } from 'googleapis-common';
 
 let cachedLatestShort: youtube_v3.Schema$PlaylistItem[] = [];
 
-async function getLastVideosByPlaylist(
-  playlistId = CONFIG.get().youtube.shortsPlaylistId
-) {
+async function getLastVideosByPlaylist(playlistId: string, apiKey: string) {
   const youtube = google.youtube({
     version: 'v3',
-    auth: CONFIG.get().youtube.apiKey
+    auth: apiKey
   });
 
   let itemsToReturn: youtube_v3.Schema$PlaylistItem[] = [];
@@ -41,13 +38,16 @@ async function getLastVideosByPlaylist(
 const command: Command = {
   name: 'shortslist',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
-    if (!CONFIG.get().youtube?.enabled) {
+  run: async (ctx, { services }) => {
+    if (!services.configV2Service.get().youtube?.enabled) {
       console.log('YouTube not enabled in config for !shortslist command');
       return false;
     }
     if (!cachedLatestShort.length) {
-      cachedLatestShort = await getLastVideosByPlaylist();
+      cachedLatestShort = await getLastVideosByPlaylist(
+        services.configV2Service.get().youtube.shortsPlaylistId,
+        services.configV2Service.get().youtube.apiKey
+      );
     }
     if (!cachedLatestShort.length) {
       ctx.botSpeak("I can't find this right now. Try again later.");

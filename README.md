@@ -14,10 +14,11 @@ You may see some references to chess.com, but currently BlunderBot only supports
 The setup is much easier in v1.6.0. Here are the steps. You'll find more details about each step below.
 
 1. Install Chrome Extension
-2. Edit config files
+2. Edit config file
 3. Run server for the first time (`npm install`, `npm run start`)
 4. Visit https://localhost in your browser and accept the risk of the self-signed certificate
-5. Visit https://lichess.org and enjoy!
+5. Visit https://www.blunder.bot to configure the bot
+6. Visit https://lichess.org and enjoy!
 
 ### Chrome Extension
 
@@ -29,17 +30,12 @@ Reminder: If you're doing development, you'll need to reload the extension after
 
 Note: Not all files in the public folder are needed for the extension to work, but some files, like utils.js, are shared between the extension and things like the overlay HTML files.
 
-### Configuration - MAJOR CHANGE IN v1.6.0
+### Configuration
 
-The config may look daunting, but there's only a few files you have to touch to get BlunderBot started now. The rest are separated out because they can get large as you add your own things in.
+- Copy `src/config/config.sample.ts` to `src/config/config.ts` making sure to connect to your database.
+- Visit https://www.blunder.bot to configure the bot
 
-1. `src/config/config.sample.ts` - Copy this to `config.ts` and follow the instructions.
-2. `src/config/config.twitch.sample.ts` - Copy this to `config.twitch.ts` and fill in the proper values.
-3. `src/config/config.lichess.sample.ts` - Copy this to `config.discord.ts` and fill in the proper values.
-
-This will get blunderbot working with twitch and lichess. For the best BlunderBot experience, I'd do the same for `config.openai.sample.ts` next!
-
-_IMPORTANT_: A lot of files (especially sounds) listed in the config files may not exist. Be sure to add your own! Sound files that don't exist will show an error message in the log and won't play but won't crash the bot.
+Note: I am using https://planetscale.com for a free MySQL database. It has a very generous free tier plan for projects like this.
 
 ### Some other settings
 
@@ -83,11 +79,3 @@ convert-svg-to-png blunder.svg
 ## png to cur
 icotool --create --cursor --output=blunder.cur blunder.png
 ```
-
-### Database Support
-
-Optional database support was added in version 1.10.0. You can enable it and set up the config in `src/config/config.database.sample.ts`.
-
-Though the database is optional for a couple of commands to work, it's highly recommended to set it up. Version 2.0 of BlunderBot will require database support.
-
-Note: I am using https://planetscale.com for a free MySQL database. It has a very generous free tier plan for projects like this.

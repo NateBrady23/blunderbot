@@ -12,6 +12,7 @@ import { TwitterService } from '../twitter/twitter.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class CommandService {
@@ -24,6 +25,8 @@ export class CommandService {
     private readonly appGateway: AppGateway,
     @Inject(forwardRef(() => BrowserService))
     private readonly browserService: BrowserService,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway,
     @Inject(forwardRef(() => TwitchService))
@@ -46,6 +49,7 @@ export class CommandService {
     this.services = {
       appGateway: this.appGateway,
       browserService: this.browserService,
+      configV2Service: this.configV2Service,
       commandService: this,
       discordService: this.discordService,
       twitchGateway: this.twitchGateway,
@@ -58,10 +62,12 @@ export class CommandService {
       // Entity services
       storedCommandEntityService: this.storedCommandEntityService
     };
+  }
 
+  init() {
     this.setInitialCommandState();
 
-    if (CONFIG.get().heartRate?.enabled) {
+    if (this.configV2Service.get().misc?.hypeRateEnabled) {
       void this.heartRateCheck();
     }
 
@@ -75,17 +81,19 @@ export class CommandService {
   setInitialCommandState() {
     this.commandState = {
       arena: '',
-      shoutoutUsers: CONFIG.get().autoShoutouts || [],
+      shoutoutUsers: this.configV2Service.get().twitch?.autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: CONFIG.get().killedCommands,
+      killedCommands: this.configV2Service.get().commandConfig?.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
-      blunderbotVoice: <OpenAiVoiceOptions>CONFIG.get().openai?.voices[0],
+      blunderbotVoice: <OpenAiVoiceOptions>(
+        this.configV2Service.get().openai?.voices[0]
+      ),
       storedCommands: {},
       cbanUsers: [],
       wouldBeCommands: {},
@@ -122,9 +130,7 @@ export class CommandService {
           ) {
             this.commandState.heartRateHigh = heartRate;
             void this.twitchService.ownerRunCommand(
-              `!tts ${
-                CONFIG.get().nickname
-              }'s heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
+              `!tts your heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
             );
             if (threshold === 140) clearInterval(heartRateInterval);
             break;
@@ -155,7 +161,7 @@ export class CommandService {
 
     if (cmd.requiresLive && !this.commandState.isLive) {
       ctx.botSpeak(
-        `${CONFIG.get().twitch.channel} is not live until I SAY HE'S LIVE!`
+        `${this.configV2Service.get().twitch.ownerUsername} is not live until I SAY HE'S LIVE!`
       );
       return false;
     }
@@ -176,7 +182,7 @@ export class CommandService {
 
     if (ctx.platform === Platform.Twitch) {
       if (
-        CONFIG.get().twitch.subCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.subCommands?.includes(cmd.name) &&
         !ctx.isSubscriber
       ) {
         ctx.botSpeak(
@@ -186,20 +192,25 @@ export class CommandService {
       }
 
       if (
-        CONFIG.get().twitch.followerCommands?.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch.followerCommands?.includes(cmd.name) &&
         !ctx.isFollower
       ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
         return false;
       }
 
-      if (CONFIG.get().twitch.vipCommands?.includes(cmd.name) && !ctx.isVip) {
+      if (
+        this.configV2Service.get().twitch.vipCommands?.includes(cmd.name) &&
+        !ctx.isVip
+      ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
         return false;
       }
 
       if (
-        CONFIG.get().twitch.founderCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.founderCommands?.includes(cmd.name) &&
         !ctx.isFounder
       ) {
         ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for founders only.`);
@@ -207,7 +218,9 @@ export class CommandService {
       }
 
       if (
-        CONFIG.get().twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
         !ctx.isHypeTrainConductor
       ) {
         ctx.botSpeak(
@@ -231,7 +244,8 @@ export class CommandService {
     }
 
     // Checks to see if the command is limited
-    const limitedTo = CONFIG.get().twitch.limitedCommands[cmd.name];
+    const limitedTo =
+      this.configV2Service.get().twitch.limitedCommands[cmd.name];
     if (limitedTo && limitedTo > 0) {
       if (!this.commandState.limitedCommands[cmd.name]) {
         this.commandState.limitedCommands[cmd.name] = {};
@@ -248,7 +262,8 @@ export class CommandService {
       }
     }
 
-    const userRestricted = CONFIG.get().twitch.userRestrictedCommands[cmd.name];
+    const userRestricted =
+      this.configV2Service.get().twitch.userRestrictedCommands[cmd.name];
     if (userRestricted) {
       const found = userRestricted.some((user) => {
         return user.toLowerCase() === ctx.displayName.toLowerCase();
@@ -266,7 +281,7 @@ export class CommandService {
   }
 
   findCommand(name: string): Command | undefined {
-    const commands = CONFIG.get().commands;
+    const commands = this.services.configV2Service.get().commands;
     name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
 

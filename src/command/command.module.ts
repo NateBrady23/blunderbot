@@ -10,11 +10,13 @@ import { BrowserModule } from '../browser/browser.module';
 import { TwitterModule } from '../twitter/twitter.module';
 import { SpotifyModule } from '../spotify/spotify.module';
 import { EntityModule } from '../models/entity.module';
+import { ConfigV2Module } from '../configV2/configV2.module';
 
 @Module({
   imports: [
     forwardRef(() => AppModule),
     forwardRef(() => BrowserModule),
+    forwardRef(() => ConfigV2Module),
     forwardRef(() => DiscordModule),
     forwardRef(() => TwitchModule),
     forwardRef(() => TwitterModule),

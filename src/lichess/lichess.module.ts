@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { LichessService } from './lichess.service';
+import { ConfigV2Module } from '../configV2/configV2.module';
 
 @Module({
-  imports: [],
+  imports: [forwardRef(() => ConfigV2Module)],
   controllers: [],
   providers: [LichessService],
   exports: [LichessService]

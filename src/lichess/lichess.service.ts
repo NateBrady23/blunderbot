@@ -1,11 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class LichessService {
   private logger: Logger = new Logger(LichessService.name);
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {
     //
   }
 
@@ -16,7 +19,7 @@ export class LichessService {
   }
 
   async getCurrentGame(
-    user = CONFIG.get().lichess.user,
+    user = this.configV2Service.get().lichess.user,
     opts: { gameId?: boolean } = {}
   ): Promise<any> {
     const url = `https://lichess.org/api/users/status?withGameIds=true&ids=${user}`;
@@ -52,7 +55,7 @@ export class LichessService {
       json: true
     }
   ): Promise<any> {
-    const token = CONFIG.get().lichess.oauthToken;
+    const token = this.configV2Service.get().lichess.oauthToken;
 
     const headers = new Headers();
     headers.set('Authorization', `Bearer ${token}`);

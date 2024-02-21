@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
 import * as WebSocket from 'ws';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitchPubSub {
@@ -13,8 +13,12 @@ export class TwitchPubSub {
 
   constructor(
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService
-  ) {
+    private readonly twitchService: TwitchService,
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {}
+
+  init() {
     this.pubSubCreateConnection();
   }
 
@@ -27,12 +31,12 @@ export class TwitchPubSub {
           type: 'LISTEN',
           data: {
             topics: [
-              `channel-points-channel-v1.${CONFIG.get().twitch.ownerId}`,
-              `channel-subscribe-events-v1.${CONFIG.get().twitch.ownerId}`,
-              `channel-bits-badge-unlocks.${CONFIG.get().twitch.ownerId}`,
-              `channel-bits-events-v2.${CONFIG.get().twitch.ownerId}`
+              `channel-points-channel-v1.${this.configV2Service.get().twitch.ownerId}`,
+              `channel-subscribe-events-v1.${this.configV2Service.get().twitch.ownerId}`,
+              `channel-bits-badge-unlocks.${this.configV2Service.get().twitch.ownerId}`,
+              `channel-bits-events-v2.${this.configV2Service.get().twitch.ownerId}`
             ],
-            auth_token: CONFIG.get().twitch.apiOwnerOauthToken
+            auth_token: this.configV2Service.get().twitch.apiOwnerOauthToken
           }
         })
       );
@@ -86,10 +90,11 @@ export class TwitchPubSub {
 
         this.logger.log(`User ${username} redeemed ${reward.title}`);
 
-        if (CONFIG.get().twitch.customRewardCommands[reward.title]) {
-          for (let command of CONFIG.get().twitch.customRewardCommands[
-            reward.title
-          ]) {
+        if (
+          this.configV2Service.get().twitch.customRewardCommands[reward.title]
+        ) {
+          for (let command of this.configV2Service.get().twitch
+            .customRewardCommands[reward.title]) {
             command = command.replace(/{username}/gi, `${username}`);
             command = command.replace(/{message}/gi, `${userInput}`);
             void this.twitchService.ownerRunCommand(`${command}`, {

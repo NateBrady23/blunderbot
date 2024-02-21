@@ -1,7 +1,5 @@
-import { playAudioFile } from '../../utils/utils';
 import { FunctionQueue } from '../../utils/FunctionQueue';
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const queue = new FunctionQueue();
 
@@ -27,24 +25,38 @@ const command: Command = {
           bits + (commandState.contributions.bits[user] || 0);
       }
 
-      console.log(commandState.contributions);
-
-      let commands: string[], alert: string;
-      if (CONFIG.get().bits?.matches && CONFIG.get().bits.matches[bits]) {
-        commands = CONFIG.get().bits.matches[bits].commands;
-        alert = CONFIG.get().bits.matches[bits].alert;
+      let commands: string[];
+      if (
+        services.configV2Service.get().twitch?.bits?.matches &&
+        services.configV2Service.get().twitch?.bits?.matches[bits]
+      ) {
+        commands =
+          services.configV2Service.get().twitch.bits.matches[bits].commands;
       } else {
-        const key = bits < 100 ? '99orLess' : '100orMore';
-        commands = CONFIG.get().bits[key].commands;
-        alert = CONFIG.get().bits[key].alert;
+        for (const match in services.configV2Service.get().twitch?.bits
+          ?.matches) {
+          if (match.startsWith('over')) {
+            if (bits > parseInt(match.replace('over', ''))) {
+              commands =
+                services.configV2Service.get().twitch.bits.matches[match]
+                  .commands;
+              break;
+            }
+          }
+          if (match.startsWith('under')) {
+            if (bits < parseInt(match.replace('under', ''))) {
+              commands =
+                services.configV2Service.get().twitch.bits.matches[match]
+                  .commands;
+              break;
+            }
+          }
+        }
       }
       if (commands) {
         for (const cmd of commands) {
           void services.twitchService.ownerRunCommand(cmd);
         }
-      }
-      if (alert) {
-        await playAudioFile(alert);
       }
 
       // Play a message after all the other alerts and sounds play

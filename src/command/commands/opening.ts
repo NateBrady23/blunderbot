@@ -1,4 +1,3 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -6,7 +5,7 @@ const command: Command = {
   help: `Gets the opening of the current game played by the streamer unless a lichess gameId is supplied.`,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const lichessUser = CONFIG.get().lichess.user;
+    const lichessUser = services.configV2Service.get().lichess.user;
 
     let gameId: string;
     if (ctx.args[0]) {

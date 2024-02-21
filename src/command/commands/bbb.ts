@@ -1,15 +1,14 @@
 import { isNHoursLater } from '../../utils/utils';
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 const ndjsonParser = require('ndjson-parse');
 
 let cached: string[] = [];
 let cachedAt: number;
 
-const cacheBBB = async () => {
+const cacheBBB = async (services: CommandServices) => {
   try {
     const res = await fetch(
-      `https://lichess.org/api/team/${CONFIG.get().lichess.teamId}/arena?max=10`
+      `https://lichess.org/api/team/${services.configV2Service.get().lichess.teamId}/arena?max=10`
     );
     const ndjson = await res.text();
     const json: LichessTournamentResponse[] = ndjsonParser(ndjson);
@@ -80,7 +79,7 @@ const command: Command = {
   ],
   help: ' Displays the team link, the current natebr4Bbb tournament, and the previous winner.',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
+  run: async (ctx, { services }) => {
     // Allow any extra args to be a cache buster
     if (ctx.args[0]) {
       cached = [];
@@ -90,7 +89,7 @@ const command: Command = {
       return true;
     }
     try {
-      await cacheBBB();
+      await cacheBBB(services);
       speak(ctx);
     } catch (e) {
       console.error(e);

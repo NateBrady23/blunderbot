@@ -1,18 +1,17 @@
-import { CONFIG } from '../../config/config.service';
 import { Platform } from '../../enums';
 
 const command: Command = {
   name: 'followage',
   help: 'How long a twitch user has been following my channel. If no user is provided, it will display the followage for the user using the command.',
   platforms: [Platform.Twitch, Platform.Discord],
-  run: async (ctx) => {
-    if (!CONFIG.get().decapi?.enabled) {
+  run: async (ctx, { services }) => {
+    if (!services.configV2Service.get().misc?.decapiToken) {
       console.log('DecAPI is not enabled for !followage command.');
       return false;
     }
 
-    const decapiToken = CONFIG.get().decapi.token;
-    const channel = CONFIG.get().twitch.channel;
+    const decapiToken = !services.configV2Service.get().misc?.decapiToken;
+    const channel = services.configV2Service.get().twitch.ownerUsername;
 
     let user = ctx.args[0];
     if (!user) {

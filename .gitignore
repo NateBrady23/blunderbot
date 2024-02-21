@@ -37,6 +37,9 @@ src/config/config.ts
 config.*.ts
 !config.*.sample.ts
 !config.sample.ts
+!config.entity.ts
+!config.service.ts
+!config.types.d.ts
 
 # other
 temp/

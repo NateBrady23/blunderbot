@@ -1,5 +1,4 @@
 import { Platform } from '../../enums';
-import { CONFIG } from '../../config/config.service';
 
 const command: Command = {
   name: 'songrequest',
@@ -7,7 +6,7 @@ const command: Command = {
   aliases: ['sr'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    if (!CONFIG.get().spotify?.enabled) {
+    if (!services.configV2Service.get().spotify?.enabled) {
       console.log('Spotify is not enabled for !songrequest.');
       return false;
     }
@@ -31,11 +30,17 @@ const command: Command = {
       ctx.reply(ctx, "I couldn't find that song on Spotify.");
       return false;
     }
-    if (!CONFIG.get().spotify.allowExplicit && track.explicit) {
+    if (
+      !services.configV2Service.get().spotify.allowExplicit &&
+      track.explicit
+    ) {
       ctx.reply(ctx, 'I cannot play explicit songs.');
       return false;
     }
-    if (track.duration_ms > CONFIG.get().spotify.maxAllowedSongLengthMs) {
+    if (
+      track.duration_ms >
+      services.configV2Service.get().spotify.maxAllowedSongLengthMs
+    ) {
       ctx.reply(
         ctx,
         'That song is too long. Try a more specific request for a shorter song.'
@@ -48,9 +53,12 @@ const command: Command = {
       const trackDetails = services.spotifyService.getTrackInfoFromTrack(track);
       commandState.spotify.requests[trackDetails] = user;
       ctx.reply(ctx, `${trackDetails} added to queue.`);
-      if (CONFIG.get().discord.enabled && CONFIG.get().discord.musicChannelId) {
-        services.discordService.botSpeak(
-          { channelId: CONFIG.get().discord.musicChannelId },
+      if (
+        services.configV2Service.get().discord.enabled &&
+        services.configV2Service.get().discord.musicChannelId
+      ) {
+        void services.discordService.botSpeak(
+          { channelId: services.configV2Service.get().discord.musicChannelId },
           `Song request added to queue by @${user} on Twitch: ${trackDetails}. Link: ${track.external_urls.spotify}`
         );
       }

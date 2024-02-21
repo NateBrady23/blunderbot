@@ -7,15 +7,23 @@ import { OpenaiModule } from '../openai/openai.module';
 import { GiphyModule } from '../giphy/giphy.module';
 import { TwitchPubSub } from './twitch.pubsub';
 import { TwitchEventSub } from './twitch.eventsub';
+import { ConfigV2Module } from '../configV2/configV2.module';
 
 @Module({
   imports: [
     forwardRef(() => CommandModule),
     forwardRef(() => OpenaiModule),
+    forwardRef(() => ConfigV2Module),
     GiphyModule
   ],
   controllers: [TwitchController],
   providers: [TwitchService, TwitchEventSub, TwitchPubSub, TwitchGateway],
-  exports: [TwitchGateway, TwitchService]
+  exports: [
+    TwitchService,
+    TwitchGateway,
+    TwitchService,
+    TwitchPubSub,
+    TwitchEventSub
+  ]
 })
 export class TwitchModule {}

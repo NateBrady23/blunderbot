@@ -1,31 +1,40 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CONFIG } from '../config/config.service';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class GiphyService {
   private logger: Logger = new Logger(GiphyService.name);
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => ConfigV2Service))
+    private readonly configV2Service: ConfigV2Service
+  ) {
     //
   }
 
   async fetchGif(phrase: string) {
     const phraseToMatch = phrase.trim().toLowerCase();
-    if (CONFIG.get().gif?.matches[phraseToMatch]) {
-      return CONFIG.get().gif.matches[phraseToMatch];
+    if (this.configV2Service.get().gifs?.includes(phraseToMatch)) {
+      return `https://localhost/gifs/${phraseToMatch}.gif`;
     }
+
+    if (!this.configV2Service.get().misc?.giphyApiKey) {
+      this.logger.error('No giphy api key found and no local gif found');
+    }
+
     const encodedPhrase = encodeURIComponent(phrase);
     const response = await fetch(
       `https://api.giphy.com/v1/gifs/search?api_key=${
-        CONFIG.get().giphy.apiKey
+        this.configV2Service.get().misc?.giphyApiKey
       }&q=${encodedPhrase}&limit=1`
     );
     const data = await response.json();
     // Sometimes giphy doesn't return a gif for a phrase, so we return a default gif
-    if (!data?.data[0] && CONFIG.get().gif?.notFound) {
+    if (!data?.data[0] && this.configV2Service.get().gifs?.includes('404')) {
       this.logger.error(data);
-      return CONFIG.get().gif.notFound;
+      return `https://localhost/gifs/404.gif`;
+    } else {
+      return `https://i.giphy.com/media/${data.data[0].id}/giphy.webp`;
     }
-    return `https://i.giphy.com/media/${data.data[0].id}/giphy.webp`;
   }
 }
