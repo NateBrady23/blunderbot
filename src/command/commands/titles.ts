@@ -10,10 +10,10 @@ const command: Command = {
     for (let i = 0; i < titledPlayers.length; i++) {
       say += `${titledPlayers[i][1]} ${titledPlayers[i][0]}`;
       if (i < titledPlayers.length - 1) {
-        say += ',\n ';
+        say += ', ';
       }
     }
-    ctx.botSpeak('The following are titled players on the stream:\n ' + say);
+    ctx.botSpeak('The following are titled players on the stream: ' + say);
     return true;
   }
 };

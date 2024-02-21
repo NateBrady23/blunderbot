@@ -1,5 +1,11 @@
 # Release Notes
 
+### 2.0.1
+
+#### Bug Fixes
+
+- Fixed a bug in `!title` where the bot was sending one title per message. The new chat endpoint was taking `\n` as a newline where it was ignored before.
+
 ### 2.0.0
 
 #### Breaking Changes
