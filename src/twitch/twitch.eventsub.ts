@@ -214,7 +214,9 @@ export class TwitchEventSub {
         data.chatter_user_login ===
         this.configV2Service.get().twitch.botUsername.toLowerCase(),
       isMod: data.badges.some((badge) => badge.set_id === 'moderator'),
-      isSub: data.badges.some((badge) => badge.set_id === 'subscriber'),
+      isSub: data.badges.some(
+        (badge) => badge.set_id === 'subscriber' || badge.set_id === 'founder'
+      ),
       isVip: data.badges.some((badge) => badge.set_id === 'vip'),
       isFounder: data.badges.some((badge) => badge.set_id === 'founder'),
       isHypeTrainConductor: data.badges.some(

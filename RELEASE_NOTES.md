@@ -10,7 +10,8 @@
 
 - Fixed a bug in `!title` where the bot was sending one title per message. The new chat endpoint was taking `\n` as a newline where it was ignored before.
 - Fixed a bug where `!vchat` was sending replies to the owner.
-- Fixed vulnerable dependencies.
+- Fixed vulnerable dependencies and removed unused packages.
+- Fixed a bug where founders weren't getting marked as subscribers.
 
 ### 2.0.0 (2024-02-20)
 
