@@ -13,6 +13,8 @@ import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 import { ConfigV2Service } from '../configV2/configV2.service';
+import { TwitchEventSub } from '../twitch/twitch.eventsub';
+import { TwitchPubSub } from '../twitch/twitch.pubsub';
 
 @Injectable()
 export class CommandService {
@@ -27,8 +29,12 @@ export class CommandService {
     private readonly browserService: BrowserService,
     @Inject(forwardRef(() => ConfigV2Service))
     private readonly configV2Service: ConfigV2Service,
+    @Inject(forwardRef(() => TwitchEventSub))
+    private readonly twitchEventSub: TwitchEventSub,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: TwitchGateway,
+    @Inject(forwardRef(() => TwitchPubSub))
+    private readonly twitchPubSub: TwitchPubSub,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService,
     @Inject(forwardRef(() => TwitterService))
@@ -52,7 +58,9 @@ export class CommandService {
       configV2Service: this.configV2Service,
       commandService: this,
       discordService: this.discordService,
+      twitchEventSub: this.twitchEventSub,
       twitchGateway: this.twitchGateway,
+      twitchPubSub: this.twitchPubSub,
       twitchService: this.twitchService,
       twitterService: this.twitterService,
       openaiService: this.openaiService,

@@ -6,20 +6,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TransactionFor } from 'nest-transact';
-import { ModuleRef } from '@nestjs/core';
 import { Config } from './config.entity';
 import { ConfigCreateInput } from './config.types';
 
 @Injectable()
-export class ConfigEntityService extends TransactionFor<ConfigEntityService> {
+export class ConfigEntityService {
   constructor(
     @InjectRepository(Config)
-    private ConfigRepository: Repository<Config>,
-    moduleRef: ModuleRef
-  ) {
-    super(moduleRef);
-  }
+    private ConfigRepository: Repository<Config>
+  ) {}
 
   async create(input: ConfigCreateInput): Promise<Config> {
     const Config: Config = this.ConfigRepository.create(input);
