@@ -5,6 +5,7 @@
 #### Bug Fixes
 
 - Fixed problem with initial config setup from empty database.
+- Fixed division by zero error in Blunder Report when a player has no moves.
 
 ### 2.1.0 (2024-02-21)
 
