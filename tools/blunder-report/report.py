@@ -9,6 +9,9 @@ def player_report():
     report = []
 
     for player in data['players']:
+        if data['players'][player]['moves'] == 0:
+            continue
+
         row = {}
         row['Player'] = player
         row['Blunders'] = data['players'][player]['blunders']
