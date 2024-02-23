@@ -148,6 +148,9 @@ export class ConfigV2Service {
 
   async getLatest(): Promise<ConfigV2> {
     config = (await this.configEntityService.latest()) as unknown as ConfigV2;
+    if (!config) {
+      config = {} as ConfigV2;
+    }
 
     config.kings = [];
     config.crowns = [];
@@ -197,11 +200,15 @@ export class ConfigV2Service {
   }
 
   async update(key: ConfigV2Keys, value: any): Promise<ConfigV2> {
-    const newConfig = await this.configEntityService.latest();
+    let newConfig: any = await this.configEntityService.latest();
     // Always create a new config object to avoid updating the same object in the database
     // allowing for possible config rollback
-    newConfig.id = undefined;
-    newConfig[key] = value;
+    if (newConfig) {
+      newConfig.id = undefined;
+      newConfig[key] = value;
+    } else {
+      newConfig = { [key]: value };
+    }
     await this.configEntityService.create(newConfig);
     config = await this.getLatest();
     return config;

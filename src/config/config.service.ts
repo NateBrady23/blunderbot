@@ -20,8 +20,6 @@ class ConfigService {
   loadConfig() {
     this.loadedConfig = require(path.join(__dirname, './config')).default;
 
-    this.loadFromFile('gif', './config.gif');
-
     // Load the public files
     console.log('Config loaded');
   }
