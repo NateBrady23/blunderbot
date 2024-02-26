@@ -13,7 +13,7 @@ const command: Command = {
       ctx.isOwner
     ) {
       const next = commandState.challengeQueue.shift();
-      ctx.botSpeak(
+      await ctx.botSpeak(
         `${next.twitchUser}->${next.lichessUser} has been removed from the queue (in a good way)`
       );
     }
@@ -23,7 +23,7 @@ const command: Command = {
         twitchUser: ctx.args[1],
         lichessUser: ctx.args.slice(2).join(' ')
       });
-      ctx.botSpeak(`@${ctx.args[1]} has joined the queue!`);
+      await ctx.botSpeak(`@${ctx.args[1]} has joined the queue!`);
       void services.twitchService.ownerRunCommand(
         `!tts ${removeSymbols(ctx.args[1])} has joined the queue!`
       );
@@ -31,17 +31,18 @@ const command: Command = {
 
     if (queueCommand === 'clear' && ctx.isOwner) {
       commandState.challengeQueue = [];
-      ctx.botSpeak('The queue has been cleared');
+      await ctx.botSpeak('The queue has been cleared');
     }
 
+    // Open and close can only be used if the challengeRewardId is set
+    // and only if this reward was created by the bot (same client id)
     if (services.configV2Service.get().twitch?.challengeRewardId) {
       if (queueCommand === 'open' && ctx.isOwner) {
         void services.twitchService.updateCustomReward(
           services.configV2Service.get().twitch.challengeRewardId,
           { is_enabled: true }
         );
-        ctx.botSpeak('The queue is now open');
-        return true;
+        await ctx.botSpeak('The queue is now open');
       }
 
       if (queueCommand === 'close' && ctx.isOwner) {
@@ -49,22 +50,20 @@ const command: Command = {
           services.configV2Service.get().twitch.challengeRewardId,
           { is_enabled: false }
         );
-        ctx.botSpeak('The queue is now closed');
-        return false;
+        await ctx.botSpeak('The queue is now closed');
       }
     }
 
     if (!commandState.challengeQueue.length) {
-      ctx.botSpeak('The queue is empty');
-      return false;
+      await ctx.botSpeak('The queue is empty');
+    } else {
+      await ctx.botSpeak(
+        'The queue is: ' +
+          commandState.challengeQueue
+            .map((c) => `${c.twitchUser}->${c.lichessUser}`)
+            .join(', ')
+      );
     }
-
-    ctx.botSpeak(
-      'The queue is: ' +
-        commandState.challengeQueue
-          .map((c) => `${c.twitchUser}->${c.lichessUser}`)
-          .join(', ')
-    );
 
     return true;
   }

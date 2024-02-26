@@ -90,7 +90,7 @@ export class DiscordService {
       discordMessage.channelId
     ) as TextChannel;
     if (channel) {
-      await channel.send(message);
+      return await channel.send(message);
     } else {
       this.logger.error(`Channel not found: ${discordMessage.channelId}`);
     }

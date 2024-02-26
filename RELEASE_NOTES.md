@@ -1,10 +1,23 @@
 # Release Notes
 
+### 2.1.2 (2024-02-26)
+
+#### Features
+
+- Add ability to edit messages for discord. Improves the feedback of the `!violators` command. Thanks for the idea @fitztrev!
+
+#### Bug Fixes
+
+- Fixed a crash happening when the heart rate page doesn't load properly.
+- Fixed a problem where the `commandState` wasn't initialized before the twitch service, causing a race condition problem with already connected sockets.
+- Minor package updates and code cleanup
+
 ### 2.1.1 (2024-02-23)
 
 #### Bug Fixes
 
 - Fixed problem with initial config setup from empty database.
+- Fixed division by zero error in Blunder Report when a player has no moves.
 
 ### 2.1.0 (2024-02-21)
 

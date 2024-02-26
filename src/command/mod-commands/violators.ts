@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import { Platform } from '../../enums';
 
 interface Violator {
@@ -18,13 +19,27 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const teamId = ctx.args[0] || services.configV2Service.get().lichess.teamId;
 
+    const msgRef = <Message<true>>(
+      await ctx.botSpeak(':hourglass: Checking for violators...')
+    );
+
     fetch(`https://lichess.org/api/team/${teamId}/users`)
       .then((res) => res.text())
       .then((data) => {
         const violators: Violator[] = [];
 
         const members = data.split('\n').filter(Boolean);
+        msgRef.edit(
+          `:hourglass: Checking for violators... 0/(${members.length} members)`
+        );
+        let i = 0;
         members.forEach((member) => {
+          i++;
+          if (i % 10 === 0) {
+            msgRef.edit(
+              `:hourglass: Checking for violators... ${i}/${members.length}`
+            );
+          }
           const parsed = JSON.parse(member) as LichessUser;
 
           if (parsed.tosViolation) {
@@ -46,7 +61,7 @@ const command: Command = {
         });
 
         if (violators.length === 0) {
-          ctx.botSpeak(':white_check_mark: No violators found!');
+          msgRef.edit(':white_check_mark: No violators found!');
         } else {
           let str = `:rotating_light: Found ${violators.length}\n`;
           violators.forEach((violator) => {
@@ -54,7 +69,7 @@ const command: Command = {
           });
           str += '---\n';
           str += `Kick here: <https://lichess.org/team/${teamId}/kick>`;
-          ctx.botSpeak(str);
+          msgRef.edit(str);
         }
       });
     return true;
