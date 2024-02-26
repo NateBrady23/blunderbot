@@ -44,17 +44,22 @@ export class BrowserService {
   }
 
   private async getHeartRatePage() {
-    if (!this.heartRatePage) {
-      const browser = await this.getBrowser();
-      this.heartRatePage = await browser.newPage();
-      await this.heartRatePage.goto(
-        this.configV2Service.get().misc?.hypeRateUrl
-      );
-      // It takes this long for the heart rate to show up on the page
-      await sleep(5000);
-    }
+    try {
+      if (!this.heartRatePage) {
+        const browser = await this.getBrowser();
+        this.heartRatePage = await browser.newPage();
+        await this.heartRatePage.goto(
+          this.configV2Service.get().misc?.hypeRateUrl
+        );
+        // It takes this long for the heart rate to show up on the page
+        await sleep(5000);
+      }
 
-    return this.heartRatePage;
+      return this.heartRatePage;
+    } catch (e) {
+      this.logger.error('Error getting heart rate page');
+      this.logger.error(e);
+    }
   }
 
   async getHeartRate() {

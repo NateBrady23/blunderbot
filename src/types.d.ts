@@ -1,57 +1,61 @@
-interface Context {
-  // Twitch or Discord client
-  client?: unknown;
-  // Discord guild
-  guild?: unknown;
-  // twitch channel
-  channel?: string;
-  // the entire message including any commands
-  message: string;
-  // the discord message object
-  discordMessage?: DiscordMessage;
-  // just the args for the command
-  args?: string[];
-  // just the command
-  command?: string;
-  // just the body of the message without the command
-  body?: string;
-  botSpeak?: (string) => void;
-  reply?: (Context, string) => void;
-  platform: Platforms;
-  isOwnerRun?: boolean;
-  onBehalfOf?: string;
+import { Message } from 'discord.js';
 
-  // always lowercase display name
-  username: string;
-  // Cased however the user entered their display name
-  displayName: string;
-  // This property will only exist if a twitch reward was redeemed
-  customRewardId: string;
-  // Currently being used to mention players in discord
-  userId?: string;
+declare global {
+  interface Context {
+    // Twitch or Discord client
+    client?: unknown;
+    // Discord guild
+    guild?: unknown;
+    // twitch channel
+    channel?: string;
+    // the entire message including any commands
+    message: string;
+    // the discord message object
+    discordMessage?: DiscordMessage;
+    // just the args for the command
+    args?: string[];
+    // just the command
+    command?: string;
+    // just the body of the message without the command
+    body?: string;
+    botSpeak?: (string) => Promise<void> | Promise<Message<true>>;
+    reply?: (Context, string) => void;
+    platform: Platforms;
+    isOwnerRun?: boolean;
+    onBehalfOf?: string;
 
-  isOwner: boolean;
-  isMod: boolean;
-  isBot: boolean;
+    // always lowercase display name
+    username: string;
+    // Cased however the user entered their display name
+    displayName: string;
+    // This property will only exist if a twitch reward was redeemed
+    customRewardId: string;
+    // Currently being used to mention players in discord
+    userId?: string;
 
-  // Twitch only
-  isSubscriber?: boolean;
-  isFollower?: boolean;
-  isVip?: boolean;
-  isHypeTrainConductor?: boolean;
-  isFounder?: boolean;
-}
+    isOwner: boolean;
+    isMod: boolean;
+    isBot: boolean;
 
-type Platforms = 'twitch' | 'discord';
+    // Twitch only
+    isSubscriber?: boolean;
+    isFollower?: boolean;
+    isVip?: boolean;
+    isHypeTrainConductor?: boolean;
+    isFounder?: boolean;
+  }
 
-interface CreateContextOptions {
-  onBehalfOf?: string;
-}
+  type Platforms = 'twitch' | 'discord';
 
-interface CommandRequest {
-  command: DiscordMessage;
-}
+  interface CreateContextOptions {
+    onBehalfOf?: string;
+  }
 
-interface TranslationRequest {
-  message: string;
+  interface CommandRequest {
+    command: DiscordMessage;
+  }
+
+  interface TranslationRequest {
+    message: string;
+  }
 }

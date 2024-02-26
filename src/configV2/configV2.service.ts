@@ -78,11 +78,11 @@ export class ConfigV2Service {
     config = (await this.getLatest()) as unknown as ConfigV2;
 
     if (config.twitch) {
+      this.commandService.init();
+
       this.twitchService.init();
       this.twitchPubSub.init();
       this.twitchEventSub.init();
-
-      this.commandService.init();
     }
 
     if (config.discord?.enabled) {
