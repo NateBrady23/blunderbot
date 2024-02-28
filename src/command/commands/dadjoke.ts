@@ -23,7 +23,7 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const apiKey = services.configV2Service.get().misc?.rapidApiKey;
     if (!apiKey) {
-      ctx.botSpeak('RapidAPI is disabled in !dadjoke.');
+      console.log('RapidAPI is disabled in !dadjoke.');
       return false;
     }
     ctx.botSpeak(await getJoke(apiKey));

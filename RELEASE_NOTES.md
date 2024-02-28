@@ -1,5 +1,16 @@
 # Release Notes
 
+### 2.2.0
+
+#### Features
+
+- Added `!random` command.
+
+#### Bug Fixes
+
+- Fixed a problem with the spotify service where the 2nd refresh of the access token was failing.
+- Fixed a bug where we were using botspeak in several commands when those commands were disabled instead of logging to the console.
+
 ### 2.1.2 (2024-02-26)
 
 #### Features

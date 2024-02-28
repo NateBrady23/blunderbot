@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import * as querystring from 'querystring';
 import { ConfigV2Service } from '../configV2/configV2.service';
-// import * as querystring from 'querystring';
 
 @Injectable()
 export class SpotifyService {
@@ -72,7 +71,7 @@ export class SpotifyService {
           refresh_token: string;
         } = await res.json();
         this.accessToken = data.access_token;
-        this.refreshToken = data.refresh_token;
+        this.refreshToken = data.refresh_token || this.refreshToken;
         this.accessTokenExpires = Date.now() + data.expires_in * 1000;
       } catch (e) {
         this.logger.error(e);
