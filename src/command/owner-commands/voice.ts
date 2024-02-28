@@ -5,7 +5,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     if (!services.configV2Service.get().openai?.enabled) {
-      ctx.botSpeak('OpenAI is disabled in !voice.');
+      console.log('OpenAI is disabled in !voice.');
       return false;
     }
     const voice: OpenAiVoiceOptions = <OpenAiVoiceOptions>(

@@ -8,7 +8,7 @@ const command: Command = {
       !services.configV2Service.get().openai?.enabled ||
       !services.configV2Service.get().openai?.chatModel
     ) {
-      ctx.botSpeak('OpenAI is disabled in !suggest.');
+      console.log('OpenAI is disabled in !suggest.');
       return false;
     }
     if (!commandState.wouldBeCommands[ctx.body]) {

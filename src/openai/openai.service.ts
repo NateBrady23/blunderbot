@@ -229,6 +229,20 @@ export class OpenaiService {
     }
   }
 
+  async getChatCompletion(messages: OpenAiChatMessage[]): Promise<string> {
+    try {
+      const completion = await this.openai.chat.completions.create({
+        model: this.configV2Service.get().openai.chatModel,
+        messages
+      });
+
+      return completion.choices[0].message.content;
+    } catch (e) {
+      this.logger.error(e);
+      return `I'm sorry, I'm not feeling well. I need to take a break.`;
+    }
+  }
+
   cleanReplyAsBlunderBot(reply: string): string {
     if (
       reply.includes(`cannot comply`) ||
