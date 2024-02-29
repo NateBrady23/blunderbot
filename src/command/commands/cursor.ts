@@ -21,7 +21,7 @@ const command: Command = {
       cursor =
         filteredCursors[Math.floor(Math.random() * filteredCursors.length)];
     } else if (!cursor || !cursors.includes(cursor)) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `The following cursors are available: ${services.configV2Service
           .get()
           .cursors.filter((k) => !k.startsWith('secret_'))

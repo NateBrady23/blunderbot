@@ -49,7 +49,7 @@ const command: Command = {
       );
 
       if (!res?.data) {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           'Something went wrong creating the prediction. Is there already an active prediction?'
         );
         return false;

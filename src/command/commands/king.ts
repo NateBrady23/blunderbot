@@ -14,7 +14,7 @@ const command: Command = {
       !kings.includes(king) ||
       (!ctx.isOwner && king.startsWith('secret_'))
     ) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `The following kings are available: ${filteredKings.join(', ')}`
       );
       return false;

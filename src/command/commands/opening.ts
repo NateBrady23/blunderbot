@@ -16,7 +16,7 @@ const command: Command = {
         gameId: true
       });
       if (!res) {
-        ctx.botSpeak(`I can't find a game being played.`);
+        void ctx.botSpeak(`I can't find a game being played.`);
         return true;
       }
       gameId = res;
@@ -24,9 +24,9 @@ const command: Command = {
 
     const opening = await services.lichessService.getGameOpening(gameId);
     if (opening) {
-      ctx.botSpeak(`The opening is ${opening}`);
+      void ctx.botSpeak(`The opening is ${opening}`);
     } else {
-      ctx.botSpeak(`I can't find the opening for that game.`);
+      void ctx.botSpeak(`I can't find the opening for that game.`);
     }
     return true;
   }

@@ -31,10 +31,10 @@ const command: Command = {
       // This helps with ownerSendCommandDirectly for things like !ask so it doesn't look like
       // blunderBot is responding to itself or the owner
       const mention = ctx.isOwner ? '' : `@${ctx.username}: `;
-      ctx.botSpeak(`${mention}${reply}`);
+      void ctx.botSpeak(`${mention}${reply}`);
     } else {
       const mention = ctx.isOwner ? '' : `<@${ctx.userId}>: `;
-      ctx.botSpeak(`${mention}${reply}`);
+      void ctx.botSpeak(`${mention}${reply}`);
     }
 
     return true;

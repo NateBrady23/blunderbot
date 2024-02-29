@@ -7,7 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: (ctx, { commandState, services }) => {
     if (!ctx.args?.length) {
-      ctx.botSpeak(`What command do you need help with?`);
+      void ctx.botSpeak(`What command do you need help with?`);
       return true;
     }
     const cmd = services.commandService.findCommand(ctx.args[0]);
@@ -18,10 +18,10 @@ const command: Command = {
       !cmd.platforms.includes(ctx.platform) ||
       commandState.killedCommands?.includes(cmd.name)
     ) {
-      ctx.botSpeak(`There is no help available for that command.`);
+      void ctx.botSpeak(`There is no help available for that command.`);
       return false;
     }
-    ctx.botSpeak(cmd.help);
+    void ctx.botSpeak(cmd.help);
     return true;
   }
 };

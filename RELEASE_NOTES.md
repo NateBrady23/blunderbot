@@ -1,5 +1,17 @@
 # Release Notes
 
+### 2.3.0
+
+#### Features
+
+- Added `!background` command and `background.html` browser source for OBS.
+- Added `json_object` response to ensure OpenAI responds with a JSON object when required.
+
+#### Bug Fixes
+
+- Fixed a bug where the command service was crashing if limited or restricted commands weren't set in the config.
+- Fixed README instructions for adding browser sources to OBS. Can't use https for local files with OBS.
+
 ### 2.2.0
 
 #### Features

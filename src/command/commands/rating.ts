@@ -40,9 +40,11 @@ const command: Command = {
       reply += bullet ? `bullet: ${bullet.rating} (${bullet.games}g), \n` : '';
       reply += puzzle ? `puzzle rating: ${puzzle.rating}, \n` : '';
       reply += `https://lichess.org/@/${user}`;
-      ctx.botSpeak(reply);
+      void ctx.botSpeak(reply);
     } catch (e) {
-      ctx.botSpeak(`There was a problem trying to fetch ${user}'s ratings.`);
+      void ctx.botSpeak(
+        `There was a problem trying to fetch ${user}'s ratings.`
+      );
       console.error(`Error getting rating for ${user}`);
       console.error(e);
     }

@@ -7,7 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState }) => {
     let msg: string;
-    if (ctx.args.length && (ctx.isOwner || ctx.isMod)) {
+    if (ctx.args.length && ctx.isMod) {
       const arg = ctx.body;
       if (arg === 'clear') {
         msg = 'Arena link has been reset.';
@@ -22,7 +22,7 @@ const command: Command = {
         : `There is currently no arena event. If you're looking to challenge, use the !challenge command to see how.`;
     }
 
-    ctx.botSpeak(msg);
+    void ctx.botSpeak(msg);
     return true;
   }
 };

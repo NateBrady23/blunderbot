@@ -17,7 +17,7 @@ const command: Command = {
     const birthdays = birthdayList.filter((obj) => obj.Born.endsWith(today));
 
     if (!birthdays.length) {
-      ctx.botSpeak('No GMs were born on this day.');
+      void ctx.botSpeak('No GMs were born on this day.');
       return true;
     }
 
@@ -26,7 +26,7 @@ const command: Command = {
       .map((obj) => `${obj.Name} (${obj.Born.substring(0, 4)})`)
       .join(', ');
 
-    ctx.botSpeak(toSay);
+    void ctx.botSpeak(toSay);
 
     return true;
   }

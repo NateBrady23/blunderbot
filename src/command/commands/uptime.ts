@@ -10,11 +10,11 @@ const command: Command = {
 
     const res = await (await fetch(url)).text();
     if (res.includes('offline')) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `${services.configV2Service.get().twitch.ownerUsername} is offline.`
       );
     } else {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `${services.configV2Service.get().twitch.ownerUsername} has been live for ${res}.`
       );
     }

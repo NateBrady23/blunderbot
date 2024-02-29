@@ -11,7 +11,7 @@ const command: Command = {
       );
       const json = await res.json();
       if (json?.puzzle) {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           `Today's lichess daily puzzle is https://lichess.org/training/` +
             json.puzzle.id
         );

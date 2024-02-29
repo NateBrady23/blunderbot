@@ -20,7 +20,7 @@ const command: Command = {
         usePersonality: true
       }
     );
-    ctx.botSpeak(msg);
+    void ctx.botSpeak(msg);
     return true;
   }
 };

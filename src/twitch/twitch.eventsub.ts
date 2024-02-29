@@ -213,7 +213,10 @@ export class TwitchEventSub {
       isBot:
         data.chatter_user_login ===
         this.configV2Service.get().twitch.botUsername.toLowerCase(),
-      isMod: data.badges.some((badge) => badge.set_id === 'moderator'),
+      isMod:
+        data.badges.some((badge) => badge.set_id === 'moderator') ||
+        data.chatter_user_login ===
+          this.configV2Service.get().twitch.ownerUsername.toLowerCase(),
       isSub: data.badges.some(
         (badge) => badge.set_id === 'subscriber' || badge.set_id === 'founder'
       ),

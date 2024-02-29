@@ -14,7 +14,7 @@ const command: Command = {
       );
       const json = await res.json();
       if (json?.url) {
-        ctx.botSpeak('Start your blunder engines! ' + json.url);
+        void ctx.botSpeak('Start your blunder engines! ' + json.url);
       }
     } catch (e) {
       console.error(e);

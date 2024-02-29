@@ -31,7 +31,7 @@ const command: Command = {
     }
 
     if (!square.match(/^[a-h][1-8]$/)) {
-      ctx.botSpeak('Invalid square! Please try again.');
+      void ctx.botSpeak('Invalid square! Please try again.');
       return false;
     }
     services.twitchGateway.sendDataToOneSocket('serverMessage', {

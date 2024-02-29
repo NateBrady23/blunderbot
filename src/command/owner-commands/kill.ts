@@ -10,10 +10,10 @@ const command: Command = {
       commandState.killedCommands = commandState.killedCommands.filter(
         (commandName) => commandName !== cmd.name
       );
-      ctx.botSpeak(`Bringing !${cmd.name} command back to life`);
+      void ctx.botSpeak(`Bringing !${cmd.name} command back to life`);
     } else {
       commandState.killedCommands.push(cmd.name);
-      ctx.botSpeak(`Killed !${cmd.name} command`);
+      void ctx.botSpeak(`Killed !${cmd.name} command`);
     }
     return true;
   }

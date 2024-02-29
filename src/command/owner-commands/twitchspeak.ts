@@ -6,7 +6,7 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const msg = ctx.body;
     if (msg) {
-      services.twitchService.botSpeak(msg);
+      void services.twitchService.botSpeak(msg);
     }
     return true;
   }

@@ -13,7 +13,7 @@ const command: Command = {
         say += ', ';
       }
     }
-    ctx.botSpeak('The following are titled players on the stream: ' + say);
+    void ctx.botSpeak('The following are titled players on the stream: ' + say);
     return true;
   }
 };

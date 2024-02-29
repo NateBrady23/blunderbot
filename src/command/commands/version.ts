@@ -6,7 +6,7 @@ const command: Command = {
   run: async (ctx) => {
     const version = require('../../../package.json').version;
 
-    ctx.botSpeak(`v${version}`);
+    void ctx.botSpeak(`v${version}`);
 
     return true;
   }

@@ -12,7 +12,7 @@ const command: Command = {
     }
     const query = ctx.body?.trim();
     if (!query) {
-      ctx.botSpeak('Please provide a song to request.');
+      void ctx.botSpeak('Please provide a song to request.');
       return false;
     }
 

@@ -21,7 +21,7 @@ const command: Command = {
           }
         );
     }
-    ctx.botSpeak(' ' + commandState.wouldBeCommands[ctx.body]);
+    void ctx.botSpeak(' ' + commandState.wouldBeCommands[ctx.body]);
     return true;
   }
 };
