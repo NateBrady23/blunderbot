@@ -31,7 +31,7 @@ const command: Command = {
   run: async (ctx, { services }) => {
     const word = ctx.args[0]?.trim();
     if (!word) {
-      ctx.botSpeak(command.help);
+      void ctx.botSpeak(command.help);
       return false;
     }
     try {
@@ -40,7 +40,7 @@ const command: Command = {
       );
       const json: WordDefinition = (await res.json())[0];
       if (!json?.word) {
-        ctx.botSpeak(`I couldn't find a definition for ${word}.`);
+        void ctx.botSpeak(`I couldn't find a definition for ${word}.`);
         return false;
       }
       let toSpeak = `${json.word} (${json.phonetic}): `;
@@ -49,7 +49,7 @@ const command: Command = {
         console.log(meaning);
         toSpeak += `${i + 1}. ${meaning.partOfSpeech}: ${meaning.definitions[0].definition} `;
       }
-      ctx.botSpeak(toSpeak);
+      void ctx.botSpeak(toSpeak);
     } catch (e) {
       console.error(e);
     }

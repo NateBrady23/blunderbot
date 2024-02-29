@@ -59,11 +59,13 @@ I use ffmpeg to capture the length of audio clips for mute duration and may end 
 
 Some commands require adding a browser source to your streaming software.
 
-For the `!alert` command to show up, add a browser source that points to: `https://localhost/blunder-alerts.html`
+For the `!alert` command to show up, add a browser source that points to: `http://localhost:3000/blunder-alerts.html`
 
-For the `!image` command, add a browser source that points to: `https://localhost/images.html`
+For the `!image` command, add a browser source that points to: `http://localhost:3000/images.html`
 
-For the `!confetti` command and future full screen overlays, add a browser source that points to: `https://localhost/full-screen.html`
+For the `!background` command, add a browser source that points to: `http://localhost:3000/background.html`
+
+For the `!confetti` command and future full screen overlays, add a browser source that points to: `http://localhost:3000/full-screen.html`
 
 Replace with a different port if you changed the `port` in the `config.yml`.
 

@@ -28,7 +28,7 @@ const command: Command = {
           await sleep(milliseconds + 1000);
         } else {
           const giphyUrl = await services.giphyService.fetchGif(msg);
-          ctx.botSpeak(giphyUrl);
+          void ctx.botSpeak(giphyUrl);
         }
         return true;
       } catch (e) {

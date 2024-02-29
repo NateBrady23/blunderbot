@@ -21,7 +21,7 @@ const command: Command = {
     }
 
     if (!crown || !services.configV2Service.get().crowns.includes(crown)) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `The following crowns are available: ${services.configV2Service
           .get()
           .crowns.join(', ')}. "!crown reset" to return to normal.`

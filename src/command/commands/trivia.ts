@@ -26,19 +26,19 @@ async function showQuestion(
   if (
     commandState.trivia.round >= services.configV2Service.get().trivia.length
   ) {
-    ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
+    void ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     showLeaderboard(ctx, commandState);
     commandState.trivia.started = false;
     return;
   }
-  ctx.botSpeak('Next question in 3...');
+  await ctx.botSpeak('Next question in 3...');
   await sleep(2000);
-  ctx.botSpeak('2...');
+  await ctx.botSpeak('2...');
   await sleep(2000);
-  ctx.botSpeak('1...');
+  await ctx.botSpeak('1...');
   await sleep(2000);
   commandState.trivia.roundStartTime = Date.now();
-  ctx.botSpeak(
+  await ctx.botSpeak(
     `Round ${commandState.trivia.round + 1}: ${
       services.configV2Service.get().trivia[commandState.trivia.round].question
     }`
@@ -163,13 +163,15 @@ const command: Command = {
     const answer = ctx.body?.toLowerCase().trim();
     if (answer === 'start' && ctx.isOwner) {
       if (commandState.trivia.started) {
-        ctx.botSpeak("Trivia has already started! I can't start it twice.");
+        void ctx.botSpeak(
+          "Trivia has already started! I can't start it twice."
+        );
         return false;
       }
       commandState.trivia.started = true;
       commandState.trivia.round = -1;
       commandState.trivia.leaderboard = {};
-      ctx.botSpeak('Trivia started!');
+      await ctx.botSpeak('Trivia started!');
       nextQuestion(ctx, commandState, services);
       return true;
     }
@@ -181,7 +183,7 @@ const command: Command = {
     }
 
     if (!commandState.trivia.started) {
-      ctx.botSpeak('Trivia has not started yet!');
+      void ctx.botSpeak('Trivia has not started yet!');
       return false;
     }
 
@@ -212,14 +214,14 @@ const command: Command = {
     }
 
     if (!answer) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         'Use !trivia <answer> to answer the trivia question. Also !trivia round, !trivia leaderboard, !trivia question'
       );
       return false;
     }
 
     if (answer === 'round') {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `It's currently Round ${commandState.trivia.round + 1}/${
           services.configV2Service.get().trivia.length
         }`
@@ -234,9 +236,9 @@ const command: Command = {
 
     if (answer === 'fastest') {
       if (!commandState.trivia.fastestAnswer) {
-        ctx.botSpeak('No one has answered correctly yet!');
+        void ctx.botSpeak('No one has answered correctly yet!');
       } else {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           `@${commandState.trivia.fastestAnswer.user} answered correctly in ${commandState.trivia.fastestAnswer.seconds} seconds!`
         );
       }

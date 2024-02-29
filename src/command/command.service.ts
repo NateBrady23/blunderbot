@@ -184,7 +184,7 @@ export class CommandService {
 
     // If the command is toggled off, don't run for anyone but the owner
     if (this.commandState.toggledOffCommands.includes(cmd.name)) {
-      ctx.botSpeak(`!${cmd.name} is currently disabled`);
+      void ctx.botSpeak(`!${cmd.name} is currently disabled`);
       return false;
     }
 
@@ -193,7 +193,7 @@ export class CommandService {
         this.configV2Service.get().twitch.subCommands?.includes(cmd.name) &&
         !ctx.isSubscriber
       ) {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           `@${ctx.displayName} !${cmd.name} is for subscribers only. You can subscribe for free if you have Amazon Prime!`
         );
         return false;
@@ -205,7 +205,9 @@ export class CommandService {
           .twitch.followerCommands?.includes(cmd.name) &&
         !ctx.isFollower
       ) {
-        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for followers only.`);
+        void ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for followers only.`
+        );
         return false;
       }
 
@@ -213,7 +215,7 @@ export class CommandService {
         this.configV2Service.get().twitch.vipCommands?.includes(cmd.name) &&
         !ctx.isVip
       ) {
-        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
+        void ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
         return false;
       }
 
@@ -221,7 +223,9 @@ export class CommandService {
         this.configV2Service.get().twitch.founderCommands?.includes(cmd.name) &&
         !ctx.isFounder
       ) {
-        ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for founders only.`);
+        void ctx.botSpeak(
+          `@${ctx.displayName} !${cmd.name} is for founders only.`
+        );
         return false;
       }
 
@@ -231,7 +235,7 @@ export class CommandService {
           .twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
         !ctx.isHypeTrainConductor
       ) {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           `@${ctx.displayName} !${cmd.name} is for Hype Train Conductors only.`
         );
         return false;
@@ -252,37 +256,41 @@ export class CommandService {
     }
 
     // Checks to see if the command is limited
-    const limitedTo =
-      this.configV2Service.get().twitch.limitedCommands[cmd.name];
-    if (limitedTo && limitedTo > 0) {
-      if (!this.commandState.limitedCommands[cmd.name]) {
-        this.commandState.limitedCommands[cmd.name] = {};
-      }
-      if (
-        (this.commandState.limitedCommands[cmd.name][ctx.displayName] || 0) >=
-        limitedTo
-      ) {
-        // If the user has used the command too many times, don't run
-        ctx.botSpeak(
-          `@${ctx.displayName} !${cmd.name} is limited to ${limitedTo} time(s) per stream.`
-        );
-        return false;
+    if (this.configV2Service.get().twitch.limitedCommands) {
+      const limitedTo =
+        this.configV2Service.get().twitch.limitedCommands[cmd.name];
+      if (limitedTo && limitedTo > 0) {
+        if (!this.commandState.limitedCommands[cmd.name]) {
+          this.commandState.limitedCommands[cmd.name] = {};
+        }
+        if (
+          (this.commandState.limitedCommands[cmd.name][ctx.displayName] || 0) >=
+          limitedTo
+        ) {
+          // If the user has used the command too many times, don't run
+          void ctx.botSpeak(
+            `@${ctx.displayName} !${cmd.name} is limited to ${limitedTo} time(s) per stream.`
+          );
+          return false;
+        }
       }
     }
 
-    const userRestricted =
-      this.configV2Service.get().twitch.userRestrictedCommands[cmd.name];
-    if (userRestricted) {
-      const found = userRestricted.some((user) => {
-        return user.toLowerCase() === ctx.displayName.toLowerCase();
-      });
-      if (!found) {
-        ctx.botSpeak(
-          `The !${cmd.name} command is only for ${userRestricted.join(' and ')}`
-        );
-        return false;
+    if (this.configV2Service.get().twitch.userRestrictedCommands) {
+      const userRestricted =
+        this.configV2Service.get().twitch.userRestrictedCommands[cmd.name];
+      if (userRestricted) {
+        const found = userRestricted.some((user) => {
+          return user.toLowerCase() === ctx.displayName.toLowerCase();
+        });
+        if (!found) {
+          void ctx.botSpeak(
+            `The !${cmd.name} command is only for ${userRestricted.join(' and ')}`
+          );
+          return false;
+        }
+        return true;
       }
-      return true;
     }
 
     return true;
@@ -321,7 +329,7 @@ export class CommandService {
 
     // Silly for !1455 = 1455's are hard...
     if (ctx.command.match(/^\d\d?\d?\d?$/)) {
-      ctx.botSpeak(`${ctx.command}'s are hard...`);
+      void ctx.botSpeak(`${ctx.command}'s are hard...`);
       return;
     }
 
@@ -355,7 +363,7 @@ export class CommandService {
 
     // Run any commands created during the stream with !add
     if (this.commandState.storedCommands[ctx.command]) {
-      ctx.botSpeak(this.commandState.storedCommands[ctx.command]);
+      void ctx.botSpeak(this.commandState.storedCommands[ctx.command]);
       return;
     }
 
@@ -376,8 +384,10 @@ export class CommandService {
     }
     const storedCommandsArr = await this.storedCommandEntityService.findAll();
     this.commandState.storedCommands = {};
-    for (const sc of storedCommandsArr) {
-      this.commandState.storedCommands[sc.name] = sc.message;
+    if (storedCommandsArr?.length) {
+      for (const sc of storedCommandsArr) {
+        this.commandState.storedCommands[sc.name] = sc.message;
+      }
     }
   }
 

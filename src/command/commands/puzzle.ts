@@ -6,7 +6,7 @@ const command: Command = {
   name: 'puzzle',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
-    ctx.botSpeak(getRandomElement(openings));
+    void ctx.botSpeak(getRandomElement(openings));
     return true;
   }
 };

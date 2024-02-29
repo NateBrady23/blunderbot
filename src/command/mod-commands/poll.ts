@@ -10,6 +10,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (ctx.isMod && ctx.args[0] === 'cancel') {
+      console.log('in end poll');
       const currPoll = await services.twitchService.getPoll();
       await services.twitchService.endPoll(currPoll.id);
       return true;
@@ -31,10 +32,7 @@ const command: Command = {
       ' Create three choices to choose from. Question is limited to 60 characters. Choices are limited to 25 characters each. Format your answer as a json string like {"title": "", choices: [{ "title": ""},{"title": "", {"title": ""]}. ';
 
     const poll = JSON.parse(
-      (await services.openaiService.sendPrompt(prompt))
-        .replace('```json', '')
-        .replace('```', '')
-        .trim()
+      await services.openaiService.getChatCompletion(prompt, true)
     ) as PollResponse;
     // Twitch API has a limit of 60 characters for the question
     if (poll.title.length > 60) {

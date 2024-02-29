@@ -10,7 +10,7 @@ const command: Command = {
     if (!commandState.first) {
       commandState.first = ctx.displayName;
     }
-    ctx.botSpeak(`@${commandState.first} is the first!`);
+    void ctx.botSpeak(`@${commandState.first} is the first!`);
     return true;
   }
 };

@@ -13,14 +13,14 @@ let users: { [key: string]: number } = {};
 
 const command: Command = {
   name: 'wordle',
-  help: 'Guess a 5-letter word by typing !wordle <word>. You may only guess once every 60 seconds. Capital means correct space. Lowercase means wrong space. If the word is funky and you guess frown: F---n.',
+  help: 'Guess a 5-letter word by typing !wordle <word>. You may only guess once every 60 seconds. Capital means correct space. Lowercase means wrong space. If the word is funky, and you guess frown: F---n.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     const guess = ctx.body?.toLowerCase().trim();
 
     if (guess === 'new' && ctx.isOwner) {
       if (chosenWord) {
-        ctx.botSpeak('A round of wordle has already been started.');
+        void ctx.botSpeak('A round of wordle has already been started.');
         return false;
       }
 
@@ -31,7 +31,7 @@ const command: Command = {
           wordList = text.split('\n').filter((word) => word.trim().length > 0);
         } catch (error) {
           console.error('Error fetching word list:', error);
-          ctx.botSpeak("I couldn't fetch the word list. Try again later.");
+          void ctx.botSpeak("I couldn't fetch the word list. Try again later.");
           return false;
         }
       }
@@ -39,14 +39,14 @@ const command: Command = {
       if (!chosenWord) {
         chosenWord = getRandomElement(wordList);
       }
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `A round of wordle has started! The Word list has ${wordList.length} words. Choose wisely!`
       );
       return true;
     }
 
     if (!chosenWord) {
-      ctx.botSpeak('A round of wordle has not been started yet.');
+      void ctx.botSpeak('A round of wordle has not been started yet.');
       return false;
     }
 
@@ -71,7 +71,7 @@ const command: Command = {
     }
 
     if (guess === chosenWord) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `@${ctx.displayName} got it! The word was ${chosenWord.toUpperCase()}!`
       );
       void services.twitchService.ownerRunCommand(`!define ${chosenWord}`);

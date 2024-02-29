@@ -8,11 +8,11 @@ const command: Command = {
       commandState.blunderBotPersonality = ctx.body.trim();
     }
     if (commandState.blunderBotPersonality) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `Someone set my chat personality to: ${commandState.blunderBotPersonality}`
       );
     } else {
-      ctx.botSpeak(`I don't have a chat personality set.`);
+      void ctx.botSpeak(`I don't have a chat personality set.`);
     }
     return true;
   }

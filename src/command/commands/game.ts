@@ -11,10 +11,10 @@ const command: Command = {
     }
     const res = await services.lichessService.getCurrentGame(user);
     if (!res) {
-      ctx.botSpeak(`I can't find a game for that user.`);
+      void ctx.botSpeak(`I can't find a game for that user.`);
       return true;
     }
-    ctx.botSpeak(`${user} is playing ${res}`);
+    void ctx.botSpeak(`${user} is playing ${res}`);
     return true;
   }
 };

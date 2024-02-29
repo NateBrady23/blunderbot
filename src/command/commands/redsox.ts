@@ -50,13 +50,13 @@ async function getRedSoxGame(ctx: Context) {
   );
 
   if (!redSoxGame) {
-    ctx.botSpeak('No Red Sox game today');
+    void ctx.botSpeak('No Red Sox game today');
     return;
   }
 
   const currentGameStatus = `(${redSoxGame.status.detailedState}) ${redSoxGame.teams.away.team.name}: ${redSoxGame.teams.away.score}, ${redSoxGame.teams.home.team.name}: ${redSoxGame.teams.home.score}`;
   if (lastGameStatus !== currentGameStatus) {
-    ctx.botSpeak(currentGameStatus);
+    void ctx.botSpeak(currentGameStatus);
   }
   lastGameStatus = currentGameStatus;
 

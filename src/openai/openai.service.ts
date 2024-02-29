@@ -5,6 +5,7 @@ import { generateUUID, playAudioFile } from '../utils/utils';
 import { createReadStream, writeFileSync } from 'fs';
 import { Platform } from '../enums';
 import { ConfigV2Service } from '../configV2/configV2.service';
+import { ImageGenerateParams } from 'openai/resources';
 
 @Injectable()
 export class OpenaiService {
@@ -42,14 +43,23 @@ export class OpenaiService {
     return text;
   }
 
-  async createImage(prompt: string): Promise<string> {
+  async createImage(
+    prompt: string,
+    opt?: {
+      size: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
+    }
+  ): Promise<string> {
     try {
-      const response = await this.openai.images.generate({
+      const generateBody: ImageGenerateParams = {
         model: this.configV2Service.get().openai?.imageModel || 'dall-e-3',
         prompt,
         quality: 'standard',
         n: 1
-      });
+      };
+      if (opt?.size) {
+        generateBody.size = opt.size;
+      }
+      const response = await this.openai.images.generate(generateBody);
       return response.data[0].url;
     } catch (error) {
       this.logger.error('Error creating image');
@@ -229,11 +239,18 @@ export class OpenaiService {
     }
   }
 
-  async getChatCompletion(messages: OpenAiChatMessage[]): Promise<string> {
+  async getChatCompletion(
+    messages: OpenAiChatMessage[] | string,
+    jsonResponse = false
+  ): Promise<string> {
+    if (typeof messages === 'string') {
+      messages = [{ role: 'user', content: messages }];
+    }
     try {
       const completion = await this.openai.chat.completions.create({
         model: this.configV2Service.get().openai.chatModel,
-        messages
+        messages,
+        response_format: { type: jsonResponse ? 'json_object' : 'text' }
       });
 
       return completion.choices[0].message.content;

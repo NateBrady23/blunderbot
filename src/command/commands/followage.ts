@@ -18,7 +18,9 @@ const command: Command = {
       if (ctx.platform === Platform.Twitch) {
         user = ctx.displayName;
       } else {
-        ctx.botSpeak('Please provide a twitch username to check followage for');
+        void ctx.botSpeak(
+          'Please provide a twitch username to check followage for'
+        );
         return false;
       }
     }
@@ -27,9 +29,9 @@ const command: Command = {
 
     const res = await (await fetch(url)).text();
     if (res.includes('does not follow')) {
-      ctx.botSpeak(`${user} does not follow https://twitch.tv/${channel}`);
+      void ctx.botSpeak(`${user} does not follow https://twitch.tv/${channel}`);
     } else {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `${user} has been following https://twitch.tv/${channel} for ${res}`
       );
     }

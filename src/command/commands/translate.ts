@@ -10,7 +10,7 @@ const command: Command = {
       return false;
     }
     if (!ctx.body) {
-      ctx.botSpeak('You must provide a message to translate');
+      void ctx.botSpeak('You must provide a message to translate');
       return false;
     }
     let reply = JSON.parse(await services.openaiService.translate(ctx.body));
@@ -23,12 +23,12 @@ const command: Command = {
       reply = `${
         !ctx.isOwner ? `@${ctx.username}: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
-      ctx.botSpeak(reply);
+      void ctx.botSpeak(reply);
     } else {
       reply = `${
         !ctx.isOwner ? `<@${ctx.userId}>: ` : ''
       }Translation: ${reply.translation} (${reply.language})`;
-      ctx.botSpeak(reply);
+      void ctx.botSpeak(reply);
     }
 
     return true;

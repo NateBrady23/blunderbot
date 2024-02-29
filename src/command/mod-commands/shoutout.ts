@@ -11,7 +11,7 @@ const command: Command = {
     return queue.enqueue(async function () {
       const user = ctx.args[0];
       if (!user) {
-        ctx.botSpeak('Please provide a twitch username to shoutout');
+        void ctx.botSpeak('Please provide a twitch username to shoutout');
         return;
       }
 
@@ -19,9 +19,9 @@ const command: Command = {
 
       const res = await (await fetch(url)).text();
       if (res.includes('not found')) {
-        ctx.botSpeak(`Are you sure ${user} exists?`);
+        void ctx.botSpeak(`Are you sure ${user} exists?`);
       } else {
-        ctx.botSpeak(
+        void ctx.botSpeak(
           `Blunder Buddies, please join me in following @${user} at https://twitch.tv/${user} ${
             res ? `They were last seen playing ${res}.` : ''
           }`

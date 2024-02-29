@@ -50,7 +50,7 @@ const command: Command = {
       );
     }
     if (!cachedLatestShort.length) {
-      ctx.botSpeak("I can't find this right now. Try again later.");
+      void ctx.botSpeak("I can't find this right now. Try again later.");
     } else {
       const last7 = cachedLatestShort
         .slice(Math.max(cachedLatestShort.length - 7, 0))
@@ -60,7 +60,7 @@ const command: Command = {
         const title = short.snippet.title.replace(/#[a-z]+( )?/gi, '');
         toSay += `${title} https://www.youtube.com/shorts/${short.snippet.resourceId.videoId}\n`;
       });
-      ctx.botSpeak(toSay);
+      void ctx.botSpeak(toSay);
     }
 
     return true;

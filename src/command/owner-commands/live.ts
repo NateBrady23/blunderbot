@@ -22,7 +22,7 @@ const command: Command = {
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
-    ctx.botSpeak(`We're live!`);
+    void ctx.botSpeak(`We're live!`);
 
     if (msg.toLowerCase().includes('nodiscord')) {
       msg = msg.replace(/nodiscord/gi, '');

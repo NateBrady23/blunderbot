@@ -23,7 +23,7 @@ const command: Command = {
           );
           const json = await res.json();
           if (json.ok) {
-            ctx.botSpeak(
+            void ctx.botSpeak(
               `Welcome ${user} to ${services.configV2Service.get().lichess.teamName}`
             );
           }
@@ -36,7 +36,7 @@ const command: Command = {
           );
           const json = await res.json();
           if (json.ok) {
-            ctx.botSpeak(
+            void ctx.botSpeak(
               `Could not accept ${user}'s request to join at this time.`
             );
           }
@@ -44,7 +44,7 @@ const command: Command = {
       }
     } catch (e) {
       console.error(e);
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `I'm sorry, something went terribly wrong! Please don't fire me!`
       );
     }

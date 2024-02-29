@@ -10,7 +10,7 @@ const command: Command = {
     const url = `https://decapi.me/twitch/followcount/${channel}`;
 
     const res = await (await fetch(url)).text();
-    ctx.botSpeak(`${channel} has ${res} followers on Twitch!`);
+    void ctx.botSpeak(`${channel} has ${res} followers on Twitch!`);
 
     return true;
   }

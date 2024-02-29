@@ -10,7 +10,7 @@ const command: Command = {
     }`;
 
     const res = await (await fetch(url)).text();
-    ctx.botSpeak(
+    void ctx.botSpeak(
       `${services.configV2Service.get().twitch.ownerUsername} has ${res} subscribers on Twitch!`
     );
 

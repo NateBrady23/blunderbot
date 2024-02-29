@@ -26,7 +26,7 @@ const command: Command = {
       console.log('RapidAPI is disabled in !dadjoke.');
       return false;
     }
-    ctx.botSpeak(await getJoke(apiKey));
+    void ctx.botSpeak(await getJoke(apiKey));
     return true;
   }
 };

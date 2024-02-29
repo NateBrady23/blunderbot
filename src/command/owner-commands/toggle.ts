@@ -11,10 +11,10 @@ const command: Command = {
       commandState.toggledOffCommands = commandState.toggledOffCommands.filter(
         (cmd) => cmd !== name
       );
-      ctx.botSpeak(`Enabled !${name} command`);
+      void ctx.botSpeak(`Enabled !${name} command`);
     } else {
       commandState.toggledOffCommands.push(ctx.args[0]);
-      ctx.botSpeak(`Disabled !${name} command`);
+      void ctx.botSpeak(`Disabled !${name} command`);
     }
     return true;
   }
