@@ -29,7 +29,7 @@
 
     socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
       if (data.type === MESSAGE_TYPE.BACKGROUND) {
-          displayImage(data.url);
+        displayImage(data.url);
       }
     });
 
