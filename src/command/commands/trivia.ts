@@ -20,7 +20,7 @@ function showLeaderboard(ctx: Context, commandState: CommandState): string {
 }
 
 async function recap(services: CommandServices, leaderboard: string) {
-  const prompt = `Say thank you to all the players who played in trivia tonight. Write a summary of these these players and their points in an exciting manner: ${leaderboard}`;
+  const prompt = `Say thank you to all the players who played in trivia tonight. Write a summary of these players and their points in an exciting manner: ${leaderboard}`;
   await services.twitchService.ownerRunCommand(`!vchat ${prompt}`);
 }
 
