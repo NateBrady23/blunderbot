@@ -1,7 +1,7 @@
 import { Platform } from '../../enums';
 import { sleep } from '../../utils/utils';
 
-function showLeaderboard(ctx: Context, commandState: CommandState) {
+function showLeaderboard(ctx: Context, commandState: CommandState): string {
   if (!Object.keys(commandState.trivia.leaderboard).length) {
     return;
   }
@@ -16,6 +16,12 @@ function showLeaderboard(ctx: Context, commandState: CommandState) {
     .map((user) => `${user.name}: ${user.score}`)
     .join(', ');
   ctx.botSpeak(`Leaderboard: ${leaderboard}`);
+  return leaderboard;
+}
+
+async function recap(services: CommandServices, leaderboard: string) {
+  const prompt = `Say thank you to all the players who played in trivia tonight. Write a summary of these these players and their points in an exciting manner: ${leaderboard}`;
+  await services.twitchService.ownerRunCommand(`!vchat ${prompt}`);
 }
 
 async function showQuestion(
@@ -27,7 +33,8 @@ async function showQuestion(
     commandState.trivia.round >= services.configV2Service.get().trivia.length
   ) {
     void ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
-    showLeaderboard(ctx, commandState);
+    const leaderboard = showLeaderboard(ctx, commandState);
+    await recap(services, leaderboard);
     commandState.trivia.started = false;
     return;
   }
