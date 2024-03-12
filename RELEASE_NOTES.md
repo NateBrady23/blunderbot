@@ -10,6 +10,7 @@
 
 - Added owner command for `!queue rotate` to move the current user to the end of the queue.
 - BlunderBot now sends a message in `!accept` when there are no team requests to accept.
+- A vchat trivia recap thanks @fitztrev!
 
 #### Bug Fixes
 
