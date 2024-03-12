@@ -67,7 +67,7 @@ For the `!background` command, add a browser source that points to: `http://loca
 
 For the `!confetti` command and future full screen overlays, add a browser source that points to: `http://localhost:3000/full-screen.html`
 
-Replace with a different port if you changed the `port` in the `config.yml`.
+Replace with a different port if you changed the `port` in the `config.ts`.
 
 ### Cursors
 

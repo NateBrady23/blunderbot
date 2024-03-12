@@ -140,7 +140,7 @@ async function setCursorStyle() {
     if (cursor) {
       styleTag.innerHTML += `
         cg-board {
-          cursor: url('https://localhost/images/cursors/${cursor}.cur'), default !important;
+          cursor: url('https://localhost/images/cursors/${cursor}'), default !important;
         }
       `;
     }
@@ -200,90 +200,13 @@ async function setKingStyle() {
             }
             url('https://localhost/images/${swapped ? 'kings' : 'opponents'}/${
               swapped ? king : opponent
-            }.png') !important;}
+            }') !important;}
       `;
-    }
-
-    if (opponent === 'hans') {
-      let [color1, color2] = swapped ? [myColor, myColor] : [myColor, oppColor];
-      styleTag.innerHTML += `
-        .piece.${color2[0]}k,
-       .analyse__board .orientation-${color1} .king.${color2},
-       .is2d .puzzle .orientation-${color1} .king.${color2},
-       .playing .is2d .orientation-${color1} .king.${color2} {
-            animation: shake 4s;
-            animation-iteration-count: infinite;
-          }
-        `;
-    }
-
-    if (opponent === 'buttery_flaky') {
-      let toggle = true;
-      clearInterval(window.buttery_interval);
-      window.buttery_interval = setInterval(() => {
-        const opp = localStorage.getItem(LOCAL_STORAGE_KEYS.OPPONENT_KING);
-        if (opp !== 'buttery_flaky') {
-          clearInterval(window.buttery_interval);
-          return;
-        }
-        document.querySelector('#buttery-style')?.remove();
-        let background_url = toggle
-          ? `https://localhost/images/opponents/buttery_flaky.png`
-          : `https://localhost/images/other/buttery_flaky2.png`;
-        toggle = !toggle;
-        if (swapped) {
-          background_url = `https://localhost/images/kings/${king}.png`;
-        }
-        const styleTag = document.createElement('style');
-        styleTag.id = 'buttery-style';
-        styleTag.innerHTML += `
-        .piece.${oppColor[0]}k,
-        .analyse__board .orientation-${myColor} .king.${oppColor},
-        .is2d .puzzle .orientation-${myColor} .king.${oppColor},
-        .playing .is2d .orientation-${myColor} .king.${oppColor} {
-          background-image:
-            url('https://localhost/images/themes/${theme}/${oppColor}/crown.png'),
-            url('${background_url}') !important;}
-      `;
-        head.appendChild(styleTag);
-      }, 5000);
-    }
-
-    if (opponent === 'batman') {
-      let toggle = true;
-      clearInterval(window.batman_interval);
-      window.batman_interval = setInterval(() => {
-        const opp = localStorage.getItem(LOCAL_STORAGE_KEYS.OPPONENT_KING);
-        if (opp !== 'batman') {
-          clearInterval(window.batman_interval);
-          return;
-        }
-        document.querySelector('#batman-style')?.remove();
-        let background_url = toggle
-          ? `https://localhost/images/opponents/batman.png`
-          : `https://localhost/images/other/bat_signal.png`;
-        toggle = !toggle;
-        if (swapped) {
-          background_url = `https://localhost/images/kings/${king}.png`;
-        }
-        const styleTag = document.createElement('style');
-        styleTag.id = 'batman-style';
-        styleTag.innerHTML += `
-        .piece.${oppColor[0]}k,
-        .analyse__board .orientation-${myColor} .king.${oppColor},
-        .is2d .puzzle .orientation-${myColor} .king.${oppColor},
-        .playing .is2d .orientation-${myColor} .king.${oppColor} {
-          background-image:
-            url('https://localhost/images/themes/${theme}/${oppColor}/crown.png'),
-            url('${background_url}') !important;}
-      `;
-        head.appendChild(styleTag);
-      }, 5000);
     }
 
     // Draw my king and crown based on the orientation of the board.
     const crownURL = crown
-      ? `url('https://localhost/images/crowns/${crown}.png')`
+      ? `url('https://localhost/images/crowns/${crown}')`
       : `url('https://localhost/images/themes/${theme}/${myColor}/crown.png')`;
 
     styleTag.innerHTML += `
@@ -295,7 +218,7 @@ async function setKingStyle() {
           ${crownURL},
           url('https://localhost/images/${swapped ? 'opponents' : 'kings'}/${
             swapped ? opponent : king
-          }.png') !important
+          }') !important
       }
     `;
 

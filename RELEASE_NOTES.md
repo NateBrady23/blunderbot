@@ -1,5 +1,22 @@
 # Release Notes
 
+### 2.4.0
+
+#### Breaking Changes
+
+- Sending the whole filename including extension to the frontend to support multiple file types, like gifs, for kings and opponent kings.
+
+#### Features
+
+- Added owner command for `!queue rotate` to move the current user to the end of the queue.
+- BlunderBot now sends a message in `!accept` when there are no team requests to accept.
+
+#### Bug Fixes
+
+- Fixed a potential crash in the twitch eventsub when there's no response for subscriptions.
+- With the addition of gif kings, was able to take out most of the hardcoded king css styles in the frontend.
+- Package updates.
+
 ### 2.3.0
 
 #### Features
