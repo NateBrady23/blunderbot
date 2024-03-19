@@ -63,7 +63,7 @@
     }
 
     async function showSnow() {
-      let duration = 15 * 1000;
+      let duration = 30 * 1000;
       let animationEnd = Date.now() + duration;
       let skew = 1;
 
@@ -156,7 +156,7 @@
         setTimeout(() => {
           clearInterval(myInterval);
           canvas.remove();
-        }, 15000);
+        }, 30000);
       }
     }
 

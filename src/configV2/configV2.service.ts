@@ -169,7 +169,7 @@ export class ConfigV2Service {
       readdirSync(publicFiles[0]).forEach((file) => {
         const fileName = file.split('.')[0];
         if (fileName) {
-          publicFiles[1].push(fileName);
+          publicFiles[1].push(file);
         }
       });
     });

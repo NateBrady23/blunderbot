@@ -4,7 +4,9 @@ const command: Command = {
   name: 'king',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = services.configV2Service.get().kings;
+    const kings = services.configV2Service
+      .get()
+      .kings.map((k) => k.split('.')[0]);
     const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     let king = (ctx.args[0] || '').toLowerCase();
     if (king === 'random') {
@@ -20,9 +22,10 @@ const command: Command = {
       return false;
     }
     const user = ctx.displayName;
+
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'KING',
-      king
+      king: services.configV2Service.get().kings.find((k) => k.startsWith(king))
     });
     if (!ctx.isOwner && !king.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(

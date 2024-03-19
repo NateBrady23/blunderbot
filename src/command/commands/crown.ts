@@ -20,18 +20,22 @@ const command: Command = {
       return true;
     }
 
-    if (!crown || !services.configV2Service.get().crowns.includes(crown)) {
+    const crowns = services.configV2Service
+      .get()
+      .crowns.map((c) => c.split('.')[0]);
+
+    if (!crown || !crowns.includes(crown)) {
       void ctx.botSpeak(
-        `The following crowns are available: ${services.configV2Service
-          .get()
-          .crowns.join(', ')}. "!crown reset" to return to normal.`
+        `The following crowns are available: ${crowns.join(', ')}. "!crown reset" to return to normal.`
       );
       return false;
     }
 
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'CROWN',
-      crown,
+      crown: services.configV2Service
+        .get()
+        .crowns.find((c) => c.startsWith(crown)),
       user: ctx.displayName
     });
     if (!ctx.isOwner && !crown.startsWith('secret_')) {

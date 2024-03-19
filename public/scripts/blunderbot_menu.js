@@ -37,7 +37,7 @@ async function blunderBotMenu() {
       ${kings
         .map((king) => {
           return `
-           <img class="king-face send-command" data-command="!king ${king}" src="https://localhost/images/kings/${king}.png" />
+           <img class="king-face send-command" data-command="!king ${king.split('.')[0]}" src="https://localhost/images/kings/${king}" />
            `;
         })
         .join('')}
@@ -48,7 +48,7 @@ async function blunderBotMenu() {
       ${opps
         .map((opp) => {
           return `
-           <img class="opp-face send-command" data-command="!opp ${opp}" src="https://localhost/images/opponents/${opp}.png" />
+           <img class="opp-face send-command" data-command="!opp ${opp.split('.')[0]}" src="https://localhost/images/opponents/${opp}" />
            `;
         })
         .join('')}
@@ -56,7 +56,7 @@ async function blunderBotMenu() {
       ${crowns
         .map((crown) => {
           return `
-           <img class="crown-select send-command" data-command="!crown ${crown}" src="https://localhost/images/crowns/${crown}.png" />
+           <img class="crown-select send-command" data-command="!crown ${crown.split('')[0]}" src="https://localhost/images/crowns/${crown}" />
            `;
         })
         .join('')}

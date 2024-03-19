@@ -4,7 +4,9 @@ const command: Command = {
   name: 'opponent',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = services.configV2Service.get().oppKings;
+    const kings = services.configV2Service
+      .get()
+      .oppKings.map((k) => k.split('.')[0]);
     let king = (ctx.args[0] || '').toLowerCase();
     const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     if (king === 'random') {
@@ -22,7 +24,9 @@ const command: Command = {
 
     services.twitchGateway.sendDataToSockets('serverMessage', {
       type: 'OPP_KING',
-      king
+      king: services.configV2Service
+        .get()
+        .oppKings.find((k) => k.startsWith(king))
     });
 
     if (!ctx.isOwner && !king.startsWith('secret_')) {

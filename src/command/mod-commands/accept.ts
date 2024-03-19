@@ -10,6 +10,10 @@ const command: Command = {
         `https://lichess.org/api/team/${team}/requests`
       );
       const json = await res.json();
+      if (!json?.length) {
+        await ctx.botSpeak('No requests to accept');
+        return true;
+      }
       for (const request of json) {
         const user = request.user.id;
         const acceptUser = await services.lichessService.isGoodUser(user);
