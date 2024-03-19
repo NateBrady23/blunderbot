@@ -7,6 +7,11 @@ const command: Command = {
     const service = _ctx.args[0]?.trim();
     const config = services.configV2Service.get();
 
+    if (!service) {
+      void services.configV2Service.init();
+      return true;
+    }
+
     if (service === 'twitch' && config.twitch) {
       services.twitchService.init();
       services.twitchPubSub.init();

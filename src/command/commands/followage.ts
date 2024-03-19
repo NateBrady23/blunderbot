@@ -10,7 +10,7 @@ const command: Command = {
       return false;
     }
 
-    const decapiToken = !services.configV2Service.get().misc?.decapiToken;
+    const decapiToken = services.configV2Service.get().misc?.decapiToken;
     const channel = services.configV2Service.get().twitch.ownerUsername;
 
     let user = ctx.args[0];

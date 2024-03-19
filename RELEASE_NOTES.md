@@ -11,11 +11,13 @@
 - Added owner command for `!queue rotate` to move the current user to the end of the queue.
 - BlunderBot now sends a message in `!accept` when there are no team requests to accept.
 - A vchat trivia recap thanks @fitztrev!
+- Owners can now pass `!t##` in `!songrequest` to change the max limit of that song request.
 
 #### Bug Fixes
 
 - Fixed a potential crash in the twitch eventsub when there's no response for subscriptions.
 - With the addition of gif kings, was able to take out most of the hardcoded king css styles in the frontend.
+- Fixed a bug in the `!followage` command.
 - Package updates.
 
 ### 2.3.0
