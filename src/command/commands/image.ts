@@ -13,11 +13,13 @@ const command: Command = {
       console.log(`OpenAI is not enabled in !image command.`);
       return false;
     }
+    if (ctx.platform === Platform.Discord && !ctx.isOwner) {
+      return false;
+    }
     let prompt = ctx.body?.trim();
     let sendToDiscord =
       services.configV2Service.get().discord?.enabled &&
-      !!services.configV2Service.get().discord?.galleryChannelId &&
-      ctx.platform !== Platform.Discord;
+      !!services.configV2Service.get().discord?.galleryChannelId;
     let sendToTwitter =
       services.configV2Service.get().twitter?.enabled &&
       services.configV2Service.get().twitter.tweetImagesEnabled;

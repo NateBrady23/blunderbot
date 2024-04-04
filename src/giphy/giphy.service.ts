@@ -13,9 +13,9 @@ export class GiphyService {
   }
 
   async fetchGif(phrase: string) {
-    const phraseToMatch = phrase.trim().toLowerCase();
+    const phraseToMatch = phrase?.trim().toLowerCase() + '.gif';
     if (this.configV2Service.get().gifs?.includes(phraseToMatch)) {
-      return `https://localhost/gifs/${phraseToMatch}.gif`;
+      return `https://localhost/gifs/${phraseToMatch}`;
     }
 
     if (!this.configV2Service.get().misc?.giphyApiKey) {

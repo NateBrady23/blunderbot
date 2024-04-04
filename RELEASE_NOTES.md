@@ -1,6 +1,13 @@
 # Release Notes
 
-### 2.4.0
+### 2.4.1
+
+#### Bug Fixes
+
+- Fixed a bug where local gifs weren't showing up after the file extension change in 2.4.0.
+- Only owner should be able to run `!image` and `!background` command from Discord.
+
+### 2.4.0 (2024-03-19)
 
 #### Breaking Changes
 
