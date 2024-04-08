@@ -197,9 +197,9 @@ export class TwitchEventSub {
           }
         }
       );
-      if (res.error) {
+      if (res?.error) {
         this.logger.error(res);
-      } else if (res.data[0]?.status === 'enabled') {
+      } else if (res?.data[0]?.status === 'enabled') {
         this.logger.log(`Subscribed to ${event.eventType}`);
       }
     }

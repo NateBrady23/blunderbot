@@ -35,8 +35,6 @@ Note: Not all files in the public folder are needed for the extension to work, b
 - Copy `src/config/config.sample.ts` to `src/config/config.ts` making sure to connect to your database.
 - Visit https://www.blunder.bot to configure the bot
 
-Note: I am using https://planetscale.com for a free MySQL database. It has a very generous free tier plan for projects like this.
-
 ### Some other settings
 
 These settings may be important to get the overlay to work properly. The size of the browser window doesn't matter, it's just what I use for my streamlabs layout, but the size of the lichess board does.
@@ -67,7 +65,7 @@ For the `!background` command, add a browser source that points to: `http://loca
 
 For the `!confetti` command and future full screen overlays, add a browser source that points to: `http://localhost:3000/full-screen.html`
 
-Replace with a different port if you changed the `port` in the `config.yml`.
+Replace with a different port if you changed the `port` in the `config.ts`.
 
 ### Cursors
 

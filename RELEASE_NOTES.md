@@ -1,5 +1,32 @@
 # Release Notes
 
+### 2.4.1
+
+#### Bug Fixes
+
+- Fixed a bug where local gifs weren't showing up after the file extension change in 2.4.0.
+- Only owner should be able to run `!image` and `!background` command from Discord.
+
+### 2.4.0 (2024-03-19)
+
+#### Breaking Changes
+
+- Sending the whole filename including extension to the frontend to support multiple file types, like gifs, for kings and opponent kings.
+
+#### Features
+
+- Added owner command for `!queue rotate` to move the current user to the end of the queue.
+- BlunderBot now sends a message in `!accept` when there are no team requests to accept.
+- A vchat trivia recap thanks @fitztrev!
+- Owners can now pass `!t##` in `!songrequest` to change the max limit of that song request.
+
+#### Bug Fixes
+
+- Fixed a potential crash in the twitch eventsub when there's no response for subscriptions.
+- With the addition of gif kings, was able to take out most of the hardcoded king css styles in the frontend.
+- Fixed a bug in the `!followage` command.
+- Package updates.
+
 ### 2.3.0
 
 #### Features

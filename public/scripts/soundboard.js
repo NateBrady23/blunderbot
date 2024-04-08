@@ -9,6 +9,7 @@ async function soundboardMenu() {
     <div role="group" class="blunderbot-group" style="width: 500px; margin-left: -200px;">
     ${soundboard
       .map((sound) => {
+        sound = sound.split('.')[0];
         return `
         <a href="#" class="send-command" data-command="!sound ${sound}">${sound}</a>
       `;

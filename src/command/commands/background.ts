@@ -12,6 +12,9 @@ const command: Command = {
       console.log(`OpenAI is not enabled in !background command.`);
       return false;
     }
+    if (ctx.platform === Platform.Discord && !ctx.isOwner) {
+      return false;
+    }
     let prompt = ctx.body?.trim();
 
     if (!prompt) {
@@ -31,8 +34,7 @@ const command: Command = {
 
     let sendToDiscord =
       services.configV2Service.get().discord?.enabled &&
-      !!services.configV2Service.get().discord?.galleryChannelId &&
-      ctx.platform !== Platform.Discord;
+      !!services.configV2Service.get().discord?.galleryChannelId;
     if (prompt.toLowerCase().includes('nodiscord')) {
       sendToDiscord = false;
       prompt = prompt.replace(/nodiscord/gi, '');
