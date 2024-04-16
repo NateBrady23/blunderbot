@@ -32,6 +32,8 @@ export class OpenaiService {
         content: this.configV2Service.get().openai?.baseSystemMessage
       }
     ];
+
+    void this.createEmbedding('testing');
   }
 
   fixPronunciations(text: string): string {
@@ -79,6 +81,21 @@ export class OpenaiService {
       return response.data[0].url;
     } catch (error) {
       this.logger.error('Error editing image');
+      this.logger.error(error);
+    }
+  }
+
+  async createEmbedding(text: string): Promise<Array<number>> {
+    try {
+      const response = await this.openai.embeddings.create({
+        model:
+          this.configV2Service.get().openai?.embeddingsModel ||
+          'text-embedding-ada-002',
+        input: text
+      });
+      return response.data[0].embedding;
+    } catch (error) {
+      this.logger.error('Error creating embedding');
       this.logger.error(error);
     }
   }

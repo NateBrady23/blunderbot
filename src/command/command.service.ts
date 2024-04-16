@@ -392,6 +392,8 @@ export class CommandService {
   }
 
   updateBoughtSquares(data: { [key: string]: string }) {
-    this.commandState.boughtSquares = data;
+    if (this.commandState) {
+      this.commandState.boughtSquares = data;
+    }
   }
 }

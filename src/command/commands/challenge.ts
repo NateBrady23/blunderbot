@@ -14,9 +14,29 @@ const command: Command = {
     }
     const user = ctx.args[0];
     let timeControls = ['5', '3'];
-
     if (ctx.args[1]) {
       timeControls = ctx.args[1].split('+');
+    }
+
+    let variant = 'standard';
+    if (ctx.args[2]) {
+      if (
+        ![
+          'standard',
+          'chess960',
+          'crazyhouse',
+          'antichess',
+          'atomic',
+          'horde',
+          'kingofthehill',
+          'racingkings',
+          'threecheck'
+        ].includes(ctx.args[2].toLowerCase())
+      ) {
+        void ctx.botSpeak('Invalid variant.');
+        return false;
+      }
+      variant = ctx.args[2];
     }
 
     try {
@@ -29,7 +49,7 @@ const command: Command = {
             'clock.limit': parseInt(timeControls[0]) * 60,
             'clock.increment': parseInt(timeControls[1]),
             color: 'random',
-            variant: 'standard',
+            variant,
             rules: 'noGiveTime'
           }
         }

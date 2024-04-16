@@ -86,6 +86,7 @@ interface UserOpenAiConfigV2 {
   imageModel: string;
   ttsModel: string;
   textModerationModel: string;
+  embeddingsModel: string;
   baseSystemMessage: string;
   imageEdits: string[];
   voices: string[];

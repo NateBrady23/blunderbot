@@ -9,11 +9,29 @@ stockfish_path = sys.argv[2]
 
 default_player = {'games': 0, 'moves': 0, 'blunders': 0, 'blunder_cpl_sum': 0, 'berserks': 0}
 
-def stockfish_evaluation(board, time_limit = 0.1):
+def winning_chance(cp):
+    """
+    Calculate the winning chance based on the given centipawn (cp) value using the method from the Scala code.
+    Uses a sigmoid function with a given multiplier and then linearly transforms it to a percentage.
+
+    :param cp: The centipawn value.
+    :return: The winning chance as a percentage.
+    """
+    MULTIPLIER = -0.00368208
+    # Calculate the winning probability with the sigmoid function
+    winning_probability = 2 / (1 + 10 ** (MULTIPLIER * cp)) - 1
+    # Transform the winning probability to a percentage
+    win_percent = 50 + (50 * winning_probability)
+    # Ensure the result is within the range [0, 100]
+    win_percent_clamped = max(0, min(100, win_percent))
+    return win_percent_clamped
+
+def stockfish_evaluation(board, time_limit=0.1):
     engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
     result = engine.analyse(board, chess.engine.Limit(time=time_limit))
     engine.close()
-    return result['score']
+    cp = result['score'].white().score(mate_score=1000)
+    return winning_chance(cp)
 
 client = berserk.Client()
 
@@ -49,7 +67,7 @@ for game in lichess_games:
     if 'berserk' in game['players']['black']:
         players[black_player]['berserks'] += 1
 
-    last_eval = 0
+    prev_winning_chance = 50  # Assume starting chances are even
     game_blunder_count = 0
 
     board = chess.Board()
@@ -61,27 +79,23 @@ for game in lichess_games:
         if board.is_game_over():
             break
 
-        result = stockfish_evaluation(board)
+        current_winning_chance = stockfish_evaluation(board)
 
-        if result.is_mate():
-            score = result.white().mate() * 1000
-        else:
-            score = result.white().score()
+        # Calculate the change in winning chance
+        delta_winning_chance = abs(current_winning_chance - prev_winning_chance)
+        prev_winning_chance = current_winning_chance
 
-        score = max(-850, min(850, score))
-
-        blunder_level = abs(score - last_eval)
-        last_eval = score
-
-        if blunder_level > 200:
-            print(f"  blunder at move {move}: {str(blunder_level)}")
+        # Define a threshold for blunders, e.g., 30 change in winning chance
+        if delta_winning_chance >= 30:
+            print(f"  blunder at move {move}: {delta_winning_chance}")
             game_blunder_count += 1
             if board.turn == chess.WHITE:
                 players[black_player]['blunders'] += 1
-                players[black_player]['blunder_cpl_sum'] += blunder_level
+                # Store the change in winning chance instead of centipawn loss
+                players[black_player]['blunder_cpl_sum'] += delta_winning_chance
             else:
                 players[white_player]['blunders'] += 1
-                players[white_player]['blunder_cpl_sum'] += blunder_level
+                players[white_player]['blunder_cpl_sum'] += delta_winning_chance
 
     games.append({
         'url': f"https://lichess.org/{game['id']}",
