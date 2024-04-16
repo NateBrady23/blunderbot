@@ -26,9 +26,9 @@ def winning_chance(cp):
     win_percent_clamped = max(0, min(100, win_percent))
     return win_percent_clamped
 
-def stockfish_evaluation(board, time_limit=0.5):
+def stockfish_evaluation(board):
     engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
-    result = engine.analyse(board, chess.engine.Limit(time=time_limit))
+    result = engine.analyse(board, chess.engine.Limit(depth=20))
     engine.close()
     cp = result['score'].white().score(mate_score=1000)
     return winning_chance(cp)
@@ -87,7 +87,9 @@ for game in lichess_games:
         prev_winning_chance = current_winning_chance
 
         # Define a threshold for blunders, e.g., 30 change in winning chance
-        if delta_winning_chance >= 30:
+        # Lichess uses 30, but that was missing a lot of blunders with local analysis
+        # This got a lot closer
+        if delta_winning_chance >= 21.5:
             print(f"  blunder at move {move}: {delta_winning_chance}")
             game_blunder_count += 1
             if board.turn == chess.WHITE:
