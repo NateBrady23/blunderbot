@@ -11,7 +11,7 @@ default_player = {'games': 0, 'moves': 0, 'blunders': 0, 'blunder_cpl_sum': 0, '
 
 def winning_chance(cp):
     """
-    Calculate the winning chance based on the given centipawn (cp) value using the method from the Scala code.
+    Calculate the winning chance based on the given centipawn (cp) value.
     Uses a sigmoid function with a given multiplier and then linearly transforms it to a percentage.
 
     :param cp: The centipawn value.
@@ -26,7 +26,7 @@ def winning_chance(cp):
     win_percent_clamped = max(0, min(100, win_percent))
     return win_percent_clamped
 
-def stockfish_evaluation(board, time_limit=0.1):
+def stockfish_evaluation(board, time_limit=0.5):
     engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
     result = engine.analyse(board, chess.engine.Limit(time=time_limit))
     engine.close()
@@ -67,7 +67,8 @@ for game in lichess_games:
     if 'berserk' in game['players']['black']:
         players[black_player]['berserks'] += 1
 
-    prev_winning_chance = 50  # Assume starting chances are even
+    # Assume starting chances are even
+    prev_winning_chance = 50
     game_blunder_count = 0
 
     board = chess.Board()
@@ -91,11 +92,9 @@ for game in lichess_games:
             game_blunder_count += 1
             if board.turn == chess.WHITE:
                 players[black_player]['blunders'] += 1
-                # Store the change in winning chance instead of centipawn loss
-                players[black_player]['blunder_cpl_sum'] += delta_winning_chance
             else:
                 players[white_player]['blunders'] += 1
-                players[white_player]['blunder_cpl_sum'] += delta_winning_chance
+
 
     games.append({
         'url': f"https://lichess.org/{game['id']}",
