@@ -41,6 +41,7 @@ export class TwitchService {
   }
 
   async botSpeak(message: string) {
+    message = message.replace(/\n/g, ' ');
     if (
       message.length >
       (this.configV2Service.get().twitch?.maxMessageLength || 1500)

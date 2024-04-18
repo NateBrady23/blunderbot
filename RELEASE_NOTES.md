@@ -10,6 +10,11 @@
 - `!challenge` now accepts variant types like `!challenge user 5+3 chess960` with `standard` being the default.
 - `openai.embeddingsModel` added to the config and openai service to support future commands utilizing embeddings.
 - Update blunder report analysis tool to more closely reflect lichess analysis.
+- Make it easier to add points with the trivia command, now either `!trivia add 10 user` or `!trivia add user 10` will work.
+
+#### Bug Fixes
+
+- Fixed a bug where AI responses including "\n" would be sent in several messages on twitch.
 
 ### 2.4.1
 

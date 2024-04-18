@@ -206,8 +206,15 @@ const command: Command = {
 
     if (answer.startsWith('add ') && ctx.isOwner) {
       // !trivia add <name> <points>
-      const [user, points] = answer.split(' ').slice(1);
-      console.log('add', user, ctx.args[2]);
+      let [user, points] = answer.split(' ').slice(1);
+      // if points isn't a number, swap the values of user and points
+      if (isNaN(+points)) {
+        [user, points] = [points, user];
+      }
+      // if points still isn't a number, return false
+      if (isNaN(+points)) {
+        return false;
+      }
       commandState.trivia.leaderboard[user] =
         (commandState.trivia.leaderboard[user] || 0) + +points;
       return true;
