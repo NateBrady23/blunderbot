@@ -65,12 +65,14 @@ function selectRoundWinner(
   commandState: CommandState,
   services: CommandServices,
   answer: string,
-  user: string
+  user: string,
+  pointsModifier = 1
 ) {
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
-  const roundPoints =
-    services.configV2Service.get().trivia[commandState.trivia.round].points ||
-    1;
+  const roundPoints = Math.round(
+    (services.configV2Service.get().trivia[commandState.trivia.round].points ||
+      1) * pointsModifier
+  );
   const points =
     (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
   commandState.trivia.roundAnswered = true;
@@ -282,13 +284,14 @@ const command: Command = {
           return true;
         }
         if (difference === 0) {
-          // Someone got it exactly right
           selectRoundWinner(
             ctx,
             commandState,
             services,
             answer,
-            ctx.displayName
+            ctx.displayName,
+            // Give double points for getting it exactly right
+            1.5
           );
           endRound(ctx, commandState, services);
         } else if (

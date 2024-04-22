@@ -11,6 +11,8 @@
 - `openai.embeddingsModel` added to the config and openai service to support future commands utilizing embeddings.
 - Update blunder report analysis tool to more closely reflect lichess analysis.
 - Make it easier to add points with the trivia command, now either `!trivia add 10 user` or `!trivia add user 10` will work.
+- 1.5x points in `!trivia` for getting a "Closest to" answer exactly right.
+- The zerkin report! Thanks @fitztrev!
 
 #### Bug Fixes
 
