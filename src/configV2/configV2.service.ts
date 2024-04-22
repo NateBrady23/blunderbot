@@ -26,6 +26,7 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
               /{username}/g,
               removeSymbols(ctx.displayName)
             );
+            command = command.replace(/{message}/g, ctx.body);
             void services.twitchService.ownerRunCommand(command, {
               onBehalfOf: ctx.displayName
             });
@@ -33,7 +34,12 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
         });
       }
       if (obj.message) {
-        ctx.botSpeak(obj.message);
+        let msg = obj.message.replace(
+          /{username}/g,
+          removeSymbols(ctx.displayName)
+        );
+        msg = msg.replace(/{message}/g, ctx.body);
+        ctx.botSpeak(msg);
       }
       return true;
     },

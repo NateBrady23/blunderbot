@@ -1,5 +1,23 @@
 # Release Notes
 
+### 2.5.0
+
+#### Features
+
+- Added `!say` as an alias for `!tts`
+- In the twitch simple commands UI, {username} and {message} can be used to replace the username and message in both any "commands" being set up or the "message" field.
+- New wordle wordlist more closely matches the actual wordle wordlist.
+- `!challenge` now accepts variant types like `!challenge user 5+3 chess960` with `standard` being the default.
+- `openai.embeddingsModel` added to the config and openai service to support future commands utilizing embeddings.
+- Update blunder report analysis tool to more closely reflect lichess analysis.
+- Make it easier to add points with the trivia command, now either `!trivia add 10 user` or `!trivia add user 10` will work.
+- 1.5x points in `!trivia` for getting a "Closest to" answer exactly right.
+- The zerkin report! Thanks @fitztrev!
+
+#### Bug Fixes
+
+- Fixed a bug where AI responses including "\n" would be sent in several messages on twitch.
+
 ### 2.4.1
 
 #### Bug Fixes

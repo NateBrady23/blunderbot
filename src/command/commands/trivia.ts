@@ -65,12 +65,14 @@ function selectRoundWinner(
   commandState: CommandState,
   services: CommandServices,
   answer: string,
-  user: string
+  user: string,
+  pointsModifier = 1
 ) {
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
-  const roundPoints =
-    services.configV2Service.get().trivia[commandState.trivia.round].points ||
-    1;
+  const roundPoints = Math.round(
+    (services.configV2Service.get().trivia[commandState.trivia.round].points ||
+      1) * pointsModifier
+  );
   const points =
     (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
   commandState.trivia.roundAnswered = true;
@@ -206,8 +208,15 @@ const command: Command = {
 
     if (answer.startsWith('add ') && ctx.isOwner) {
       // !trivia add <name> <points>
-      const [user, points] = answer.split(' ').slice(1);
-      console.log('add', user, ctx.args[2]);
+      let [user, points] = answer.split(' ').slice(1);
+      // if points isn't a number, swap the values of user and points
+      if (isNaN(+points)) {
+        [user, points] = [points, user];
+      }
+      // if points still isn't a number, return false
+      if (isNaN(+points)) {
+        return false;
+      }
       commandState.trivia.leaderboard[user] =
         (commandState.trivia.leaderboard[user] || 0) + +points;
       return true;
@@ -275,13 +284,14 @@ const command: Command = {
           return true;
         }
         if (difference === 0) {
-          // Someone got it exactly right
           selectRoundWinner(
             ctx,
             commandState,
             services,
             answer,
-            ctx.displayName
+            ctx.displayName,
+            // Give double points for getting it exactly right
+            1.5
           );
           endRound(ctx, commandState, services);
         } else if (

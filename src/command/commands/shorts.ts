@@ -58,12 +58,8 @@ const command: Command = {
     if (!cachedLatestShort) {
       void ctx.botSpeak("I can't find this right now. Try again later.");
     } else {
-      const title = cachedLatestShort.snippet.title.replace(
-        /#[a-z]+( )?/gi,
-        ''
-      );
       void ctx.botSpeak(
-        `Check out my latest short: ${title} https://www.youtube.com/shorts/${cachedLatestShort.snippet.resourceId.videoId}`
+        `Check out my latest short: ${cachedLatestShort.snippet.title} https://www.youtube.com/shorts/${cachedLatestShort.snippet.resourceId.videoId}`
       );
     }
 
