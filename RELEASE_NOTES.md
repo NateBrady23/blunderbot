@@ -1,5 +1,19 @@
 # Release Notes
 
+### 2.6.0
+
+#### Breaking Changes
+
+- Update to the UI extension required for new features.
+
+#### Features
+
+- Added ability to colored squares over the board with a new `SHAPE` socket event.
+- Added a script that takes 8x8 pixel art images and turns it into an object that can be passed to the `SHAPE` event.
+- Added a `!shape` owner command to send the pixel art to the board. Can be used in Twitch rewards or by the owner.
+- Added a script to quickly resize images for the custom rewards icon.
+- Lots of package updates.
+
 ### 2.5.0
 
 #### Features

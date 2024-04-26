@@ -24,6 +24,7 @@ const MESSAGE_TYPE = {
   OPPONENT_RATING: 'OPP_RATING',
   SERVER_MESSAGE: 'serverMessage',
   THEME: 'THEME',
+  SHAPE: 'SHAPE',
   BOUGHT_SQUARES: 'BOUGHT_SQUARES',
   REFRESH: 'REFRESH'
 };
@@ -57,8 +58,9 @@ socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
   } else if (data.type === MESSAGE_TYPE.CROWN) {
     localStorage.setItem(LOCAL_STORAGE_KEYS.CROWN, data.crown);
     await forceClientsToRefresh();
+  } else if (data.type === MESSAGE_TYPE.SHAPE) {
+    drawShapeOverBoard(data.shape, data.milliseconds);
   } else if (data.type === MESSAGE_TYPE.THEME) {
-    console.log(data.theme);
     localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, data.theme);
     await forceClientsToRefresh();
   } else if (data.type === MESSAGE_TYPE.HIGHLIGHT) {
