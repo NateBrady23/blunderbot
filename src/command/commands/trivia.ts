@@ -38,6 +38,10 @@ async function showQuestion(
     commandState.trivia.started = false;
     return;
   }
+
+  const { timeLimit, question, closestTo } =
+    services.configV2Service.get().trivia[commandState.trivia.round];
+
   await ctx.botSpeak('Next question in 3...');
   await sleep(2000);
   await ctx.botSpeak('2...');
@@ -45,13 +49,14 @@ async function showQuestion(
   await ctx.botSpeak('1...');
   await sleep(2000);
   commandState.trivia.roundStartTime = Date.now();
-  await ctx.botSpeak(
-    `Round ${commandState.trivia.round + 1}: ${
-      services.configV2Service.get().trivia[commandState.trivia.round].question
-    }`
-  );
-  const timeLimit =
-    services.configV2Service.get().trivia[commandState.trivia.round].timeLimit;
+  let speakQuestion = `Round ${commandState.trivia.round + 1}: ${question}`;
+  if (closestTo) {
+    speakQuestion += ` Closest wins!`;
+  }
+  if (timeLimit) {
+    speakQuestion += ` ${timeLimit} seconds!`;
+  }
+  await ctx.botSpeak(speakQuestion);
   if (timeLimit) {
     commandState.trivia.triviaTimeout = setTimeout(() => {
       ctx.botSpeak(`Time's up!`);
@@ -168,7 +173,6 @@ const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
-    console.log(services.configV2Service.get().trivia);
     const answer = ctx.body?.toLowerCase().trim();
     if (answer === 'start' && ctx.isOwner) {
       if (commandState.trivia.started) {

@@ -3,7 +3,7 @@ body {
 }
 
 #board,
-.brown .is2d cg-board::before {
+.is2d cg-board::before {
   opacity: 40% !important;
   background-size: cover;
   content: '';

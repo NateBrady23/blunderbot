@@ -12,7 +12,12 @@
 - Added a script that takes 8x8 pixel art images and turns it into an object that can be passed to the `SHAPE` event.
 - Added a `!shape` owner command to send the pixel art to the board. Can be used in Twitch rewards or by the owner.
 - Added a script to quickly resize images for the custom rewards icon.
+- Trivia questions now automatically append "Closest wins!" and the number of seconds to guess if either of those options are set.
 - Lots of package updates.
+
+#### Bug Fixes
+
+- Fix board selector css class after lichess UI changes caused the board to lose its opacity.
 
 ### 2.5.0
 
