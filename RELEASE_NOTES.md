@@ -18,6 +18,7 @@
 #### Bug Fixes
 
 - Fix board selector css class after lichess UI changes caused the board to lose its opacity.
+- Fix BlunderbotMenu scrolling.
 
 ### 2.5.0
 
