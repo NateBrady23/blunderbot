@@ -13,12 +13,15 @@
 - Added a `!shape` owner command to send the pixel art to the board. Can be used in Twitch rewards or by the owner.
 - Added a script to quickly resize images for the custom rewards icon.
 - Trivia questions now automatically append "Closest wins!" and the number of seconds to guess if either of those options are set.
+- Trivia now allows multiple correct answers from different users within 3 seconds of the first correct answer. (Except for closest to questions.)
+- Added a new trivia command: `!trivia random` which returns a random user from the leaderboard
 - Lots of package updates.
 
 #### Bug Fixes
 
-- Fix board selector css class after lichess UI changes caused the board to lose its opacity.
-- Fix BlunderbotMenu scrolling.
+- Fixed board selector css class after lichess UI changes caused the board to lose its opacity.
+- Fixed BlunderbotMenu scrolling.
+- Fixed a bug where users were able to enter any username for the `!buy` command via channel redemption.
 
 ### 2.5.0
 

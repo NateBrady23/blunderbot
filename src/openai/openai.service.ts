@@ -206,7 +206,6 @@ export class OpenaiService {
 
       this.savedMessages = [...this.savedMessages, ...messages];
       messages = [...systemMessages, ...this.savedMessages];
-      console.log(messages);
       const completion = await this.openai.chat.completions.create({
         model: this.configV2Service.get().openai.chatModel,
         messages,
