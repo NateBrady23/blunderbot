@@ -1,5 +1,5 @@
 import { Platform } from '../../enums';
-import { sleep } from '../../utils/utils';
+import { getRandomElement, sleep } from '../../utils/utils';
 
 function showLeaderboard(ctx: Context, commandState: CommandState): string {
   if (!Object.keys(commandState.trivia.leaderboard).length) {
@@ -38,6 +38,10 @@ async function showQuestion(
     commandState.trivia.started = false;
     return;
   }
+
+  const { timeLimit, question, closestTo } =
+    services.configV2Service.get().trivia[commandState.trivia.round];
+
   await ctx.botSpeak('Next question in 3...');
   await sleep(2000);
   await ctx.botSpeak('2...');
@@ -45,13 +49,14 @@ async function showQuestion(
   await ctx.botSpeak('1...');
   await sleep(2000);
   commandState.trivia.roundStartTime = Date.now();
-  await ctx.botSpeak(
-    `Round ${commandState.trivia.round + 1}: ${
-      services.configV2Service.get().trivia[commandState.trivia.round].question
-    }`
-  );
-  const timeLimit =
-    services.configV2Service.get().trivia[commandState.trivia.round].timeLimit;
+  let speakQuestion = `Round ${commandState.trivia.round + 1}: ${question}`;
+  if (closestTo) {
+    speakQuestion += ` Closest wins!`;
+  }
+  if (timeLimit) {
+    speakQuestion += ` ${timeLimit} seconds!`;
+  }
+  await ctx.botSpeak(speakQuestion);
   if (timeLimit) {
     commandState.trivia.triviaTimeout = setTimeout(() => {
       ctx.botSpeak(`Time's up!`);
@@ -65,7 +70,6 @@ function selectRoundWinner(
   commandState: CommandState,
   services: CommandServices,
   answer: string,
-  user: string,
   pointsModifier = 1
 ) {
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
@@ -73,36 +77,39 @@ function selectRoundWinner(
     (services.configV2Service.get().trivia[commandState.trivia.round].points ||
       1) * pointsModifier
   );
-  const points =
-    (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
-  commandState.trivia.roundAnswered = true;
-  commandState.trivia.leaderboard[user.toLowerCase()] = points;
-  if (
-    !commandState.trivia.fastestAnswer ||
-    seconds < commandState.trivia.fastestAnswer.seconds
-  ) {
-    commandState.trivia.fastestAnswer = {
-      user,
-      seconds
-    };
+  const users = commandState.trivia.roundWinners;
+  for (const user of users) {
+    const points =
+      (commandState.trivia.leaderboard[user.toLowerCase()] || 0) + roundPoints;
+    commandState.trivia.roundAnswered = true;
+    commandState.trivia.leaderboard[user.toLowerCase()] = points;
+    if (
+      !commandState.trivia.fastestAnswer ||
+      seconds < commandState.trivia.fastestAnswer.seconds
+    ) {
+      commandState.trivia.fastestAnswer = {
+        user,
+        seconds
+      };
+    }
   }
-  // If it's not the first acceptable answer, put it in parens. For instance, if we accept
-  // "franklin", but the first answer is "benjamin franklin", we'll put "franklin" in parens.
-  let finalAnswer =
+
+  const finalAnswer =
     (
       services.configV2Service.get().trivia[commandState.trivia.round]
         .answers as string[]
     )[0] ??
     services.configV2Service.get().trivia[commandState.trivia.round].answers;
-  if (answer !== finalAnswer.toString()) {
-    finalAnswer = `${answer} (${finalAnswer})`;
+
+  let toSpeak = `"${finalAnswer}" is correct! Congrats to @${users[0]}`;
+  if (users.length > 1) {
+    for (let i = 1; i < users.length; i++) {
+      toSpeak += ` and @${users[i]}`;
+    }
   }
-  ctx.botSpeak(
-    `"${finalAnswer}" is correct! @${user} got it right in ${seconds} seconds and earned ${roundPoints} points! They now have ${points} point(s).`
-  );
-  void services.twitchService.ownerRunCommand(
-    `!alert {"${finalAnswer}"} is correct! {@${user}} got it right in {${seconds} seconds} and earned {${roundPoints} points}!`
-  );
+  toSpeak += `. They earned ${roundPoints} points for answering correctly.`;
+  ctx.botSpeak(toSpeak);
+  void services.twitchService.ownerRunCommand(`!alert ${toSpeak}`);
 }
 
 function endRound(
@@ -117,12 +124,14 @@ function endRound(
   }
 
   if (commandState.trivia.closestAnswer && !commandState.trivia.roundAnswered) {
+    commandState.trivia.roundWinners.push(
+      commandState.trivia.closestAnswer.user
+    );
     selectRoundWinner(
       ctx,
       commandState,
       services,
-      commandState.trivia.closestAnswer.answer,
-      commandState.trivia.closestAnswer.user
+      commandState.trivia.closestAnswer.answer
     );
   }
 
@@ -156,6 +165,7 @@ function nextQuestion(
     commandState.trivia.started = false;
   } else {
     commandState.trivia.answeredUsers = [];
+    commandState.trivia.roundWinners = [];
     commandState.trivia.round++;
     commandState.trivia.roundAnswered = false;
     commandState.trivia.roundEnded = false;
@@ -168,7 +178,6 @@ const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
-    console.log(services.configV2Service.get().trivia);
     const answer = ctx.body?.toLowerCase().trim();
     if (answer === 'start' && ctx.isOwner) {
       if (commandState.trivia.started) {
@@ -194,6 +203,13 @@ const command: Command = {
     if (!commandState.trivia.started) {
       void ctx.botSpeak('Trivia has not started yet!');
       return false;
+    }
+
+    if (answer === 'random' && ctx.isOwner) {
+      void ctx.botSpeak(
+        getRandomElement(Object.keys(commandState.trivia.leaderboard))
+      );
+      return true;
     }
 
     if (answer === 'next' && ctx.isOwner) {
@@ -284,12 +300,12 @@ const command: Command = {
           return true;
         }
         if (difference === 0) {
+          commandState.trivia.roundWinners.push(ctx.displayName);
           selectRoundWinner(
             ctx,
             commandState,
             services,
             answer,
-            ctx.displayName,
             // Give double points for getting it exactly right
             1.5
           );
@@ -309,13 +325,20 @@ const command: Command = {
         console.error(e);
       }
       return true;
-    } else if (
+    }
+
+    if (
       (
         services.configV2Service.get().trivia[commandState.trivia.round]
           .answers as string[]
       ).includes(answer)
     ) {
-      selectRoundWinner(ctx, commandState, services, answer, ctx.displayName);
+      commandState.trivia.roundWinners.push(ctx.displayName);
+      if (commandState.trivia.roundWinners.length === 1) {
+        setTimeout(() => {
+          selectRoundWinner(ctx, commandState, services, answer);
+        }, 3000);
+      }
     } else {
       commandState.trivia.answeredUsers.push(ctx.displayName);
     }

@@ -114,6 +114,7 @@ export class CommandService {
         started: false,
         round: 0,
         leaderboard: {},
+        roundWinners: [],
         answeredUsers: []
       },
       spotify: {
@@ -168,7 +169,7 @@ export class CommandService {
     }
 
     if (cmd.requiresLive && !this.commandState.isLive) {
-      ctx.botSpeak(
+      void ctx.botSpeak(
         `${this.configV2Service.get().twitch.ownerUsername} is not live until I SAY HE'S LIVE!`
       );
       return false;

@@ -1,5 +1,28 @@
 # Release Notes
 
+### 2.6.0
+
+#### Breaking Changes
+
+- Update to the UI extension required for new features.
+
+#### Features
+
+- Added ability to colored squares over the board with a new `SHAPE` socket event.
+- Added a script that takes 8x8 pixel art images and turns it into an object that can be passed to the `SHAPE` event.
+- Added a `!shape` owner command to send the pixel art to the board. Can be used in Twitch rewards or by the owner.
+- Added a script to quickly resize images for the custom rewards icon.
+- Trivia questions now automatically append "Closest wins!" and the number of seconds to guess if either of those options are set.
+- Trivia now allows multiple correct answers from different users within 3 seconds of the first correct answer. (Except for closest to questions.)
+- Added a new trivia command: `!trivia random` which returns a random user from the leaderboard
+- Lots of package updates.
+
+#### Bug Fixes
+
+- Fixed board selector css class after lichess UI changes caused the board to lose its opacity.
+- Fixed BlunderbotMenu scrolling.
+- Fixed a bug where users were able to enter any username for the `!buy` command via channel redemption.
+
 ### 2.5.0
 
 #### Features

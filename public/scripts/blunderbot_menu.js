@@ -6,7 +6,7 @@ async function blunderBotMenu() {
   let section = document.createElement('section');
   section.innerHTML = `
     <a href="#">Blunderbot23</a>
-    <div role="group" class="blunderbot-group" style="width: 500px; margin-left: -200px;">
+    <div role="group" class="blunderbot-group" style="width: 500px; margin-left: -200px; overflow: auto; height: 100vh;">
       <a href="https://lichess.org/team/bradys-blunder-buddies/pm-all">Message Team</a>
       <a href="https://dashboard.twitch.tv/u/natebrady23/viewer-rewards/channel-points/rewards" target="_blank">Manage Rewards</a>
       <a href="#" class="reset-bought-squares">Reset Bought Squares</a>
@@ -32,6 +32,19 @@ async function blunderBotMenu() {
       <hr style="margin: 0;"/>
       <a href="#" class="send-command" data-command="!queue list">!queue</a>
       <a href="#" class="send-command" data-command="!queue pop">!queue pop</a>
+      <hr style="margin: 0;"/>
+      <a href="#" class="send-command" data-command="!live">
+         Start Stream
+      </a>
+      <a href="#" class="end-stream">
+         End Stream
+      </a>
+      <a href="#" class="send-command" data-command="!autochat on">
+         Autochat On
+      </a>
+      <a href="#" class="send-command" data-command="!autochat off">
+         Autochat off
+      </a>
       <hr style="margin: 0;"/>
       <a href="#" style="display: block">King Faces:</a>
       ${kings
@@ -61,22 +74,6 @@ async function blunderBotMenu() {
         })
         .join('')}
        <img class="send-command" style="width: 20px; margin-bottom: 25px;" data-command="!crown reset" src="https://localhost/images/other/No_sign.svg" />
-      <hr style="margin: 0;"/>
-      <a href="#" class="send-command" data-command="!live">
-         Start Stream
-      </a>
-      <a href="#" class="end-stream">
-         End Stream
-      </a>
-      <a href="#" class="send-command" data-command="!autochat on">
-         Autochat On
-      </a>
-      <a href="#" class="send-command" data-command="!autochat off">
-         Autochat off
-      </a>
-      <form>
-        <input type="text" id="owner-command" placeholder="!command" />
-      </form>
     </div>
   `;
   document.querySelector('#topnav').appendChild(section);

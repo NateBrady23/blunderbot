@@ -3,7 +3,7 @@ body {
 }
 
 #board,
-.brown .is2d cg-board::before {
+.is2d cg-board::before {
   opacity: 40% !important;
   background-size: cover;
   content: '';
@@ -187,292 +187,352 @@ body {
   box-sizing: border-box;
   line-height: 1;
   white-space: pre-wrap;
-  transform: rotate(-45deg);
   color: navajowhite;
 }
 
+.rotate45 {
+  transform: rotate(-45deg);
+}
+
 .orientation-black .above-board.h1,
-.orientation-white .above-board.a8 {
+.orientation-white .above-board.a8,
+.no-orientation-a8 {
   top: 0;
   left: 0;
 }
 .orientation-black .above-board.g1,
-.orientation-white .above-board.b8 {
+.orientation-white .above-board.b8,
+.no-orientation-b8 {
   top: 0;
   left: 12.5%;
 }
 .orientation-black .above-board.f1,
-.orientation-white .above-board.c8 {
+.orientation-white .above-board.c8,
+.no-orientation-c8 {
   top: 0;
   left: 25%;
 }
 .orientation-black .above-board.e1,
-.orientation-white .above-board.d8 {
+.orientation-white .above-board.d8,
+.no-orientation-d8 {
   top: 0;
   left: 37.5%;
 }
 .orientation-black .above-board.d1,
-.orientation-white .above-board.e8 {
+.orientation-white .above-board.e8,
+.no-orientation-e8 {
   top: 0;
   left: 50%;
 }
 .orientation-black .above-board.c1,
-.orientation-white .above-board.f8 {
+.orientation-white .above-board.f8,
+.no-orientation-f8 {
   top: 0;
   left: 62.5%;
 }
 .orientation-black .above-board.b1,
-.orientation-white .above-board.g8 {
+.orientation-white .above-board.g8,
+.no-orientation-g8 {
   top: 0;
   left: 75%;
 }
 .orientation-black .above-board.a1,
-.orientation-white .above-board.h8 {
+.orientation-white .above-board.h8,
+.no-orientation-h8 {
   top: 0;
   left: 87.5%;
 }
 .orientation-black .above-board.h2,
-.orientation-white .above-board.a7 {
+.orientation-white .above-board.a7,
+.no-orientation-a7 {
   top: 12.5%;
   left: 0;
 }
 .orientation-black .above-board.g2,
-.orientation-white .above-board.b7 {
+.orientation-white .above-board.b7,
+.no-orientation-b7 {
   top: 12.5%;
   left: 12.5%;
 }
 .orientation-black .above-board.f2,
-.orientation-white .above-board.c7 {
+.orientation-white .above-board.c7,
+.no-orientation-c7 {
   top: 12.5%;
   left: 25%;
 }
 .orientation-black .above-board.e2,
-.orientation-white .above-board.d7 {
+.orientation-white .above-board.d7,
+.no-orientation-d7 {
   top: 12.5%;
   left: 37.5%;
 }
 .orientation-black .above-board.d2,
-.orientation-white .above-board.e7 {
+.orientation-white .above-board.e7,
+.no-orientation-e7 {
   top: 12.5%;
   left: 50%;
 }
 .orientation-black .above-board.c2,
-.orientation-white .above-board.f7 {
+.orientation-white .above-board.f7,
+.no-orientation-f7 {
   top: 12.5%;
   left: 62.5%;
 }
 .orientation-black .above-board.b2,
-.orientation-white .above-board.g7 {
+.orientation-white .above-board.g7,
+.no-orientation-g7 {
   top: 12.5%;
   left: 75%;
 }
 .orientation-black .above-board.a2,
-.orientation-white .above-board.h7 {
+.orientation-white .above-board.h7,
+.no-orientation-h7 {
   top: 12.5%;
   left: 87.5%;
 }
 .orientation-black .above-board.h3,
-.orientation-white .above-board.a6 {
+.orientation-white .above-board.a6,
+.no-orientation-a6 {
   top: 25%;
   left: 0;
 }
 .orientation-black .above-board.g3,
-.orientation-white .above-board.b6 {
+.orientation-white .above-board.b6,
+.no-orientation-b6 {
   top: 25%;
   left: 12.5%;
 }
 .orientation-black .above-board.f3,
-.orientation-white .above-board.c6 {
+.orientation-white .above-board.c6,
+.no-orientation-c6 {
   top: 25%;
   left: 25%;
 }
 .orientation-black .above-board.e3,
-.orientation-white .above-board.d6 {
+.orientation-white .above-board.d6,
+.no-orientation-d6 {
   top: 25%;
   left: 37.5%;
 }
 .orientation-black .above-board.d3,
-.orientation-white .above-board.e6 {
+.orientation-white .above-board.e6,
+.no-orientation-e6 {
   top: 25%;
   left: 50%;
 }
 .orientation-black .above-board.c3,
-.orientation-white .above-board.f6 {
+.orientation-white .above-board.f6,
+.no-orientation-f6 {
   top: 25%;
   left: 62.5%;
 }
 .orientation-black .above-board.b3,
-.orientation-white .above-board.g6 {
+.orientation-white .above-board.g6,
+.no-orientation-g6 {
   top: 25%;
   left: 75%;
 }
 .orientation-black .above-board.a3,
-.orientation-white .above-board.h6 {
+.orientation-white .above-board.h6,
+.no-orientation-h6 {
   top: 25%;
   left: 87.5%;
 }
 .orientation-black .above-board.h4,
-.orientation-white .above-board.a5 {
+.orientation-white .above-board.a5,
+.no-orientation-a5 {
   top: 37.5%;
   left: 0;
 }
 .orientation-black .above-board.g4,
-.orientation-white .above-board.b5 {
+.orientation-white .above-board.b5,
+.no-orientation-b5 {
   top: 37.5%;
   left: 12.5%;
 }
 .orientation-black .above-board.f4,
-.orientation-white .above-board.c5 {
+.orientation-white .above-board.c5,
+.no-orientation-c5 {
   top: 37.5%;
   left: 25%;
 }
 .orientation-black .above-board.e4,
-.orientation-white .above-board.d5 {
+.orientation-white .above-board.d5,
+.no-orientation-d5 {
   top: 37.5%;
   left: 37.5%;
 }
 .orientation-black .above-board.d4,
-.orientation-white .above-board.e5 {
+.orientation-white .above-board.e5,
+.no-orientation-e5 {
   top: 37.5%;
   left: 50%;
 }
 .orientation-black .above-board.c4,
-.orientation-white .above-board.f5 {
+.orientation-white .above-board.f5,
+.no-orientation-f5 {
   top: 37.5%;
   left: 62.5%;
 }
 .orientation-black .above-board.b4,
-.orientation-white .above-board.g5 {
+.orientation-white .above-board.g5,
+.no-orientation-g5 {
   top: 37.5%;
   left: 75%;
 }
 .orientation-black .above-board.a4,
-.orientation-white .above-board.h5 {
+.orientation-white .above-board.h5,
+.no-orientation-h5 {
   top: 37.5%;
   left: 87.5%;
 }
 .orientation-black .above-board.h5,
-.orientation-white .above-board.a4 {
+.orientation-white .above-board.a4,
+.no-orientation-a4 {
   top: 50%;
   left: 0;
 }
 .orientation-black .above-board.g5,
-.orientation-white .above-board.b4 {
+.orientation-white .above-board.b4,
+.no-orientation-b4 {
   top: 50%;
   left: 12.5%;
 }
 .orientation-black .above-board.f5,
-.orientation-white .above-board.c4 {
+.orientation-white .above-board.c4,
+.no-orientation-c4 {
   top: 50%;
   left: 25%;
 }
 .orientation-black .above-board.e5,
-.orientation-white .above-board.d4 {
+.orientation-white .above-board.d4,
+.no-orientation-d4 {
   top: 50%;
   left: 37.5%;
 }
 .orientation-black .above-board.d5,
-.orientation-white .above-board.e4 {
+.orientation-white .above-board.e4,
+.no-orientation-e4 {
   top: 50%;
   left: 50%;
 }
 .orientation-black .above-board.c5,
-.orientation-white .above-board.f4 {
+.orientation-white .above-board.f4,
+.no-orientation-f4 {
   top: 50%;
   left: 62.5%;
 }
 .orientation-black .above-board.b5,
-.orientation-white .above-board.g4 {
+.orientation-white .above-board.g4,
+.no-orientation-g4 {
   top: 50%;
   left: 75%;
 }
 .orientation-black .above-board.a5,
-.orientation-white .above-board.h4 {
+.orientation-white .above-board.h4,
+.no-orientation-h4 {
   top: 50%;
   left: 87.5%;
 }
 .orientation-black .above-board.h6,
-.orientation-white .above-board.a3 {
+.orientation-white .above-board.a3,
+.no-orientation-a3 {
   top: 62.5%;
   left: 0;
 }
 .orientation-black .above-board.g6,
-.orientation-white .above-board.b3 {
+.orientation-white .above-board.b3,
+.no-orientation-b3 {
   top: 62.5%;
   left: 12.5%;
 }
 .orientation-black .above-board.f6,
-.orientation-white .above-board.c3 {
+.orientation-white .above-board.c3,
+.no-orientation-c3 {
   top: 62.5%;
   left: 25%;
 }
 .orientation-black .above-board.e6,
-.orientation-white .above-board.d3 {
+.orientation-white .above-board.d3,
+.no-orientation-d3 {
   top: 62.5%;
   left: 37.5%;
 }
 .orientation-black .above-board.d6,
-.orientation-white .above-board.e3 {
+.orientation-white .above-board.e3,
+.no-orientation-e3 {
   top: 62.5%;
   left: 50%;
 }
 .orientation-black .above-board.c6,
-.orientation-white .above-board.f3 {
+.orientation-white .above-board.f3,
+.no-orientation-f3 {
   top: 62.5%;
   left: 62.5%;
 }
 .orientation-black .above-board.b6,
-.orientation-white .above-board.g3 {
+.orientation-white .above-board.g3,
+.no-orientation-g3 {
   top: 62.5%;
   left: 75%;
 }
 .orientation-black .above-board.a6,
-.orientation-white .above-board.h3 {
+.orientation-white .above-board.h3,
+.no-orientation-h3 {
   top: 62.5%;
   left: 87.5%;
 }
 .orientation-black .above-board.h7,
-.orientation-white .above-board.a2 {
+.orientation-white .above-board.a2,
+.no-orientation-a2 {
   top: 75%;
   left: 0;
 }
 .orientation-black .above-board.g7,
-.orientation-white .above-board.b2 {
+.orientation-white .above-board.b2,
+.no-orientation-b2 {
   top: 75%;
   left: 12.5%;
 }
 .orientation-black .above-board.f7,
-.orientation-white .above-board.c2 {
+.orientation-white .above-board.c2,
+.no-orientation-c2 {
   top: 75%;
   left: 25%;
 }
 .orientation-black .above-board.e7,
-.orientation-white .above-board.d2 {
+.orientation-white .above-board.d2,
+.no-orientation-d2 {
   top: 75%;
   left: 37.5%;
 }
 .orientation-black .above-board.d7,
-.orientation-white .above-board.e2 {
+.orientation-white .above-board.e2,
+.no-orientation-e2 {
   top: 75%;
   left: 50%;
 }
 .orientation-black .above-board.c7,
-.orientation-white .above-board.f2 {
+.orientation-white .above-board.f2,
+.no-orientation-f2 {
   top: 75%;
   left: 62.5%;
 }
 .orientation-black .above-board.b7,
-.orientation-white .above-board.g2 {
+.orientation-white .above-board.g2,
+.no-orientation-g2 {
   top: 75%;
   left: 75%;
 }
 .orientation-black .above-board.a7,
-.orientation-white .above-board.h2 {
+.orientation-white .above-board.h2,
+.no-orientation-h2 {
   top: 75%;
   left: 87.5%;
 }
 .orientation-black .above-board.h8,
-.orientation-white .above-board.a1 {
+.orientation-white .above-board.a1,
+.no-orientation-a1 {
   top: 87.5%;
   left: 0;
 }
@@ -482,32 +542,38 @@ body {
   left: 12.5%;
 }
 .orientation-black .above-board.f8,
-.orientation-white .above-board.c1 {
+.orientation-white .above-board.c1,
+.no-orientation-c1 {
   top: 87.5%;
   left: 25%;
 }
 .orientation-black .above-board.e8,
-.orientation-white .above-board.d1 {
+.orientation-white .above-board.d1,
+.no-orientation-d1 {
   top: 87.5%;
   left: 37.5%;
 }
 .orientation-black .above-board.d8,
-.orientation-white .above-board.e1 {
+.orientation-white .above-board.e1,
+.no-orientation-e1 {
   top: 87.5%;
   left: 50%;
 }
 .orientation-black .above-board.c8,
-.orientation-white .above-board.f1 {
+.orientation-white .above-board.f1,
+.no-orientation-f1 {
   top: 87.5%;
   left: 62.5%;
 }
 .orientation-black .above-board.b8,
-.orientation-white .above-board.g1 {
+.orientation-white .above-board.g1,
+.no-orientation-g1 {
   top: 87.5%;
   left: 75%;
 }
 .orientation-black .above-board.a8,
-.orientation-white .above-board.h1 {
+.orientation-white .above-board.h1,
+.no-orientation-h1 {
   top: 87.5%;
   left: 87.5%;
 }

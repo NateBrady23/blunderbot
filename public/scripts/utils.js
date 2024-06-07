@@ -226,6 +226,37 @@ async function setKingStyle() {
   });
 }
 
+// shape is a key color mapping
+shapeTimeout = null;
+async function drawShapeOverBoard(shape, milliseconds = 5000) {
+  clearTimeout(shapeTimeout);
+  removeShapeOverBoard();
+  const boardNode = document.querySelector('cg-board');
+  if (!boardNode) return;
+  while (Object.keys(shape).length) {
+    // get a random element from the object
+    const key =
+      Object.keys(shape)[Math.floor(Math.random() * Object.keys(shape).length)];
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="above-board  no-orientation-${key} shape-over-board" style="background: ${shape[key]}"></div>`;
+    boardNode.append(div);
+    // remove the element from the object
+    delete shape[key];
+    await sleep(100);
+  }
+  shapeTimeout = setTimeout(() => {
+    removeShapeOverBoard();
+  }, milliseconds);
+  // Redraw the bought squares on top of the shape
+  drawBoughtSquares();
+}
+
+function removeShapeOverBoard() {
+  document.querySelectorAll('.shape-over-board').forEach((node) => {
+    node.remove();
+  });
+}
+
 function drawBoughtSquares() {
   try {
     const boardNode = document.querySelector('cg-board');
@@ -238,8 +269,8 @@ function drawBoughtSquares() {
       removeBoughtSquares(false);
       Object.keys(boughtSquares).forEach((key) => {
         const div = document.createElement('div');
-        div.innerHTML = `<div class="above-board ${key} bought-square">${boughtSquares[key]}</div>`;
-        boardNode.prepend(div);
+        div.innerHTML = `<div class="above-board rotate45 ${key} bought-square">${boughtSquares[key]}</div>`;
+        boardNode.append(div);
       });
     }
   } catch (e) {

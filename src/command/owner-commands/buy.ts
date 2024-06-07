@@ -23,7 +23,7 @@ const command: Command = {
       square = ctx.args[0]?.trim().substring(0, 2).toLowerCase();
     }
 
-    const user = ctx.args[1]?.trim();
+    const user = ctx.onBehalfOf || ctx.args[1]?.trim();
 
     if (!square || !user) {
       console.log('No square or user provided for !buy command!');

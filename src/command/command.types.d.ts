@@ -103,6 +103,7 @@ declare global {
       round: number;
       leaderboard: { [key: string]: number };
       answeredUsers: string[];
+      roundWinners: string[];
       roundAnswered?: boolean;
       roundEnded?: boolean;
       triviaTimeout?: NodeJS.Timeout;
