@@ -1,5 +1,16 @@
 # Release Notes
 
+### 2.7.0
+
+#### Features
+
+- Added a script to make galleries out of kings, opponent kings, etc.
+- Added a config option for entering the URLs of the those galleries and to use that link if it exists instead of outputting all the names in twitch.
+
+#### Bug Fixes
+
+- Fixed a bug with adding `@` in a user's name with `!shoutout` command.
+
 ### 2.6.0
 
 #### Breaking Changes

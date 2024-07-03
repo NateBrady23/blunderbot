@@ -9,7 +9,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx: Context, { services }) => {
     return queue.enqueue(async function () {
-      const user = ctx.args[0];
+      const user = ctx.args[0]?.replace('@', '');
       if (!user) {
         void ctx.botSpeak('Please provide a twitch username to shoutout');
         return;

@@ -62,6 +62,8 @@ interface UserTwitchConfigV2 {
   maxMessageLength?: number;
   eventWebsocketUrl: string;
   eventSubscriptionUrl: string;
+  kingsGalleryUrl: string;
+  opponentsGalleryUrl: string;
 }
 
 interface UserLichessConfigV2 {
