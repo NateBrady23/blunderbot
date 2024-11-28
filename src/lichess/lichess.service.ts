@@ -18,10 +18,10 @@ export class LichessService {
     const res = await this.apiCall(`https://lichess.org/api/user/${username}`);
     const json = await res.json();
     const maxGameRating = Math.max(
-      json.perfs.bullet.rating,
-      json.perfs.blitz.rating,
-      json.perfs.rapid.rating,
-      json.perfs.classical.rating
+      json.perfs.bullet?.rating || 0,
+      json.perfs.blitz?.rating || 0,
+      json.perfs.rapid?.rating || 0,
+      json.perfs.classical?.rating || 0
     );
 
     // If the user's puzzle rating is more than 1000 points higher than their highest game rating, something fishy is going on
