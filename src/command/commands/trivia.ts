@@ -337,7 +337,7 @@ const command: Command = {
       if (commandState.trivia.roundWinners.length === 1) {
         setTimeout(() => {
           selectRoundWinner(ctx, commandState, services, answer);
-        }, 3000);
+        }, 2000);
       }
     } else {
       commandState.trivia.answeredUsers.push(ctx.displayName);

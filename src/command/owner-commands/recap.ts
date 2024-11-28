@@ -12,9 +12,15 @@ const command: Command = {
       return false;
     }
     let res = await fetch(
-      `https://lichess.org/api/team/bradys-blunder-buddies/arena?max=1`
+      `https://lichess.org/api/team/bradys-blunder-buddies/arena?max=2`
     );
-    const arena = await res.json();
+    const arenas = await res.text();
+
+    let arena = arenas
+      .trim()
+      .split('\n')
+      .map((a) => JSON.parse(a))
+      .find((arena) => arena.winner);
 
     res = await fetch(`https://lichess.org/api/tournament/${arena.id}`);
     const tournament = await res.json();

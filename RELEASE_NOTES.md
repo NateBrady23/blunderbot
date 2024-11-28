@@ -1,5 +1,19 @@
 # Release Notes
 
+### 2.7.0
+
+#### Features
+
+- Added a script to make galleries out of kings, opponent kings, etc.
+- Added a config option for entering the URLs of the those galleries and to use that link if it exists instead of outputting all the names in twitch.
+- `!accept` now returns a reason for not accepting a user into the team.
+- Rejecting users from `!accept` when puzzle rating is > 1000 over their max game rating or if their account is less than 30 days old.
+
+#### Bug Fixes
+
+- Fixed a bug with adding `@` in a user's name with `!shoutout` command.
+- Fixed an issue where the Spotify service now also returns 200 when a song is found.
+
 ### 2.6.0
 
 #### Breaking Changes

@@ -186,11 +186,11 @@ export class SpotifyService {
           }
         }
       );
-      if (res.status === 204) {
+      if (res.status === 200 || res.status === 204) {
         this.logger.log('Track added to Spotify queue');
         return true;
       } else {
-        this.logger.error(await res.json());
+        this.logger.error(res);
       }
     } catch (e) {
       this.logger.error(e);

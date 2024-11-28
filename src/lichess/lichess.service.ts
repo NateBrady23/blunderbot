@@ -12,10 +12,47 @@ export class LichessService {
     //
   }
 
-  async isGoodUser(username: string): Promise<boolean> {
+  async isGoodUser(
+    username: string
+  ): Promise<{ isValid: boolean; reason?: string }> {
     const res = await this.apiCall(`https://lichess.org/api/user/${username}`);
     const json = await res.json();
-    return !json.closed && !json.disabled && !json.tosViolation;
+    const maxGameRating = Math.max(
+      json.perfs.bullet.rating,
+      json.perfs.blitz.rating,
+      json.perfs.rapid.rating,
+      json.perfs.classical.rating
+    );
+
+    // If the user's puzzle rating is more than 1000 points higher than their highest game rating, something fishy is going on
+    if (maxGameRating + 1000 < json.perfs.puzzle.rating) {
+      return {
+        isValid: false,
+        reason: 'Puzzle rating is too high compared to game ratings.'
+      };
+    }
+
+    // If json.createdAt (unix epoch) is less than 1 month ago, something fishy is going on
+    if (json.createdAt > Date.now() - 2592000000) {
+      return {
+        isValid: false,
+        reason: 'User account is less than 30 days old.'
+      };
+    }
+
+    if (json.closed) {
+      return { isValid: false, reason: 'User account is closed.' };
+    }
+
+    if (json.disabled) {
+      return { isValid: false, reason: 'User account is disabled.' };
+    }
+
+    if (json.tosViolation) {
+      return { isValid: false, reason: 'User has violated terms of service.' };
+    }
+
+    return { isValid: true };
   }
 
   async getCurrentGame(

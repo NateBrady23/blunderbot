@@ -16,9 +16,15 @@ const command: Command = {
       !kings.includes(king) ||
       (!ctx.isOwner && king.startsWith('secret_'))
     ) {
-      void ctx.botSpeak(
-        `The following opponent kings are available: ${filteredKings.join(', ')}`
-      );
+      const kingsUrl =
+        services.configV2Service.get().twitch.opponentsGalleryUrl;
+      if (kingsUrl) {
+        void ctx.botSpeak(`Check out the gallery at ${kingsUrl}`);
+      } else {
+        void ctx.botSpeak(
+          `The following opponents are available: ${filteredKings.join(', ')}`
+        );
+      }
       return false;
     }
 

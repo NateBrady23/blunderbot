@@ -18,7 +18,7 @@ const command: Command = {
         const user = request.user.id;
         const acceptUser = await services.lichessService.isGoodUser(user);
 
-        if (acceptUser) {
+        if (acceptUser.isValid) {
           const res = await services.lichessService.apiCall(
             `https://lichess.org/api/team/${team}/request/${user}/accept`,
             {
@@ -41,7 +41,7 @@ const command: Command = {
           const json = await res.json();
           if (json.ok) {
             void ctx.botSpeak(
-              `Could not accept ${user}'s request to join at this time.`
+              `Could not accept ${user}'s request to join at this time. ${acceptUser.reason}`
             );
           }
         }
