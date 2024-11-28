@@ -103,7 +103,7 @@ async function setCustomStyle() {
 
   styleTag.innerHTML += `
     #board,
-    .brown .is2d cg-board::before {
+    .is2d cg-board::before {
       background-image: ${
         themeConfig[theme]?.boardExists
           ? `url('https://localhost/images/themes/${theme}/board.png') !important`

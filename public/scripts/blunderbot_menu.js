@@ -1,7 +1,11 @@
 async function blunderBotMenu() {
+  console.log('fetching kings for blunderbot menu');
   const kings = await fetchJson('https://localhost/twitch/kings');
+  console.log('fetching opps for blunderbot menu');
   const opps = await fetchJson('https://localhost/twitch/opps');
+  console.log('fetching crowns for blunderbot menu');
   const crowns = await fetchJson('https://localhost/twitch/crowns');
+  console.log('items fetched');
 
   let section = document.createElement('section');
   section.innerHTML = `
