@@ -1,5 +1,11 @@
 # Release Notes
 
+### 2.7.1
+
+#### Bug Fixes
+
+- Fix potential undefined errors in lichess performance ratings during good user checks
+
 ### 2.7.0
 
 #### Features
