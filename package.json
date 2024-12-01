@@ -1,6 +1,6 @@
 {
   "name": "blunderot",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "description": "BlunderBot came here to drink milk and blunder and he's all out of milk.",
   "author": "Nate Brady <https://twitch.tv/NateBrady23>",
   "license": "MIT",
@@ -21,6 +21,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@atproto/api": "^0.13.18",
     "@nestjs/common": "^10.3.8",
     "@nestjs/core": "^10.3.8",
     "@nestjs/platform-express": "^10.3.8",
