@@ -8,13 +8,13 @@ import { DiscordModule } from './discord/discord.module';
 import { OpenaiModule } from './openai/openai.module';
 import { AppGateway } from './app.gateway';
 import { BrowserModule } from './browser/browser.module';
-import { TwitterModule } from './twitter/twitter.module';
 import { SpotifyModule } from './spotify/spotify.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, EntitySchema } from 'typeorm';
 import * as TypeOrmNamingStrategy from 'typeorm-naming-strategies';
 import { CONFIG } from './config/config.service';
 import { ConfigV2Module } from './configV2/configV2.module';
+import { BlueskyModule } from './bluesky/bluesky.module';
 
 const imports = [
   BrowserModule,
@@ -23,7 +23,7 @@ const imports = [
   OpenaiModule,
   SpotifyModule,
   TwitchModule,
-  TwitterModule,
+  BlueskyModule,
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public')
   })

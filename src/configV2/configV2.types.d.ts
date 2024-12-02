@@ -105,14 +105,12 @@ interface UserSpotifyConfigV2 {
   allowExplicit: boolean;
 }
 
-interface UserTwitterConfigV2 {
+interface UserBlueskyConfigV2 {
   enabled: boolean;
-  apiKey: string;
-  apiSecret: string;
-  accessToken: string;
-  accessSecret: string;
-  tweetImagesEnabled: boolean;
-  tweetHashtags: string;
+  username: string;
+  password: string;
+  imagesEnabled: boolean;
+  hashtags: string;
   announceLive: boolean;
 }
 
@@ -205,7 +203,7 @@ interface UserConfigV2 {
   discord: UserDiscordConfigV2;
   openai: UserOpenAiConfigV2;
   spotify: UserSpotifyConfigV2;
-  twitter: UserTwitterConfigV2;
+  bluesky: UserBlueskyConfigV2;
   youtube: UserYoutubeConfigV2;
   trivia: UserTriviaConfigV2;
   misc: UserMiscConfigV2;
@@ -229,6 +227,6 @@ type ConfigV2Keys =
   | 'openai'
   | 'discord'
   | 'spotify'
-  | 'twitter'
+  | 'bluesky'
   | 'trivia'
   | 'youtube';

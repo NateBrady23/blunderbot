@@ -7,10 +7,10 @@ import { GiphyModule } from '../giphy/giphy.module';
 import { LichessModule } from '../lichess/lichess.module';
 import { AppModule } from '../app.module';
 import { BrowserModule } from '../browser/browser.module';
-import { TwitterModule } from '../twitter/twitter.module';
 import { SpotifyModule } from '../spotify/spotify.module';
 import { EntityModule } from '../models/entity.module';
 import { ConfigV2Module } from '../configV2/configV2.module';
+import { BlueskyModule } from 'src/bluesky/bluesky.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { ConfigV2Module } from '../configV2/configV2.module';
     forwardRef(() => ConfigV2Module),
     forwardRef(() => DiscordModule),
     forwardRef(() => TwitchModule),
-    forwardRef(() => TwitterModule),
+    forwardRef(() => BlueskyModule),
     EntityModule,
     GiphyModule,
     LichessModule,

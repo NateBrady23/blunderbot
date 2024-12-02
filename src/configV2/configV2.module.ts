@@ -6,12 +6,12 @@ import { TwitchModule } from '../twitch/twitch.module';
 import { AppModule } from '../app.module';
 import { BrowserModule } from '../browser/browser.module';
 import { DiscordModule } from '../discord/discord.module';
-import { TwitterModule } from '../twitter/twitter.module';
 import { GiphyModule } from '../giphy/giphy.module';
 import { LichessModule } from '../lichess/lichess.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { SpotifyModule } from '../spotify/spotify.module';
 import { CommandModule } from '../command/command.module';
+import { BlueskyModule } from 'src/bluesky/bluesky.module';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { CommandModule } from '../command/command.module';
     forwardRef(() => OpenaiModule),
     forwardRef(() => SpotifyModule),
     forwardRef(() => TwitchModule),
-    forwardRef(() => TwitterModule)
+    forwardRef(() => BlueskyModule)
   ],
   controllers: [ConfigV2Controller],
   providers: [ConfigV2Service],

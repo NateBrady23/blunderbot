@@ -16,9 +16,9 @@ const command: Command = {
     let sendToDiscord =
       services.configV2Service.get().discord?.enabled &&
       !!services.configV2Service.get().discord?.announcementChannelId;
-    let sendToTwitter =
-      services.configV2Service.get().twitter?.enabled &&
-      services.configV2Service.get().twitter?.announceLive;
+    let sendToBluesky =
+      services.configV2Service.get().bluesky?.enabled &&
+      services.configV2Service.get().bluesky?.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -29,12 +29,12 @@ const command: Command = {
       sendToDiscord = false;
     }
 
-    if (msg.toLowerCase().includes('notwitter')) {
-      msg = msg.replace(/notwitter/gi, '');
-      sendToTwitter = false;
+    if (msg.toLowerCase().includes('nobluesky')) {
+      msg = msg.replace(/nobluesky/gi, '');
+      sendToBluesky = false;
     }
 
-    if (!sendToDiscord && !sendToTwitter) {
+    if (!sendToDiscord && !sendToBluesky) {
       return true;
     }
 
@@ -58,8 +58,8 @@ const command: Command = {
       );
     }
 
-    if (sendToTwitter) {
-      void services.twitterService.postTweet(
+    if (sendToBluesky) {
+      void services.blueskyService.post(
         `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }

@@ -5,7 +5,7 @@ export interface ConfigInterface {
   discord: JSON;
   openai: JSON;
   spotify: JSON;
-  twitter: JSON;
+  bluesky: JSON;
   trivia: JSON;
   youtube: JSON;
   misc: JSON;
@@ -18,7 +18,7 @@ export interface ConfigCreateInput {
   discord?: JSON;
   openai?: JSON;
   spotify?: JSON;
-  twitter?: JSON;
+  bluesky?: JSON;
   trivia?: JSON;
   youtube?: JSON;
   misc?: JSON;

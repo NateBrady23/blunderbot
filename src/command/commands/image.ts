@@ -20,9 +20,9 @@ const command: Command = {
     let sendToDiscord =
       services.configV2Service.get().discord?.enabled &&
       !!services.configV2Service.get().discord?.galleryChannelId;
-    let sendToTwitter =
-      services.configV2Service.get().twitter?.enabled &&
-      services.configV2Service.get().twitter.tweetImagesEnabled;
+    let sendToBluesky =
+      services.configV2Service.get().bluesky?.enabled &&
+      services.configV2Service.get().bluesky?.imagesEnabled;
 
     const user = ctx.onBehalfOf || ctx.displayName;
 
@@ -38,9 +38,9 @@ const command: Command = {
       prompt = prompt.replace(/nodiscord/gi, '');
     }
 
-    if (prompt.toLowerCase().includes('notwitter')) {
-      sendToTwitter = false;
-      prompt = prompt.replace(/notwitter/gi, '');
+    if (prompt.toLowerCase().includes('nobluesky')) {
+      sendToBluesky = false;
+      prompt = prompt.replace(/nobluesky/gi, '');
     }
 
     let url = '';
@@ -71,7 +71,7 @@ const command: Command = {
     const res = await fetch(url);
     const buffer = Buffer.from(await res.arrayBuffer());
 
-    // If this is a command run by the owner, don't send to Discord or Twitter
+    // If this is a command run by the owner, don't send to Discord or Bluesky
     // Unless it was onBehalf of a user (most common case: Channel Redemption)
     if (ctx.isOwnerRun && !ctx.onBehalfOf) {
       return true;
@@ -84,12 +84,10 @@ const command: Command = {
       );
     }
 
-    if (sendToTwitter) {
-      const hashtags =
-        services.configV2Service.get().twitter.tweetHashtags || '';
-      void services.twitterService.postImage(
+    if (sendToBluesky) {
+      void services.blueskyService.postImage(
         buffer,
-        `${user} on Twitch used "!image ${prompt}" ${hashtags}`
+        `${user} on Twitch used "!image ${prompt}"`
       );
     }
 

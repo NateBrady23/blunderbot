@@ -37,7 +37,7 @@ export class Config extends BaseEntity implements ConfigInterface {
   @Column({
     type: 'json'
   })
-  twitter: JSON;
+  bluesky: JSON;
 
   @Column({
     type: 'json'

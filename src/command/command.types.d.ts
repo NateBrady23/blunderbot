@@ -6,7 +6,7 @@ import { GiphyService } from '../giphy/giphy.service';
 import { DiscordService } from '../discord/discord.service';
 import { BrowserService } from '../browser/browser.service';
 import { AppGateway } from '../app.gateway';
-import { TwitterService } from '../twitter/twitter.service';
+import { BlueskyService } from '../bluesky/bluesky.service';
 import { CommandService } from './command.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
@@ -49,6 +49,7 @@ declare global {
   interface CommandServices {
     appGateway: AppGateway;
     browserService: BrowserService;
+    blueskyService: BlueskyService;
     configV2Service: ConfigV2Service;
     commandService: CommandService;
     discordService: DiscordService;
@@ -60,7 +61,6 @@ declare global {
     twitchGateway: TwitchGateway;
     twitchPubSub: TwitchPubSub;
     twitchService: TwitchService;
-    twitterService: TwitterService;
     storedCommandEntityService: StoredCommandEntityService;
   }
 
