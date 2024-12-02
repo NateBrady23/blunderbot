@@ -5,7 +5,6 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 @Injectable()
 export class BlueskyService {
   private logger: Logger = new Logger(BlueskyService.name);
-
   private client: AtpAgent;
 
   constructor(
@@ -13,14 +12,22 @@ export class BlueskyService {
     private readonly configV2Service: ConfigV2Service
   ) {}
 
-  init() {
-    this.client = new AtpAgent({
-      service: 'https://bsky.social'
-    });
-    this.client.login({
-      identifier: this.configV2Service.get().bluesky.username,
-      password: this.configV2Service.get().bluesky.password
-    });
+  async init() {
+    try {
+      this.client = new AtpAgent({
+        service: 'https://bsky.social'
+      });
+
+      await this.client.login({
+        identifier: this.configV2Service.get().bluesky.username,
+        password: this.configV2Service.get().bluesky.password
+      });
+
+      this.logger.log('Successfully connected to Bluesky');
+    } catch (e) {
+      this.logger.error('Failed to initialize Bluesky client:');
+      this.logger.error(e);
+    }
   }
 
   async postImage(imageBuffer: Buffer, text: string) {
