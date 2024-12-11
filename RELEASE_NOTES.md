@@ -1,5 +1,15 @@
 # Release Notes
 
+### 2.8.0
+
+#### Features
+
+- Added Bluesky support.
+
+#### Breaking Changes
+
+- Removed Twitter support.
+
 ### 2.7.1
 
 #### Bug Fixes

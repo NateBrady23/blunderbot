@@ -26,8 +26,8 @@ const command: Command = {
       services.openaiService.init();
     }
 
-    if (service === 'twitter' && config.twitter?.enabled) {
-      services.twitterService.init();
+    if (service === 'bluesky' && config.bluesky?.enabled) {
+      services.blueskyService.init();
     }
 
     return true;

@@ -9,7 +9,7 @@ import { TwitchService } from '../twitch/twitch.service';
 import { readdirSync } from 'fs';
 import { Platform } from '../enums';
 import { removeSymbols } from '../utils/utils';
-import { TwitterService } from '../twitter/twitter.service';
+import { BlueskyService } from '../bluesky/bluesky.service';
 import { BrowserService } from '../browser/browser.service';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
@@ -72,8 +72,8 @@ export class ConfigV2Service {
     private readonly twitchPubSub: TwitchPubSub,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService,
-    @Inject(forwardRef(() => TwitterService))
-    private readonly twitterService: TwitterService
+    @Inject(forwardRef(() => BlueskyService))
+    private readonly blueskyService: BlueskyService
   ) {
     this.get = this.get.bind(this);
     void this.init();
@@ -99,8 +99,8 @@ export class ConfigV2Service {
       this.openaiService.init();
     }
 
-    if (config.twitter?.enabled) {
-      this.twitterService.init();
+    if (config.bluesky?.enabled) {
+      this.blueskyService.init();
     }
 
     this.browserService.init();

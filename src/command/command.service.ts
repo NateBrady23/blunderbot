@@ -8,7 +8,7 @@ import { LichessService } from '../lichess/lichess.service';
 import { AppGateway } from '../app.gateway';
 import { BrowserService } from '../browser/browser.service';
 import { CONFIG } from '../config/config.service';
-import { TwitterService } from '../twitter/twitter.service';
+import { BlueskyService } from '../bluesky/bluesky.service';
 import { SpotifyService } from '../spotify/spotify.service';
 import { Platform } from '../enums';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
@@ -37,8 +37,8 @@ export class CommandService {
     private readonly twitchPubSub: TwitchPubSub,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: TwitchService,
-    @Inject(forwardRef(() => TwitterService))
-    private readonly twitterService: TwitterService,
+    @Inject(forwardRef(() => BlueskyService))
+    private readonly blueskyService: BlueskyService,
     @Inject(forwardRef(() => DiscordService))
     private readonly discordService: DiscordService,
     @Inject(forwardRef(() => GiphyService))
@@ -62,7 +62,7 @@ export class CommandService {
       twitchGateway: this.twitchGateway,
       twitchPubSub: this.twitchPubSub,
       twitchService: this.twitchService,
-      twitterService: this.twitterService,
+      blueskyService: this.blueskyService,
       openaiService: this.openaiService,
       spotifyService: this.spotifyService,
       lichessService: this.lichessService,
