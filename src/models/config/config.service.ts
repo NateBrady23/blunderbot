@@ -5,50 +5,52 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Config } from './config.entity';
-import { ConfigCreateInput } from './config.types';
 
 @Injectable()
 export class ConfigEntityService {
-  constructor(
+  public constructor(
     @InjectRepository(Config)
     private ConfigRepository: Repository<Config>
   ) {}
 
-  async create(input: ConfigCreateInput): Promise<Config> {
+  public async create(input: ConfigCreateInput): Promise<Config> {
     const Config: Config = this.ConfigRepository.create(input);
     await this.ConfigRepository.insert(Config);
     return Config;
   }
 
-  async latest(): Promise<Config> {
+  public async latest(): Promise<Config> {
     return this.ConfigRepository.findOne({ where: {}, order: { id: 'DESC' } });
   }
 
-  async save(Config: Config): Promise<Config> {
+  public async save(Config: Config): Promise<Config> {
     return this.ConfigRepository.save(Config);
   }
 
-  async remove(Config: Config): Promise<void> {
+  public async remove(Config: Config): Promise<void> {
     await this.ConfigRepository.remove(Config);
   }
 
-  async softDelete(Config: Config): Promise<void> {
+  public async softDelete(Config: Config): Promise<void> {
     Config.deletedAt = new Date();
     await this.ConfigRepository.save(Config);
   }
 
-  async findById(id: string, failIfNotFound?: boolean): Promise<Config> {
+  public async findById(id: string, failIfNotFound?: boolean): Promise<Config> {
     return this.find(
       {
-        where: { id }
+        where: { id: Number(id) }
       },
       failIfNotFound
     );
   }
 
-  private async find(options: any, failIfNotFound: any): Promise<Config> {
+  private async find(
+    options: FindOneOptions<Config>,
+    failIfNotFound: boolean
+  ): Promise<Config> {
     if (failIfNotFound) {
       return this.ConfigRepository.findOneOrFail(options);
     }

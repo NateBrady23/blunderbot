@@ -6,7 +6,7 @@
  * {@link ArchivedEntityNotUpdatableError}.
  */
 export class EntityNotUpdatableError extends Error {
-  constructor(message: string) {
+  public constructor(message: string) {
     super(message);
   }
 }
@@ -18,7 +18,7 @@ export class EntityNotUpdatableError extends Error {
  * this exception being thrown.
  */
 export class ArchivedEntityNotUpdatableError extends EntityNotUpdatableError {
-  constructor(message: string) {
+  public constructor(message: string) {
     super(message);
   }
 }

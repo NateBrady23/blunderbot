@@ -17,26 +17,26 @@ import { CONFIG } from './config/config.service';
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() wss: Server;
+  @WebSocketServer() public wss: Server;
 
   private logger: Logger = new Logger(AppGateway.name);
 
   private sockets: Socket[] = [];
 
-  afterInit(_server: unknown): undefined {
+  public afterInit(_server: unknown): void {
     this.logger.log('Initialized!');
   }
 
-  handleConnection(client: Socket) {
+  public handleConnection(client: Socket): void {
     this.logger.log(`App-Socket Client connected: ${client.id}`);
     this.sockets.push(client);
   }
 
-  handleDisconnect(client: Socket) {
+  public handleDisconnect(client: Socket): void {
     this.logger.log(`App-Socket Client disconnected: ${client.id}`);
   }
 
-  public sendDataToSockets(event: string, data: unknown) {
+  public sendDataToSockets(event: string, data: unknown): void {
     this.logger.log(`Sending ${event} event to sockets.`);
     this.sockets.forEach((socket) => {
       if (socket.connected) {

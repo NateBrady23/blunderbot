@@ -22,33 +22,33 @@ export class CommandService {
   private commandState: CommandState;
   private readonly services: CommandServices;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => AppGateway))
-    private readonly appGateway: AppGateway,
+    private readonly appGateway: WrapperType<AppGateway>,
     @Inject(forwardRef(() => BrowserService))
-    private readonly browserService: BrowserService,
+    private readonly browserService: WrapperType<BrowserService>,
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service,
+    private readonly configV2Service: WrapperType<ConfigV2Service>,
     @Inject(forwardRef(() => TwitchEventSub))
-    private readonly twitchEventSub: TwitchEventSub,
+    private readonly twitchEventSub: WrapperType<TwitchEventSub>,
     @Inject(forwardRef(() => TwitchGateway))
-    private readonly twitchGateway: TwitchGateway,
+    private readonly twitchGateway: WrapperType<TwitchGateway>,
     @Inject(forwardRef(() => TwitchPubSub))
-    private readonly twitchPubSub: TwitchPubSub,
+    private readonly twitchPubSub: WrapperType<TwitchPubSub>,
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService,
+    private readonly twitchService: WrapperType<TwitchService>,
     @Inject(forwardRef(() => BlueskyService))
-    private readonly blueskyService: BlueskyService,
+    private readonly blueskyService: WrapperType<BlueskyService>,
     @Inject(forwardRef(() => DiscordService))
-    private readonly discordService: DiscordService,
+    private readonly discordService: WrapperType<DiscordService>,
     @Inject(forwardRef(() => GiphyService))
-    private readonly giphyService: GiphyService,
+    private readonly giphyService: WrapperType<GiphyService>,
     @Inject(forwardRef(() => OpenaiService))
-    private readonly openaiService: OpenaiService,
+    private readonly openaiService: WrapperType<OpenaiService>,
     @Inject(forwardRef(() => SpotifyService))
-    private readonly spotifyService: SpotifyService,
+    private readonly spotifyService: WrapperType<SpotifyService>,
     @Inject(forwardRef(() => LichessService))
-    private readonly lichessService: LichessService,
+    private readonly lichessService: WrapperType<LichessService>,
     @Inject(forwardRef(() => StoredCommandEntityService))
     private readonly storedCommandEntityService: StoredCommandEntityService
   ) {
@@ -72,35 +72,35 @@ export class CommandService {
     };
   }
 
-  init() {
+  public init(): void {
     this.setInitialCommandState();
 
-    if (this.configV2Service.get().misc?.hypeRateEnabled) {
+    if (this.configV2Service.get().misc.hypeRateEnabled) {
       void this.heartRateCheck();
     }
 
     void this.setStoredCommands();
   }
 
-  static isCommandFormat(message: string) {
+  public static isCommandFormat(message: string): boolean {
     return /^![a-z0-9]+/i.test(message);
   }
 
-  setInitialCommandState() {
+  private setInitialCommandState(): void {
     this.commandState = {
       arena: '',
-      shoutoutUsers: this.configV2Service.get().twitch?.autoShoutouts || [],
+      shoutoutUsers: this.configV2Service.get().twitch.autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: this.configV2Service.get().commandConfig?.killedCommands,
+      killedCommands: this.configV2Service.get().commandConfig.killedCommands,
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: <OpenAiVoiceOptions>(
-        this.configV2Service.get().openai?.voices[0]
+        this.configV2Service.get().openai.voices[0]
       ),
       storedCommands: {},
       cbanUsers: [],
@@ -123,36 +123,38 @@ export class CommandService {
     };
   }
 
-  async heartRateCheck() {
+  private async heartRateCheck(): Promise<void> {
     const thresholds = [140, 130, 120, 110, 100];
 
-    const heartRateInterval = setInterval(async () => {
-      if (!this.browserService.isBrowserLoaded()) return;
-      if (!this.commandState.isLive) return;
+    const heartRateInterval = setInterval(() => {
+      (async () => {
+        if (!this.browserService.isBrowserLoaded()) return;
+        if (!this.commandState.isLive) return;
 
-      try {
-        const heartRate = await this.browserService.getHeartRate();
-        for (const threshold of thresholds) {
-          if (
-            heartRate >= threshold &&
-            this.commandState.heartRateHigh < threshold
-          ) {
-            this.commandState.heartRateHigh = heartRate;
-            void this.twitchService.ownerRunCommand(
-              `!tts your heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
-            );
-            if (threshold === 140) clearInterval(heartRateInterval);
-            break;
+        try {
+          const heartRate = await this.browserService.getHeartRate();
+          for (const threshold of thresholds) {
+            if (
+              heartRate >= threshold &&
+              this.commandState.heartRateHigh < threshold
+            ) {
+              this.commandState.heartRateHigh = heartRate;
+              void this.twitchService.ownerRunCommand(
+                `!tts your heart rate has crossed the ${threshold} BPM threshold for the first time this stream at ${heartRate} BPM`
+              );
+              if (threshold === 140) clearInterval(heartRateInterval);
+              break;
+            }
           }
+        } catch (error) {
+          console.error('Error getting heart rate:', error);
+          clearInterval(heartRateInterval);
         }
-      } catch (error) {
-        console.error('Error getting heart rate:', error);
-        clearInterval(heartRateInterval);
-      }
+      })();
     }, 1000);
   }
 
-  async canRun(ctx: Context, cmd: Command): Promise<boolean> {
+  private async canRun(ctx: Context, cmd: Command): Promise<boolean> {
     if (!cmd.platforms.includes(ctx.platform)) {
       return;
     }
@@ -163,7 +165,7 @@ export class CommandService {
     }
 
     // If the command is killed, don't run for anyone including the owner
-    if (this.commandState.killedCommands?.includes(cmd.name)) {
+    if (this.commandState.killedCommands.includes(cmd.name)) {
       this.logger.log(`${cmd.name} is killed and will not run`);
       return false;
     }
@@ -191,7 +193,7 @@ export class CommandService {
 
     if (ctx.platform === Platform.Twitch) {
       if (
-        this.configV2Service.get().twitch.subCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.subCommands.includes(cmd.name) &&
         !ctx.isSubscriber
       ) {
         void ctx.botSpeak(
@@ -201,9 +203,7 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service
-          .get()
-          .twitch.followerCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.followerCommands.includes(cmd.name) &&
         !ctx.isFollower
       ) {
         void ctx.botSpeak(
@@ -213,7 +213,7 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service.get().twitch.vipCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.vipCommands.includes(cmd.name) &&
         !ctx.isVip
       ) {
         void ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
@@ -221,7 +221,7 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service.get().twitch.founderCommands?.includes(cmd.name) &&
+        this.configV2Service.get().twitch.founderCommands.includes(cmd.name) &&
         !ctx.isFounder
       ) {
         void ctx.botSpeak(
@@ -233,7 +233,7 @@ export class CommandService {
       if (
         this.configV2Service
           .get()
-          .twitch.hypeTrainConductorCommands?.includes(cmd.name) &&
+          .twitch.hypeTrainConductorCommands.includes(cmd.name) &&
         !ctx.isHypeTrainConductor
       ) {
         void ctx.botSpeak(
@@ -297,7 +297,7 @@ export class CommandService {
     return true;
   }
 
-  findCommand(name: string): Command | undefined {
+  private findCommand(name: string): Command | undefined {
     const commands = this.services.configV2Service.get().commands;
     name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
@@ -314,9 +314,8 @@ export class CommandService {
           cmd = commands[c];
         }
         // However, prefer an exact match for aliases
-        const currCmd = commands[c];
-        if (currCmd.aliases && currCmd.aliases.includes(name)) {
-          cmd = currCmd;
+        if (commands[c].aliases?.includes(name)) {
+          cmd = commands[c];
           break;
         }
       }
@@ -325,7 +324,7 @@ export class CommandService {
     return cmd;
   }
 
-  async run(ctx: Context) {
+  public async run(ctx: Context): Promise<void> {
     if (!ctx.command) return;
 
     // Silly for !1455 = 1455's are hard...
@@ -375,24 +374,24 @@ export class CommandService {
     }
   }
 
-  async getCommandState() {
+  public async getCommandState(): Promise<CommandState> {
     return this.commandState;
   }
 
-  async setStoredCommands() {
-    if (!CONFIG.get().db?.enabled) {
+  public async setStoredCommands(): Promise<{ [key: string]: string }> {
+    if (!CONFIG.get().db.enabled) {
       return {};
     }
     const storedCommandsArr = await this.storedCommandEntityService.findAll();
     this.commandState.storedCommands = {};
-    if (storedCommandsArr?.length) {
+    if (storedCommandsArr.length) {
       for (const sc of storedCommandsArr) {
         this.commandState.storedCommands[sc.name] = sc.message;
       }
     }
   }
 
-  updateBoughtSquares(data: { [key: string]: string }) {
+  public updateBoughtSquares(data: { [key: string]: string }): void {
     if (this.commandState) {
       this.commandState.boughtSquares = data;
     }

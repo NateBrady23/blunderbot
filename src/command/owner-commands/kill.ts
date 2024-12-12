@@ -6,7 +6,7 @@ const command: Command = {
   run: async (ctx, { commandState, services }) => {
     const cmd = services.commandService.findCommand(ctx.args[0]);
 
-    if (commandState.killedCommands?.includes(cmd.name)) {
+    if (commandState.killedCommands.includes(cmd.name)) {
       commandState.killedCommands = commandState.killedCommands.filter(
         (commandName) => commandName !== cmd.name
       );

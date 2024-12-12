@@ -12,22 +12,22 @@ export class BrowserService {
 
   private heartRatePage: Page;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  init() {
+  public init(): void {
     // Preload some frequently used pages
     (async () => {
       this.logger.log('Preloading browser pages');
-      if (this.configV2Service.get().misc?.hypeRateEnabled) {
+      if (this.configV2Service.get().misc.hypeRateEnabled) {
         await this.getHeartRatePage();
       }
     })();
   }
 
-  private async getBrowser() {
+  private async getBrowser(): Promise<Browser> {
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         headless: true,
@@ -39,17 +39,17 @@ export class BrowserService {
     return this.browser;
   }
 
-  isBrowserLoaded() {
+  public isBrowserLoaded(): boolean {
     return this.browserLoaded;
   }
 
-  private async getHeartRatePage() {
+  private async getHeartRatePage(): Promise<Page> {
     try {
       if (!this.heartRatePage) {
         const browser = await this.getBrowser();
         this.heartRatePage = await browser.newPage();
         await this.heartRatePage.goto(
-          this.configV2Service.get().misc?.hypeRateUrl
+          this.configV2Service.get().misc.hypeRateUrl
         );
         // It takes this long for the heart rate to show up on the page
         await sleep(5000);
@@ -62,7 +62,7 @@ export class BrowserService {
     }
   }
 
-  async getHeartRate() {
+  public async getHeartRate(): Promise<number> {
     const page = await this.getHeartRatePage();
 
     try {
@@ -70,7 +70,7 @@ export class BrowserService {
         timeout: 5_000
       });
       return parseInt(
-        (await textSelector?.evaluate((el) => el.textContent))?.trim()
+        (await textSelector.evaluate((el) => el.textContent)).trim()
       );
     } catch (e) {
       console.error(e);

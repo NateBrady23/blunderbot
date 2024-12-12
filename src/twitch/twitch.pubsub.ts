@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
-import * as WebSocket from 'ws';
+import { WebSocket } from 'ws';
 import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
@@ -11,18 +11,18 @@ export class TwitchPubSub {
   private pubSubConnection: WebSocket;
   private pubSubPingInterval: NodeJS.Timeout;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService,
+    private readonly twitchService: WrapperType<TwitchService>,
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  init() {
+  public init(): void {
     this.pubSubCreateConnection();
   }
 
-  pubSubCreateConnection() {
+  public pubSubCreateConnection(): void {
     this.pubSubConnection = new WebSocket('wss://pubsub-edge.twitch.tv');
     this.pubSubConnection.onopen = () => {
       this.logger.log('PubSub connection opened');
@@ -53,7 +53,7 @@ export class TwitchPubSub {
     this.pubSubConnection.onmessage = this.pubSubMessageHandler.bind(this);
   }
 
-  async pubSubMessageHandler(data: { data: string }) {
+  public async pubSubMessageHandler(data: { data: string }): Promise<void> {
     const event = JSON.parse(data.data);
 
     if (event.type === 'AUTH_REVOKED' || event.type === 'RECONNECT') {

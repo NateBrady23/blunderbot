@@ -14,11 +14,11 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      services.configV2Service.get().discord?.enabled &&
-      !!services.configV2Service.get().discord?.announcementChannelId;
+      services.configV2Service.get().discord.enabled &&
+      !!services.configV2Service.get().discord.announcementChannelId;
     let sendToBluesky =
-      services.configV2Service.get().bluesky?.enabled &&
-      services.configV2Service.get().bluesky?.announceLive;
+      services.configV2Service.get().bluesky.enabled &&
+      services.configV2Service.get().bluesky.announceLive;
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -48,6 +48,7 @@ const command: Command = {
           }
         );
       } catch (e) {
+        console.error(e);
         msg = `Are you ready? We're live!`;
       }
     }

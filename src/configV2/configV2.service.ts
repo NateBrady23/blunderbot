@@ -9,8 +9,8 @@ import { TwitchService } from '../twitch/twitch.service';
 import { readdirSync } from 'fs';
 import { Platform } from '../enums';
 import { removeSymbols } from '../utils/utils';
-import { BlueskyService } from '../bluesky/bluesky.service';
 import { BrowserService } from '../browser/browser.service';
+import { Config } from 'src/models/config/config.entity';
 
 function getCommandProperties(obj: MessageCommand, name: string): Command {
   return {
@@ -55,31 +55,29 @@ let config: ConfigV2;
 export class ConfigV2Service {
   private logger: Logger = new Logger(ConfigV2Service.name);
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => BrowserService))
-    private readonly browserService: BrowserService,
+    private readonly browserService: WrapperType<BrowserService>,
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService,
+    private readonly commandService: WrapperType<CommandService>,
     @Inject(forwardRef(() => ConfigEntityService))
-    private readonly configEntityService: ConfigEntityService,
+    private readonly configEntityService: WrapperType<ConfigEntityService>,
     @Inject(forwardRef(() => DiscordService))
-    private readonly discordService: DiscordService,
+    private readonly discordService: WrapperType<DiscordService>,
     @Inject(forwardRef(() => OpenaiService))
-    private readonly openaiService: OpenaiService,
+    private readonly openaiService: WrapperType<OpenaiService>,
     @Inject(forwardRef(() => TwitchEventSub))
-    private readonly twitchEventSub: TwitchEventSub,
+    private readonly twitchEventSub: WrapperType<TwitchEventSub>,
     @Inject(forwardRef(() => TwitchPubSub))
-    private readonly twitchPubSub: TwitchPubSub,
+    private readonly twitchPubSub: WrapperType<TwitchPubSub>,
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService,
-    @Inject(forwardRef(() => BlueskyService))
-    private readonly blueskyService: BlueskyService
+    private readonly twitchService: WrapperType<TwitchService>
   ) {
     this.get = this.get.bind(this);
     void this.init();
   }
 
-  async init() {
+  public async init(): Promise<void> {
     this.logger.log('ConfigV2Service instantiated');
     config = (await this.getLatest()) as unknown as ConfigV2;
 
@@ -91,24 +89,20 @@ export class ConfigV2Service {
       this.twitchEventSub.init();
     }
 
-    if (config.discord?.enabled) {
+    if (config.discord.enabled) {
       this.discordService.init();
     }
 
-    if (config.openai?.enabled) {
+    if (config.openai.enabled) {
       this.openaiService.init();
-    }
-
-    if (config.bluesky?.enabled) {
-      this.blueskyService.init();
     }
 
     this.browserService.init();
   }
 
-  private loadCommands() {
+  private loadCommands(): void {
     const messageCommands: Record<string, Command> = {};
-    const messageCommandsConfig = config.commandConfig?.simpleCommands || {};
+    const messageCommandsConfig = config.commandConfig.simpleCommands || {};
     Object.keys(messageCommandsConfig).forEach((key) => {
       messageCommands[key] = getCommandProperties(
         messageCommandsConfig[key],
@@ -141,6 +135,7 @@ export class ConfigV2Service {
       readdirSync(dir[0]).forEach((file) => {
         const fileName = file.split('.')[0];
         if (!file.startsWith('.')) {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           config.commands[fileName] = require(`${dir[1]}${fileName}`).default;
           if (dir[0].includes('mod-commands')) {
             config.commands[fileName].modOnly = true;
@@ -152,7 +147,7 @@ export class ConfigV2Service {
     });
   }
 
-  async getLatest(): Promise<ConfigV2> {
+  public async getLatest(): Promise<ConfigV2> {
     config = (await this.configEntityService.latest()) as unknown as ConfigV2;
     if (!config) {
       config = {} as ConfigV2;
@@ -205,22 +200,25 @@ export class ConfigV2Service {
     return config;
   }
 
-  async update(key: ConfigV2Keys, value: any): Promise<ConfigV2> {
-    let newConfig: any = await this.configEntityService.latest();
+  public async update(
+    key: ConfigV2Keys,
+    value: JSON & number & Date
+  ): Promise<ConfigV2> {
+    let newConfig: Config = await this.configEntityService.latest();
     // Always create a new config object to avoid updating the same object in the database
     // allowing for possible config rollback
     if (newConfig) {
       newConfig.id = undefined;
-      newConfig[key] = value;
+      newConfig[key as keyof Config] = value;
     } else {
-      newConfig = { [key]: value };
+      newConfig = { [key]: value } as unknown as Config;
     }
     await this.configEntityService.create(newConfig);
     config = await this.getLatest();
     return config;
   }
 
-  get(): Partial<ConfigV2> {
+  public get(): Partial<ConfigV2> {
     return config as unknown as Partial<ConfigV2>;
   }
 }

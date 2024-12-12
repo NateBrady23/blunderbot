@@ -1,56 +1,55 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../base.entity';
-import { ConfigInterface } from './config.types';
 
 @Entity()
 export class Config extends BaseEntity implements ConfigInterface {
   @Column({
     type: 'json'
   })
-  twitch: JSON;
+  public twitch: JSON;
 
   @Column({
     type: 'json'
   })
-  lichess: JSON;
+  public lichess: JSON;
 
   @Column({
     type: 'json'
   })
-  commandConfig: JSON;
+  public commandConfig: JSON;
 
   @Column({
     type: 'json'
   })
-  discord: JSON;
+  public discord: JSON;
 
   @Column({
     type: 'json'
   })
-  openai: JSON;
+  public openai: JSON;
 
   @Column({
     type: 'json'
   })
-  spotify: JSON;
+  public spotify: JSON;
 
   @Column({
     type: 'json'
   })
-  bluesky: JSON;
+  public bluesky: JSON;
 
   @Column({
     type: 'json'
   })
-  trivia: JSON;
+  public trivia: JSON;
 
   @Column({
     type: 'json'
   })
-  youtube: JSON;
+  public youtube: JSON;
 
   @Column({
     type: 'json'
   })
-  misc: JSON;
+  public misc: JSON;
 }

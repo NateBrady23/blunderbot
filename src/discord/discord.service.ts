@@ -18,14 +18,14 @@ export class DiscordService {
   public client: Client;
   public guild: Guild;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService,
+    private readonly commandService: WrapperType<CommandService>,
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  init() {
+  public init(): void {
     this.client = new Client({
       intents: [
         GatewayIntentBits.Guilds,
@@ -61,14 +61,14 @@ export class DiscordService {
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
-  makeAnnouncement(content: string) {
+  public makeAnnouncement(content: string): Promise<Message> {
     const channel = this.client.channels.cache.get(
       this.configV2Service.get().discord.announcementChannelId
     ) as TextChannel;
-    void channel.send(content);
+    return channel.send(content);
   }
 
-  postImageToGallery(content: string, buffer: Buffer) {
+  public postImageToGallery(content: string, buffer: Buffer): void {
     try {
       const channel = this.client.channels.cache.get(
         this.configV2Service.get().discord.galleryChannelId
@@ -82,10 +82,10 @@ export class DiscordService {
     }
   }
 
-  async botSpeak(
+  public async botSpeak(
     discordMessage: DiscordMessage | { channelId: string },
     message: string
-  ) {
+  ): Promise<Message> {
     const channel = this.client.channels.cache.get(
       discordMessage.channelId
     ) as TextChannel;
@@ -97,7 +97,7 @@ export class DiscordService {
   }
 
   // TODO: There's a bug sometimes where there's no message or context?
-  onMessageHandler(discordMessage: Message) {
+  public onMessageHandler(discordMessage: Message): void {
     const botAuthorId = this.configV2Service.get().discord.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
@@ -121,12 +121,12 @@ export class DiscordService {
     void this.commandService.run(context);
   }
 
-  ownerRunCommand(discordMessage: DiscordMessage) {
+  public ownerRunCommand(discordMessage: DiscordMessage): void {
     const context = this.createContext(discordMessage);
     void this.commandService.run(context);
   }
 
-  createContext(discordMessage: DiscordMessage) {
+  public createContext(discordMessage: DiscordMessage): Context | undefined {
     const message = discordMessage.content;
     const context: Partial<Context> = {
       client: this.client,
@@ -134,8 +134,9 @@ export class DiscordService {
       message,
       discordMessage,
       reply: (ctx, message) =>
-        this.botSpeak(discordMessage, `<@${ctx.userId}> ${message}`),
-      botSpeak: (message: string) => this.botSpeak(discordMessage, message),
+        void this.botSpeak(discordMessage, `<@${ctx.userId}> ${message}`),
+      botSpeak: (message: string) =>
+        void this.botSpeak(discordMessage, message),
       platform: Platform.Discord
     };
 

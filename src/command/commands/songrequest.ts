@@ -6,11 +6,11 @@ const command: Command = {
   aliases: ['sr'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    if (!services.configV2Service.get().spotify?.enabled) {
+    if (!services.configV2Service.get().spotify.enabled) {
       console.log('Spotify is not enabled for !songrequest.');
       return false;
     }
-    const query = ctx.body?.trim();
+    const query = ctx.body.trim();
     if (!query) {
       void ctx.botSpeak('Please provide a song to request.');
       return false;

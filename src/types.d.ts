@@ -58,4 +58,11 @@ declare global {
   interface TranslationRequest {
     message: string;
   }
+
+  /**
+   * Wrapper type used to circumvent ESM modules circular dependency issue
+   * caused by reflection metadata saving the type of the property. Need to
+   * add this spefically because of the switch to SWC.
+   */
+  type WrapperType<T> = T; // WrapperType === Relation
 }

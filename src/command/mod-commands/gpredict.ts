@@ -56,8 +56,8 @@ const command: Command = {
       }
 
       if (
-        services.configV2Service.get().openai?.enabled &&
-        services.configV2Service.get().openai?.ttsModel
+        services.configV2Service.get().openai.enabled &&
+        services.configV2Service.get().openai.ttsModel
       ) {
         const msg = await services.openaiService.sendPrompt(
           `

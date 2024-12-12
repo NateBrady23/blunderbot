@@ -14,14 +14,14 @@ export class OpenaiService {
   private openai: OpenAI;
   private baseMessages: OpenAiChatMessage[];
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService,
+    private readonly commandService: WrapperType<CommandService>,
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  init() {
+  public init(): void {
     this.openai = new OpenAI({
       apiKey: this.configV2Service.get().openai.apiKey
     });
@@ -29,14 +29,14 @@ export class OpenaiService {
     this.baseMessages = [
       {
         role: 'system',
-        content: this.configV2Service.get().openai?.baseSystemMessage
+        content: this.configV2Service.get().openai.baseSystemMessage
       }
     ];
 
     void this.createEmbedding('testing');
   }
 
-  fixPronunciations(text: string): string {
+  public fixPronunciations(text: string): string {
     for (const [key, value] of this.configV2Service.get().openai
       .pronunciations) {
       text = text.replace(new RegExp(key, 'gi'), value);
@@ -45,7 +45,7 @@ export class OpenaiService {
     return text;
   }
 
-  async createImage(
+  public async createImage(
     prompt: string,
     opt?: {
       size: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
@@ -53,12 +53,12 @@ export class OpenaiService {
   ): Promise<string> {
     try {
       const generateBody: ImageGenerateParams = {
-        model: this.configV2Service.get().openai?.imageModel || 'dall-e-3',
+        model: this.configV2Service.get().openai.imageModel || 'dall-e-3',
         prompt,
         quality: 'standard',
         n: 1
       };
-      if (opt?.size) {
+      if (opt.size) {
         generateBody.size = opt.size;
       }
       const response = await this.openai.images.generate(generateBody);
@@ -69,7 +69,7 @@ export class OpenaiService {
     }
   }
 
-  async editImage(maskImg: string, prompt: string): Promise<string> {
+  public async editImage(maskImg: string, prompt: string): Promise<string> {
     try {
       const response = await this.openai.images.edit({
         image: createReadStream(maskImg),
@@ -85,11 +85,11 @@ export class OpenaiService {
     }
   }
 
-  async createEmbedding(text: string): Promise<Array<number>> {
+  public async createEmbedding(text: string): Promise<Array<number>> {
     try {
       const response = await this.openai.embeddings.create({
         model:
-          this.configV2Service.get().openai?.embeddingsModel ||
+          this.configV2Service.get().openai.embeddingsModel ||
           'text-embedding-ada-002',
         input: text
       });
@@ -100,7 +100,10 @@ export class OpenaiService {
     }
   }
 
-  async tts(message: string, voice: OpenAiVoiceOptions): Promise<boolean> {
+  public async tts(
+    message: string,
+    voice: OpenAiVoiceOptions
+  ): Promise<boolean> {
     try {
       if (await this.isFlagged(message)) {
         return false;
@@ -128,7 +131,7 @@ export class OpenaiService {
     }
   }
 
-  async translate(message: string): Promise<string> {
+  public async translate(message: string): Promise<string> {
     try {
       const messages: OpenAiChatMessage[] = [
         {
@@ -150,7 +153,7 @@ export class OpenaiService {
     }
   }
 
-  async sendPrompt(
+  public async sendPrompt(
     userMessage: string,
     opts?: {
       temp?: number;
@@ -163,7 +166,7 @@ export class OpenaiService {
   ): Promise<string> {
     let systemMessages: OpenAiChatMessage[] = [];
     try {
-      if (opts?.moderate) {
+      if (opts.moderate) {
         try {
           const isFlagged = await this.isFlagged(userMessage);
           if (isFlagged) {
@@ -176,13 +179,13 @@ export class OpenaiService {
         }
       }
 
-      if (opts?.platform === Platform.Twitch) {
+      if (opts.platform === Platform.Twitch) {
         userMessage += ' Only reply with 50 words or less.';
       } else {
         userMessage += ' Only reply with 200 words or less.';
       }
 
-      if (opts?.usePersonality) {
+      if (opts.usePersonality) {
         const personality = (await this.commandService.getCommandState())
           .blunderBotPersonality;
         if (personality) {
@@ -193,11 +196,11 @@ export class OpenaiService {
       let messages: OpenAiChatMessage[] = [
         { role: 'user', content: userMessage }
       ];
-      if (opts?.includeBlunderBotContext) {
+      if (opts.includeBlunderBotContext) {
         systemMessages = [...this.baseMessages];
       }
 
-      if (opts?.user) {
+      if (opts.user) {
         this.savedMessages.push({
           role: 'system',
           content: `The following message is from ${opts.user}.`
@@ -209,13 +212,13 @@ export class OpenaiService {
       const completion = await this.openai.chat.completions.create({
         model: this.configV2Service.get().openai.chatModel,
         messages,
-        temperature: opts?.temp || 0.9
+        temperature: opts.temp || 0.9
       });
 
       let reply = completion.choices[0].message.content;
       this.logger.log(`Reply before filter: ${reply}`);
 
-      if (opts?.includeBlunderBotContext) {
+      if (opts.includeBlunderBotContext) {
         reply = this.cleanReplyAsBlunderBot(reply);
       }
 
@@ -235,7 +238,10 @@ export class OpenaiService {
     }
   }
 
-  async getReplyFromContext(ctx: Context, services: CommandServices) {
+  public async getReplyFromContext(
+    ctx: Context,
+    services: CommandServices
+  ): Promise<string> {
     let temp = 0.9;
     if (ctx.args[0]?.match(/!t.../i)) {
       temp = +ctx.args[0].replace('!t', '');
@@ -255,7 +261,7 @@ export class OpenaiService {
     }
   }
 
-  async getChatCompletion(
+  public async getChatCompletion(
     messages: OpenAiChatMessage[] | string,
     jsonResponse = false
   ): Promise<string> {
@@ -276,7 +282,7 @@ export class OpenaiService {
     }
   }
 
-  cleanReplyAsBlunderBot(reply: string): string {
+  private cleanReplyAsBlunderBot(reply: string): string {
     if (
       reply.includes(`cannot comply`) ||
       reply.includes(`can't comply`) ||
@@ -295,7 +301,7 @@ export class OpenaiService {
     return reply;
   }
 
-  async isFlagged(message: string): Promise<boolean> {
+  private async isFlagged(message: string): Promise<boolean> {
     const moderation = await this.openai.moderations.create({
       model: this.configV2Service.get().openai.textModerationModel,
       input: message

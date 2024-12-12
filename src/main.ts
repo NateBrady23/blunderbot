@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import express = require('express');
+import express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { readFileSync } from 'fs';
 import { createServer } from 'https';
-import * as http from 'http';
+import http from 'node:http';
 import { CONFIG } from './config/config.service';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 

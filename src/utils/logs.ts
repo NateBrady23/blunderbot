@@ -3,14 +3,14 @@ import * as path from 'path';
 
 export async function writeLog(
   filename: string,
-  message: any,
+  message: unknown,
   opts?: { excludeDate?: boolean }
-) {
+): Promise<void> {
   if (typeof message !== 'string') {
     message = JSON.stringify(message);
   }
   try {
-    if (!opts?.excludeDate) {
+    if (!opts.excludeDate) {
       // Get current date in format: YYYY-MM-DD
       const date = new Date().toISOString().split('T')[0];
       filename += `-${date}.log`;
