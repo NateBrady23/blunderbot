@@ -6,8 +6,8 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitchPubSub {
-  private logger: Logger = new Logger(TwitchPubSub.name);
-  private redemptionIds: string[] = [];
+  private readonly logger: Logger = new Logger(TwitchPubSub.name);
+  private readonly redemptionIds: string[] = [];
   private pubSubConnection: WebSocket;
   private pubSubPingInterval: NodeJS.Timeout;
 

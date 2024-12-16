@@ -12,9 +12,9 @@ const twitchUserMap: Record<string, { id: string; isFollower: boolean }> = {};
 
 @Injectable()
 export class TwitchService {
-  private logger: Logger = new Logger(TwitchService.name);
+  private readonly logger: Logger = new Logger(TwitchService.name);
 
-  private constructor(
+  public constructor(
     @Inject(forwardRef(() => CommandService))
     private readonly commandService: WrapperType<CommandService>,
     @Inject(forwardRef(() => TwitchGateway))

@@ -3,7 +3,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class LichessService {
-  private logger: Logger = new Logger(LichessService.name);
+  private readonly logger: Logger = new Logger(LichessService.name);
 
   public constructor(
     @Inject(forwardRef(() => ConfigV2Service))

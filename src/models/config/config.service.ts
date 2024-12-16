@@ -12,7 +12,7 @@ import { Config } from './config.entity';
 export class ConfigEntityService {
   public constructor(
     @InjectRepository(Config)
-    private ConfigRepository: Repository<Config>
+    private readonly ConfigRepository: Repository<Config>
   ) {}
 
   public async create(input: ConfigCreateInput): Promise<Config> {

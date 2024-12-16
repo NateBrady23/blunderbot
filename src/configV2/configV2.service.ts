@@ -53,7 +53,7 @@ let config: ConfigV2;
 
 @Injectable()
 export class ConfigV2Service {
-  private logger: Logger = new Logger(ConfigV2Service.name);
+  private readonly logger: Logger = new Logger(ConfigV2Service.name);
 
   public constructor(
     @Inject(forwardRef(() => BrowserService))
@@ -105,7 +105,7 @@ export class ConfigV2Service {
     const messageCommandsConfig = config.commandConfig.simpleCommands || {};
     Object.keys(messageCommandsConfig).forEach((key) => {
       messageCommands[key] = getCommandProperties(
-        messageCommandsConfig[key],
+        messageCommandsConfig[key] as MessageCommand,
         key
       );
     });
@@ -176,6 +176,7 @@ export class ConfigV2Service {
     });
 
     config.themeConfig = {};
+
     readdirSync('./public/images/themes').forEach((theme) => {
       config.themeConfig[theme] = {};
 
@@ -187,7 +188,9 @@ export class ConfigV2Service {
           readdirSync(`./public/images/themes/${theme}/${dir}`).forEach(
             (file) => {
               const fileName = file.split('.')[0];
-              config.themeConfig[theme][dir][fileName] = true;
+              (config.themeConfig[theme][dir] as { [key: string]: true })[
+                fileName
+              ] = true;
             }
           );
         }

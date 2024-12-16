@@ -9,7 +9,7 @@ import { ImageGenerateParams } from 'openai/resources';
 
 @Injectable()
 export class OpenaiService {
-  private logger: Logger = new Logger(OpenaiService.name);
+  private readonly logger: Logger = new Logger(OpenaiService.name);
   private savedMessages: OpenAiChatMessage[] = [];
   private openai: OpenAI;
   private baseMessages: OpenAiChatMessage[];

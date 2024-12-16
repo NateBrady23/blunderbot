@@ -19,9 +19,9 @@ export class AppGateway
 {
   @WebSocketServer() public wss: Server;
 
-  private logger: Logger = new Logger(AppGateway.name);
+  private readonly logger: Logger = new Logger(AppGateway.name);
 
-  private sockets: Socket[] = [];
+  private readonly sockets: Socket[] = [];
 
   public afterInit(_server: unknown): void {
     this.logger.log('Initialized!');

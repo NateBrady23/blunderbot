@@ -24,9 +24,9 @@ export class TwitchGateway
 {
   @WebSocketServer() public wss: Server;
 
-  private logger: Logger = new Logger(TwitchGateway.name);
+  private readonly logger: Logger = new Logger(TwitchGateway.name);
 
-  private sockets: Socket[] = [];
+  private readonly sockets: Socket[] = [];
 
   public constructor(
     @Inject(forwardRef(() => CommandService))

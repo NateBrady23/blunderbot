@@ -4,7 +4,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class BlueskyService {
-  private logger: Logger = new Logger(BlueskyService.name);
+  private readonly logger: Logger = new Logger(BlueskyService.name);
   private client: AtpAgent;
 
   public constructor(
@@ -12,7 +12,7 @@ export class BlueskyService {
     private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  private async init(): Promise<void> {
+  public async init(): Promise<void> {
     try {
       this.client = new AtpAgent({
         service: 'https://bsky.social'

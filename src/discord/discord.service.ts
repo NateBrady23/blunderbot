@@ -13,7 +13,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class DiscordService {
-  private logger: Logger = new Logger(DiscordService.name);
+  private readonly logger: Logger = new Logger(DiscordService.name);
 
   public client: Client;
   public guild: Guild;
@@ -136,7 +136,7 @@ export class DiscordService {
       reply: (ctx, message) =>
         void this.botSpeak(discordMessage, `<@${ctx.userId}> ${message}`),
       botSpeak: (message: string) =>
-        void this.botSpeak(discordMessage, message),
+        this.botSpeak(discordMessage, message) as Promise<Message<true>>,
       platform: Platform.Discord
     };
 

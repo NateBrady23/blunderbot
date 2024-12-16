@@ -18,7 +18,7 @@ import { TwitchPubSub } from '../twitch/twitch.pubsub';
 
 @Injectable()
 export class CommandService {
-  private logger: Logger = new Logger(CommandService.name);
+  private readonly logger: Logger = new Logger(CommandService.name);
   private commandState: CommandState;
   private readonly services: CommandServices;
 
@@ -86,7 +86,7 @@ export class CommandService {
     return /^![a-z0-9]+/i.test(message);
   }
 
-  private setInitialCommandState(): void {
+  public setInitialCommandState(): void {
     this.commandState = {
       arena: '',
       shoutoutUsers: this.configV2Service.get().twitch.autoShoutouts || [],
@@ -297,7 +297,7 @@ export class CommandService {
     return true;
   }
 
-  private findCommand(name: string): Command | undefined {
+  public findCommand(name: string): Command | undefined {
     const commands = this.services.configV2Service.get().commands;
     name = name.toLowerCase();
     const commandKeys = Object.keys(commands);

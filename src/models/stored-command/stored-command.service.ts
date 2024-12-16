@@ -7,7 +7,7 @@ import { StoredCommand } from './stored-command.entity';
 export class StoredCommandEntityService {
   public constructor(
     @InjectRepository(StoredCommand)
-    private StoredCommandRepository: Repository<StoredCommand>
+    private readonly StoredCommandRepository: Repository<StoredCommand>
   ) {}
 
   public async create(input: StoredCommandInterface): Promise<StoredCommand> {

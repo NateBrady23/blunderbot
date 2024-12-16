@@ -9,7 +9,7 @@ export class ConfigV2Controller {
     config: Partial<UserConfigV2>,
     path: string
   ): Partial<UserConfigV2> {
-    let response = [path as keyof Partial<UserConfigV2>] || {};
+    let response = config[path as keyof Partial<UserConfigV2>] || {};
     if (path === 'trivia' && !config.trivia.length) {
       response = [];
     }
@@ -29,7 +29,10 @@ export class ConfigV2Controller {
     @Param('path') path: ConfigV2Keys,
     @Body() body: Partial<UserConfigV2>
   ): Promise<Partial<UserConfigV2>> {
-    const config = await this.configV2Service.update(path, body);
+    const config = await this.configV2Service.update(
+      path,
+      body as JSON & number & Date
+    );
     return this.generateResponse(config, path);
   }
 }

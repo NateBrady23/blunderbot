@@ -10,8 +10,8 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitchEventSub {
-  private logger: Logger = new Logger(TwitchEventSub.name);
-  private eventSubMessageIds: string[] = [];
+  private readonly logger: Logger = new Logger(TwitchEventSub.name);
+  private readonly eventSubMessageIds: string[] = [];
   private eventSubConnection: WebSocket;
 
   private currentHypeTrainLevel = 1;

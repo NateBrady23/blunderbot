@@ -65,6 +65,12 @@ export default [
       '@typescript-eslint/no-implied-eval': 'error',
       '@typescript-eslint/no-invalid-this': 'error',
       '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
+      '@typescript-eslint/no-empty-interface': 'error',
+      '@typescript-eslint/no-this-alias': 'error',
+      '@typescript-eslint/prefer-as-const': 'error',
+      '@typescript-eslint/prefer-enum-initializers': 'error',
+      '@typescript-eslint/prefer-literal-enum-member': 'error',
+      '@typescript-eslint/prefer-readonly': 'error',
 
       '@typescript-eslint/naming-convention': [
         'error',

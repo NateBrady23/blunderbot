@@ -2,7 +2,8 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "builder": "swc"
+    "builder": "swc",
+    "typeCheck": true
   },
   "swc": {
     "module": {
@@ -14,7 +15,8 @@
         "syntax": "typescript",
         "decorators": true
       },
-      "target": "es2021"
-    }
+      "target": "es2024"
+    },
+    "typeCheck": true
   }
 }

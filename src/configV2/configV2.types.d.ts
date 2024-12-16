@@ -214,7 +214,17 @@ interface ConfigV2 extends UserConfigV2 {
   kings: string[];
   crowns: string[];
   oppKings: string[];
-  themeConfig: unknown;
+  themeConfig: {
+    [theme: string]: {
+      boardExists?: boolean;
+      [dir: string]:
+        | {
+            [fileName: string]: true;
+          }
+        | boolean
+        | undefined;
+    };
+  };
   soundboard: string[];
   cursors: string[];
   commands: { [key: string]: Command };

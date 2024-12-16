@@ -5,7 +5,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class BrowserService {
-  private logger: Logger = new Logger(BrowserService.name);
+  private readonly logger: Logger = new Logger(BrowserService.name);
 
   private browser: Browser;
   private browserLoaded = false;

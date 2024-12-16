@@ -1,5 +1,5 @@
 export class FunctionQueue {
-  private queue: ((...args: unknown[]) => Promise<unknown>)[];
+  private readonly queue: ((...args: unknown[]) => Promise<unknown>)[];
   private isRunning: boolean;
 
   public constructor() {

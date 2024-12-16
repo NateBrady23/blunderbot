@@ -4,7 +4,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class SpotifyService {
-  private logger: Logger = new Logger(SpotifyService.name);
+  private readonly logger: Logger = new Logger(SpotifyService.name);
 
   private authCode = '';
   private refreshToken = '';
