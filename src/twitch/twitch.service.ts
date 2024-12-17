@@ -181,7 +181,7 @@ export class TwitchService {
     } else {
       // If no data, then it's a command being run directly by the owner
       context.isOwnerRun = true;
-      context.onBehalfOf = opts.onBehalfOf;
+      context.onBehalfOf = opts?.onBehalfOf;
       context.username = this.configV2Service
         .get()
         .twitch.ownerUsername.toLowerCase();

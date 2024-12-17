@@ -65,7 +65,7 @@ export class LichessService {
       return;
     }
     if (res[0].playingId) {
-      if (opts.gameId) {
+      if (opts?.gameId) {
         return res[0].playingId;
       } else {
         return `https://lichess.org/${res[0].playingId}`;
@@ -87,7 +87,7 @@ export class LichessService {
 
   public async apiCall(
     url: string,
-    options: { method?: string; json?: boolean; body?: unknown } = {
+    opts: { method?: string; json?: boolean; body?: unknown } = {
       method: 'GET',
       json: true
     }
@@ -97,17 +97,17 @@ export class LichessService {
     const headers = new Headers();
     headers.set('Authorization', `Bearer ${token}`);
 
-    if (options.json === undefined || options.json) {
+    if (opts.json === undefined || opts.json) {
       headers.set('Content-Type', 'application/json');
     }
 
     const request: RequestInit = {
       headers,
-      method: options.method || 'GET'
+      method: opts.method || 'GET'
     };
 
-    if (options.body) {
-      request['body'] = JSON.stringify(options.body);
+    if (opts.body) {
+      request['body'] = JSON.stringify(opts.body);
     }
 
     return await fetch(url, request);

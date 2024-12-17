@@ -48,12 +48,12 @@ export class ConfigEntityService {
   }
 
   private async find(
-    options: FindOneOptions<Config>,
+    opts: FindOneOptions<Config>,
     failIfNotFound: boolean
   ): Promise<Config> {
     if (failIfNotFound) {
-      return this.ConfigRepository.findOneOrFail(options);
+      return this.ConfigRepository.findOneOrFail(opts);
     }
-    return this.ConfigRepository.findOne(options);
+    return this.ConfigRepository.findOne(opts);
   }
 }

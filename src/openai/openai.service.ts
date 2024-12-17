@@ -47,7 +47,7 @@ export class OpenaiService {
 
   public async createImage(
     prompt: string,
-    opt?: {
+    opts?: {
       size: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
     }
   ): Promise<string> {
@@ -58,8 +58,8 @@ export class OpenaiService {
         quality: 'standard',
         n: 1
       };
-      if (opt?.size) {
-        generateBody.size = opt.size;
+      if (opts?.size) {
+        generateBody.size = opts.size;
       }
       const response = await this.openai.images.generate(generateBody);
       return response.data[0].url;
@@ -166,7 +166,7 @@ export class OpenaiService {
   ): Promise<string> {
     let systemMessages: OpenAiChatMessage[] = [];
     try {
-      if (opts.moderate) {
+      if (opts?.moderate) {
         try {
           const isFlagged = await this.isFlagged(userMessage);
           if (isFlagged) {
@@ -179,13 +179,13 @@ export class OpenaiService {
         }
       }
 
-      if (opts.platform === Platform.Twitch) {
+      if (opts?.platform === Platform.Twitch) {
         userMessage += ' Only reply with 50 words or less.';
       } else {
         userMessage += ' Only reply with 200 words or less.';
       }
 
-      if (opts.usePersonality) {
+      if (opts?.usePersonality) {
         const personality = (await this.commandService.getCommandState())
           .blunderBotPersonality;
         if (personality) {
@@ -196,11 +196,11 @@ export class OpenaiService {
       let messages: OpenAiChatMessage[] = [
         { role: 'user', content: userMessage }
       ];
-      if (opts.includeBlunderBotContext) {
+      if (opts?.includeBlunderBotContext) {
         systemMessages = [...this.baseMessages];
       }
 
-      if (opts.user) {
+      if (opts?.user) {
         this.savedMessages.push({
           role: 'system',
           content: `The following message is from ${opts.user}.`
@@ -212,13 +212,13 @@ export class OpenaiService {
       const completion = await this.openai.chat.completions.create({
         model: this.configV2Service.get().openai.chatModel,
         messages,
-        temperature: opts.temp || 0.9
+        temperature: opts?.temp || 0.9
       });
 
       let reply = completion.choices[0].message.content;
       this.logger.log(`Reply before filter: ${reply}`);
 
-      if (opts.includeBlunderBotContext) {
+      if (opts?.includeBlunderBotContext) {
         reply = this.cleanReplyAsBlunderBot(reply);
       }
 

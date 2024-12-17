@@ -59,12 +59,12 @@ export class StoredCommandEntityService {
   }
 
   private async find(
-    options: FindOneOptions<StoredCommand>,
+    opts: FindOneOptions<StoredCommand>,
     failIfNotFound: boolean
   ): Promise<StoredCommand> {
     if (failIfNotFound) {
-      return this.StoredCommandRepository.findOneOrFail(options);
+      return this.StoredCommandRepository.findOneOrFail(opts);
     }
-    return this.StoredCommandRepository.findOne(options);
+    return this.StoredCommandRepository.findOne(opts);
   }
 }
