@@ -10,7 +10,7 @@ export async function writeLog(
     message = JSON.stringify(message);
   }
   try {
-    if (!opts.excludeDate) {
+    if (!opts?.excludeDate) {
       // Get current date in format: YYYY-MM-DD
       const date = new Date().toISOString().split('T')[0];
       filename += `-${date}.log`;

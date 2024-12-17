@@ -58,7 +58,7 @@ export class OpenaiService {
         quality: 'standard',
         n: 1
       };
-      if (opt.size) {
+      if (opt?.size) {
         generateBody.size = opt.size;
       }
       const response = await this.openai.images.generate(generateBody);
