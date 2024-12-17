@@ -8,6 +8,7 @@ import { readFileSync } from 'fs';
 import { createServer } from 'https';
 import http from 'node:http';
 import { CONFIG } from './config/config.service';
+import { removeTempFiles } from './utils/utils';
 
 async function bootstrap(): Promise<void> {
   const server = express();
@@ -26,6 +27,8 @@ async function bootstrap(): Promise<void> {
 
   // app.useWebSocketAdapter(new IoAdapter(httpServer));
   app.useWebSocketAdapter(new IoAdapter(httpsServer));
+
+  void removeTempFiles();
   await app.init();
 }
 

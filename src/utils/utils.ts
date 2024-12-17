@@ -1,6 +1,13 @@
 import { FunctionQueue } from './FunctionQueue';
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
+import {
+  existsSync,
+  globSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync
+} from 'fs';
 
 import playerImport from 'play-sound';
 import { ConfigV2Service } from '../configV2/configV2.service';
@@ -192,4 +199,15 @@ export function parseNdjson<T>(input: string): T[] {
     }
   }
   return result;
+}
+
+export function removeTempFiles(): void {
+  if (!existsSync('temp')) {
+    mkdirSync('temp');
+  }
+  const tempFiles = globSync('temp/*');
+  console.log(tempFiles);
+  for (const file of tempFiles) {
+    unlinkSync(file);
+  }
 }
