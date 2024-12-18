@@ -166,7 +166,7 @@ type UserAutoCommandsConfigV2 = {
 type UserKilledCommandsConfigV2 = string[];
 type UserHiddenCommandsConfigV2 = string[];
 interface UserSimpleCommandsConfigV2 {
-  [command: string]: any;
+  [command: string]: unknown;
 }
 
 type UserTriviaConfigV2 = {
@@ -214,7 +214,17 @@ interface ConfigV2 extends UserConfigV2 {
   kings: string[];
   crowns: string[];
   oppKings: string[];
-  themeConfig: any;
+  themeConfig: {
+    [theme: string]: {
+      boardExists?: boolean;
+      [dir: string]:
+        | {
+            [fileName: string]: true;
+          }
+        | boolean
+        | undefined;
+    };
+  };
   soundboard: string[];
   cursors: string[];
   commands: { [key: string]: Command };

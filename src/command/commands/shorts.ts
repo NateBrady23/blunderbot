@@ -6,7 +6,10 @@ import { GaxiosResponse } from 'googleapis-common';
 let cachedLatestShort: youtube_v3.Schema$PlaylistItem;
 const cachedLatestShortAt = Date.now();
 
-async function getLastVideoByPlaylist(playlistId: string, apiKey: string) {
+async function getLastVideoByPlaylist(
+  playlistId: string,
+  apiKey: string
+): Promise<youtube_v3.Schema$PlaylistItem> {
   const youtube = google.youtube({
     version: 'v3',
     auth: apiKey
@@ -41,7 +44,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['pants'],
   run: async (ctx, { services }) => {
-    if (!services.configV2Service.get().youtube?.enabled) {
+    if (!services.configV2Service.get().youtube.enabled) {
       console.log('YouTube is not enabled for !shorts command.');
       return false;
     }

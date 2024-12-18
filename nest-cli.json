@@ -1,4 +1,22 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "builder": "swc",
+    "typeCheck": true
+  },
+  "swc": {
+    "module": {
+      "type": "commonjs",
+      "strict": true
+    },
+    "jsc": {
+      "parser": {
+        "syntax": "typescript",
+        "decorators": true
+      },
+      "target": "es2024"
+    },
+    "typeCheck": true
+  }
 }

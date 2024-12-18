@@ -22,46 +22,46 @@ import { CommandService } from '../command/command.service';
 export class TwitchGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() wss: Server;
+  @WebSocketServer() public wss: Server;
 
-  private logger: Logger = new Logger(TwitchGateway.name);
+  private readonly logger: Logger = new Logger(TwitchGateway.name);
 
-  private sockets: Socket[] = [];
+  private readonly sockets: Socket[] = [];
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => CommandService))
-    private readonly commandService: CommandService,
+    private readonly commandService: WrapperType<CommandService>,
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService
+    private readonly twitchService: WrapperType<TwitchService>
   ) {}
 
   @SubscribeMessage('botSpeak')
-  handleMessage(_client: Socket, payload: string) {
+  public handleMessage(_client: Socket, payload: string): void {
     void this.twitchService.botSpeak(payload);
   }
 
   @SubscribeMessage('updateBoughtSquares')
-  handleUpdateBoughtSquares(
+  public handleUpdateBoughtSquares(
     _client: Socket,
     payload: { [key: string]: string }
-  ) {
+  ): void {
     this.commandService.updateBoughtSquares(payload);
   }
 
-  afterInit(_server: unknown) {
+  public afterInit(_server: unknown): void {
     this.logger.log('Initialized!');
   }
 
-  handleConnection(client: Socket) {
+  public handleConnection(client: Socket): void {
     this.logger.log(`Twitch-Socket Client connected: ${client.id}`);
     this.sockets.push(client);
   }
 
-  handleDisconnect(client: Socket) {
+  public handleDisconnect(client: Socket): void {
     this.logger.log(`Twitch-Socket Client disconnected: ${client.id}`);
   }
 
-  public sendDataToSockets(event: string, data: unknown) {
+  public sendDataToSockets(event: string, data: unknown): void {
     this.logger.log(`Sending ${event} event to sockets.`);
     this.sockets.forEach((socket: Socket) => {
       if (socket.connected) {
@@ -70,7 +70,7 @@ export class TwitchGateway
     });
   }
 
-  public sendDataToOneSocket(event: string, data: unknown) {
+  public sendDataToOneSocket(event: string, data: unknown): void {
     this.logger.log(`Sending ${event} event to a single socket.`);
 
     const firstSocket = this.sockets.find((socket) => socket.connected);

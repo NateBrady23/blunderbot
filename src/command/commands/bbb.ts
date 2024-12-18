@@ -1,17 +1,16 @@
-import { isNHoursLater } from '../../utils/utils';
+import { isNHoursLater, parseNdjson } from '../../utils/utils';
 import { Platform } from '../../enums';
-const ndjsonParser = require('ndjson-parse');
 
 let cached: string[] = [];
 let cachedAt: number;
 
-const cacheBBB = async (services: CommandServices) => {
+const cacheBBB = async (services: CommandServices): Promise<void> => {
   try {
     const res = await fetch(
       `https://lichess.org/api/team/${services.configV2Service.get().lichess.teamId}/arena?max=10`
     );
     const ndjson = await res.text();
-    const json: LichessTournamentResponse[] = ndjsonParser(ndjson);
+    const json: LichessTournamentResponse[] = parseNdjson(ndjson);
     const current = json[0];
     const last = json[1];
     cached = [];

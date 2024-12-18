@@ -9,33 +9,33 @@ import {
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  public id: number;
 
   @VersionColumn()
-  version: number;
+  public version: number;
 
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',
     default: () => 'CURRENT_TIMESTAMP'
   })
-  createdAt: Date;
+  public createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
     name: 'updated_at',
     default: () => 'CURRENT_TIMESTAMP'
   })
-  updatedAt: Date;
+  public updatedAt: Date;
 
   @DeleteDateColumn({
     type: 'timestamp',
     name: 'deleted_at'
   })
-  deletedAt: Date;
+  public deletedAt: Date;
 
   @Column({
     type: 'json'
   })
-  meta: JSON;
+  public meta: JSON;
 }

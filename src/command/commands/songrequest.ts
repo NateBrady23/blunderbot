@@ -6,11 +6,11 @@ const command: Command = {
   aliases: ['sr'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    if (!services.configV2Service.get().spotify?.enabled) {
+    if (!services.configV2Service.get().spotify.enabled) {
       console.log('Spotify is not enabled for !songrequest.');
       return false;
     }
-    const query = ctx.body?.trim();
+    const query = ctx.body.trim();
     if (!query) {
       void ctx.botSpeak('Please provide a song to request.');
       return false;
@@ -18,15 +18,19 @@ const command: Command = {
 
     let allowedSongLengthMs =
       services.configV2Service.get().spotify.maxAllowedSongLengthMs;
-    // If this user is an owner, and the query contains a number in this format !t## then set the max
-    // allowed song length to that number of minutes and remove it from the query. This is useful for
+    // If the request is from a channel point redemption, and the query contains a
+    // number in this format !t## then set the max allowed song length to that
+    // number of minutes and remove it from the query. This is useful for
     // channel point redemptions for higher song lengths, like: !sr !t10 {message}
-    if (ctx.isOwner) {
+    if (ctx.onBehalfOf) {
       const match = query.match(/!t(\d+)/);
       if (match) {
         allowedSongLengthMs = parseInt(match[1], 10) * 60 * 1000;
         query.replace(match[0], '');
       }
+    } else if (ctx.isOwner) {
+      // If the user is an owner, they can request any song length
+      allowedSongLengthMs = 1000000000;
     }
 
     let track;

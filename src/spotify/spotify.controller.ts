@@ -4,15 +4,15 @@ import { Response } from 'express';
 
 @Controller('spotify')
 export class SpotifyController {
-  constructor(private readonly spotifyService: SpotifyService) {}
+  public constructor(private readonly spotifyService: SpotifyService) {}
 
   @Get('/login')
-  login(@Res() res: Response) {
+  public login(@Res() res: Response): void {
     return res.redirect(this.spotifyService.getAuthUrl());
   }
 
   @Get('/callback')
-  callback(@Res() res: Response, @Query('code') code: string) {
+  public callback(@Res() res: Response, @Query('code') code: string): void {
     this.spotifyService.setAuthCode(code);
     // Get an access token as soon as we have the auth code
     // Not using the code right away seems to cause issues

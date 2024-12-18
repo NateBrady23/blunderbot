@@ -257,7 +257,7 @@ function removeShapeOverBoard() {
   });
 }
 
-function drawBoughtSquares() {
+async function drawBoughtSquares() {
   try {
     const boardNode = document.querySelector('cg-board');
 
@@ -278,6 +278,26 @@ function drawBoughtSquares() {
     console.log(e);
   }
   updateBoughtSquares();
+}
+
+// Some change has been made to the lichess UI that causes the
+// cg-board element to be replaced with a new one after initial load.
+// This observer will redraw the bought squares when this happens.
+function observeBoardReplacement() {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeName.toLowerCase() === 'cg-board') {
+            drawBoughtSquares();
+          }
+        });
+      }
+    });
+  });
+
+  const parentNode = document.body || document.documentElement;
+  observer.observe(parentNode, { childList: true, subtree: true });
 }
 
 function drawGiphy(url, milliseconds) {

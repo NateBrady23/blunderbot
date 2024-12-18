@@ -4,19 +4,19 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class SpotifyService {
-  private logger: Logger = new Logger(SpotifyService.name);
+  private readonly logger: Logger = new Logger(SpotifyService.name);
 
-  private authCode: string = '';
-  private refreshToken: string = '';
-  private accessToken: string = '';
+  private authCode = '';
+  private refreshToken = '';
+  private accessToken = '';
   private accessTokenExpires: number;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  getAuthUrl(): string {
+  public getAuthUrl(): string {
     return (
       'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -30,11 +30,11 @@ export class SpotifyService {
     );
   }
 
-  setAuthCode(code: string) {
+  public setAuthCode(code: string): void {
     this.authCode = code;
   }
 
-  async getAccessToken(): Promise<string> {
+  public async getAccessToken(): Promise<string> {
     if (!this.accessToken || Date.now() > this.accessTokenExpires) {
       const url = 'https://accounts.spotify.com/api/token';
       const params = !this.accessToken
@@ -82,7 +82,7 @@ export class SpotifyService {
     return this.accessToken;
   }
 
-  async getTrackById(id: string): Promise<TrackItem> {
+  public async getTrackById(id: string): Promise<TrackItem> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for track');
@@ -97,11 +97,13 @@ export class SpotifyService {
       const data: TrackItem = await res.json();
       return data;
     } catch (e) {
+      this.logger.error(e);
       this.logger.error('Error getting Spotify track by id');
       return;
     }
   }
-  async getTrackFromSearch(query: string): Promise<TrackItem> {
+
+  public async getTrackFromSearch(query: string): Promise<TrackItem> {
     const token = await this.getAccessToken();
 
     if (!token) {
@@ -129,12 +131,13 @@ export class SpotifyService {
         }
       }
     } catch (e) {
+      this.logger.error(e);
       this.logger.error('Error getting Spotify track from search');
       return;
     }
   }
 
-  async getCurrentTrack(): Promise<TrackItem> {
+  public async getCurrentTrack(): Promise<TrackItem> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for current track');
@@ -156,12 +159,13 @@ export class SpotifyService {
       const data: { item: TrackItem } = await res.json();
       return data.item;
     } catch (e) {
+      this.logger.error(e);
       this.logger.error('Error getting current Spotify track');
       return;
     }
   }
 
-  getTrackInfoFromTrack(track: TrackItem): string {
+  public getTrackInfoFromTrack(track: TrackItem): string {
     let trackDetails = track.name;
     const artistNames = track.artists.map((artist) => artist.name).join(' ');
     if (artistNames) {
@@ -170,7 +174,7 @@ export class SpotifyService {
     return trackDetails;
   }
 
-  async addTrackToQueue(uri: string): Promise<boolean> {
+  public async addTrackToQueue(uri: string): Promise<boolean> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for queue');
@@ -199,7 +203,7 @@ export class SpotifyService {
     return false;
   }
 
-  async skipTrack(): Promise<boolean> {
+  public async skipTrack(): Promise<boolean> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for skip');

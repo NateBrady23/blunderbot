@@ -108,7 +108,8 @@ async function load() {
   void setCustomStyle();
   void setKingStyle();
   void setCursorStyle();
-  drawBoughtSquares();
+  // Currently just redraws the bought squares when the board is replaced
+  observeBoardReplacement();
 
   fetch('https://localhost/twitch/titles')
     .then((response) => response.json())

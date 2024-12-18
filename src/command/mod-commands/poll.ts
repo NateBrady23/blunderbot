@@ -16,7 +16,7 @@ const command: Command = {
       return true;
     }
 
-    if (!services.configV2Service.get().openai?.enabled) {
+    if (!services.configV2Service.get().openai.enabled) {
       console.log(`OpenAI is not enabled in !poll command.`);
       return false;
     }

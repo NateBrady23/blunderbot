@@ -4,15 +4,15 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class BlueskyService {
-  private logger: Logger = new Logger(BlueskyService.name);
+  private readonly logger: Logger = new Logger(BlueskyService.name);
   private client: AtpAgent;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service
+    private readonly configV2Service: WrapperType<ConfigV2Service>
   ) {}
 
-  async init() {
+  public async init(): Promise<void> {
     try {
       this.client = new AtpAgent({
         service: 'https://bsky.social'
@@ -30,9 +30,18 @@ export class BlueskyService {
     }
   }
 
-  async postImage(imageBuffer: Buffer, text: string) {
+  private async getClient(): Promise<AtpAgent> {
+    if (!this.client) {
+      await this.init();
+    }
+    return this.client;
+  }
+
+  public async postImage(imageBuffer: Buffer, text: string): Promise<void> {
+    const client = await this.getClient();
+
     try {
-      const response = await this.client.api.com.atproto.repo.uploadBlob(
+      const response = await client.api.com.atproto.repo.uploadBlob(
         imageBuffer,
         {
           encoding: 'image/jpeg'
@@ -40,7 +49,7 @@ export class BlueskyService {
       );
 
       await this.client.api.com.atproto.repo.createRecord({
-        repo: this.client.session?.did,
+        repo: this.client.session.did,
         collection: 'app.bsky.feed.post',
         record: {
           text,
@@ -59,11 +68,13 @@ export class BlueskyService {
     }
   }
 
-  async post(text: string) {
+  public async post(text: string): Promise<void> {
+    const client = await this.getClient();
+
     try {
       text += ' ' + this.configV2Service.get().bluesky.hashtags || '';
-      await this.client.com.atproto.repo.createRecord({
-        repo: this.client.session?.did,
+      await client.com.atproto.repo.createRecord({
+        repo: client.session.did,
         collection: 'app.bsky.feed.post',
         record: {
           text,

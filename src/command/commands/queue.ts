@@ -41,7 +41,7 @@ const command: Command = {
 
       // Open and close can only be used if the challengeRewardId is set
       // and only if this reward was created by the bot (same client id)
-      if (services.configV2Service.get().twitch?.challengeRewardId) {
+      if (services.configV2Service.get().twitch.challengeRewardId) {
         if (queueCommand === 'open') {
           void services.twitchService.updateCustomReward(
             services.configV2Service.get().twitch.challengeRewardId,
