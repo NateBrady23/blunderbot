@@ -166,13 +166,10 @@ export class DiscordService {
       this.configV2Service.get().discord.botAuthorId;
     // We determine a mod by seeing if they're in the mod channel
     context.isMod =
-      discordMessage.author.id ===
-        this.configV2Service.get().discord.ownerAuthorId ||
+      context.isOwner ||
       discordMessage.channelId ===
         this.configV2Service.get().discord.modChannelId;
-    context.isSubscriber =
-      discordMessage.author.id ===
-      this.configV2Service.get().discord.ownerAuthorId;
+    context.isSubscriber = context.isOwner;
     return <Context>context;
   }
 }

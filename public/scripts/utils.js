@@ -270,7 +270,7 @@ async function drawBoughtSquares() {
       Object.keys(boughtSquares).forEach((key) => {
         const div = document.createElement('div');
         div.innerHTML = `<div class="above-board rotate45 ${key} bought-square">${boughtSquares[key]}</div>`;
-        boardNode.after(div);
+        boardNode.append(div);
       });
     }
   } catch (e) {
