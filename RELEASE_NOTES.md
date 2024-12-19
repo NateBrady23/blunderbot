@@ -1,11 +1,12 @@
 # Release Notes
 
-### 2.9.0 (2024-12-11)
+### 2.9.0 (2024-12-19)
 
 #### Features
 
 - Switched to SWC for infinitely faster builds.
 - Added `!skeet` command to post to Bluesky.
+- Added `!apod` command to display the NASA APOD for a given date.
 
 #### Breaking Changes
 
@@ -14,6 +15,7 @@
 #### Bug Fixes
 
 - Fixed a bug where bought squares were disappearing after the board was replaced.
+- Fixed a bug where Discord service was crashing because of the 4000 character limit.
 - Updated all packages to the latest versions and added an override for `path-to-regexp` to fix a high vulnerability with the `@nestjs/serve-static` package.
 - Added more eslint rules to the project.
 - TONS of code cleanup and type fixes.

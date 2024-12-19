@@ -183,6 +183,7 @@ interface UserMiscConfigV2 {
   hypeRateUrl: string;
   giphyApiKey: string;
   rapidApiKey: string;
+  nasaApiKey: string;
   sounds: UserSoundsConfigV2;
   commandsListUrl: string;
 }

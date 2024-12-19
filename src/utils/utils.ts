@@ -206,7 +206,6 @@ export function removeTempFiles(): void {
     mkdirSync('temp');
   }
   const tempFiles = globSync('temp/*');
-  console.log(tempFiles);
   for (const file of tempFiles) {
     unlinkSync(file);
   }

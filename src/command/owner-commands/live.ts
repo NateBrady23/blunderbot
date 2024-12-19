@@ -41,7 +41,7 @@ const command: Command = {
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `We're about to go live on twitch. Say something to get people excited`,
+          `We're about to go live on twitch. Say something to get people excited. Under 500 characters.`,
           {
             temp: 1.4,
             includeBlunderBotContext: true

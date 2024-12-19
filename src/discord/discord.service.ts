@@ -61,11 +61,24 @@ export class DiscordService {
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
+  private async sendToTextChannel(
+    channel: TextChannel,
+    content: string
+  ): Promise<Message> {
+    // trim because discord has a 4000 character limit
+    if (content.length > 4000) {
+      content = content.slice(0, 4000);
+    }
+    if (channel) {
+      return channel.send(content);
+    }
+  }
+
   public makeAnnouncement(content: string): Promise<Message> {
     const channel = this.client.channels.cache.get(
       this.configV2Service.get().discord.announcementChannelId
     ) as TextChannel;
-    return channel.send(content);
+    return this.sendToTextChannel(channel, content);
   }
 
   public postImageToGallery(content: string, buffer: Buffer): void {
@@ -90,7 +103,7 @@ export class DiscordService {
       discordMessage.channelId
     ) as TextChannel;
     if (channel) {
-      return await channel.send(message);
+      return await this.sendToTextChannel(channel, message);
     } else {
       this.logger.error(`Channel not found: ${discordMessage.channelId}`);
     }
