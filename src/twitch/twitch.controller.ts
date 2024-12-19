@@ -11,55 +11,55 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Controller('twitch')
 export class TwitchController {
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service,
+    private readonly configV2Service: WrapperType<ConfigV2Service>,
     private readonly twitchService: TwitchService
   ) {}
 
   @Get('kings')
-  getTwitchKings(): string[] {
+  public getTwitchKings(): string[] {
     return this.configV2Service.get().kings;
   }
 
   @Get('opps')
-  getOpponentKings(): string[] {
+  public getOpponentKings(): string[] {
     return this.configV2Service.get().oppKings;
   }
 
   @Get('crowns')
-  getTwitchCrowns(): string[] {
+  public getTwitchCrowns(): string[] {
     return this.configV2Service.get().crowns;
   }
 
   @Get('themeconfig')
-  getThemeConfig(): unknown {
+  public getThemeConfig(): unknown {
     return this.configV2Service.get().themeConfig;
   }
 
   // Load sounds for the soundboard menu
   @Get('soundboard')
-  getSoundboard(): string[] {
+  public getSoundboard(): string[] {
     return this.configV2Service.get().soundboard;
   }
 
   @Get('titles')
-  getTitles(): string[][] {
+  public getTitles(): string[][] {
     return this.configV2Service.get().lichess.titledPlayers;
   }
 
   @Post('/command')
-  postOwnerRunCommand(@Body() body: { command: string }) {
+  public postOwnerRunCommand(@Body() body: { command: string }): void {
     void this.twitchService.ownerRunCommand(body.command);
   }
 
   @Post('/custom-reward')
-  postCustomReward(@Body() body: { title: string; cost: number }) {
+  public postCustomReward(@Body() body: { title: string; cost: number }): void {
     void this.twitchService.createCustomReward(body);
   }
 
   @Post('/force-clients-refresh')
-  forceClientsRefresh() {
+  public forceClientsRefresh(): void {
     void this.twitchService.tellAllConnectedClientsToRefresh();
   }
 }

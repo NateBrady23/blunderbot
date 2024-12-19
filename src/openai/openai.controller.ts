@@ -3,10 +3,10 @@ import { OpenaiService } from './openai.service';
 
 @Controller('openai')
 export class OpenaiController {
-  constructor(private readonly openaiService: OpenaiService) {}
+  public constructor(private readonly openaiService: OpenaiService) {}
 
   @Post('/translate')
-  translate(@Body() body: TranslationRequest) {
+  public translate(@Body() body: TranslationRequest): Promise<string> {
     return this.openaiService.translate(body.message);
   }
 }

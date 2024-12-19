@@ -20,5 +20,3 @@ interface UserConfig {
 
   db: UserDbConfig;
 }
-
-interface Config extends UserConfig {}

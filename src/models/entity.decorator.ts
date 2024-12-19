@@ -7,7 +7,7 @@ import { BaseEntity } from './base.entity';
  * @param options
  * @returns Column meta data for a zoned timestamp
  */
-export function TimestampColumn(options?: ColumnOptions): PropertyDecorator {
+export function TimestampColumn(opts?: ColumnOptions): PropertyDecorator {
   return function (object: BaseEntity, propertyName: string) {
     getMetadataArgsStorage().columns.push({
       target: object.constructor,
@@ -27,7 +27,7 @@ export function TimestampColumn(options?: ColumnOptions): PropertyDecorator {
               ? new Date(value.indexOf('Z') !== -1 ? value : value + 'Z')
               : value
         },
-        ...options
+        ...opts
       }
     } as ColumnMetadataArgs);
   };

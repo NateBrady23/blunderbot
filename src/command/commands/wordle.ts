@@ -16,7 +16,7 @@ const command: Command = {
   help: 'Guess a 5-letter word by typing !wordle <word>. You may only guess once every 60 seconds. Capital means correct space. Lowercase means wrong space. If the word is funky, and you guess frown: F---n.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const guess = ctx.body?.toLowerCase().trim();
+    const guess = ctx.body.toLowerCase().trim();
 
     if (guess === 'new' && ctx.isOwner) {
       if (chosenWord) {

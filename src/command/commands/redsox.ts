@@ -33,9 +33,9 @@ interface MlbGame {
 }
 
 let currentInterval: undefined | ReturnType<typeof setTimeout>;
-let lastGameStatus: string = '';
+let lastGameStatus = '';
 
-async function getRedSoxGame(ctx: Context) {
+async function getRedSoxGame(ctx: Context): Promise<void> {
   const res = await fetch(
     `https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1`
   );
@@ -75,8 +75,8 @@ const command: Command = {
     lastGameStatus = null;
     clearInterval(currentInterval);
     await getRedSoxGame(ctx);
-    currentInterval = setInterval(async () => {
-      await getRedSoxGame(ctx);
+    currentInterval = setInterval(() => {
+      void getRedSoxGame(ctx);
     }, 1000 * 60);
     return true;
   }

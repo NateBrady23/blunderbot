@@ -1,6 +1,5 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../base.entity';
-import { StoredCommandInterface } from './stored-command.types';
 
 @Entity()
 export class StoredCommand
@@ -9,8 +8,8 @@ export class StoredCommand
 {
   //
   @Column({ length: 200 })
-  name: string;
+  public name: string;
 
   @Column({ length: 200 })
-  message: string;
+  public message: string;
 }

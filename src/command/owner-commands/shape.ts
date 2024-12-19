@@ -10,7 +10,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     return queue.enqueue(async function () {
-      let msg = ctx.body?.toLowerCase();
+      let msg = ctx.body.toLowerCase();
       if (!msg) {
         return false;
       }

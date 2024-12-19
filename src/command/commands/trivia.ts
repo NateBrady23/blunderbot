@@ -19,7 +19,10 @@ function showLeaderboard(ctx: Context, commandState: CommandState): string {
   return leaderboard;
 }
 
-async function recap(services: CommandServices, leaderboard: string) {
+async function recap(
+  services: CommandServices,
+  leaderboard: string
+): Promise<void> {
   const prompt = `Say thank you to all the players who played in trivia tonight. Write a summary of these players and their points in an exciting manner: ${leaderboard}`;
   await services.twitchService.ownerRunCommand(`!vchat ${prompt}`);
 }
@@ -28,7 +31,7 @@ async function showQuestion(
   ctx: Context,
   commandState: CommandState,
   services: CommandServices
-) {
+): Promise<void> {
   if (
     commandState.trivia.round >= services.configV2Service.get().trivia.length
   ) {
@@ -71,7 +74,7 @@ function selectRoundWinner(
   services: CommandServices,
   answer: string,
   pointsModifier = 1
-) {
+): void {
   const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
   const roundPoints = Math.round(
     (services.configV2Service.get().trivia[commandState.trivia.round].points ||
@@ -95,10 +98,8 @@ function selectRoundWinner(
   }
 
   const finalAnswer =
-    (
-      services.configV2Service.get().trivia[commandState.trivia.round]
-        .answers as string[]
-    )[0] ??
+    services.configV2Service.get().trivia[commandState.trivia.round]
+      .answers[0] ??
     services.configV2Service.get().trivia[commandState.trivia.round].answers;
 
   let toSpeak = `"${finalAnswer}" is correct! Congrats to @${users[0]}`;
@@ -116,7 +117,7 @@ function endRound(
   ctx: Context,
   commandState: CommandState,
   services: CommandServices
-) {
+): void {
   commandState.trivia.roundEnded = true;
 
   if (commandState.trivia.triviaTimeout) {
@@ -153,7 +154,7 @@ function nextQuestion(
   ctx: Context,
   commandState: CommandState,
   services: CommandServices
-) {
+): void {
   if (!commandState.trivia.roundEnded) {
     endRound(ctx, commandState, services);
   }
@@ -178,7 +179,7 @@ const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
-    const answer = ctx.body?.toLowerCase().trim();
+    const answer = ctx.body.toLowerCase().trim();
     if (answer === 'start' && ctx.isOwner) {
       if (commandState.trivia.started) {
         void ctx.botSpeak(
@@ -328,10 +329,9 @@ const command: Command = {
     }
 
     if (
-      (
-        services.configV2Service.get().trivia[commandState.trivia.round]
-          .answers as string[]
-      ).includes(answer)
+      services.configV2Service
+        .get()
+        .trivia[commandState.trivia.round].answers.includes(answer)
     ) {
       commandState.trivia.roundWinners.push(ctx.displayName);
       if (commandState.trivia.roundWinners.length === 1) {
