@@ -1,6 +1,6 @@
 # Release Notes
 
-### 2.9.0 (2024-12-19)
+### 2.9.0 (2025-01-09)
 
 #### Features
 
@@ -14,6 +14,7 @@
 
 #### Bug Fixes
 
+- Fixed an issue with `!personality` where the personality was being appended to the response instead of being applied to the response. (prompt fix)
 - Fixed a bug where bought squares were disappearing after the board was replaced.
 - Fixed a bug where Discord service was crashing because of the 4000 character limit.
 - Updated all packages to the latest versions and added an override for `path-to-regexp` to fix a high vulnerability with the `@nestjs/serve-static` package.

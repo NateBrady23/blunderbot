@@ -189,7 +189,7 @@ export class OpenaiService {
         const personality = (await this.commandService.getCommandState())
           .blunderBotPersonality;
         if (personality) {
-          userMessage += ' Respond in this style: ' + personality;
+          userMessage += ' Respond using this personality/tone: ' + personality;
         }
       }
 
