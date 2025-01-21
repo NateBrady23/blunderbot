@@ -3,9 +3,9 @@ import * as path from 'path';
 
 export async function writeLog(
   filename: string,
-  message: any,
+  message: unknown,
   opts?: { excludeDate?: boolean }
-) {
+): Promise<void> {
   if (typeof message !== 'string') {
     message = JSON.stringify(message);
   }

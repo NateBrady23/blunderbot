@@ -9,7 +9,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     const raidersConfig =
-      services.configV2Service.get().twitch?.raids?.matches || {};
+      services.configV2Service.get().twitch.raids.matches || {};
 
     return queue.enqueue(async function () {
       try {
@@ -21,7 +21,7 @@ const command: Command = {
         if (Object.keys(raidersConfig).includes(username)) {
           commands = raidersConfig[username].commands;
         } else {
-          commands = raidersConfig.default?.commands || [];
+          commands = raidersConfig.default.commands || [];
         }
         for (let cmd of commands) {
           cmd = cmd.replace(/{raider}/g, removeSymbols(username));

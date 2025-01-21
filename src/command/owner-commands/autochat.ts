@@ -7,7 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     let commandsToCycle =
-      services.configV2Service.get().twitch?.autoCommands?.commandSets || [];
+      services.configV2Service.get().twitch.autoCommands.commandSets || [];
 
     // Always clearing the interval so multiple "on"s don't stack and anything else shuts it off
     clearInterval(currentInterval);

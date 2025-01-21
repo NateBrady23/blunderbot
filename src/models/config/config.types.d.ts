@@ -1,4 +1,4 @@
-export interface ConfigInterface {
+interface ConfigInterface {
   twitch: JSON;
   lichess: JSON;
   commandConfig: JSON;
@@ -11,7 +11,7 @@ export interface ConfigInterface {
   misc: JSON;
 }
 
-export interface ConfigCreateInput {
+interface ConfigCreateInput {
   twitch?: JSON;
   lichess?: JSON;
   commandConfig?: JSON;

@@ -12,13 +12,13 @@ export async function createIndexes(
   },
   table: string,
   indexedColumns: ColumnOptions[]
-) {
+): Promise<void> {
   for (const columnOptions of indexedColumns) {
     const indexName = `IDX_${table.toUpperCase()}_${columnOptions.column.toUpperCase()}`;
     try {
       // Because sometimes dropping the database doesn't drop the indexes
       await queryRunner.dropIndex(table, indexName);
-    } catch (e) {
+    } catch {
       // pass because index doesn't exist
     }
     await queryRunner.createIndex(
@@ -38,7 +38,7 @@ export async function dropIndexes(
   },
   table: string,
   indexedColumns: ColumnOptions[]
-) {
+): Promise<void> {
   for (const columnOptions of indexedColumns) {
     const indexName = `IDX_${table.toUpperCase()}_${columnOptions.column.toUpperCase()}`;
     await queryRunner.dropIndex(table, indexName);

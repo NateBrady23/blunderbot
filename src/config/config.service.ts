@@ -1,30 +1,33 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import * as path from 'path';
 
 class ConfigService {
-  loadedConfig: Partial<Config> = {};
-  constructor() {
+  private loadedConfig: Partial<UserConfig> = {};
+  public constructor() {
     this.loadConfig();
   }
 
-  loadFromFile(configKey: string, filePath: string) {
+  public loadFromFile(
+    configKey: 'port' | 'wsPort' | 'db',
+    filePath: string
+  ): void {
     try {
-      // @ts-expect-error: Dynamically load the config file
       this.loadedConfig[configKey] = require(
         path.join(__dirname, filePath)
       ).default;
-    } catch (e) {
+    } catch {
       console.log(`No config file: ${filePath} [skipping]`);
     }
   }
 
-  loadConfig() {
+  public loadConfig(): void {
     this.loadedConfig = require(path.join(__dirname, './config')).default;
 
     // Load the public files
     console.log('Config loaded');
   }
 
-  public get() {
+  public get(): Partial<UserConfig> {
     return this.loadedConfig;
   }
 }

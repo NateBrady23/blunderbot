@@ -15,11 +15,11 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     let msg = ctx.body;
     let sendToDiscord =
-      services.configV2Service.get().discord?.enabled &&
-      !!services.configV2Service.get().discord?.announcementChannelId;
+      services.configV2Service.get().discord.enabled &&
+      !!services.configV2Service.get().discord.announcementChannelId;
     let sendToBluesky =
-      services.configV2Service.get().bluesky?.enabled &&
-      services.configV2Service.get().bluesky?.announceLive;
+      services.configV2Service.get().bluesky.enabled &&
+      services.configV2Service.get().bluesky.announceLive;
 
     const now = new Date();
 
@@ -44,13 +44,14 @@ const command: Command = {
     if (!msg) {
       try {
         msg = await services.openaiService.sendPrompt(
-          `We're about to go live on twitch. Say something to get people excited`,
+          `We're about to go live on twitch. Say something to get people excited. Under 500 characters.`,
           {
             temp: 1.4,
             includeBlunderBotContext: true
           }
         );
       } catch (e) {
+        console.error(e);
         msg = `Are you ready? We're live!`;
       }
     }

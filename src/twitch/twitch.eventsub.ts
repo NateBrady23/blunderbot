@@ -5,31 +5,31 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { TwitchService } from './twitch.service';
 import { writeLog } from '../utils/logs';
-import * as WebSocket from 'ws';
+import { WebSocket } from 'ws';
 import { ConfigV2Service } from '../configV2/configV2.service';
 
 @Injectable()
 export class TwitchEventSub {
-  private logger: Logger = new Logger(TwitchEventSub.name);
-  private eventSubMessageIds: string[] = [];
+  private readonly logger: Logger = new Logger(TwitchEventSub.name);
+  private readonly eventSubMessageIds: string[] = [];
   private eventSubConnection: WebSocket;
 
   private currentHypeTrainLevel = 1;
 
-  constructor(
+  public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: ConfigV2Service,
+    private readonly configV2Service: WrapperType<ConfigV2Service>,
     @Inject(forwardRef(() => TwitchService))
-    private readonly twitchService: TwitchService
+    private readonly twitchService: WrapperType<TwitchService>
   ) {}
 
-  init() {
+  public init(): void {
     void this.eventSubCreateConnection();
   }
 
-  async eventSubCreateConnection(
+  public async eventSubCreateConnection(
     wssUrl = this.configV2Service.get().twitch.eventWebsocketUrl
-  ) {
+  ): Promise<void> {
     this.eventSubConnection = new WebSocket(wssUrl);
     this.eventSubConnection.onopen = () => {
       this.logger.log('EventSub connection opened');
@@ -48,7 +48,7 @@ export class TwitchEventSub {
     this.eventSubConnection.onmessage = this.eventSubMessageHandler.bind(this);
   }
 
-  async eventSubMessageHandler(data: { data: string }) {
+  public async eventSubMessageHandler(data: { data: string }): Promise<void> {
     const parsedData = JSON.parse(data.data);
     const messageId = parsedData.metadata.message_id;
     if (this.eventSubMessageIds.includes(messageId)) {
@@ -135,11 +135,11 @@ export class TwitchEventSub {
     }
   }
 
-  async deleteExistingSubscriptions() {
+  public async deleteExistingSubscriptions(): Promise<void> {
     // Delete existing subscriptions
-    const existingSubs = await this.twitchService.helixApiCall(
+    const existingSubs = (await this.twitchService.helixApiCall(
       'https://api.twitch.tv/helix/eventsub/subscriptions'
-    );
+    )) as { data: { id: string }[] };
     if (!existingSubs?.data) {
       return;
     }
@@ -151,7 +151,7 @@ export class TwitchEventSub {
     }
   }
 
-  async subscribeToEvents(sessionId: string) {
+  public async subscribeToEvents(sessionId: string): Promise<void> {
     // https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelfollow
     const events = [
       { eventType: 'channel.follow', version: '2' },
@@ -184,7 +184,7 @@ export class TwitchEventSub {
       if (event.eventType === 'channel.chat.message') {
         condition['user_id'] = this.configV2Service.get().twitch.ownerId;
       }
-      const res = await this.twitchService.helixApiCall(
+      const res = (await this.twitchService.helixApiCall(
         this.configV2Service.get().twitch.eventSubscriptionUrl,
         'POST',
         {
@@ -196,7 +196,7 @@ export class TwitchEventSub {
             session_id: sessionId
           }
         }
-      );
+      )) as { error: unknown; data: { status: string }[] };
       if (res?.error) {
         this.logger.error(res);
       } else if (res?.data[0]?.status === 'enabled') {
@@ -205,7 +205,7 @@ export class TwitchEventSub {
     }
   }
 
-  async onChatMessage(data: OnChatMessageEvent) {
+  public async onChatMessage(data: OnChatMessageEvent): Promise<void> {
     const obj: OnMessageHandlerInput = {
       message: data.message.text,
       userLogin: data.chatter_user_login,
@@ -234,7 +234,7 @@ export class TwitchEventSub {
     void this.twitchService.onMessageHandler(obj);
   }
 
-  async onCheer(data: OnCheerEvent) {
+  public async onCheer(data: OnCheerEvent): Promise<void> {
     const obj = {
       message: data.message,
       bits: data.bits || 0,
@@ -244,11 +244,11 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onbits ${JSON.stringify(obj)}`);
   }
 
-  async onFollow(data: OnFollowEvent) {
+  public async onFollow(data: OnFollowEvent): Promise<void> {
     void this.twitchService.helixGetTwitchUserInfo(data.user_login, true);
   }
 
-  async onSubscribe(data: OnSubscribeEvent) {
+  public async onSubscribe(data: OnSubscribeEvent): Promise<void> {
     if (data.is_gift) {
       // This will be handled by the gift sub event
       return;
@@ -259,7 +259,9 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onSubscriptionGift(data: OnSubscriptionGiftEvent) {
+  public async onSubscriptionGift(
+    data: OnSubscriptionGiftEvent
+  ): Promise<void> {
     const obj = {
       username: data.is_anonymous ? 'Anonymous' : data.user_name,
       isGifter: true
@@ -267,7 +269,7 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
   }
 
-  async onRaid(data: OnRaidEvent) {
+  public async onRaid(data: OnRaidEvent): Promise<void> {
     void this.twitchService.ownerRunCommand(
       `!onraids ${data.from_broadcaster_user_login}`
     );
@@ -276,7 +278,7 @@ export class TwitchEventSub {
     );
   }
 
-  async onTrain(_data: OnHypeTrainBeginEvent) {
+  public async onTrain(_data: OnHypeTrainBeginEvent): Promise<void> {
     this.currentHypeTrainLevel = 1;
     this.twitchService.botSpeak(
       `Hype train level 1! Come on the train, choo choo ride it!!`
@@ -284,7 +286,7 @@ export class TwitchEventSub {
     void this.twitchService.ownerRunCommand('!train');
   }
 
-  async onTrainProgress(data: OnHypeTrainProgressEvent) {
+  public async onTrainProgress(data: OnHypeTrainProgressEvent): Promise<void> {
     const level = data.level;
     if (level > this.currentHypeTrainLevel) {
       this.currentHypeTrainLevel = level;
@@ -293,7 +295,7 @@ export class TwitchEventSub {
     }
   }
 
-  async onStreamOnline(_data: OnStreamOnlineEvent) {
+  public async onStreamOnline(_data: OnStreamOnlineEvent): Promise<void> {
     this.logger.log('Stream is online!');
   }
 }

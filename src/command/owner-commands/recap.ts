@@ -5,8 +5,8 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     if (
-      !services.configV2Service.get().openai?.enabled ||
-      !services.configV2Service.get().openai?.ttsModel
+      !services.configV2Service.get().openai.enabled ||
+      !services.configV2Service.get().openai.ttsModel
     ) {
       console.log(`OpenAI is not enabled in !recap command.`);
       return false;
@@ -16,7 +16,7 @@ const command: Command = {
     );
     const arenas = await res.text();
 
-    let arena = arenas
+    const arena = arenas
       .trim()
       .split('\n')
       .map((a) => JSON.parse(a))

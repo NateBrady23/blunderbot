@@ -13,7 +13,7 @@ const command: Command = {
     const items = ctx.body
       .split(',')
       .map((item) => item.trim())
-      .filter((item) => item?.length);
+      .filter((item) => item.length);
     await ctx.botSpeak(getRandomElement(items));
     return true;
   }

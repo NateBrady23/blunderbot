@@ -1,12 +1,20 @@
 import { FunctionQueue } from './FunctionQueue';
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
+import {
+  existsSync,
+  globSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync
+} from 'fs';
 
-import playerImport = require('play-sound');
+import playerImport from 'play-sound';
 import { ConfigV2Service } from '../configV2/configV2.service';
-const player = playerImport({});
+import ffmpeg from 'fluent-ffmpeg';
+import { FfprobeData } from 'fluent-ffmpeg';
 
-const ffmpeg = require('fluent-ffmpeg');
+const player = playerImport({});
 
 export function removeSymbols(text: string): string {
   return text.replace(/[^a-z0-9]/gi, '');
@@ -18,19 +26,13 @@ export function sleep(ms: number): Promise<void> {
 
 function getAudioDurationInSeconds(filePath: string): Promise<number> {
   return new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(
-      filePath,
-      function (
-        err: any,
-        metadata: { format: { duration: number | PromiseLike<number> } }
-      ) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(metadata.format.duration);
+    ffmpeg.ffprobe(filePath, function (err: unknown, data: FfprobeData) {
+      if (err) {
+        reject(err);
+        return;
       }
-    );
+      resolve(data.format.duration || 0);
+    });
   });
 }
 
@@ -42,11 +44,11 @@ function getAudioDurationInSeconds(filePath: string): Promise<number> {
 export async function muteOrUnmuteDesktopApps(
   mute: boolean,
   configService: ConfigV2Service
-) {
+): Promise<void> {
   const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
-    for (const command of configService.get().misc?.sounds[muteOrUnmute]
-      ?.programs) {
+    for (const command of configService.get().misc.sounds[muteOrUnmute]
+      .programs) {
       execSync(command);
     }
   } catch (error) {
@@ -59,8 +61,8 @@ const audioFileQueue = new FunctionQueue();
 export async function playAudioFile(
   filePath: string,
   configService: ConfigV2Service
-) {
-  await audioFileQueue.enqueue(async function () {
+): Promise<boolean> {
+  return await audioFileQueue.enqueue(async function () {
     try {
       await muteOrUnmuteDesktopApps(true, configService);
       const duration = await getAudioDurationInSeconds(filePath);
@@ -72,6 +74,7 @@ export async function playAudioFile(
       console.log(`Error playing audio file.`);
       console.log(error);
     }
+    return false;
   });
 }
 
@@ -87,7 +90,7 @@ export function isNHoursLater(
   return difference >= hoursInMilliseconds;
 }
 
-export function generateUUID() {
+export function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -102,13 +105,13 @@ export function getItemsBetweenDelimiters(
   const regex = new RegExp(`${delimiter}(.*?)${delimiter}`, 'g');
   const matches = [];
   let match;
-  while ((match = regex.exec(str))) {
+  while (Boolean((match = regex.exec(str)))) {
     matches.push(match[1]);
   }
   return matches;
 }
 
-export function timeSince(date: Date) {
+export function timeSince(date: Date): string {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;
 
@@ -142,8 +145,8 @@ export function getRandomIntBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function getRandomElement<T>(arr: T[]) {
-  if (!arr || arr.length === 0) {
+export function getRandomElement<T>(arr: T[]): T | undefined {
+  if (!Boolean(arr) || arr.length === 0) {
     return;
   }
 
@@ -151,12 +154,11 @@ export function getRandomElement<T>(arr: T[]) {
   return arr[randomIndex];
 }
 
-// I'm so good at naming things
 export function addStrToFileAfterStr(
   str: string,
   filePath: string,
   afterStr: string
-) {
+): void {
   try {
     const data = readFileSync(filePath, 'utf8');
     // Split the file content by lines
@@ -204,4 +206,26 @@ export function scheduleAt(hhmm: string, callback: () => void) {
 
   const msUntilThen = then.getTime() - now.getTime();
   setTimeout(callback, msUntilThen);
+
+export function parseNdjson<T>(input: string): T[] {
+  const lines = input.split('\n');
+  const result: T[] = [];
+  for (const line of lines) {
+    try {
+      result.push(JSON.parse(line) as T);
+    } catch {
+      // ignore
+    }
+  }
+  return result;
+}
+
+export function removeTempFiles(): void {
+  if (!existsSync('temp')) {
+    mkdirSync('temp');
+  }
+  const tempFiles = globSync('temp/*');
+  for (const file of tempFiles) {
+    unlinkSync(file);
+  }
 }

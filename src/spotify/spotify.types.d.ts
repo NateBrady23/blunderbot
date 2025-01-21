@@ -113,16 +113,8 @@ interface TracksResponse {
   items: TrackItem[];
 }
 
-interface ArtistItem extends TrackArtist {
-  // Inherits from TrackArtist, which includes all the properties of an artist
-}
-
 interface ArtistsResponse {
   items: ArtistItem[];
-}
-
-interface AlbumItem extends Album {
-  // Inherits from Album, which includes all the properties of an album
 }
 
 interface AlbumsResponse {
