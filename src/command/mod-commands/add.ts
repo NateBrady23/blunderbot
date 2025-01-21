@@ -6,7 +6,7 @@ const command: Command = {
   aliases: ['addcom'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().db?.enabled) {
+    if (!CONFIG.get().db.enabled) {
       console.error('Database is not enabled for !add command');
       return false;
     }
@@ -33,6 +33,7 @@ const command: Command = {
       }
       await services.commandService.setStoredCommands();
     } catch (e) {
+      console.error(e);
       ctx.reply(ctx, 'Error adding command');
       return false;
     }

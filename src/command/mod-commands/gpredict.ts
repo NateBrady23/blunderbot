@@ -33,7 +33,7 @@ const command: Command = {
 
     // This means we're starting a new prediction.
     if (items.length === 4) {
-      const res = await services.twitchService.helixApiCall(
+      const res = (await services.twitchService.helixApiCall(
         'https://api.twitch.tv/helix/predictions',
         'POST',
         {
@@ -46,7 +46,7 @@ const command: Command = {
           ],
           prediction_window: 90
         }
-      );
+      )) as { data: { id: string } };
 
       if (!res?.data) {
         void ctx.botSpeak(
@@ -56,8 +56,8 @@ const command: Command = {
       }
 
       if (
-        services.configV2Service.get().openai?.enabled &&
-        services.configV2Service.get().openai?.ttsModel
+        services.configV2Service.get().openai.enabled &&
+        services.configV2Service.get().openai.ttsModel
       ) {
         const msg = await services.openaiService.sendPrompt(
           `
@@ -74,13 +74,19 @@ const command: Command = {
       return true;
     }
 
-    const res = await services.twitchService.helixApiCall(
+    const res = (await services.twitchService.helixApiCall(
       `https://api.twitch.tv/helix/predictions?broadcaster_id=${
         services.configV2Service.get().twitch.ownerId
       }`
-    );
+    )) as { data: { id: string }[] };
 
-    const lastPrediction = res.data[0];
+    const lastPrediction = res.data[0] as {
+      id: string;
+      outcomes: Array<{
+        id: string;
+        channel_points: number;
+      }>;
+    };
 
     if (!lastPrediction) {
       return false;

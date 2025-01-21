@@ -9,9 +9,9 @@ const command: Command = {
   run: async (ctx, { commandState, services }) => {
     return queue.enqueue(async function () {
       const body = JSON.parse(ctx.body);
-      if (services.configV2Service.get().twitch?.onSubscribe?.length) {
+      if (services.configV2Service.get().twitch.onSubscribe.length) {
         for (const command of services.configV2Service.get().twitch
-          ?.onSubscribe) {
+          .onSubscribe) {
           void services.twitchService.ownerRunCommand(command);
         }
       }

@@ -4,7 +4,10 @@ import { GaxiosResponse } from 'googleapis-common';
 
 let cachedLatestShort: youtube_v3.Schema$PlaylistItem[] = [];
 
-async function getLastVideosByPlaylist(playlistId: string, apiKey: string) {
+async function getLastVideosByPlaylist(
+  playlistId: string,
+  apiKey: string
+): Promise<youtube_v3.Schema$PlaylistItem[]> {
   const youtube = google.youtube({
     version: 'v3',
     auth: apiKey
@@ -39,7 +42,7 @@ const command: Command = {
   name: 'shortslist',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!services.configV2Service.get().youtube?.enabled) {
+    if (!services.configV2Service.get().youtube.enabled) {
       console.log('YouTube not enabled in config for !shortslist command');
       return false;
     }

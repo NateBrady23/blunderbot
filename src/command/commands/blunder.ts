@@ -13,15 +13,15 @@ const command: Command = {
       // Hide all simple commands and hidden and killed commands
       if (
         Object.keys(
-          services.configV2Service.get().commandConfig?.simpleCommands
+          services.configV2Service.get().commandConfig.simpleCommands
         ).includes(commandName) ||
         services.configV2Service
           .get()
-          .commandConfig?.hiddenCommands?.includes(commandName) ||
+          .commandConfig.hiddenCommands.includes(commandName) ||
         services.configV2Service
           .get()
-          .commandConfig?.killedCommands?.includes(commandName) ||
-        commandState.killedCommands?.includes(commandName)
+          .commandConfig.killedCommands.includes(commandName) ||
+        commandState.killedCommands.includes(commandName)
       ) {
         return;
       }
@@ -41,8 +41,7 @@ const command: Command = {
     ctx.botSpeak(
       `The following commands are available: [${availableCommands.join(', ')}]`
     );
-    const commandsListUrl =
-      services.configV2Service.get().misc?.commandsListUrl;
+    const commandsListUrl = services.configV2Service.get().misc.commandsListUrl;
     if (commandsListUrl) {
       ctx.botSpeak(
         `For a full list of commands, check out: ${commandsListUrl}`

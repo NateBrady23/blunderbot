@@ -10,8 +10,8 @@ const command: Command = {
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function (): Promise<boolean> {
       if (
-        !services.configV2Service.get().openai?.enabled ||
-        !services.configV2Service.get().openai?.ttsModel
+        !services.configV2Service.get().openai.enabled ||
+        !services.configV2Service.get().openai.ttsModel
       ) {
         console.log(`OpenAI is not enabled in !tts command.`);
         return false;
