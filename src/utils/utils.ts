@@ -185,3 +185,23 @@ export function addStrToFileAfterStr(
     console.error(e);
   }
 }
+
+export function scheduleAt(hhmm: string, callback: () => void) {
+  const [hours, minutes] = hhmm.split(':').map((x) => parseInt(x));
+  const now = new Date();
+  const then = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    hours,
+    minutes
+  );
+
+  // If the time has already passed, schedule for tomorrow
+  if (now > then) {
+    then.setDate(then.getDate() + 1);
+  }
+
+  const msUntilThen = then.getTime() - now.getTime();
+  setTimeout(callback, msUntilThen);
+}

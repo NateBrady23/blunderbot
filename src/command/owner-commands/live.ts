@@ -1,3 +1,4 @@
+import { scheduleAt } from 'src/utils/utils';
 import { Platform } from '../../enums';
 
 /**
@@ -63,6 +64,10 @@ const command: Command = {
         `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
     }
+
+    scheduleAt('19:50', async () => {
+      await services.twitchService.ownerRunCommand('!sound dairyqueen');
+    });
 
     return true;
   }
