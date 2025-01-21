@@ -1,4 +1,5 @@
-import { Platform } from '../../enums';
+import { scheduleAt } from 'src/utils/utils';
+import { DaysOfWeek, Platform } from '../../enums';
 
 /**
  * The !live command without any arguments will announce that the streamer is live on discord if
@@ -19,6 +20,8 @@ const command: Command = {
     let sendToBluesky =
       services.configV2Service.get().bluesky.enabled &&
       services.configV2Service.get().bluesky.announceLive;
+
+    const now = new Date();
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -63,6 +66,20 @@ const command: Command = {
       void services.blueskyService.post(
         `${msg} https://twitch.tv/${services.configV2Service.get().twitch.ownerUsername}`
       );
+    }
+
+    scheduleAt('19:50', async () => {
+      await services.twitchService.ownerRunCommand('!sound dairyqueen');
+    });
+
+    if (now.getDay() === DaysOfWeek.Wednesday) {
+      scheduleAt('18:58', async () => {
+        await services.twitchService.ownerRunCommand(
+          `!vchat Announce that the BBB is starting in 2 minutes.
+          Encourage people to join and vie for the BBB title and by joining the team and clicking the link in the chat.`
+        );
+        await services.twitchService.ownerRunCommand('!bbb');
+      });
     }
 
     return true;
