@@ -1,5 +1,17 @@
 import { Platform } from '../../enums';
 
+const variants = [
+  'standard',
+  'chess960',
+  'crazyhouse',
+  'antichess',
+  'atomic',
+  'horde',
+  'kingofthehill',
+  'racingkings',
+  'threecheck'
+];
+
 const command: Command = {
   name: 'challenge',
   aliases: ['1v1'],
@@ -12,31 +24,24 @@ const command: Command = {
       );
       return true;
     }
+
     const user = ctx.args[0];
     let timeControls = ['5', '3'];
-    if (ctx.args[1]) {
-      timeControls = ctx.args[1].split('+');
-    }
-
     let variant = 'standard';
-    if (ctx.args[2]) {
-      if (
-        ![
-          'standard',
-          'chess960',
-          'crazyhouse',
-          'antichess',
-          'atomic',
-          'horde',
-          'kingofthehill',
-          'racingkings',
-          'threecheck'
-        ].includes(ctx.args[2].toLowerCase())
-      ) {
-        void ctx.botSpeak('Invalid variant.');
+
+    // Process remaining arguments flexibly
+    const remainingArgs = ctx.args.slice(1);
+    for (const arg of remainingArgs) {
+      if (arg.includes('+')) {
+        // This is a time control
+        timeControls = arg.split('+');
+      } else if (variants.includes(arg.toLowerCase())) {
+        // This is a variant
+        variant = arg.toLowerCase();
+      } else {
+        void ctx.botSpeak('Invalid argument provided.');
         return false;
       }
-      variant = ctx.args[2];
     }
 
     try {
@@ -55,8 +60,9 @@ const command: Command = {
         }
       );
       const json = await res.json();
-      if (json.challenge?.url) {
-        console.log(`Challenge URL: ${json.challenge.url}`);
+      if (json.url) {
+        console.log(`Challenge URL: ${json.url}`);
+        services.twitchService.ownerRunCommand(`!redirect ${json.url}`);
       } else {
         console.error(`Error creating challenge: ${user}`);
         return false;
