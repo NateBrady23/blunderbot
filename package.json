@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.13.29",
+    "@lichess-org/types": "^2.0.22",
     "@nestjs/common": "^11.0.3",
     "@nestjs/core": "^11.0.3",
     "@nestjs/platform-express": "^11.0.3",
