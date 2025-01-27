@@ -1,3 +1,4 @@
+import { components, paths } from '@lichess-org/types';
 import { Platform } from '../../enums';
 
 const command: Command = {
@@ -19,11 +20,17 @@ const command: Command = {
     const arena = arenas
       .trim()
       .split('\n')
-      .map((a) => JSON.parse(a))
+      .map(
+        (a) =>
+          JSON.parse(
+            a
+          ) as paths['/api/team/{teamId}/arena']['get']['responses']['200']['content']['application/x-ndjson']
+      )
       .find((arena) => arena.winner);
 
     res = await fetch(`https://lichess.org/api/tournament/${arena.id}`);
-    const tournament = await res.json();
+    const tournament =
+      (await res.json()) as components['schemas']['ArenaTournamentFull'];
 
     const prompt = `
     Say thank you to the ${arena.nbPlayers} players who played in the ${arena.fullName} today.
