@@ -26,7 +26,8 @@ const MESSAGE_TYPE = {
   THEME: 'THEME',
   SHAPE: 'SHAPE',
   BOUGHT_SQUARES: 'BOUGHT_SQUARES',
-  REFRESH: 'REFRESH'
+  REFRESH: 'REFRESH',
+  REDIRECT: 'REDIRECT'
 };
 
 let socket;
@@ -100,6 +101,10 @@ socket.on(MESSAGE_TYPE.SERVER_MESSAGE, async (data) => {
     load();
   } else if (data.type === MESSAGE_TYPE.GIPHY) {
     drawGiphy(data.giphyUrl, data.milliseconds);
+  } else if (data.type === MESSAGE_TYPE.REDIRECT) {
+    if (document.visibilityState === 'visible') {
+      window.location.href = data.url;
+    }
   }
 });
 

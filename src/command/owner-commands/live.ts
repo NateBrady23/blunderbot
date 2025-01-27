@@ -80,6 +80,19 @@ const command: Command = {
         );
         await services.twitchService.ownerRunCommand('!bbb');
       });
+
+      ['19:15', '19:30', '19:45'].forEach((time) =>
+        scheduleAt(
+          time,
+          async () =>
+            await services.twitchService.ownerRunCommand('!commentary')
+        )
+      );
+
+      scheduleAt(
+        '20:01',
+        async () => await services.twitchService.ownerRunCommand('!recap')
+      );
     }
 
     return true;

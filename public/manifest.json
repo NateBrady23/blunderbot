@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BlunderBot-Extension",
-  "version": "1.0",
+  "version": "2.9.1",
   "description": "A Chrome extension to enhance your experience on lichess.org.",
   "host_permissions": ["https://lichess.org/*", "https://localhost/*"],
   "permissions": [

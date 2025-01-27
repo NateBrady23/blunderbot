@@ -90,6 +90,12 @@ export default [
           allowExpressions: true,
           allowTypedFunctionExpressions: true
         }
+      ],
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto'
+        }
       ]
     }
   }
