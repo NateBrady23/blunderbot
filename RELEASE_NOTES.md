@@ -1,4 +1,22 @@
-# Release Notes
+# BlunderBot Release Notes
+
+### 2.10.0
+
+#### Features
+
+- Added `!redirect` owner command to redirect current window to a given URL.
+- `!challenge` now redirects to the challenge URL in the current window.
+- The order of the arguments for `!challenge` is now more flexible: `!challenge <user> <time> <variant>` or `!challenge <user> <variant> <time>` and variant and time are optional, defaulting to standard and 5+3.
+- Added the ability to schedule commands to run at a specific time. Thanks @fitztrev!
+- Added `!commentary` owner command to get some commentary on the current BBB tournament. Thanks @fitztrev!
+
+#### Bug Fixes
+
+- Fixed a bug where `!challenge` was not outputting the challenge URL.
+
+#### Breaking Changes
+
+- Major underlying framework update: NestJS to 11.0
 
 ### 2.9.0 (2025-01-09)
 

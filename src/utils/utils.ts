@@ -188,7 +188,7 @@ export function addStrToFileAfterStr(
   }
 }
 
-export function scheduleAt(hhmm: string, callback: () => void): void {
+export function scheduleAt(hhmm: string, callback: () => Promise<void>): void {
   const [hours, minutes] = hhmm.split(':').map((x) => parseInt(x));
   const now = new Date();
   const then = new Date(
@@ -205,7 +205,11 @@ export function scheduleAt(hhmm: string, callback: () => void): void {
   }
 
   const msUntilThen = then.getTime() - now.getTime();
-  setTimeout(callback, msUntilThen);
+  setTimeout(() => {
+    void (async () => {
+      await callback();
+    })();
+  }, msUntilThen);
 }
 
 export function parseNdjson<T>(input: string): T[] {

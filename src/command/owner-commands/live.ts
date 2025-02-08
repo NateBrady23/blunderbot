@@ -72,7 +72,7 @@ const command: Command = {
       await services.twitchService.ownerRunCommand('!sound dairyqueen');
     });
 
-    if (now.getDay() === DaysOfWeek.Wednesday) {
+    if (now.getDay() === DaysOfWeek.Tuesday) {
       scheduleAt('18:58', async () => {
         await services.twitchService.ownerRunCommand(
           `!vchat Announce that the BBB is starting in 2 minutes.
@@ -80,6 +80,19 @@ const command: Command = {
         );
         await services.twitchService.ownerRunCommand('!bbb');
       });
+
+      ['19:15', '19:30', '19:45'].forEach((time) =>
+        scheduleAt(
+          time,
+          async () =>
+            await services.twitchService.ownerRunCommand('!commentary')
+        )
+      );
+
+      scheduleAt(
+        '20:01',
+        async () => await services.twitchService.ownerRunCommand('!recap')
+      );
     }
 
     return true;
