@@ -1,6 +1,12 @@
 # BlunderBot Release Notes
 
-### 2.10.0
+### 2.11.0
+
+#### Breaking Changes
+
+- Removed reliance on pubsub, which is being slowly deprecated by Twitch starting on February 10, 2025.
+
+### 2.10.0 (2025-02-07)
 
 #### Features
 

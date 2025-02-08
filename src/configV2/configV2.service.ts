@@ -1,6 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigEntityService } from '../models/config/config.service';
-import { TwitchPubSub } from '../twitch/twitch.pubsub';
 import { TwitchEventSub } from '../twitch/twitch.eventsub';
 import { CommandService } from '../command/command.service';
 import { DiscordService } from '../discord/discord.service';
@@ -68,8 +67,6 @@ export class ConfigV2Service {
     private readonly openaiService: WrapperType<OpenaiService>,
     @Inject(forwardRef(() => TwitchEventSub))
     private readonly twitchEventSub: WrapperType<TwitchEventSub>,
-    @Inject(forwardRef(() => TwitchPubSub))
-    private readonly twitchPubSub: WrapperType<TwitchPubSub>,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: WrapperType<TwitchService>
   ) {
@@ -85,7 +82,6 @@ export class ConfigV2Service {
       this.commandService.init();
 
       this.twitchService.init();
-      this.twitchPubSub.init();
       this.twitchEventSub.init();
     }
 

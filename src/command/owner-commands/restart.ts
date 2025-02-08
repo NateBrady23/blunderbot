@@ -14,7 +14,6 @@ const command: Command = {
 
     if (service === 'twitch' && config.twitch) {
       services.twitchService.init();
-      services.twitchPubSub.init();
       services.twitchEventSub.init();
     }
 
