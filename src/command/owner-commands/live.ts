@@ -72,7 +72,7 @@ const command: Command = {
       await services.twitchService.ownerRunCommand('!sound dairyqueen');
     });
 
-    if (now.getDay() === DaysOfWeek.Wednesday) {
+    if (now.getDay() === DaysOfWeek.Tuesday) {
       scheduleAt('18:58', async () => {
         await services.twitchService.ownerRunCommand(
           `!vchat Announce that the BBB is starting in 2 minutes.
