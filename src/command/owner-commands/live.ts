@@ -22,8 +22,6 @@ const command: Command = {
       services.configV2Service.get().bluesky.enabled &&
       services.configV2Service.get().bluesky.announceLive;
 
-    const now = new Date();
-
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
     void ctx.botSpeak(`We're live!`);
