@@ -1,5 +1,6 @@
 import { scheduleAt } from 'src/utils/utils';
-import { DaysOfWeek, Platform } from '../../enums';
+import { Platform } from '../../enums';
+import { components } from '@lichess-org/types';
 
 /**
  * The !live command without any arguments will announce that the streamer is live on discord if
@@ -20,8 +21,6 @@ const command: Command = {
     let sendToBluesky =
       services.configV2Service.get().bluesky.enabled &&
       services.configV2Service.get().bluesky.announceLive;
-
-    const now = new Date();
 
     commandState.isLive = true;
     await services.twitchService.ownerRunCommand('!autochat on');
@@ -72,7 +71,18 @@ const command: Command = {
       await services.twitchService.ownerRunCommand('!sound dairyqueen');
     });
 
-    if (now.getDay() === DaysOfWeek.Tuesday) {
+    const res = await fetch(
+      `https://lichess.org/api/team/bradys-blunder-buddies/arena?max=2`
+    );
+    const arenas = await res.text();
+
+    const nextBbb = arenas
+      .trim()
+      .split('\n')
+      .map((a) => JSON.parse(a) as components['schemas']['ArenaTournament'])
+      .find((arena) => arena.secondsToStart);
+
+    if (nextBbb && nextBbb.secondsToStart < 60 * 60 * 2) {
       scheduleAt('18:58', async () => {
         await services.twitchService.ownerRunCommand(
           `!vchat Announce that the BBB is starting in 2 minutes.
