@@ -71,7 +71,7 @@ const command: Command = {
       await services.twitchService.ownerRunCommand('!sound dairyqueen');
     });
 
-    let res = await fetch(
+    const res = await fetch(
       `https://lichess.org/api/team/bradys-blunder-buddies/arena?max=2`
     );
     const arenas = await res.text();
@@ -79,10 +79,7 @@ const command: Command = {
     const nextBbb = arenas
       .trim()
       .split('\n')
-      .map(
-        (a) =>
-          JSON.parse(a) as components["schemas"]["ArenaTournament"]
-      )
+      .map((a) => JSON.parse(a) as components['schemas']['ArenaTournament'])
       .find((arena) => arena.secondsToStart);
 
     if (nextBbb && nextBbb.secondsToStart < 60 * 60 * 2) {
