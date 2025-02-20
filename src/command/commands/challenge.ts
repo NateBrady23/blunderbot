@@ -1,7 +1,7 @@
 import { components, paths } from '@lichess-org/types';
 import { Platform } from '../../enums';
 
-type LichessVariant = components["schemas"]["VariantKey"];
+type LichessVariant = components['schemas']['VariantKey'];
 
 const variants: LichessVariant[] = [
   'standard',
@@ -35,7 +35,9 @@ const command: Command = {
     // Process remaining arguments flexibly
     const remainingArgs = ctx.args.slice(1);
     for (const arg of remainingArgs) {
-      const requestedVariant = variants.find((v) => v.toLowerCase() === arg.toLowerCase());
+      const requestedVariant = variants.find(
+        (v) => v.toLowerCase() === arg.toLowerCase()
+      );
       if (arg.includes('+')) {
         // This is a time control
         timeControls = arg.split('+');
@@ -51,23 +53,27 @@ const command: Command = {
     try {
       const lichessUser = await services.lichessService.isGoodUser(user);
       if (!lichessUser.isValid) {
-        console.error('🚨 Challenge: Account not in good standing', `https://lichess.org/@/${user}`);
+        console.error(
+          '🚨 Challenge: Account not in good standing',
+          `https://lichess.org/@/${user}`
+        );
         return false;
       }
 
-      const challengeOptions: paths['/api/challenge/{username}']['post']['requestBody']['content']['application/x-www-form-urlencoded'] = {
-        rated: false,
-        'clock.limit': parseInt(timeControls[0]) * 60,
-        'clock.increment': parseInt(timeControls[1]),
-        color: 'random',
-        variant,
-        rules: 'noGiveTime'
-      }
+      const challengeOptions: paths['/api/challenge/{username}']['post']['requestBody']['content']['application/x-www-form-urlencoded'] =
+        {
+          rated: false,
+          'clock.limit': parseInt(timeControls[0]) * 60,
+          'clock.increment': parseInt(timeControls[1]),
+          color: 'random',
+          variant,
+          rules: 'noGiveTime'
+        };
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/challenge/${user}`,
         {
           method: 'POST',
-          body: challengeOptions,
+          body: challengeOptions
         }
       );
       const json = await res.json();
