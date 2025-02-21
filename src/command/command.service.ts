@@ -14,7 +14,6 @@ import { Platform } from '../enums';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 import { ConfigV2Service } from '../configV2/configV2.service';
 import { TwitchEventSub } from '../twitch/twitch.eventsub';
-import { TwitchPubSub } from '../twitch/twitch.pubsub';
 
 @Injectable()
 export class CommandService {
@@ -33,8 +32,6 @@ export class CommandService {
     private readonly twitchEventSub: WrapperType<TwitchEventSub>,
     @Inject(forwardRef(() => TwitchGateway))
     private readonly twitchGateway: WrapperType<TwitchGateway>,
-    @Inject(forwardRef(() => TwitchPubSub))
-    private readonly twitchPubSub: WrapperType<TwitchPubSub>,
     @Inject(forwardRef(() => TwitchService))
     private readonly twitchService: WrapperType<TwitchService>,
     @Inject(forwardRef(() => BlueskyService))
@@ -60,7 +57,6 @@ export class CommandService {
       discordService: this.discordService,
       twitchEventSub: this.twitchEventSub,
       twitchGateway: this.twitchGateway,
-      twitchPubSub: this.twitchPubSub,
       twitchService: this.twitchService,
       blueskyService: this.blueskyService,
       openaiService: this.openaiService,

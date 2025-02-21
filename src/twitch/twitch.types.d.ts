@@ -218,3 +218,16 @@ interface CreatePoll {
   channel_points_per_vote?: number;
   duration: number;
 }
+
+interface OnChannelPointsCustomRewardRedemptionEvent {
+  user_id: string;
+  user_login: string;
+  user_name: string;
+  user_input: string;
+  reward: {
+    id: string;
+    title: string;
+    prompt: string;
+    cost: number;
+  };
+}

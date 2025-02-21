@@ -12,7 +12,6 @@ import { SpotifyService } from '../spotify/spotify.service';
 import { StoredCommandEntityService } from '../models/stored-command/stored-command.service';
 import { ConfigV2Service } from '../configV2/configV2.service';
 import { TwitchEventSub } from '../twitch/twitch.eventsub';
-import { TwitchPubSub } from '../twitch/twitch.pubsub';
 
 declare global {
   interface CommandRunFuncOptions {
@@ -59,7 +58,6 @@ declare global {
     spotifyService: SpotifyService;
     twitchEventSub: TwitchEventSub;
     twitchGateway: TwitchGateway;
-    twitchPubSub: TwitchPubSub;
     twitchService: TwitchService;
     storedCommandEntityService: StoredCommandEntityService;
   }

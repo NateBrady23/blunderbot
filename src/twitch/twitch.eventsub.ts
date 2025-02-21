@@ -126,6 +126,12 @@ export class TwitchEventSub {
             await this.onChatMessage(parsedData.payload.event);
             break;
 
+          case 'channel.channel_points_custom_reward_redemption.add':
+            await this.onChannelPointsCustomRewardRedemption(
+              parsedData.payload.event
+            );
+            break;
+
           default:
             break;
         }
@@ -162,7 +168,11 @@ export class TwitchEventSub {
       { eventType: 'channel.cheer', version: '1' },
       { eventType: 'channel.subscribe', version: '1' },
       { eventType: 'channel.subscription.gift', version: '1' },
-      { eventType: 'channel.chat.message', version: '1' }
+      { eventType: 'channel.chat.message', version: '1' },
+      {
+        eventType: 'channel.channel_points_custom_reward_redemption.add',
+        version: '1'
+      }
     ];
     for (const event of events) {
       const condition: {
@@ -297,5 +307,26 @@ export class TwitchEventSub {
 
   public async onStreamOnline(_data: OnStreamOnlineEvent): Promise<void> {
     this.logger.log('Stream is online!');
+  }
+
+  public async onChannelPointsCustomRewardRedemption(
+    data: OnChannelPointsCustomRewardRedemptionEvent
+  ): Promise<void> {
+    const username = data.user_name;
+    const userInput = data.user_input;
+    const reward = data.reward;
+
+    this.logger.log(`User ${username} redeemed ${reward.title}`);
+
+    if (this.configV2Service.get().twitch.customRewardCommands[reward.title]) {
+      for (let command of this.configV2Service.get().twitch
+        .customRewardCommands[reward.title]) {
+        command = command.replace(/{username}/gi, `${username}`);
+        command = command.replace(/{message}/gi, `${userInput}`);
+        void this.twitchService.ownerRunCommand(`${command}`, {
+          onBehalfOf: username
+        });
+      }
+    }
   }
 }

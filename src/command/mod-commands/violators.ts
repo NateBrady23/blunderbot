@@ -23,7 +23,7 @@ const command: Command = {
       await ctx.botSpeak(':hourglass: Checking for violators...')
     );
 
-    fetch(`https://lichess.org/api/team/${teamId}/users`)
+    fetch(`https://lichess.org/api/team/${teamId}/users?full=true`)
       .then((res) => res.text())
       .then((data) => {
         const violators: Violator[] = [];
@@ -41,6 +41,8 @@ const command: Command = {
             );
           }
           const parsed = JSON.parse(member) as LichessUser;
+
+          console.log(parsed);
 
           if (parsed.tosViolation) {
             violators.push({

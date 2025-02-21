@@ -1,15 +1,18 @@
+import { components, paths } from '@lichess-org/types';
 import { Platform } from '../../enums';
 
-const variants = [
+type LichessVariant = components['schemas']['VariantKey'];
+
+const variants: LichessVariant[] = [
   'standard',
   'chess960',
   'crazyhouse',
   'antichess',
   'atomic',
   'horde',
-  'kingofthehill',
-  'racingkings',
-  'threecheck'
+  'kingOfTheHill',
+  'racingKings',
+  'threeCheck'
 ];
 
 const command: Command = {
@@ -27,17 +30,20 @@ const command: Command = {
 
     const user = ctx.args[0];
     let timeControls = ['5', '3'];
-    let variant = 'standard';
+    let variant: LichessVariant = 'standard';
 
     // Process remaining arguments flexibly
     const remainingArgs = ctx.args.slice(1);
     for (const arg of remainingArgs) {
+      const requestedVariant = variants.find(
+        (v) => v.toLowerCase() === arg.toLowerCase()
+      );
       if (arg.includes('+')) {
         // This is a time control
         timeControls = arg.split('+');
-      } else if (variants.includes(arg.toLowerCase())) {
+      } else if (requestedVariant) {
         // This is a variant
-        variant = arg.toLowerCase();
+        variant = requestedVariant;
       } else {
         void ctx.botSpeak('Invalid argument provided.');
         return false;
@@ -45,18 +51,29 @@ const command: Command = {
     }
 
     try {
+      const lichessUser = await services.lichessService.isGoodUser(user);
+      if (!lichessUser.isValid) {
+        console.error(
+          '🚨 Challenge: Account not in good standing',
+          `https://lichess.org/@/${user}`
+        );
+        return false;
+      }
+
+      const challengeOptions: paths['/api/challenge/{username}']['post']['requestBody']['content']['application/x-www-form-urlencoded'] =
+        {
+          rated: false,
+          'clock.limit': parseInt(timeControls[0]) * 60,
+          'clock.increment': parseInt(timeControls[1]),
+          color: 'random',
+          variant,
+          rules: 'noGiveTime'
+        };
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/challenge/${user}`,
         {
           method: 'POST',
-          body: {
-            rated: false,
-            'clock.limit': parseInt(timeControls[0]) * 60,
-            'clock.increment': parseInt(timeControls[1]),
-            color: 'random',
-            variant,
-            rules: 'noGiveTime'
-          }
+          body: challengeOptions
         }
       );
       const json = await res.json();
