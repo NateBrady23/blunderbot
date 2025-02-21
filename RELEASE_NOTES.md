@@ -1,6 +1,16 @@
-# BlunderBot Release Notes
+
 
 ### 2.11.0
+
+#### Features
+
+- `!onsubs` without a body will simulate a subscription event without a user.
+- Automatic commentary for BBB tournaments. Thanks @fitztrev!
+- `!challenge` command now checks if the user is a good user before sending the challenge. Thanks @fitztrev!
+
+#### Bug Fixes
+
+- Fixed a bug where `!violators` was not getting the full user data from lichess.
 
 #### Breaking Changes
 

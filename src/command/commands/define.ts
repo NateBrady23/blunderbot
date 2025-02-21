@@ -39,7 +39,7 @@ const command: Command = {
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
       const json: WordDefinition = (await res.json())[0];
-      if (!json.word) {
+      if (!json?.word) {
         void ctx.botSpeak(`I couldn't find a definition for ${word}.`);
         return false;
       }
