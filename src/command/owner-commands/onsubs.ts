@@ -8,7 +8,12 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     return queue.enqueue(async function () {
-      const body = JSON.parse(ctx.body);
+      let body;
+      try {
+        body = JSON.parse(ctx.body);
+      } catch {
+        // If unparsed, assume it's !onsubs from the owner
+      }
       if (services.configV2Service.get().twitch.onSubscribe.length) {
         for (const command of services.configV2Service.get().twitch
           .onSubscribe) {

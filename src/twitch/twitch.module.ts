@@ -5,7 +5,6 @@ import { TwitchGateway } from './twitch.gateway';
 import { CommandModule } from '../command/command.module';
 import { OpenaiModule } from '../openai/openai.module';
 import { GiphyModule } from '../giphy/giphy.module';
-import { TwitchPubSub } from './twitch.pubsub';
 import { TwitchEventSub } from './twitch.eventsub';
 import { ConfigV2Module } from '../configV2/configV2.module';
 
@@ -17,13 +16,7 @@ import { ConfigV2Module } from '../configV2/configV2.module';
     GiphyModule
   ],
   controllers: [TwitchController],
-  providers: [TwitchService, TwitchEventSub, TwitchPubSub, TwitchGateway],
-  exports: [
-    TwitchService,
-    TwitchGateway,
-    TwitchService,
-    TwitchPubSub,
-    TwitchEventSub
-  ]
+  providers: [TwitchService, TwitchEventSub, TwitchGateway],
+  exports: [TwitchService, TwitchGateway, TwitchService, TwitchEventSub]
 })
 export class TwitchModule {}
