@@ -30,22 +30,27 @@ const command: Command = {
     const tournament =
       (await res.json()) as components['schemas']['ArenaTournamentFull'];
 
+    if (!tournament) {
+      console.error('No tournament found');
+      return false;
+    }
+
     const nbPlayers = tournament.nbPlayers;
     const topGames = tournament.duels
-      .map((duel) => {
-        return duel.p.map((p) => p.n).join(' vs ');
+      ?.map((duel) => {
+        return duel.p?.map((p) => p.n).join(' vs ');
       })
       .join(', ');
-    const topPlayers = tournament.standing.players
-      .map((player) => {
+    const topPlayers = tournament.standing?.players
+      ?.map((player) => {
         return (
           `${player.rank}: ${player.name} with ${player.score} points` +
-          (player.sheet.fire ? ` and currently on a streak` : '')
+          (player.sheet?.fire ? ` and currently on a streak` : '')
         );
       })
       .slice(0, 4)
       .join(', ');
-    const minutesRemaining = Math.floor(tournament.secondsToFinish / 60);
+    const minutesRemaining = Math.floor(tournament.secondsToFinish || 0 / 60);
 
     const prompt = `
     Provide an exciting commentary of the ongoing BBB chess tournament.

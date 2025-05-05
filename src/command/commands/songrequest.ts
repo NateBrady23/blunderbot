@@ -6,18 +6,18 @@ const command: Command = {
   aliases: ['sr'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    if (!services.configV2Service.get().spotify.enabled) {
+    if (!services.configV2Service.get().spotify?.enabled) {
       console.log('Spotify is not enabled for !songrequest.');
       return false;
     }
-    const query = ctx.body.trim();
+    const query = ctx.body?.trim();
     if (!query) {
       void ctx.botSpeak('Please provide a song to request.');
       return false;
     }
 
     let allowedSongLengthMs =
-      services.configV2Service.get().spotify.maxAllowedSongLengthMs;
+      services.configV2Service.get().spotify?.maxAllowedSongLengthMs || 300000;
     // If the request is from a channel point redemption, and the query contains a
     // number in this format !t## then set the max allowed song length to that
     // number of minutes and remove it from the query. This is useful for
@@ -48,7 +48,7 @@ const command: Command = {
       return false;
     }
     if (
-      !services.configV2Service.get().spotify.allowExplicit &&
+      !services.configV2Service.get().spotify?.allowExplicit &&
       track.explicit
     ) {
       ctx.reply(ctx, 'I cannot play explicit songs.');
@@ -68,12 +68,13 @@ const command: Command = {
       const trackDetails = services.spotifyService.getTrackInfoFromTrack(track);
       commandState.spotify.requests[trackDetails] = user;
       ctx.reply(ctx, `${trackDetails} added to queue.`);
-      if (
-        services.configV2Service.get().discord.enabled &&
-        services.configV2Service.get().discord.musicChannelId
-      ) {
+      const musicChannelId =
+        services.configV2Service.get().discord?.musicChannelId;
+      if (services.configV2Service.get().discord?.enabled && musicChannelId) {
         void services.discordService.botSpeak(
-          { channelId: services.configV2Service.get().discord.musicChannelId },
+          {
+            channelId: musicChannelId
+          },
           `Song request added to queue by @${user} on Twitch: ${trackDetails}. Link: ${track.external_urls.spotify}`
         );
       }

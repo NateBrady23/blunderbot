@@ -18,7 +18,7 @@ import { TwitchEventSub } from '../twitch/twitch.eventsub';
 @Injectable()
 export class CommandService {
   private readonly logger: Logger = new Logger(CommandService.name);
-  private commandState: CommandState;
+  private commandState: CommandState = {} as CommandState;
   private readonly services: CommandServices;
 
   public constructor(
@@ -71,7 +71,7 @@ export class CommandService {
   public init(): void {
     this.setInitialCommandState();
 
-    if (this.configV2Service.get().misc.hypeRateEnabled) {
+    if (this.configV2Service.get().misc?.hypeRateEnabled) {
       void this.heartRateCheck();
     }
 
@@ -85,18 +85,19 @@ export class CommandService {
   public setInitialCommandState(): void {
     this.commandState = {
       arena: '',
-      shoutoutUsers: this.configV2Service.get().twitch.autoShoutouts || [],
+      shoutoutUsers: this.configV2Service.get().twitch?.autoShoutouts || [],
       boughtSquares: {},
       first: '',
       challengeQueue: [],
       isLive: false,
       limitedCommands: {},
       toggledOffCommands: [],
-      killedCommands: this.configV2Service.get().commandConfig.killedCommands,
+      killedCommands:
+        this.configV2Service.get().commandConfig?.killedCommands || [],
       heartRateHigh: 0,
       blunderBotPersonality: '',
       blunderbotVoice: <OpenAiVoiceOptions>(
-        this.configV2Service.get().openai.voices[0]
+        this.configV2Service.get().openai?.voices?.[0]
       ),
       storedCommands: {},
       cbanUsers: [],
@@ -152,7 +153,7 @@ export class CommandService {
 
   private async canRun(ctx: Context, cmd: Command): Promise<boolean> {
     if (!cmd.platforms.includes(ctx.platform)) {
-      return;
+      return false;
     }
 
     if (this.commandState.cbanUsers.includes(ctx.displayName.toLowerCase())) {
@@ -168,7 +169,7 @@ export class CommandService {
 
     if (cmd.requiresLive && !this.commandState.isLive) {
       void ctx.botSpeak(
-        `${this.configV2Service.get().twitch.ownerUsername} is not live until I SAY HE'S LIVE!`
+        `${this.configV2Service.get().twitch?.ownerUsername} is not live until I SAY HE'S LIVE!`
       );
       return false;
     }
@@ -189,7 +190,7 @@ export class CommandService {
 
     if (ctx.platform === Platform.Twitch) {
       if (
-        this.configV2Service.get().twitch.subCommands.includes(cmd.name) &&
+        this.configV2Service.get().twitch?.subCommands?.includes(cmd.name) &&
         !ctx.isSubscriber
       ) {
         void ctx.botSpeak(
@@ -199,7 +200,9 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service.get().twitch.followerCommands.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch?.followerCommands?.includes(cmd.name) &&
         !ctx.isFollower
       ) {
         void ctx.botSpeak(
@@ -209,7 +212,7 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service.get().twitch.vipCommands.includes(cmd.name) &&
+        this.configV2Service.get().twitch?.vipCommands?.includes(cmd.name) &&
         !ctx.isVip
       ) {
         void ctx.botSpeak(`@${ctx.displayName} !${cmd.name} is for VIPs only.`);
@@ -217,7 +220,9 @@ export class CommandService {
       }
 
       if (
-        this.configV2Service.get().twitch.founderCommands.includes(cmd.name) &&
+        this.configV2Service
+          .get()
+          .twitch?.founderCommands?.includes(cmd.name) &&
         !ctx.isFounder
       ) {
         void ctx.botSpeak(
@@ -229,7 +234,7 @@ export class CommandService {
       if (
         this.configV2Service
           .get()
-          .twitch.hypeTrainConductorCommands.includes(cmd.name) &&
+          .twitch?.hypeTrainConductorCommands?.includes(cmd.name) &&
         !ctx.isHypeTrainConductor
       ) {
         void ctx.botSpeak(
@@ -245,7 +250,7 @@ export class CommandService {
     }
 
     // Don't run if there's still some cooling down to do.
-    if (cmd.lastRun + (cmd.coolDown || 0) > Date.now()) {
+    if (cmd.lastRun && cmd.lastRun + (cmd.coolDown || 0) > Date.now()) {
       this.logger.log(
         `${ctx.command} by ${ctx.displayName} needed to cool down.`
       );
@@ -253,9 +258,9 @@ export class CommandService {
     }
 
     // Checks to see if the command is limited
-    if (this.configV2Service.get().twitch.limitedCommands) {
+    if (this.configV2Service.get().twitch?.limitedCommands) {
       const limitedTo =
-        this.configV2Service.get().twitch.limitedCommands[cmd.name];
+        this.configV2Service.get().twitch?.limitedCommands?.[cmd.name];
       if (limitedTo && limitedTo > 0) {
         if (!this.commandState.limitedCommands[cmd.name]) {
           this.commandState.limitedCommands[cmd.name] = {};
@@ -273,9 +278,9 @@ export class CommandService {
       }
     }
 
-    if (this.configV2Service.get().twitch.userRestrictedCommands) {
+    if (this.configV2Service.get().twitch?.userRestrictedCommands) {
       const userRestricted =
-        this.configV2Service.get().twitch.userRestrictedCommands[cmd.name];
+        this.configV2Service.get().twitch?.userRestrictedCommands?.[cmd.name];
       if (userRestricted) {
         const found = userRestricted.some((user) => {
           return user.toLowerCase() === ctx.displayName.toLowerCase();
@@ -294,7 +299,7 @@ export class CommandService {
   }
 
   public findCommand(name: string): Command | undefined {
-    const commands = this.services.configV2Service.get().commands;
+    const commands = this.services.configV2Service.get().commands || {};
     name = name.toLowerCase();
     const commandKeys = Object.keys(commands);
 
@@ -358,7 +363,7 @@ export class CommandService {
     }
 
     // Run any commands created during the stream with !add
-    if (this.commandState.storedCommands[ctx.command]) {
+    if (this.commandState.storedCommands?.[ctx.command]) {
       void ctx.botSpeak(this.commandState.storedCommands[ctx.command]);
       return;
     }
@@ -375,7 +380,7 @@ export class CommandService {
   }
 
   public async setStoredCommands(): Promise<{ [key: string]: string }> {
-    if (!CONFIG.get().db.enabled) {
+    if (!CONFIG.get().db?.enabled) {
       return {};
     }
     const storedCommandsArr = await this.storedCommandEntityService.findAll();
@@ -385,6 +390,7 @@ export class CommandService {
         this.commandState.storedCommands[sc.name] = sc.message;
       }
     }
+    return this.commandState.storedCommands;
   }
 
   public updateBoughtSquares(data: { [key: string]: string }): void {

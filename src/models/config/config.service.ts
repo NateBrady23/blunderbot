@@ -21,8 +21,11 @@ export class ConfigEntityService {
     return Config;
   }
 
-  public async latest(): Promise<Config> {
-    return this.ConfigRepository.findOne({ where: {}, order: { id: 'DESC' } });
+  public async latest(): Promise<Config | null> {
+    return this.ConfigRepository.findOne({
+      where: {},
+      order: { id: 'DESC' }
+    });
   }
 
   public async save(Config: Config): Promise<Config> {
@@ -38,7 +41,10 @@ export class ConfigEntityService {
     await this.ConfigRepository.save(Config);
   }
 
-  public async findById(id: string, failIfNotFound?: boolean): Promise<Config> {
+  public async findById(
+    id: string,
+    failIfNotFound = false
+  ): Promise<Config | null> {
     return this.find(
       {
         where: { id: Number(id) }
@@ -50,7 +56,7 @@ export class ConfigEntityService {
   private async find(
     opts: FindOneOptions<Config>,
     failIfNotFound: boolean
-  ): Promise<Config> {
+  ): Promise<Config | null> {
     if (failIfNotFound) {
       return this.ConfigRepository.findOneOrFail(opts);
     }

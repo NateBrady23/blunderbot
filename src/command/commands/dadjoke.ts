@@ -14,6 +14,7 @@ async function getJoke(apiKey: string): Promise<string> {
     return answer[0].joke;
   } catch (error) {
     console.error(error);
+    return 'Error fetching joke';
   }
 }
 
@@ -21,7 +22,7 @@ const command: Command = {
   name: 'dadjoke',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const apiKey = services.configV2Service.get().misc.rapidApiKey;
+    const apiKey = services.configV2Service.get().misc?.rapidApiKey;
     if (!apiKey) {
       console.log('RapidAPI is disabled in !dadjoke.');
       return false;

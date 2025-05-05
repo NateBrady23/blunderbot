@@ -5,8 +5,8 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (
-      !services.configV2Service.get().discord.enabled ||
-      !services.configV2Service.get().discord.generalChannelId
+      !services.configV2Service.get().discord?.enabled ||
+      !services.configV2Service.get().discord?.generalChannelId
     ) {
       console.log(`Discord is not enabled in !discordspeak command.`);
       return false;
@@ -14,7 +14,8 @@ const command: Command = {
     const msg = ctx.body;
     if (msg) {
       const channel = {
-        channelId: services.configV2Service.get().discord.generalChannelId
+        channelId:
+          services.configV2Service.get().discord?.generalChannelId || ''
       };
       void services.discordService.botSpeak(channel, msg);
     }

@@ -7,8 +7,8 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (
-      !services.configV2Service.get().openai.enabled ||
-      !services.configV2Service.get().openai.imageModel
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.imageModel
     ) {
       console.log(`OpenAI is not enabled in !image command.`);
       return false;
@@ -16,13 +16,13 @@ const command: Command = {
     if (ctx.platform === Platform.Discord && !ctx.isOwner) {
       return false;
     }
-    let prompt = ctx.body.trim();
+    let prompt = ctx.body?.trim();
     let sendToDiscord =
-      services.configV2Service.get().discord.enabled &&
-      !!services.configV2Service.get().discord.galleryChannelId;
+      services.configV2Service.get().discord?.enabled &&
+      !!services.configV2Service.get().discord?.galleryChannelId;
     let sendToBluesky =
-      services.configV2Service.get().bluesky.enabled &&
-      services.configV2Service.get().bluesky.imagesEnabled;
+      services.configV2Service.get().bluesky?.enabled &&
+      services.configV2Service.get().bluesky?.imagesEnabled;
 
     const user = ctx.onBehalfOf || ctx.displayName;
 
@@ -46,7 +46,9 @@ const command: Command = {
     let url = '';
     const firstWord = prompt.split(' ')[0].toLowerCase();
 
-    if (services.configV2Service.get().openai.imageEdits.includes(firstWord)) {
+    if (
+      services.configV2Service.get().openai?.imageEdits?.includes(firstWord)
+    ) {
       const regex = new RegExp(`${firstWord} `, 'i');
       url = await services.openaiService.editImage(
         `./public/images/edits/${firstWord}.png`,

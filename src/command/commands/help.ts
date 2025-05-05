@@ -13,7 +13,7 @@ const command: Command = {
     const cmd = services.commandService.findCommand(ctx.args[0]);
 
     if (
-      !cmd.help ||
+      !cmd?.help ||
       !cmd.platforms.includes(ctx.platform) ||
       commandState.killedCommands.includes(cmd.name)
     ) {

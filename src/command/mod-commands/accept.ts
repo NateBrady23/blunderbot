@@ -4,7 +4,10 @@ const command: Command = {
   name: 'accept',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const team = services.configV2Service.get().lichess.teamId;
+    const team = services.configV2Service.get().lichess?.teamId;
+    if (!team) {
+      return false;
+    }
     try {
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/team/${team}/requests`
@@ -28,7 +31,7 @@ const command: Command = {
           const json = await res.json();
           if (json.ok) {
             void ctx.botSpeak(
-              `Welcome ${user} to ${services.configV2Service.get().lichess.teamName}`
+              `Welcome ${user} to ${services.configV2Service.get().lichess?.teamName}`
             );
           }
         } else {

@@ -11,8 +11,8 @@ import { ImageGenerateParams } from 'openai/resources';
 export class OpenaiService {
   private readonly logger: Logger = new Logger(OpenaiService.name);
   private savedMessages: OpenAiChatMessage[] = [];
-  private openai: OpenAI;
-  private baseMessages: OpenAiChatMessage[];
+  private openai: OpenAI | undefined;
+  private baseMessages: OpenAiChatMessage[] = [];
 
   public constructor(
     @Inject(forwardRef(() => CommandService))
@@ -23,13 +23,13 @@ export class OpenaiService {
 
   public init(): void {
     this.openai = new OpenAI({
-      apiKey: this.configV2Service.get().openai.apiKey
+      apiKey: this.configV2Service.get().openai?.apiKey
     });
 
     this.baseMessages = [
       {
         role: 'system',
-        content: this.configV2Service.get().openai.baseSystemMessage
+        content: this.configV2Service.get().openai?.baseSystemMessage || ''
       }
     ];
 
@@ -38,7 +38,7 @@ export class OpenaiService {
 
   public fixPronunciations(text: string): string {
     for (const [key, value] of this.configV2Service.get().openai
-      .pronunciations) {
+      ?.pronunciations || []) {
       text = text.replace(new RegExp(key, 'gi'), value);
     }
 
@@ -51,9 +51,12 @@ export class OpenaiService {
       size: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
     }
   ): Promise<string> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     try {
       const generateBody: ImageGenerateParams = {
-        model: this.configV2Service.get().openai.imageModel || 'dall-e-3',
+        model: this.configV2Service.get().openai?.imageModel || 'dall-e-3',
         prompt,
         quality: 'standard',
         n: 1
@@ -62,14 +65,18 @@ export class OpenaiService {
         generateBody.size = opts.size;
       }
       const response = await this.openai.images.generate(generateBody);
-      return response.data[0].url;
+      return response.data[0].url || '';
     } catch (error) {
       this.logger.error('Error creating image');
       this.logger.error(error);
     }
+    return '';
   }
 
   public async editImage(maskImg: string, prompt: string): Promise<string> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     try {
       const response = await this.openai.images.edit({
         image: createReadStream(maskImg),
@@ -78,18 +85,24 @@ export class OpenaiService {
         prompt,
         n: 1
       });
-      return response.data[0].url;
+      return response.data[0].url || '';
     } catch (error) {
       this.logger.error('Error editing image');
       this.logger.error(error);
     }
+    return '';
   }
 
-  public async createEmbedding(text: string): Promise<Array<number>> {
+  public async createEmbedding(
+    text: string
+  ): Promise<Array<number> | undefined> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     try {
       const response = await this.openai.embeddings.create({
         model:
-          this.configV2Service.get().openai.embeddingsModel ||
+          this.configV2Service.get().openai?.embeddingsModel ||
           'text-embedding-ada-002',
         input: text
       });
@@ -104,6 +117,9 @@ export class OpenaiService {
     message: string,
     voice: OpenAiVoiceOptions
   ): Promise<boolean> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     try {
       if (await this.isFlagged(message)) {
         return false;
@@ -116,7 +132,7 @@ export class OpenaiService {
 
     try {
       const response = await this.openai.audio.speech.create({
-        model: this.configV2Service.get().openai.ttsModel,
+        model: this.configV2Service.get().openai?.ttsModel || 'tts-1',
         voice,
         input: message
       });
@@ -129,9 +145,13 @@ export class OpenaiService {
     } catch (error) {
       this.logger.error(error);
     }
+    return false;
   }
 
   public async translate(message: string): Promise<string> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     try {
       const messages: OpenAiChatMessage[] = [
         {
@@ -143,10 +163,10 @@ export class OpenaiService {
       ];
 
       const completion = await this.openai.chat.completions.create({
-        model: this.configV2Service.get().openai.chatModel,
+        model: this.configV2Service.get().openai?.chatModel || 'gpt-4o',
         messages
       });
-      return completion.choices[0].message.content;
+      return completion.choices[0].message.content || '';
     } catch (e) {
       this.logger.error(e);
       return `Translation service is unavailable.`;
@@ -164,6 +184,9 @@ export class OpenaiService {
       user?: string;
     }
   ): Promise<string> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     let systemMessages: OpenAiChatMessage[] = [];
     try {
       if (opts?.moderate) {
@@ -210,7 +233,7 @@ export class OpenaiService {
       this.savedMessages = [...this.savedMessages, ...messages];
       messages = [...systemMessages, ...this.savedMessages];
       const completion = await this.openai.chat.completions.create({
-        model: this.configV2Service.get().openai.chatModel,
+        model: this.configV2Service.get().openai?.chatModel || 'gpt-4o',
         messages,
         temperature: opts?.temp || 0.9
       });
@@ -219,19 +242,18 @@ export class OpenaiService {
       this.logger.log(`Reply before filter: ${reply}`);
 
       if (opts?.includeBlunderBotContext) {
-        reply = this.cleanReplyAsBlunderBot(reply);
+        reply = this.cleanReplyAsBlunderBot(reply || '');
       }
 
-      this.savedMessages.push({ role: 'assistant', content: reply });
+      this.savedMessages.push({ role: 'assistant', content: reply || '' });
 
       while (
         this.savedMessages.length >
-          this.configV2Service.get().openai.memoryCount ||
-        0
+        (this.configV2Service.get().openai?.memoryCount || 0)
       ) {
         this.savedMessages.shift();
       }
-      return reply;
+      return reply || '';
     } catch (e) {
       this.logger.error(e);
       return `I'm sorry, I'm not feeling well. I need to take a break.`;
@@ -259,6 +281,7 @@ export class OpenaiService {
         user: ctx.onBehalfOf || ctx.username
       });
     }
+    return '';
   }
 
   public async getChatCompletion(
@@ -269,13 +292,18 @@ export class OpenaiService {
       messages = [{ role: 'user', content: messages }];
     }
     try {
+      if (!this.openai) {
+        this.logger.error('OpenAI client not initialized');
+        return `I'm sorry, I'm not feeling well. I need to take a break.`;
+      }
+
       const completion = await this.openai.chat.completions.create({
-        model: this.configV2Service.get().openai.chatModel,
+        model: this.configV2Service.get().openai?.chatModel || 'gpt-4o',
         messages,
         response_format: { type: jsonResponse ? 'json_object' : 'text' }
       });
 
-      return completion.choices[0].message.content;
+      return completion.choices[0].message.content || '';
     } catch (e) {
       this.logger.error(e);
       return `I'm sorry, I'm not feeling well. I need to take a break.`;
@@ -302,8 +330,13 @@ export class OpenaiService {
   }
 
   private async isFlagged(message: string): Promise<boolean> {
+    if (!this.openai) {
+      throw new Error('OpenAI client not initialized');
+    }
     const moderation = await this.openai.moderations.create({
-      model: this.configV2Service.get().openai.textModerationModel,
+      model:
+        this.configV2Service.get().openai?.textModerationModel ||
+        'text-moderation-latest',
       input: message
     });
     return moderation.results[0].flagged;

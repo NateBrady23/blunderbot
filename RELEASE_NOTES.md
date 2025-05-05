@@ -1,4 +1,8 @@
+### 2.12.0
 
+#### Features
+
+- 
 
 ### 2.11.0
 
@@ -11,6 +15,7 @@
 #### Bug Fixes
 
 - Fixed a bug where `!violators` was not getting the full user data from lichess.
+- Fixed a fatal bug where locked temp files that can't be deleted will now be skipped instead of crashing the bot.
 
 #### Breaking Changes
 

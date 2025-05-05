@@ -5,7 +5,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const themes = services.configV2Service.get().themeConfig;
-    if (themes[ctx.args[0] as keyof typeof themes]) {
+    if (themes?.[ctx.args[0] as keyof typeof themes]) {
       const theme = (ctx.args[0] || '').toLowerCase();
       services.twitchGateway.sendDataToOneSocket('serverMessage', {
         type: 'THEME',

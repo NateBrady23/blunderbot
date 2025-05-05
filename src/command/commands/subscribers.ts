@@ -6,12 +6,12 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     const url = `https://decapi.me/twitch/subcount/${
-      services.configV2Service.get().twitch.ownerUsername
+      services.configV2Service.get().twitch?.ownerUsername
     }`;
 
     const res = await (await fetch(url)).text();
     void ctx.botSpeak(
-      `${services.configV2Service.get().twitch.ownerUsername} has ${res} subscribers on Twitch!`
+      `${services.configV2Service.get().twitch?.ownerUsername} has ${res} subscribers on Twitch!`
     );
 
     return true;

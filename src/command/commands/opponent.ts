@@ -4,9 +4,9 @@ const command: Command = {
   name: 'opponent',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = services.configV2Service
-      .get()
-      .oppKings.map((k) => k.split('.')[0]);
+    const kings =
+      services.configV2Service.get().oppKings?.map((k) => k.split('.')[0]) ??
+      [];
     let king = (ctx.args[0] || '').toLowerCase();
     const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     if (king === 'random') {
@@ -17,7 +17,7 @@ const command: Command = {
       (!ctx.isOwner && king.startsWith('secret_'))
     ) {
       const kingsUrl =
-        services.configV2Service.get().twitch.opponentsGalleryUrl;
+        services.configV2Service.get().twitch?.opponentsGalleryUrl;
       if (kingsUrl) {
         void ctx.botSpeak(`Check out the gallery at ${kingsUrl}`);
       } else {
@@ -32,7 +32,7 @@ const command: Command = {
       type: 'OPP_KING',
       king: services.configV2Service
         .get()
-        .oppKings.find((k) => k.startsWith(king))
+        .oppKings?.find((k) => k.startsWith(king))
     });
 
     if (!ctx.isOwner && !king.startsWith('secret_')) {

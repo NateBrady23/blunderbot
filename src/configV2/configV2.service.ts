@@ -25,7 +25,7 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
               /{username}/g,
               removeSymbols(ctx.displayName)
             );
-            command = command.replace(/{message}/g, ctx.body);
+            command = command.replace(/{message}/g, ctx.body || '');
             void services.twitchService.ownerRunCommand(command, {
               onBehalfOf: ctx.displayName
             });
@@ -37,7 +37,7 @@ function getCommandProperties(obj: MessageCommand, name: string): Command {
           /{username}/g,
           removeSymbols(ctx.displayName)
         );
-        msg = msg.replace(/{message}/g, ctx.body);
+        msg = msg.replace(/{message}/g, ctx.body || '');
         ctx.botSpeak(msg);
       }
       return true;
@@ -162,11 +162,12 @@ export class ConfigV2Service {
       ['./public/sounds/soundboard', config.soundboard],
       ['./public/images/cursors', config.cursors],
       ['./public/gifs', config.gifs]
-    ].forEach((publicFiles: [string, string[]]) => {
-      readdirSync(publicFiles[0]).forEach((file) => {
+    ].forEach((publicFiles) => {
+      const [dir, fileList] = publicFiles as [string, string[]];
+      readdirSync(dir).forEach((file) => {
         const fileName = file.split('.')[0];
         if (fileName) {
-          publicFiles[1].push(file);
+          fileList.push(file);
         }
       });
     });
@@ -203,11 +204,11 @@ export class ConfigV2Service {
     key: ConfigV2Keys,
     value: JSON & number & Date
   ): Promise<ConfigV2> {
-    let newConfig: Config = await this.configEntityService.latest();
+    let newConfig: Config | null = await this.configEntityService.latest();
     // Always create a new config object to avoid updating the same object in the database
     // allowing for possible config rollback
     if (newConfig) {
-      newConfig.id = undefined;
+      (newConfig as Partial<Config>).id = null as unknown as number;
       newConfig[key as keyof Config] = value;
     } else {
       newConfig = { [key]: value } as unknown as Config;

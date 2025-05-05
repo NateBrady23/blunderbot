@@ -6,7 +6,10 @@ const command: Command = {
   aliases: ['followers', 'followercount', 'followcount'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const channel = services.configV2Service.get().twitch.ownerUsername;
+    const channel = services.configV2Service.get().twitch?.ownerUsername;
+    if (!channel) {
+      return false;
+    }
     const url = `https://decapi.me/twitch/followcount/${channel}`;
 
     const res = await (await fetch(url)).text();

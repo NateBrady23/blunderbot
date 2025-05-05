@@ -15,8 +15,8 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 export class DiscordService {
   private readonly logger: Logger = new Logger(DiscordService.name);
 
-  public client: Client;
-  public guild: Guild;
+  public client: Client | undefined;
+  public guild: Guild | undefined;
 
   public constructor(
     @Inject(forwardRef(() => CommandService))
@@ -39,32 +39,33 @@ export class DiscordService {
     this.client.on('ready', async () => {
       this.logger.log('Discord bot ready');
 
-      this.guild = this.client.guilds.cache.first();
-      this.guild.members
-        .fetch({ withPresences: true })
-
-        .then((fetchedMembers) => {
-          const totalOnline = fetchedMembers.filter(
-            (member) => member.presence?.status === 'online'
-          );
-          for (const id of totalOnline.keys()) {
-            this.logger.log(totalOnline.get(id).user.username);
-          }
-          // Now you have a collection with all online member objects in the totalOnline variable
-          this.logger.log(
-            `There are currently ${totalOnline.size} members online in this guild!`
-          );
-        });
+      this.guild = this.client?.guilds.cache.first();
+      if (this.guild) {
+        this.guild.members
+          .fetch({ withPresences: true })
+          .then((fetchedMembers) => {
+            const totalOnline = fetchedMembers.filter(
+              (member) => member.presence?.status === 'online'
+            );
+            for (const id of totalOnline.keys()) {
+              this.logger.log(totalOnline.get(id)?.user.username);
+            }
+            // Now you have a collection with all online member objects in the totalOnline variable
+            this.logger.log(
+              `There are currently ${totalOnline.size} members online in this guild!`
+            );
+          });
+      }
     });
 
-    void this.client.login(this.configV2Service.get().discord.botToken);
+    void this.client.login(this.configV2Service.get().discord?.botToken);
     this.client.on('messageCreate', this.onMessageHandler.bind(this));
   }
 
   private async sendToTextChannel(
     channel: TextChannel,
     content: string
-  ): Promise<Message> {
+  ): Promise<Message | undefined> {
     // trim because discord has a 4000 character limit
     if (content.length > 4000) {
       content = content.slice(0, 4000);
@@ -75,17 +76,21 @@ export class DiscordService {
   }
 
   public makeAnnouncement(content: string): Promise<Message> {
-    const channel = this.client.channels.cache.get(
-      this.configV2Service.get().discord.announcementChannelId
+    const channel = this.client?.channels.cache.get(
+      this.configV2Service.get().discord?.announcementChannelId || ''
     ) as TextChannel;
-    return this.sendToTextChannel(channel, content);
+    return this.sendToTextChannel(channel, content) as Promise<Message>;
   }
 
   public postImageToGallery(content: string, buffer: Buffer): void {
     try {
-      const channel = this.client.channels.cache.get(
-        this.configV2Service.get().discord.galleryChannelId
+      const channel: TextChannel | undefined = this.client?.channels.cache.get(
+        this.configV2Service.get().discord?.galleryChannelId || ''
       ) as TextChannel;
+      if (!channel) {
+        this.logger.error('Gallery channel not found');
+        return;
+      }
       const attachment = new AttachmentBuilder(buffer, {
         name: 'image.png'
       });
@@ -98,8 +103,8 @@ export class DiscordService {
   public async botSpeak(
     discordMessage: DiscordMessage | { channelId: string },
     message: string
-  ): Promise<Message> {
-    const channel = this.client.channels.cache.get(
+  ): Promise<Message | undefined> {
+    const channel: TextChannel | undefined = this.client?.channels.cache.get(
       discordMessage.channelId
     ) as TextChannel;
     if (channel) {
@@ -111,7 +116,7 @@ export class DiscordService {
 
   // TODO: There's a bug sometimes where there's no message or context?
   public onMessageHandler(discordMessage: Message): void {
-    const botAuthorId = this.configV2Service.get().discord.botAuthorId;
+    const botAuthorId = this.configV2Service.get().discord?.botAuthorId;
     if (!discordMessage) return;
     // Checks to see if BlunderBot was mentioned at the beginning or
     // end of the message, so it can respond.
@@ -136,6 +141,7 @@ export class DiscordService {
 
   public ownerRunCommand(discordMessage: DiscordMessage): void {
     const context = this.createContext(discordMessage);
+    if (!context) return;
     void this.commandService.run(context);
   }
 
@@ -163,9 +169,9 @@ export class DiscordService {
 
     if (args.length && args[0].length) {
       const command = args.shift();
-      context.body = context.message.replace(`!${command}`, '').trim();
+      context.body = context.message?.replace(`!${command}`, '').trim();
       context.args = args;
-      context.command = command.toLowerCase();
+      context.command = command?.toLowerCase();
     }
 
     context.username = discordMessage.author.username.toLowerCase();
@@ -173,15 +179,15 @@ export class DiscordService {
     context.userId = discordMessage.author.id;
     context.isOwner =
       discordMessage.author.id ===
-      this.configV2Service.get().discord.ownerAuthorId;
+      this.configV2Service.get().discord?.ownerAuthorId;
     context.isBot =
       discordMessage.author.id ===
-      this.configV2Service.get().discord.botAuthorId;
+      this.configV2Service.get().discord?.botAuthorId;
     // We determine a mod by seeing if they're in the mod channel
     context.isMod =
       context.isOwner ||
       discordMessage.channelId ===
-        this.configV2Service.get().discord.modChannelId;
+        this.configV2Service.get().discord?.modChannelId;
     context.isSubscriber = context.isOwner;
     return <Context>context;
   }

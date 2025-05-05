@@ -17,15 +17,15 @@ const command: Command = {
       services.twitchEventSub.init();
     }
 
-    if (service === 'discord' && config.discord.enabled) {
+    if (service === 'discord' && config.discord?.enabled) {
       services.discordService.init();
     }
 
-    if (service === 'openai' && config.openai.enabled) {
+    if (service === 'openai' && config.openai?.enabled) {
       services.openaiService.init();
     }
 
-    if (service === 'bluesky' && config.bluesky.enabled) {
+    if (service === 'bluesky' && config.bluesky?.enabled) {
       services.blueskyService.init();
     }
 

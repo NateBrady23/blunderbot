@@ -6,7 +6,7 @@ const command: Command = {
   aliases: ['music'],
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
-    if (!services.configV2Service.get().spotify.enabled) {
+    if (!services.configV2Service.get().spotify?.enabled) {
       console.log('Spotify is not enabled for !song.');
       return false;
     }

@@ -36,6 +36,9 @@ const command: Command = {
       quotes = await fetchAndParseQuotes(url);
     }
     const quote = getRandomElement(quotes);
+    if (!quote) {
+      return false;
+    }
     void ctx.botSpeak(`${quote.quote} - ${quote.author}`);
     return true;
   }

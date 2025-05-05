@@ -11,7 +11,7 @@ const command: Command = {
   run: async (ctx, { services }) => {
     return queue.enqueue(async function () {
       if (!ctx.body) {
-        return;
+        return false;
       }
       let file;
 

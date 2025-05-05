@@ -6,8 +6,8 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     if (
-      !services.configV2Service.get().openai.enabled ||
-      !services.configV2Service.get().openai.ttsModel
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.ttsModel
     ) {
       console.log(`OpenAI is not enabled in !recap command.`);
       return false;
@@ -28,10 +28,17 @@ const command: Command = {
       )
       .find((arena) => arena.winner);
 
+    if (!arena) {
+      return false;
+    }
+
     res = await fetch(`https://lichess.org/api/tournament/${arena.id}`);
     const tournament =
       (await res.json()) as components['schemas']['ArenaTournamentFull'];
 
+    if (!tournament?.podium) {
+      return false;
+    }
     const prompt = `
     Say thank you to the ${arena.nbPlayers} players who played in the ${arena.fullName} today.
     Write a summary of these tournament results in an exciting manner:

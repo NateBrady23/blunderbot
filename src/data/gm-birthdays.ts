@@ -1,6 +1,6 @@
 interface Birthday {
   Name: string;
-  'FIDE ID': number;
+  'FIDE ID': number | null;
   Born: string;
   Birthplace: string;
   Died: string;

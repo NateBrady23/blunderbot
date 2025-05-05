@@ -5,6 +5,9 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     const cmd = services.commandService.findCommand(ctx.args[0]);
+    if (!cmd) {
+      return false;
+    }
 
     if (commandState.killedCommands.includes(cmd.name)) {
       commandState.killedCommands = commandState.killedCommands.filter(

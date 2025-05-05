@@ -8,7 +8,7 @@ const command: Command = {
   run: async (ctx, { commandState }) => {
     let msg: string;
     if (ctx.args.length && ctx.isMod) {
-      const arg = ctx.body;
+      const arg = ctx.body ?? '';
       if (arg === 'clear') {
         msg = 'Arena link has been reset.';
         commandState.arena = '';

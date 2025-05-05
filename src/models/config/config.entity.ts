@@ -6,50 +6,50 @@ export class Config extends BaseEntity implements ConfigInterface {
   @Column({
     type: 'json'
   })
-  public twitch: JSON;
+  public twitch!: JSON;
 
   @Column({
     type: 'json'
   })
-  public lichess: JSON;
+  public lichess!: JSON;
 
   @Column({
     type: 'json'
   })
-  public commandConfig: JSON;
+  public commandConfig!: JSON;
 
   @Column({
     type: 'json'
   })
-  public discord: JSON;
+  public discord!: JSON;
 
   @Column({
     type: 'json'
   })
-  public openai: JSON;
+  public openai!: JSON;
 
   @Column({
     type: 'json'
   })
-  public spotify: JSON;
+  public spotify!: JSON;
 
   @Column({
     type: 'json'
   })
-  public bluesky: JSON;
+  public bluesky!: JSON;
 
   @Column({
     type: 'json'
   })
-  public trivia: JSON;
+  public trivia!: JSON;
 
   @Column({
     type: 'json'
   })
-  public youtube: JSON;
+  public youtube!: JSON;
 
   @Column({
     type: 'json'
   })
-  public misc: JSON;
+  public misc!: JSON;
 }

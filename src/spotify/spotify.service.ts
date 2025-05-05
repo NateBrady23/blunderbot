@@ -9,7 +9,7 @@ export class SpotifyService {
   private authCode = '';
   private refreshToken = '';
   private accessToken = '';
-  private accessTokenExpires: number;
+  private accessTokenExpires = 0;
 
   public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
@@ -21,10 +21,10 @@ export class SpotifyService {
       'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: this.configV2Service.get().spotify.clientId,
+        client_id: this.configV2Service.get().spotify?.clientId || '',
         scope:
           'user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-modify-public playlist-modify-private playlist-read-collaborative playlist-read-private user-library-modify user-library-read',
-        redirect_uri: this.configV2Service.get().spotify.redirectUri,
+        redirect_uri: this.configV2Service.get().spotify?.redirectUri || '',
         state: '123456'
       })
     );
@@ -40,7 +40,7 @@ export class SpotifyService {
       const params = !this.accessToken
         ? new URLSearchParams({
             grant_type: 'authorization_code',
-            redirect_uri: this.configV2Service.get().spotify.redirectUri,
+            redirect_uri: this.configV2Service.get().spotify?.redirectUri || '',
             code: this.authCode
           })
         : new URLSearchParams({
@@ -55,9 +55,9 @@ export class SpotifyService {
           Authorization:
             'Basic ' +
             Buffer.from(
-              this.configV2Service.get().spotify.clientId +
+              (this.configV2Service.get().spotify?.clientId || '') +
                 ':' +
-                this.configV2Service.get().spotify.clientSecret
+                (this.configV2Service.get().spotify?.clientSecret || '')
             ).toString('base64')
         },
         body: params,
@@ -82,7 +82,7 @@ export class SpotifyService {
     return this.accessToken;
   }
 
-  public async getTrackById(id: string): Promise<TrackItem> {
+  public async getTrackById(id: string): Promise<TrackItem | undefined> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for track');
@@ -103,7 +103,9 @@ export class SpotifyService {
     }
   }
 
-  public async getTrackFromSearch(query: string): Promise<TrackItem> {
+  public async getTrackFromSearch(
+    query: string
+  ): Promise<TrackItem | undefined> {
     const token = await this.getAccessToken();
 
     if (!token) {
@@ -137,7 +139,7 @@ export class SpotifyService {
     }
   }
 
-  public async getCurrentTrack(): Promise<TrackItem> {
+  public async getCurrentTrack(): Promise<TrackItem | undefined> {
     const token = await this.getAccessToken();
     if (!token) {
       this.logger.error('No Spotify token available for current track');

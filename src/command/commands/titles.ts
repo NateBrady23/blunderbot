@@ -5,7 +5,11 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   aliases: ['titties'],
   run: async (ctx, { services }) => {
-    const titledPlayers = services.configV2Service.get().lichess.titledPlayers;
+    const titledPlayers = services.configV2Service.get().lichess?.titledPlayers;
+    if (!titledPlayers) {
+      void ctx.botSpeak('No titled players found.');
+      return true;
+    }
     let say = '';
     for (let i = 0; i < titledPlayers.length; i++) {
       say += `${titledPlayers[i][1]} ${titledPlayers[i][0]}`;

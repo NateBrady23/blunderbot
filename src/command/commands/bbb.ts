@@ -7,7 +7,7 @@ let cachedAt: number;
 const cacheBBB = async (services: CommandServices): Promise<void> => {
   try {
     const res = await fetch(
-      `https://lichess.org/api/team/${services.configV2Service.get().lichess.teamId}/arena?max=10`
+      `https://lichess.org/api/team/${services.configV2Service.get().lichess?.teamId}/arena?max=10`
     );
     const ndjson = await res.text();
     const json: LichessTournamentResponse[] = parseNdjson(ndjson);
@@ -80,7 +80,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     // Allow any extra args to be a cache buster
-    if (ctx.args[0]) {
+    if (ctx.args?.[0]) {
       cached = [];
     }
     if (cached.length && cachedAt && !isNHoursLater(8, cachedAt)) {

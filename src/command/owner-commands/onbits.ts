@@ -14,7 +14,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     return queue.enqueue(async function () {
-      let body: string = ctx.body;
+      let body: string = ctx.body || '';
       // To test bits like: !onbits 420
       if (body.match(/^\d{1,4}$/g)) {
         body = '{ "bits": ' + body + ' }';
@@ -22,7 +22,7 @@ const command: Command = {
       const parsedBody = JSON.parse(body) as BitsPayload;
 
       const user = parsedBody.user;
-      const bits = parseInt(parsedBody.bits) || 0;
+      const bits = parseInt(parsedBody.bits || '0');
       let message = parsedBody.message;
 
       // If there's a user, add them to the contributions to thank them at the end of the stream
@@ -31,26 +31,27 @@ const command: Command = {
           bits + (commandState.contributions.bits[user] || 0);
       }
 
-      let commands: string[];
+      let commands: string[] = [];
       if (services.configV2Service.get().twitch?.bits?.matches[bits]) {
         commands =
-          services.configV2Service.get().twitch.bits.matches[bits].commands;
+          services.configV2Service.get().twitch?.bits?.matches[bits]
+            ?.commands || [];
       } else {
-        for (const match in services.configV2Service.get().twitch.bits
-          .matches) {
+        for (const match in services.configV2Service.get().twitch?.bits
+          ?.matches) {
           if (match.startsWith('over')) {
             if (bits > parseInt(match.replace('over', ''))) {
               commands =
-                services.configV2Service.get().twitch.bits.matches[match]
-                  .commands;
+                services.configV2Service.get().twitch?.bits?.matches[match]
+                  ?.commands || [];
               break;
             }
           }
           if (match.startsWith('under')) {
             if (bits < parseInt(match.replace('under', ''))) {
               commands =
-                services.configV2Service.get().twitch.bits.matches[match]
-                  .commands;
+                services.configV2Service.get().twitch?.bits?.matches[match]
+                  ?.commands || [];
               break;
             }
           }

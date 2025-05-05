@@ -10,8 +10,8 @@ const command: Command = {
   run: async (ctx, { services }) => {
     return queue.enqueue(async function () {
       let milliseconds;
-      let message = ctx.body;
-      if (ctx.args[0].startsWith('!s')) {
+      let message = ctx.body || '';
+      if (ctx.args[0]?.startsWith('!s')) {
         milliseconds = parseInt(ctx.args[0].replace('!s', '')) * 1000;
         message = message.replace(ctx.args[0], '').trim();
       }
