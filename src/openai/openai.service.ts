@@ -65,7 +65,7 @@ export class OpenaiService {
         generateBody.size = opts.size;
       }
       const response = await this.openai.images.generate(generateBody);
-      return response.data[0].url || '';
+      return response.data?.[0]?.url || '';
     } catch (error) {
       this.logger.error('Error creating image');
       this.logger.error(error);
@@ -85,7 +85,7 @@ export class OpenaiService {
         prompt,
         n: 1
       });
-      return response.data[0].url || '';
+      return response.data?.[0]?.url || '';
     } catch (error) {
       this.logger.error('Error editing image');
       this.logger.error(error);

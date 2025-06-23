@@ -83,7 +83,28 @@ const command: Command = {
       .find((arena) => arena.secondsToStart);
 
     if (nextBbb?.secondsToStart && nextBbb.secondsToStart < 60 * 60 * 2) {
-      scheduleAt('18:58', async () => {
+      // Calculate dynamic times based on BBB start time
+      const now = new Date();
+      const startTime = new Date(now.getTime() + nextBbb.secondsToStart * 1000);
+      const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
+
+      // Announcement: 2 minutes before start
+      const announceTime = new Date(startTime.getTime() - 2 * 60 * 1000);
+      const announceTimeStr = announceTime.toTimeString().slice(0, 5);
+
+      // Commentary: 15, 30, and 45 minutes after start
+      const commentaryTimes = [15, 30, 45].map((minutes) => {
+        const commentaryTime = new Date(
+          startTime.getTime() + minutes * 60 * 1000
+        );
+        return commentaryTime.toTimeString().slice(0, 5);
+      });
+
+      // Recap: 1 minute after end
+      const recapTime = new Date(endTime.getTime() + 1 * 60 * 1000);
+      const recapTimeStr = recapTime.toTimeString().slice(0, 5);
+
+      scheduleAt(announceTimeStr, async () => {
         await services.twitchService.ownerRunCommand(
           `!vchat Announce that the BBB is starting in 2 minutes.
           Encourage people to join and vie for the BBB title and by joining the team and clicking the link in the chat.`
@@ -91,7 +112,7 @@ const command: Command = {
         await services.twitchService.ownerRunCommand('!bbb');
       });
 
-      ['19:15', '19:30', '19:45'].forEach((time) =>
+      commentaryTimes.forEach((time) =>
         scheduleAt(
           time,
           async () =>
@@ -100,7 +121,7 @@ const command: Command = {
       );
 
       scheduleAt(
-        '20:01',
+        recapTimeStr,
         async () => await services.twitchService.ownerRunCommand('!recap')
       );
     }

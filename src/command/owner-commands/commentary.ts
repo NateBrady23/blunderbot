@@ -50,7 +50,7 @@ const command: Command = {
       })
       .slice(0, 4)
       .join(', ');
-    const minutesRemaining = Math.floor(tournament.secondsToFinish || 0 / 60);
+    const minutesRemaining = Math.floor((tournament.secondsToFinish || 0) / 60);
 
     const prompt = `
     Provide an exciting commentary of the ongoing BBB chess tournament.

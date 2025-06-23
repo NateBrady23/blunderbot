@@ -1,8 +1,9 @@
-### 2.12.0
+### 2.11.1 (2025-06-23)
 
-#### Features
+#### Bug Fixes
 
-- 
+- BBB announcement, commentary, and recap is now based on next BBB start time versus the legacy 7pm start time.
+- Package updates and other minor fixes.
 
 ### 2.11.0
 
