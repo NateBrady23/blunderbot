@@ -22,7 +22,7 @@ import { CommandService } from '../command/command.service';
 export class TwitchGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() public wss: Server;
+  @WebSocketServer() public wss: Server | undefined;
 
   private readonly logger: Logger = new Logger(TwitchGateway.name);
 

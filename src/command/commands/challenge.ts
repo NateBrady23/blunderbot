@@ -21,7 +21,7 @@ const command: Command = {
   help: 'Displays information on how and when to challenge me.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!ctx.isOwner || !ctx.args[0]) {
+    if (!ctx.isOwner || !ctx.args?.[0]) {
       void ctx.botSpeak(
         'Challenge me using the challenge channel point redemption during Viewer Challenge streams (Sunday/Tuesday) to get in the queue. (Must be a follower to challenge.) You can also play me during the BBB (Wednesdays) !bbb'
       );
@@ -60,15 +60,16 @@ const command: Command = {
         return false;
       }
 
-      const challengeOptions: paths['/api/challenge/{username}']['post']['requestBody']['content']['application/x-www-form-urlencoded'] =
-        {
-          rated: false,
-          'clock.limit': parseInt(timeControls[0]) * 60,
-          'clock.increment': parseInt(timeControls[1]),
-          color: 'random',
-          variant,
-          rules: 'noGiveTime'
-        };
+      const challengeOptions: NonNullable<
+        paths['/api/challenge/{username}']['post']['requestBody']
+      >['content']['application/x-www-form-urlencoded'] = {
+        rated: false,
+        'clock.limit': parseInt(timeControls[0]) * 60,
+        'clock.increment': parseInt(timeControls[1]),
+        color: 'random',
+        variant,
+        rules: 'noGiveTime'
+      };
       const res = await services.lichessService.apiCall(
         `https://lichess.org/api/challenge/${user}`,
         {

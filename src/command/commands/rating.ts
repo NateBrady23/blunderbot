@@ -20,7 +20,10 @@ const command: Command = {
   run: async (ctx, { services }) => {
     let user = ctx.args[0];
     if (!user) {
-      user = services.configV2Service.get().lichess.user;
+      user = services.configV2Service.get().lichess?.user || '';
+    }
+    if (!user) {
+      return false;
     }
     try {
       const res = await fetch(`https://lichess.org/api/user/${user}`);

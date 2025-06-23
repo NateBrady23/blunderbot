@@ -24,24 +24,24 @@ export class StoredCommandEntityService {
   public async findById(
     id: string,
     failIfNotFound?: boolean
-  ): Promise<StoredCommand> {
+  ): Promise<StoredCommand | null> {
     return this.find(
       {
         where: { id: Number(id) }
       },
-      failIfNotFound
+      failIfNotFound ?? false
     );
   }
 
   public async findByName(
     name: string,
     failIfNotFound?: boolean
-  ): Promise<StoredCommand> {
+  ): Promise<StoredCommand | null> {
     return this.find(
       {
         where: { name }
       },
-      failIfNotFound
+      failIfNotFound ?? false
     );
   }
 
@@ -61,10 +61,10 @@ export class StoredCommandEntityService {
   private async find(
     opts: FindOneOptions<StoredCommand>,
     failIfNotFound: boolean
-  ): Promise<StoredCommand> {
+  ): Promise<StoredCommand | null> {
     if (failIfNotFound) {
       return this.StoredCommandRepository.findOneOrFail(opts);
     }
-    return this.StoredCommandRepository.findOne(opts);
+    return this.StoredCommandRepository.findOne(opts) ?? null;
   }
 }

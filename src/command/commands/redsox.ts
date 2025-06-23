@@ -72,7 +72,7 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx) => {
     // If someone ran the command, erase the last game status so we can give the current score
-    lastGameStatus = null;
+    lastGameStatus = '';
     clearInterval(currentInterval);
     await getRedSoxGame(ctx);
     currentInterval = setInterval(() => {

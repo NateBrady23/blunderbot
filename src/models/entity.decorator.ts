@@ -1,6 +1,5 @@
 import { ColumnOptions, getMetadataArgsStorage } from 'typeorm';
 import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
-import { BaseEntity } from './base.entity';
 
 /**
  * Timestamp column decorator
@@ -8,10 +7,10 @@ import { BaseEntity } from './base.entity';
  * @returns Column meta data for a zoned timestamp
  */
 export function TimestampColumn(opts?: ColumnOptions): PropertyDecorator {
-  return function (object: BaseEntity, propertyName: string) {
+  return function (target: object, propertyName: string | symbol) {
     getMetadataArgsStorage().columns.push({
-      target: object.constructor,
-      propertyName: propertyName,
+      target: target.constructor,
+      propertyName: propertyName.toString(),
       options: {
         type: 'timestamptz',
         nullable: true,

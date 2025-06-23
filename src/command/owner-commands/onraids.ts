@@ -9,7 +9,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services, commandState }) => {
     const raidersConfig =
-      services.configV2Service.get().twitch.raids.matches || {};
+      services.configV2Service.get().twitch?.raids?.matches || {};
 
     return queue.enqueue(async function () {
       try {
@@ -31,6 +31,7 @@ const command: Command = {
       } catch (e) {
         console.error('Error in raids command');
         console.error(e);
+        return false;
       }
     });
   }

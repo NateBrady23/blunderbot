@@ -9,14 +9,14 @@ const command: Command = {
   name: 'poll',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (ctx.isMod && ctx.args[0] === 'cancel') {
+    if (ctx.isMod && ctx.args?.[0] === 'cancel') {
       console.log('in end poll');
       const currPoll = await services.twitchService.getPoll();
       await services.twitchService.endPoll(currPoll.id);
       return true;
     }
 
-    if (!services.configV2Service.get().openai.enabled) {
+    if (!services.configV2Service.get().openai?.enabled) {
       console.log(`OpenAI is not enabled in !poll command.`);
       return false;
     }

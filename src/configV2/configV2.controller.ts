@@ -10,7 +10,7 @@ export class ConfigV2Controller {
     path: string
   ): Partial<UserConfigV2> {
     let response = config[path as keyof Partial<UserConfigV2>] || {};
-    if (path === 'trivia' && !config.trivia.length) {
+    if (path === 'trivia' && !config.trivia?.length) {
       response = [];
     }
     return response;

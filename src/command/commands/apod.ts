@@ -16,11 +16,14 @@ const command: Command = {
   help: 'Displays NASA APOD for a given date.',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const apiKey = services.configV2Service.get().misc.nasaApiKey;
+    const apiKey = services.configV2Service.get().misc?.nasaApiKey;
+    if (!apiKey) {
+      return false;
+    }
     // Today's date in YYYY-MM-DD format
     let today = ctx.body;
 
-    if (!today.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    if (!today?.match(/^\d{4}-\d{2}-\d{2}$/)) {
       today = new Date().toISOString().split('T')[0];
     }
     const response = await fetch(

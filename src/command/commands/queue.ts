@@ -10,9 +10,11 @@ const command: Command = {
     if (ctx.isOwner) {
       if (commandState.challengeQueue.length && queueCommand === 'pop') {
         const next = commandState.challengeQueue.shift();
-        await ctx.botSpeak(
-          `${next.twitchUser}->${next.lichessUser} has been removed from the queue (in a good way)`
-        );
+        if (next) {
+          await ctx.botSpeak(
+            `${next.twitchUser}->${next.lichessUser} has been removed from the queue (in a good way)`
+          );
+        }
       }
 
       if (queueCommand === 'add') {
@@ -28,10 +30,12 @@ const command: Command = {
 
       if (queueCommand === 'rotate') {
         const next = commandState.challengeQueue.shift();
-        commandState.challengeQueue.push(next);
-        await ctx.botSpeak(
-          `${next.twitchUser}->${next.lichessUser} has been moved to the back of the queue`
-        );
+        if (next) {
+          commandState.challengeQueue.push(next);
+          await ctx.botSpeak(
+            `${next.twitchUser}->${next.lichessUser} has been moved to the back of the queue`
+          );
+        }
       }
 
       if (queueCommand === 'clear') {
@@ -41,10 +45,10 @@ const command: Command = {
 
       // Open and close can only be used if the challengeRewardId is set
       // and only if this reward was created by the bot (same client id)
-      if (services.configV2Service.get().twitch.challengeRewardId) {
+      if (services.configV2Service.get().twitch?.challengeRewardId) {
         if (queueCommand === 'open') {
           void services.twitchService.updateCustomReward(
-            services.configV2Service.get().twitch.challengeRewardId,
+            services.configV2Service.get().twitch?.challengeRewardId as string,
             { is_enabled: true }
           );
           await ctx.botSpeak('The queue is now open');
@@ -52,7 +56,7 @@ const command: Command = {
 
         if (queueCommand === 'close') {
           void services.twitchService.updateCustomReward(
-            services.configV2Service.get().twitch.challengeRewardId,
+            services.configV2Service.get().twitch?.challengeRewardId as string,
             { is_enabled: false }
           );
           await ctx.botSpeak('The queue is now closed');

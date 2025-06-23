@@ -8,8 +8,8 @@ export class StoredCommand
 {
   //
   @Column({ length: 200 })
-  public name: string;
+  public name!: string;
 
   @Column({ length: 200 })
-  public message: string;
+  public message!: string;
 }

@@ -12,7 +12,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 export class TwitchEventSub {
   private readonly logger: Logger = new Logger(TwitchEventSub.name);
   private readonly eventSubMessageIds: string[] = [];
-  private eventSubConnection: WebSocket;
+  private eventSubConnection: WebSocket | undefined;
 
   private currentHypeTrainLevel = 1;
 
@@ -28,7 +28,7 @@ export class TwitchEventSub {
   }
 
   public async eventSubCreateConnection(
-    wssUrl = this.configV2Service.get().twitch.eventWebsocketUrl
+    wssUrl = this.configV2Service.get().twitch?.eventWebsocketUrl || ''
   ): Promise<void> {
     this.eventSubConnection = new WebSocket(wssUrl);
     this.eventSubConnection.onopen = () => {
@@ -45,7 +45,9 @@ export class TwitchEventSub {
       this.eventSubCreateConnection();
     };
 
-    this.eventSubConnection.onmessage = this.eventSubMessageHandler.bind(this);
+    this.eventSubConnection.onmessage = (event) => {
+      this.eventSubMessageHandler({ data: event.data.toString() });
+    };
   }
 
   public async eventSubMessageHandler(data: { data: string }): Promise<void> {
@@ -72,7 +74,7 @@ export class TwitchEventSub {
     }
 
     if (messageType === 'revocation') {
-      this.eventSubConnection.close();
+      this.eventSubConnection?.close();
       void this.eventSubCreateConnection(
         parsedData.payload.session.reconnect_url
       );
@@ -144,7 +146,9 @@ export class TwitchEventSub {
   public async deleteExistingSubscriptions(): Promise<void> {
     // Delete existing subscriptions
     const existingSubs = (await this.twitchService.helixApiCall(
-      'https://api.twitch.tv/helix/eventsub/subscriptions'
+      'https://api.twitch.tv/helix/eventsub/subscriptions',
+      'GET',
+      undefined
     )) as { data: { id: string }[] };
     if (!existingSubs?.data) {
       return;
@@ -152,7 +156,8 @@ export class TwitchEventSub {
     for (const sub of existingSubs?.data || []) {
       await this.twitchService.helixApiCall(
         `https://api.twitch.tv/helix/eventsub/subscriptions?id=${sub.id}`,
-        'DELETE'
+        'DELETE',
+        undefined
       );
     }
   }
@@ -181,21 +186,21 @@ export class TwitchEventSub {
         to_broadcaster_user_id?: string;
         user_id?: string;
       } = {
-        broadcaster_user_id: this.configV2Service.get().twitch.ownerId
+        broadcaster_user_id: this.configV2Service.get().twitch?.ownerId || ''
       };
       if (event.version === '2') {
         condition['moderator_user_id'] =
-          this.configV2Service.get().twitch.ownerId;
+          this.configV2Service.get().twitch?.ownerId || '';
       }
       if (event.eventType === 'channel.raid') {
         condition['to_broadcaster_user_id'] =
-          this.configV2Service.get().twitch.ownerId;
+          this.configV2Service.get().twitch?.ownerId || '';
       }
       if (event.eventType === 'channel.chat.message') {
-        condition['user_id'] = this.configV2Service.get().twitch.ownerId;
+        condition['user_id'] = this.configV2Service.get().twitch?.ownerId || '';
       }
       const res = (await this.twitchService.helixApiCall(
-        this.configV2Service.get().twitch.eventSubscriptionUrl,
+        this.configV2Service.get().twitch?.eventSubscriptionUrl || '',
         'POST',
         {
           type: event.eventType,
@@ -222,11 +227,13 @@ export class TwitchEventSub {
       displayName: data.chatter_user_name,
       isBot:
         data.chatter_user_login ===
-        this.configV2Service.get().twitch.botUsername.toLowerCase(),
+        (this.configV2Service.get().twitch?.botUsername || '').toLowerCase(),
       isMod:
         data.badges.some((badge) => badge.set_id === 'moderator') ||
         data.chatter_user_login ===
-          this.configV2Service.get().twitch.ownerUsername.toLowerCase(),
+          (
+            this.configV2Service.get().twitch?.ownerUsername || ''
+          ).toLowerCase(),
       isSub: data.badges.some(
         (badge) => badge.set_id === 'subscriber' || badge.set_id === 'founder'
       ),
@@ -237,7 +244,7 @@ export class TwitchEventSub {
       ),
       isOwner:
         data.chatter_user_login ===
-        this.configV2Service.get().twitch.ownerUsername.toLowerCase(),
+        (this.configV2Service.get().twitch?.ownerUsername || '').toLowerCase(),
       channelPointsCustomRewardId: data.channel_points_custom_reward_id
     };
 
@@ -318,9 +325,11 @@ export class TwitchEventSub {
 
     this.logger.log(`User ${username} redeemed ${reward.title}`);
 
-    if (this.configV2Service.get().twitch.customRewardCommands[reward.title]) {
+    if (
+      this.configV2Service.get().twitch?.customRewardCommands?.[reward.title]
+    ) {
       for (let command of this.configV2Service.get().twitch
-        .customRewardCommands[reward.title]) {
+        ?.customRewardCommands?.[reward.title] || []) {
         command = command.replace(/{username}/gi, `${username}`);
         command = command.replace(/{message}/gi, `${userInput}`);
         void this.twitchService.ownerRunCommand(`${command}`, {

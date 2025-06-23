@@ -6,8 +6,8 @@ const command: Command = {
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
     if (
-      !services.configV2Service.get().openai.enabled ||
-      !services.configV2Service.get().openai.imageModel
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.imageModel
     ) {
       console.log(`OpenAI is not enabled in !background command.`);
       return false;
@@ -15,7 +15,7 @@ const command: Command = {
     if (ctx.platform === Platform.Discord && !ctx.isOwner) {
       return false;
     }
-    let prompt = ctx.body.trim();
+    let prompt = ctx.body?.trim();
 
     if (!prompt) {
       ctx.reply(ctx, `You need to provide a prompt.`);
@@ -33,8 +33,8 @@ const command: Command = {
     }
 
     let sendToDiscord =
-      services.configV2Service.get().discord.enabled &&
-      !!services.configV2Service.get().discord.galleryChannelId;
+      services.configV2Service.get().discord?.enabled &&
+      !!services.configV2Service.get().discord?.galleryChannelId;
     if (prompt.toLowerCase().includes('nodiscord')) {
       sendToDiscord = false;
       prompt = prompt.replace(/nodiscord/gi, '');

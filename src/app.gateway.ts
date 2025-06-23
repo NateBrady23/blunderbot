@@ -17,7 +17,7 @@ import { CONFIG } from './config/config.service';
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() public wss: Server;
+  @WebSocketServer() public wss!: Server;
 
   private readonly logger: Logger = new Logger(AppGateway.name);
 

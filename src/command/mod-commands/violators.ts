@@ -17,7 +17,11 @@ const command: Command = {
   name: 'violators',
   platforms: [Platform.Discord],
   run: async (ctx, { services }) => {
-    const teamId = ctx.args[0] || services.configV2Service.get().lichess.teamId;
+    const teamId =
+      ctx.args[0] || services.configV2Service.get().lichess?.teamId;
+    if (!teamId) {
+      return false;
+    }
 
     const msgRef = <Message<true>>(
       await ctx.botSpeak(':hourglass: Checking for violators...')

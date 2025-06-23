@@ -3,7 +3,7 @@ import { getRandomElement, sleep } from '../../utils/utils';
 
 function showLeaderboard(ctx: Context, commandState: CommandState): string {
   if (!Object.keys(commandState.trivia.leaderboard).length) {
-    return;
+    return '';
   }
   const leaderboard = Object.keys(commandState.trivia.leaderboard)
     .map((key) => {
@@ -33,7 +33,8 @@ async function showQuestion(
   services: CommandServices
 ): Promise<void> {
   if (
-    commandState.trivia.round >= services.configV2Service.get().trivia.length
+    commandState.trivia.round >=
+    (services.configV2Service.get().trivia?.length || 0)
   ) {
     void ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     const leaderboard = showLeaderboard(ctx, commandState);
@@ -43,7 +44,7 @@ async function showQuestion(
   }
 
   const { timeLimit, question, closestTo } =
-    services.configV2Service.get().trivia[commandState.trivia.round];
+    services.configV2Service.get().trivia?.[commandState.trivia.round] || {};
 
   await ctx.botSpeak('Next question in 3...');
   await sleep(2000);
@@ -75,10 +76,11 @@ function selectRoundWinner(
   answer: string,
   pointsModifier = 1
 ): void {
-  const seconds = (Date.now() - commandState.trivia.roundStartTime) / 1000;
+  const seconds =
+    (Date.now() - (commandState.trivia.roundStartTime || 0)) / 1000;
   const roundPoints = Math.round(
-    (services.configV2Service.get().trivia[commandState.trivia.round].points ||
-      1) * pointsModifier
+    (services.configV2Service.get().trivia?.[commandState.trivia.round]
+      ?.points || 1) * pointsModifier
   );
   const users = commandState.trivia.roundWinners;
   for (const user of users) {
@@ -98,9 +100,8 @@ function selectRoundWinner(
   }
 
   const finalAnswer =
-    services.configV2Service.get().trivia[commandState.trivia.round]
-      .answers[0] ??
-    services.configV2Service.get().trivia[commandState.trivia.round].answers;
+    services.configV2Service.get().trivia?.[commandState.trivia.round]
+      ?.answers?.[0] ?? '';
 
   let toSpeak = `"${finalAnswer}" is correct! Congrats to @${users[0]}`;
   if (users.length > 1) {
@@ -147,7 +148,7 @@ function endRound(
 }
 
 function getCorrectAnswer(round: number, services: CommandServices): string {
-  return services.configV2Service.get().trivia[round].answers[0];
+  return services.configV2Service.get().trivia?.[round]?.answers?.[0] || '';
 }
 
 function nextQuestion(
@@ -159,7 +160,8 @@ function nextQuestion(
     endRound(ctx, commandState, services);
   }
   if (
-    commandState.trivia.round >= services.configV2Service.get().trivia.length
+    commandState.trivia.round >=
+    (services.configV2Service.get().trivia?.length || 0)
   ) {
     ctx.botSpeak('Trivia has ended! Congrats to the leaders!');
     showLeaderboard(ctx, commandState);
@@ -179,7 +181,7 @@ const command: Command = {
   name: 'trivia',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { commandState, services }) => {
-    const answer = ctx.body.toLowerCase().trim();
+    const answer = ctx.body?.toLowerCase().trim() || '';
     if (answer === 'start' && ctx.isOwner) {
       if (commandState.trivia.started) {
         void ctx.botSpeak(
@@ -256,7 +258,7 @@ const command: Command = {
     if (answer === 'round') {
       void ctx.botSpeak(
         `It's currently Round ${commandState.trivia.round + 1}/${
-          services.configV2Service.get().trivia.length
+          services.configV2Service.get().trivia?.length || 0
         }`
       );
       return true;
@@ -287,15 +289,17 @@ const command: Command = {
     }
 
     if (
-      services.configV2Service.get().trivia[commandState.trivia.round].closestTo
+      services.configV2Service.get().trivia?.[commandState.trivia.round]
+        ?.closestTo
     ) {
       // Always track that the user has already answered.
       commandState.trivia.answeredUsers.push(ctx.displayName);
       try {
         const answerNum = +answer;
-        const correctNum =
-          +services.configV2Service.get().trivia[commandState.trivia.round]
-            .answers;
+        const correctNum = +(
+          services.configV2Service.get().trivia?.[commandState.trivia.round]
+            ?.answers || 0
+        );
         const difference = Math.abs(answerNum - correctNum);
         if (isNaN(answerNum)) {
           return true;
@@ -331,7 +335,7 @@ const command: Command = {
     if (
       services.configV2Service
         .get()
-        .trivia[commandState.trivia.round].answers.includes(answer)
+        .trivia?.[commandState.trivia.round]?.answers?.includes(answer)
     ) {
       commandState.trivia.roundWinners.push(ctx.displayName);
       if (commandState.trivia.roundWinners.length === 1) {

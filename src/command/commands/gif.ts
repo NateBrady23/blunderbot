@@ -14,8 +14,11 @@ const command: Command = {
         let milliseconds = 7000;
         let msg = ctx.body;
         if (ctx.args[0].startsWith('!s')) {
-          msg = ctx.body.replace(ctx.args[0], '').trim();
+          msg = ctx.body?.replace(ctx.args[0], '').trim();
           milliseconds = parseInt(ctx.args[0].replace('!s', '')) * 1000;
+        }
+        if (!msg) {
+          return true;
         }
         if (ctx.platform === Platform.Twitch) {
           const giphyUrl = await services.giphyService.fetchGif(msg);
@@ -30,10 +33,10 @@ const command: Command = {
           const giphyUrl = await services.giphyService.fetchGif(msg);
           void ctx.botSpeak(giphyUrl);
         }
-        return true;
       } catch (e) {
         console.error(e);
       }
+      return true;
     });
   }
 };

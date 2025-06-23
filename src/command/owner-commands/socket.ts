@@ -6,7 +6,7 @@ const command: Command = {
   run: async (ctx, { services }) => {
     services.appGateway.sendDataToSockets(
       'serverMessage',
-      JSON.parse(ctx.body)
+      JSON.parse(ctx.body || '{}')
     );
     return true;
   }

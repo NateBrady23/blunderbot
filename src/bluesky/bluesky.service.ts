@@ -5,7 +5,7 @@ import { ConfigV2Service } from '../configV2/configV2.service';
 @Injectable()
 export class BlueskyService {
   private readonly logger: Logger = new Logger(BlueskyService.name);
-  private client: AtpAgent;
+  private client!: AtpAgent;
 
   public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
@@ -19,8 +19,8 @@ export class BlueskyService {
       });
 
       await this.client.login({
-        identifier: this.configV2Service.get().bluesky.username,
-        password: this.configV2Service.get().bluesky.password
+        identifier: this.configV2Service.get().bluesky?.username || '',
+        password: this.configV2Service.get().bluesky?.password || ''
       });
 
       this.logger.log('Successfully connected to Bluesky');
@@ -49,7 +49,7 @@ export class BlueskyService {
       );
 
       await this.client.api.com.atproto.repo.createRecord({
-        repo: this.client.session.did,
+        repo: this.client.session?.did || '',
         collection: 'app.bsky.feed.post',
         record: {
           text,
@@ -72,9 +72,9 @@ export class BlueskyService {
     const client = await this.getClient();
 
     try {
-      text += ' ' + this.configV2Service.get().bluesky.hashtags || '';
+      text += ' ' + (this.configV2Service.get().bluesky?.hashtags || '');
       await client.com.atproto.repo.createRecord({
-        repo: client.session.did,
+        repo: client.session?.did || '',
         collection: 'app.bsky.feed.post',
         record: {
           text,

@@ -14,23 +14,23 @@ export class GiphyService {
 
   public async fetchGif(phrase: string): Promise<string> {
     const phraseToMatch = phrase.trim().toLowerCase() + '.gif';
-    if (this.configV2Service.get().gifs.includes(phraseToMatch)) {
+    if (this.configV2Service.get().gifs?.includes(phraseToMatch)) {
       return `https://localhost/gifs/${phraseToMatch}`;
     }
 
-    if (!this.configV2Service.get().misc.giphyApiKey) {
+    if (!this.configV2Service.get().misc?.giphyApiKey) {
       this.logger.error('No giphy api key found and no local gif found');
     }
 
     const encodedPhrase = encodeURIComponent(phrase);
     const response = await fetch(
       `https://api.giphy.com/v1/gifs/search?api_key=${
-        this.configV2Service.get().misc.giphyApiKey
+        this.configV2Service.get().misc?.giphyApiKey
       }&q=${encodedPhrase}&limit=1`
     );
     const data = await response.json();
     // Sometimes giphy doesn't return a gif for a phrase, so we return a default gif
-    if (!data?.data[0] && this.configV2Service.get().gifs.includes('404')) {
+    if (!data?.data[0] && this.configV2Service.get().gifs?.includes('404')) {
       this.logger.error(data);
       return `https://localhost/gifs/404.gif`;
     } else {

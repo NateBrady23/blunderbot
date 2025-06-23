@@ -1,4 +1,9 @@
+### 2.11.1 (2025-06-23)
 
+#### Bug Fixes
+
+- BBB announcement, commentary, and recap is now based on next BBB start time versus the legacy 7pm start time.
+- Package updates and other minor fixes.
 
 ### 2.11.0
 
@@ -11,6 +16,7 @@
 #### Bug Fixes
 
 - Fixed a bug where `!violators` was not getting the full user data from lichess.
+- Fixed a fatal bug where locked temp files that can't be deleted will now be skipped instead of crashing the bot.
 
 #### Breaking Changes
 

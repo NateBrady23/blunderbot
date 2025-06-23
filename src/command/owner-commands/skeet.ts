@@ -4,12 +4,15 @@ const command: Command = {
   name: 'skeet',
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }): Promise<boolean> => {
-    if (!services.configV2Service.get().bluesky.enabled) {
+    if (!services.configV2Service.get().bluesky?.enabled) {
       console.log('Bluesky disabled in !skeet command');
       return false;
     }
 
     const msg = ctx.body;
+    if (!msg) {
+      return false;
+    }
     void services.blueskyService.post(msg);
     return true;
   }

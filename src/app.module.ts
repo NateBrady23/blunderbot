@@ -28,24 +28,25 @@ const imports = [
   })
 ];
 
-if (CONFIG.get().db.enabled) {
+const dbConfig = CONFIG.get().db;
+if (dbConfig?.enabled) {
   const srcOrDist = __filename.endsWith('.ts') ? 'src' : 'dist';
 
   const typeOrmModule = TypeOrmModule.forRoot({
-    type: CONFIG.get().db.type,
-    host: CONFIG.get().db.host,
-    port: CONFIG.get().db.port,
-    username: CONFIG.get().db.username,
-    password: CONFIG.get().db.password,
-    database: CONFIG.get().db.database,
+    type: dbConfig.type,
+    host: dbConfig.host,
+    port: dbConfig.port,
+    username: dbConfig.username,
+    password: dbConfig.password,
+    database: dbConfig.database,
     entities: [`${srcOrDist}/models/**/*.entity{.ts,.js}`],
-    migrationsRun: CONFIG.get().db.migrationsRun,
+    migrationsRun: dbConfig.migrationsRun,
     migrationsTableName: 'migrations',
     migrations: [`${srcOrDist}/migrations/*{.ts,.js}`],
     logging: ['error'],
     connectTimeout: 60 * 1000,
     namingStrategy: new TypeOrmNamingStrategy.SnakeNamingStrategy(),
-    extra: CONFIG.get().db.extra
+    extra: dbConfig.extra
   });
 
   imports.push(typeOrmModule);

@@ -5,10 +5,13 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { commandState, services }) => {
     if (
-      !services.configV2Service.get().openai.enabled ||
-      !services.configV2Service.get().openai.chatModel
+      !services.configV2Service.get().openai?.enabled ||
+      !services.configV2Service.get().openai?.chatModel
     ) {
       console.log('OpenAI is disabled in !suggest.');
+      return false;
+    }
+    if (!ctx.body) {
       return false;
     }
     if (!commandState.wouldBeCommands[ctx.body]) {

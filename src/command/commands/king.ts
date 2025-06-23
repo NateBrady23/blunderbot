@@ -4,9 +4,8 @@ const command: Command = {
   name: 'king',
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const kings = services.configV2Service
-      .get()
-      .kings.map((k) => k.split('.')[0]);
+    const kings =
+      services.configV2Service.get().kings?.map((k) => k.split('.')[0]) ?? [];
     const filteredKings = kings.filter((k) => !k.startsWith('secret_'));
     let king = (ctx.args[0] || '').toLowerCase();
     if (king === 'random') {
@@ -16,7 +15,7 @@ const command: Command = {
       !kings.includes(king) ||
       (!ctx.isOwner && king.startsWith('secret_'))
     ) {
-      const kingsUrl = services.configV2Service.get().twitch.kingsGalleryUrl;
+      const kingsUrl = services.configV2Service.get().twitch?.kingsGalleryUrl;
       if (kingsUrl) {
         void ctx.botSpeak(`Check out the gallery at ${kingsUrl}`);
       } else {
@@ -30,7 +29,9 @@ const command: Command = {
 
     services.twitchGateway.sendDataToOneSocket('serverMessage', {
       type: 'KING',
-      king: services.configV2Service.get().kings.find((k) => k.startsWith(king))
+      king: services.configV2Service
+        .get()
+        .kings?.find((k) => k.startsWith(king))
     });
     if (!ctx.isOwner && !king.startsWith('secret_')) {
       void services.twitchService.ownerRunCommand(

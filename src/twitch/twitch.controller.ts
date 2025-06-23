@@ -19,33 +19,33 @@ export class TwitchController {
 
   @Get('kings')
   public getTwitchKings(): string[] {
-    return this.configV2Service.get().kings;
+    return this.configV2Service.get().kings || [];
   }
 
   @Get('opps')
   public getOpponentKings(): string[] {
-    return this.configV2Service.get().oppKings;
+    return this.configV2Service.get().oppKings || [];
   }
 
   @Get('crowns')
   public getTwitchCrowns(): string[] {
-    return this.configV2Service.get().crowns;
+    return this.configV2Service.get().crowns || [];
   }
 
   @Get('themeconfig')
   public getThemeConfig(): unknown {
-    return this.configV2Service.get().themeConfig;
+    return this.configV2Service.get().themeConfig || {};
   }
 
   // Load sounds for the soundboard menu
   @Get('soundboard')
   public getSoundboard(): string[] {
-    return this.configV2Service.get().soundboard;
+    return this.configV2Service.get().soundboard || [];
   }
 
   @Get('titles')
   public getTitles(): string[][] {
-    return this.configV2Service.get().lichess.titledPlayers;
+    return this.configV2Service.get().lichess?.titledPlayers || [];
   }
 
   @Post('/command')

@@ -6,7 +6,7 @@ const command: Command = {
   aliases: ['addcom'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().db.enabled) {
+    if (!CONFIG.get().db?.enabled) {
       console.error('Database is not enabled for !add command');
       return false;
     }
@@ -15,7 +15,7 @@ const command: Command = {
       return false;
     }
     const regex = new RegExp(`^${name} `);
-    const message = ctx.body.replace(regex, '');
+    const message = ctx.body?.replace(regex, '') || '';
     try {
       const existingCommand =
         await services.storedCommandEntityService.findByName(name);

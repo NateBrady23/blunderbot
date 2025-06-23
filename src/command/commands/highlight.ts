@@ -5,7 +5,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     const square = ctx.args[0]?.split('');
-    if (!square || square.length % 2 !== 0) return;
+    if (!square || square.length % 2 !== 0) return false;
     for (let i = 0; i < square.length - 1; i += 2) {
       const col = square[i];
       const row = square[i + 1];

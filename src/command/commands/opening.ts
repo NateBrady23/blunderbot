@@ -5,12 +5,12 @@ const command: Command = {
   help: `Gets the opening of the current game played by the streamer unless a lichess gameId is supplied.`,
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    const lichessUser = services.configV2Service.get().lichess.user;
-
-    let gameId: string;
-    if (ctx.args[0]) {
-      gameId = ctx.args[0];
+    const lichessUser = services.configV2Service.get().lichess?.user;
+    if (!lichessUser) {
+      return false;
     }
+
+    let gameId = ctx.args[0];
     if (!gameId) {
       const res = await services.lichessService.getCurrentGame(lichessUser, {
         gameId: true

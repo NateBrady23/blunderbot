@@ -56,13 +56,13 @@ export class LichessService {
   }
 
   public async getCurrentGame(
-    user = this.configV2Service.get().lichess.user,
+    user = this.configV2Service.get().lichess?.user,
     opts: { gameId?: boolean } = {}
   ): Promise<string> {
     const url = `https://lichess.org/api/users/status?withGameIds=true&ids=${user}`;
     const res = await (await fetch(url)).json();
     if (!res?.[0]) {
-      return;
+      return '';
     }
     if (res[0].playingId) {
       if (opts?.gameId) {
@@ -71,6 +71,7 @@ export class LichessService {
         return `https://lichess.org/${res[0].playingId}`;
       }
     }
+    return '';
   }
 
   public async getGameOpening(gameId: string): Promise<string> {
@@ -81,7 +82,7 @@ export class LichessService {
       return json.opening.name;
     } catch (e) {
       this.logger.error(e);
-      return;
+      return '';
     }
   }
 
@@ -92,7 +93,11 @@ export class LichessService {
       json: true
     }
   ): Promise<Response> {
-    const token = this.configV2Service.get().lichess.oauthToken;
+    const token = this.configV2Service.get().lichess?.oauthToken;
+    if (!token) {
+      this.logger.error('No lichess oauth token found');
+      return new Response('No lichess oauth token found', { status: 401 });
+    }
 
     const headers = new Headers();
     headers.set('Authorization', `Bearer ${token}`);

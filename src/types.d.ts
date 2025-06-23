@@ -13,13 +13,13 @@ declare global {
     // the discord message object
     discordMessage?: DiscordMessage;
     // just the args for the command
-    args?: string[];
+    args: string[];
     // just the command
     command?: string;
     // just the body of the message without the command
     body?: string;
-    botSpeak?: (string) => Promise<void> | Promise<Message<true>>;
-    reply?: (Context, string) => void;
+    botSpeak: (string) => Promise<void> | Promise<Message<true>>;
+    reply: (Context, string) => void;
     platform: Platforms;
     isOwnerRun?: boolean;
     onBehalfOf?: string;

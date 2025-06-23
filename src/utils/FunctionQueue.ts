@@ -17,7 +17,9 @@ export class FunctionQueue {
     if (this.isRunning || this.queue.length === 0) return;
     this.isRunning = true;
     const fn = this.queue.shift();
-    await fn();
+    if (fn) {
+      await fn();
+    }
     this.isRunning = false;
     await this.run();
   }

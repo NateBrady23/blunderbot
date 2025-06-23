@@ -7,7 +7,7 @@ const command: Command = {
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
     let commandsToCycle =
-      services.configV2Service.get().twitch.autoCommands.commandSets || [];
+      services.configV2Service.get().twitch?.autoCommands?.commandSets || [];
 
     // Always clearing the interval so multiple "on"s don't stack and anything else shuts it off
     clearInterval(currentInterval);
@@ -21,8 +21,8 @@ const command: Command = {
         () => {
           if (!commandsToCycle.length) {
             commandsToCycle =
-              services.configV2Service.get().twitch.autoCommands.commandSets ||
-              [];
+              services.configV2Service.get().twitch?.autoCommands
+                ?.commandSets || [];
           }
 
           // If there are still no commands to cycle, don't run anything
@@ -31,12 +31,15 @@ const command: Command = {
           }
 
           const commands = commandsToCycle.shift();
+          if (!commands) {
+            return false;
+          }
           commands.forEach((c: string) => {
             void services.twitchService.ownerRunCommand(c);
           });
         },
-        services.configV2Service.get().twitch.autoCommands.timeBetweenSeconds *
-          1000 || 250000
+        (services.configV2Service.get().twitch?.autoCommands
+          ?.timeBetweenSeconds || 0) * 1000 || 250000
       );
     }
     return true;

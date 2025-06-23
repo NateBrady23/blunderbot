@@ -47,8 +47,8 @@ export async function muteOrUnmuteDesktopApps(
 ): Promise<void> {
   const muteOrUnmute = mute ? 'mute' : 'unmute';
   try {
-    for (const command of configService.get().misc.sounds[muteOrUnmute]
-      .programs) {
+    for (const command of configService.get().misc?.sounds?.[muteOrUnmute]
+      ?.programs || []) {
       execSync(command);
     }
   } catch (error) {
@@ -106,7 +106,7 @@ export function getItemsBetweenDelimiters(
   const matches = [];
   let match;
   while (Boolean((match = regex.exec(str)))) {
-    matches.push(match[1]);
+    matches.push(match?.[1] || '');
   }
   return matches;
 }
@@ -231,6 +231,10 @@ export function removeTempFiles(): void {
   }
   const tempFiles = globSync('temp/*');
   for (const file of tempFiles) {
-    unlinkSync(file);
+    try {
+      unlinkSync(file);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

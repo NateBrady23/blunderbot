@@ -5,7 +5,7 @@ const command: Command = {
   help: `Change my crown while I'm playing. Ex. !crown tophat`,
   platforms: [Platform.Twitch],
   run: async (ctx, { services }) => {
-    const crown = (ctx.args[0] || '').toLowerCase();
+    const crown = (ctx.args?.[0] || '').toLowerCase();
     if (crown === 'reset') {
       services.twitchGateway.sendDataToOneSocket('serverMessage', {
         type: 'CROWN',
@@ -20,9 +20,8 @@ const command: Command = {
       return true;
     }
 
-    const crowns = services.configV2Service
-      .get()
-      .crowns.map((c) => c.split('.')[0]);
+    const crowns =
+      services.configV2Service.get().crowns?.map((c) => c.split('.')[0]) ?? [];
 
     if (!crown || !crowns.includes(crown)) {
       void ctx.botSpeak(
@@ -35,7 +34,7 @@ const command: Command = {
       type: 'CROWN',
       crown: services.configV2Service
         .get()
-        .crowns.find((c) => c.startsWith(crown)),
+        .crowns?.find((c) => c.startsWith(crown)),
       user: ctx.displayName
     });
     if (!ctx.isOwner && !crown.startsWith('secret_')) {

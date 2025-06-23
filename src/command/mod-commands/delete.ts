@@ -6,7 +6,7 @@ const command: Command = {
   aliases: ['delcom'],
   platforms: [Platform.Twitch, Platform.Discord],
   run: async (ctx, { services }) => {
-    if (!CONFIG.get().db.enabled) {
+    if (!CONFIG.get().db?.enabled) {
       console.error('Database is not enabled for !delete command');
       return false;
     }
