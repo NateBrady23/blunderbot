@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import OpenAI from 'openai';
+import OpenAI, { toFile } from 'openai';
 import { CommandService } from '../command/command.service';
 import { generateUUID, playAudioFile } from '../utils/utils';
 import { createReadStream, writeFileSync } from 'fs';
@@ -78,10 +78,15 @@ export class OpenaiService {
       throw new Error('OpenAI client not initialized');
     }
     try {
+      const image = await toFile(createReadStream(maskImg), null, {
+        type: 'image/png'
+      });
+
       const response = await this.openai.images.edit({
-        image: createReadStream(maskImg),
-        // TODO: Currently does not accept model parameter
-        // model: CONFIG.get().openai?.imageModel || 'dall-e-3',
+        image,
+        // TODO: gpt-image-1 requires a verified organization to use. otherwise, only
+        // dall-e-2 is available.
+        // model: 'gpt-image-1',
         prompt,
         n: 1
       });

@@ -120,6 +120,14 @@ export class TwitchEventSub {
             await this.onSubscribe(parsedData.payload.event);
             break;
 
+          case 'channel.subscription.message':
+            await this.onSubscriptionMessage(parsedData.payload.event);
+            break;
+
+          case 'channel.ban':
+            await this.onBan(parsedData.payload.event);
+            break;
+
           case 'channel.subscription.gift':
             await this.onSubscriptionGift(parsedData.payload.event);
             break;
@@ -173,7 +181,9 @@ export class TwitchEventSub {
       { eventType: 'channel.cheer', version: '1' },
       { eventType: 'channel.subscribe', version: '1' },
       { eventType: 'channel.subscription.gift', version: '1' },
+      { eventType: 'channel.subscription.message', version: '1' },
       { eventType: 'channel.chat.message', version: '1' },
+      { eventType: 'channel.ban', version: '1' },
       {
         eventType: 'channel.channel_points_custom_reward_redemption.add',
         version: '1'
@@ -284,6 +294,24 @@ export class TwitchEventSub {
       isGifter: true
     };
     void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
+  }
+
+  public async onSubscriptionMessage(
+    data: OnSubscriptionMessageEvent
+  ): Promise<void> {
+    const obj = {
+      username: data.user_name,
+      message: data.message.text
+    };
+    void this.twitchService.ownerRunCommand(`!onsubs ${JSON.stringify(obj)}`);
+  }
+
+  public async onBan(data: OnBanEvent): Promise<void> {
+    const obj = {
+      username: data.user_name,
+      reason: data.reason
+    };
+    void this.twitchService.ownerRunCommand(`!onbans ${JSON.stringify(obj)}`);
   }
 
   public async onRaid(data: OnRaidEvent): Promise<void> {

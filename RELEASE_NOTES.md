@@ -1,3 +1,12 @@
+### 2.12.0
+
+#### Features
+
+- Now tracks resubs that come in with a user message
+- `!onsubs` now allows messages and `!tts`s them
+- Now listening to twitch ban events and added `!onbans` (and configuration in Blunderbot Admin) for commands to run when someone is banned
+- If OpenAI is enabled it will be used to enhance spotify search results leading to more accurate results for user queries
+
 ### 2.11.1 (2025-06-23)
 
 #### Bug Fixes

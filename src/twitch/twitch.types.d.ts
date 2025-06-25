@@ -149,6 +149,27 @@ interface OnSubscribeEvent {
   is_gift: boolean;
 }
 
+interface OnSubscriptionMessageEvent {
+  user_id: string;
+  user_login: string;
+  user_name: string;
+  broadcaster_user_id: string;
+  broadcaster_user_login: string;
+  broadcaster_user_name: string;
+  tier: string;
+  message: {
+    text: string;
+    emotes: Array<{
+      begin: number;
+      end: number;
+      id: string;
+    }>;
+  };
+  cumulative_months: number;
+  streak_months: number | null;
+  duration_months: number;
+}
+
 interface OnSubscriptionGiftEvent {
   user_id: string;
   user_login: string;
@@ -230,4 +251,20 @@ interface OnChannelPointsCustomRewardRedemptionEvent {
     prompt: string;
     cost: number;
   };
+}
+
+interface OnBanEvent {
+  user_id: string;
+  user_login: string;
+  user_name: string;
+  broadcaster_user_id: string;
+  broadcaster_user_login: string;
+  broadcaster_user_name: string;
+  moderator_user_id: string;
+  moderator_user_login: string;
+  moderator_user_name: string;
+  reason: string;
+  banned_at: string;
+  ends_at: string;
+  is_permanent: boolean;
 }
