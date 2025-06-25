@@ -55,6 +55,7 @@ interface UserTwitchConfigV2 {
 
   // Uncategorized
   onSubscribe: string[];
+  onBan: string[];
   welcome: {
     message: string;
     ignoreUsers: string[];

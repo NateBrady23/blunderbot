@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import * as querystring from 'querystring';
 import { ConfigV2Service } from '../configV2/configV2.service';
+import { OpenaiService } from 'src/openai/openai.service';
 
 @Injectable()
 export class SpotifyService {
@@ -13,7 +14,9 @@ export class SpotifyService {
 
   public constructor(
     @Inject(forwardRef(() => ConfigV2Service))
-    private readonly configV2Service: WrapperType<ConfigV2Service>
+    private readonly configV2Service: WrapperType<ConfigV2Service>,
+    @Inject(forwardRef(() => OpenaiService))
+    private readonly openaiService: WrapperType<OpenaiService>
   ) {}
 
   public getAuthUrl(): string {
@@ -116,7 +119,7 @@ export class SpotifyService {
       const res = await fetch(
         `https://api.spotify.com/v1/search?q=${encodeURIComponent(
           query
-        )}&type=track&limit=1`,
+        )}&type=track&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -124,14 +127,52 @@ export class SpotifyService {
         }
       );
       const data: SpotifySearchResponse = await res.json();
-      for (const track of data.tracks.items) {
-        if (
-          query.includes('karaoke') ||
-          !track.name.toLowerCase().includes('karaoke')
-        ) {
-          return track;
+
+      let trackIndex = 0;
+
+      // Improve search results with AI
+      if (this.configV2Service.get().openai?.enabled) {
+        try {
+          const newItems = data.tracks.items.map((item) => {
+            return {
+              name: item.name,
+              artists: item.artists.map((artist) => artist.name).join(', '),
+              album: item.album.name,
+              duration: item.duration_ms,
+              isExplicit: item.explicit
+            };
+          });
+
+          let prompt = `
+        You are a helpful assistant that can help me find the best track from a search query.
+        You have been given this query from a user: 
+        <QUERY>
+        ${query}
+        </QUERY>
+        You have been given these tracks: 
+        <TRACKS>
+        ${JSON.stringify(newItems)}
+        </TRACKS>
+        You need to return the index of the track that is the best match for the query. 
+        `;
+          if (!this.configV2Service.get().spotify?.allowExplicit) {
+            prompt += `
+          While searching for the best match, prefer tracks that are not explicit.
+          `;
+          }
+          prompt += `
+          Index starts at 0. Only return the index, no other text.
+          `;
+
+          const response = await this.openaiService.sendPrompt(prompt);
+          trackIndex = parseInt(response);
+        } catch (e) {
+          this.logger.error(e);
+          this.logger.error('Error improving search results with AI');
+          trackIndex = 0;
         }
       }
+      return data.tracks.items[trackIndex];
     } catch (e) {
       this.logger.error(e);
       this.logger.error('Error getting Spotify track from search');

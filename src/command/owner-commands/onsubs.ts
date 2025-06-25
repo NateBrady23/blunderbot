@@ -23,6 +23,9 @@ const command: Command = {
       if (body?.username) {
         commandState.contributions.subs[body.username] = true;
       }
+      if (body?.message) {
+        void services.twitchService.ownerRunCommand(`!tts ${body.message}`);
+      }
       return true;
     });
   }
